@@ -45,6 +45,7 @@ public class TaskDurationDetector implements IDetector {
 
     @Override
     public DetectorResult detect() {
+        log.info("start TaskDurationDetector");
         DetectorResult<List<TaskDurationAbnormal>> detectorResult =
                 new DetectorResult<>(AppCategoryEnum.TASK_DURATION.getCategory(), false);
 

@@ -24,11 +24,12 @@ import com.oppo.cloud.parser.domain.job.DetectorParam;
 import com.oppo.cloud.parser.domain.spark.eventlog.SparkJob;
 import com.oppo.cloud.parser.domain.spark.eventlog.SparkStage;
 import com.oppo.cloud.parser.domain.spark.eventlog.SparkTask;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
+@Slf4j
 public class SpeculativeTaskDetector implements IDetector {
 
     private DetectorParam param;
@@ -42,6 +43,7 @@ public class SpeculativeTaskDetector implements IDetector {
 
     @Override
     public DetectorResult detect() {
+        log.info("start SpeculativeTaskDetector");
         DetectorResult<List<SpeculativeTaskAbnormal>> detectorResult =
                 new DetectorResult<>(AppCategoryEnum.SPECULATIVE_TASK.getCategory(), false);
 

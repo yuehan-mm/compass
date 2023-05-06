@@ -45,6 +45,7 @@ public class GlobalSortDetector implements IDetector {
 
     @Override
     public DetectorResult detect() {
+        log.info("start GlobalSortDetector");
         DetectorResult<List<GlobalSortAbnormal>> detectorResult =
                 new DetectorResult<>(AppCategoryEnum.GLOBAL_SORT.getCategory(), false);
 

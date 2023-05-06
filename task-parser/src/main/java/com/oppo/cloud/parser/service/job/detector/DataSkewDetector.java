@@ -49,7 +49,7 @@ public class DataSkewDetector implements IDetector {
 
     @Override
     public DetectorResult detect() {
-
+        log.info("start DataSkewDetector");
         DetectorResult<List<DataSkewAbnormal>> detectorResult =
                 new DetectorResult<>(AppCategoryEnum.DATA_SKEW.getCategory(), false);
 

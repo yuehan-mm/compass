@@ -1,8 +1,8 @@
 hadoop:
   namenodes:
-    - nameservices: log-hdfs
-      namenodesAddr: [ "host1", "host2" ]
-      namenodes: [ "namenode1", "namenode2" ]
+    - nameservices: nameservice1
+      namenodesAddr: [ "qdedhtest0", "qdedhtest1" ]
+      namenodes: [ "namenode30", "namenode172" ]
       user: hdfs
       password:
       port: 8020
@@ -21,8 +21,8 @@ hadoop:
 
   yarn:
     - clusterName: "bigdata"
-      resourceManager: [ "localhost:8088" ]
-      jobHistoryServer: "localhost:19888"
+      resourceManager: [ "qdedhtest2:8088","qdedhtest1:8088" ]
+      jobHistoryServer: "qdedhtest0:19888"
 
   spark:
-    sparkHistoryServer: [ "localhost:18018" ]
+    sparkHistoryServer: [ "qdedhtest1:18088" ]

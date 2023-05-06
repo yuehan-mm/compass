@@ -41,6 +41,7 @@ public class HdfsStuckDetector implements IDetector {
 
     @Override
     public DetectorResult detect() {
+        log.info("start HdfsStuckDetector");
         DetectorResult<List<HdfsStuckAbnormal>> detectorResult =
                 new DetectorResult<>(AppCategoryEnum.HDFS_STUCK.getCategory(), false);
 

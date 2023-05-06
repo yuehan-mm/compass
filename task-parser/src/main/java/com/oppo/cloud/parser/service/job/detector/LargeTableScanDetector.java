@@ -25,12 +25,13 @@ import com.oppo.cloud.parser.domain.spark.eventlog.AccumulableInfo;
 import com.oppo.cloud.parser.domain.spark.eventlog.SQLMetricInfo;
 import com.oppo.cloud.parser.domain.spark.eventlog.SparkListenerSQLExecutionStart;
 import com.oppo.cloud.parser.domain.spark.eventlog.SparkPlanInfo;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+@Slf4j
 public class LargeTableScanDetector implements IDetector {
 
     private final DetectorParam param;
@@ -44,6 +45,7 @@ public class LargeTableScanDetector implements IDetector {
 
     @Override
     public DetectorResult detect() {
+        log.info("start LargeTableScanDetector");
         DetectorResult<LargeTableScanAbnormal> detectorResult =
                 new DetectorResult<>(AppCategoryEnum.LARGE_TABLE_SCAN.getCategory(), false);
 

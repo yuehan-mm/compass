@@ -1,36 +1,36 @@
 #!/bin/bash
 
 # dolphinscheduler or airflow or custom
-export SCHEDULER="dolphinscheduler"
+export SCHEDULER="airflow"
 export SPRING_PROFILES_ACTIVE="hadoop,${SCHEDULER}"
 
 # Scheduler MySQL
-export SCHEDULER_MYSQL_ADDRESS="localhost:33066"
-export SCHEDULER_MYSQL_DB="dolphinscheduler"
+export SCHEDULER_MYSQL_ADDRESS="10.138.46.222:3306"
+export SCHEDULER_MYSQL_DB="airflow_3"
 export SCHEDULER_DATASOURCE_URL="jdbc:mysql://${SCHEDULER_MYSQL_ADDRESS}/${SCHEDULER_MYSQL_DB}?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai"
-export SCHEDULER_DATASOURCE_USERNAME=""
-export SCHEDULER_DATASOURCE_PASSWORD=""
+export SCHEDULER_DATASOURCE_USERNAME="scan_binlog"
+export SCHEDULER_DATASOURCE_PASSWORD="Scan_Binlog123!@#"
 
 # Compass MySQL
-export COMPASS_MYSQL_ADDRESS="localhost:33066"
+export COMPASS_MYSQL_ADDRESS="10.138.46.222:3306"
 export COMPASS_MYSQL_DB="compass"
 export SPRING_DATASOURCE_URL="jdbc:mysql://${COMPASS_MYSQL_ADDRESS}/${COMPASS_MYSQL_DB}?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai"
-export SPRING_DATASOURCE_USERNAME=""
-export SPRING_DATASOURCE_PASSWORD=""
+export SPRING_DATASOURCE_USERNAME="bdp_jt"
+export SPRING_DATASOURCE_PASSWORD="OdKzCYC4s"
 
 # Kafka
-export SPRING_KAFKA_BOOTSTRAPSERVERS="host1:port,host2:port"
+export SPRING_KAFKA_BOOTSTRAPSERVERS="10.163.199.178:9092"
 
 # Redis
-export SPRING_REDIS_CLUSTER_NODES="localhost:6379"
+export SPRING_REDIS_CLUSTER_NODES="10.163.199.178:6380,10.163.199.178:6381,10.163.199.178:6382"
 # Optional
 export SPRING_REDIS_PASSWORD=""
 
 # Zookeeper
-export SPRING_ZOOKEEPER_NODES="localhost:2181"
+export SPRING_ZOOKEEPER_NODES="10.163.199.178:2181"
 
 # Elasticsearch
-export SPRING_ELASTICSEARCH_NODES="localhost:19527"
+export SPRING_ELASTICSEARCH_NODES="10.163.199.178:9200"
 # Optional
 export SPRING_ELASTICSEARCH_USERNAME=""
 # Optional

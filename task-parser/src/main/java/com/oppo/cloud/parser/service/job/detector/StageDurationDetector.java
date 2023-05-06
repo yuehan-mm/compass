@@ -47,6 +47,7 @@ public class StageDurationDetector implements IDetector {
 
     @Override
     public DetectorResult detect() {
+        log.info("start StageDurationDetector");
         DetectorResult<List<StageDurationAbnormal>> detectorResult =
                 new DetectorResult<>(AppCategoryEnum.STAGE_DURATION.getCategory(), false);
 

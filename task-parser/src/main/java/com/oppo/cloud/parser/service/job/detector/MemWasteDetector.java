@@ -40,6 +40,7 @@ public class MemWasteDetector {
     }
 
     public DetectorResult detect(List<GCReport> gcReports, MemoryCalculateParam memoryCalculateParam) {
+        log.info("start MemWasteDetector");
         DetectorResult<MemWasteAbnormal> detectorResult =
                 new DetectorResult<>(AppCategoryEnum.MEMORY_WASTE.getCategory(), false);
         long appTotalTime = memoryCalculateParam.getAppTotalTime();

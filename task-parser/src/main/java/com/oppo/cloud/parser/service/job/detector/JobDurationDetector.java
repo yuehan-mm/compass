@@ -47,6 +47,7 @@ public class JobDurationDetector implements IDetector {
 
     @Override
     public DetectorResult detect() {
+        log.info("start JobDurationDetector");
         DetectorResult<List<JobDurationAbnormal>> detectorResult =
                 new DetectorResult<>(AppCategoryEnum.JOB_DURATION.getCategory(), false);
         List<JobDurationAbnormal> jobLists = new ArrayList<>();
