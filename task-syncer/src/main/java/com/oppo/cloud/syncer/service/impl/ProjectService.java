@@ -46,7 +46,7 @@ public class ProjectService extends CommonService implements ActionService {
     private ProjectExtendMapper projectMapper;
 
     @Autowired
-    @Qualifier("diagnoseJdbcTemplate")
+    @Qualifier("sourceJdbcTemplate")
     private JdbcTemplate jdbcTemplate;
 
     /**

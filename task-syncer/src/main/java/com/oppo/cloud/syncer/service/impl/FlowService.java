@@ -44,7 +44,7 @@ public class FlowService extends CommonService implements ActionService {
     private FlowExtendMapper flowMapper;
 
     @Autowired
-    @Qualifier("diagnoseJdbcTemplate")
+    @Qualifier("sourceJdbcTemplate")
     private JdbcTemplate jdbcTemplate;
     /**
      * 插入操作

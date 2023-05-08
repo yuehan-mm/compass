@@ -47,7 +47,7 @@ public class TaskService extends CommonService implements ActionService {
     private TaskExtendMapper taskMapper;
 
     @Autowired
-    @Qualifier("diagnoseJdbcTemplate")
+    @Qualifier("sourceJdbcTemplate")
     private JdbcTemplate jdbcTemplate;
 
     /**

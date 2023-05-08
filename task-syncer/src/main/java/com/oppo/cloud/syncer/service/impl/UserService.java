@@ -50,7 +50,7 @@ public class UserService extends CommonService implements ActionService {
     private UserExtendMapper userMapper;
 
     @Autowired
-    @Qualifier("diagnoseJdbcTemplate")
+    @Qualifier("sourceJdbcTemplate")
     private JdbcTemplate jdbcTemplate;
 
     /**

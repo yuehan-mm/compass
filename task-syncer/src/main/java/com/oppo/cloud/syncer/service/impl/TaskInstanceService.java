@@ -47,7 +47,7 @@ public class TaskInstanceService extends CommonService implements ActionService 
     private TaskInstanceExtendMapper taskInstanceMapper;
 
     @Autowired
-    @Qualifier("diagnoseJdbcTemplate")
+    @Qualifier("sourceJdbcTemplate")
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
