@@ -181,7 +181,7 @@ public class InitService implements CommandLineRunner {
 
         while (true) {
             String query = buildQuery(mapping.getTable(), page, pageSize);
-            List<Map<String, Object>> queryDatas = sourceJdbcTemplate.queryForList(query);
+            List<Map<String, Object>> queryDatas = jdbcTemplate.queryForList(query);
             if (queryDatas.size() == 0) {
                 break;
             }
