@@ -11,13 +11,13 @@ hadoop:
       # kerberos
       enableKerberos: false
       # /etc/krb5.conf
-      krb5Conf: ""
+      krb5Conf: "/opt/compassCompile/keberosconf/krb5.conf"
       # hdfs/*@EXAMPLE.COM
-      principalPattern:  ""
+      principalPattern:  "hdfs/*@HAIER.COM"
       # admin
-      loginUser: ""
+      loginUser: "admin"
       # /var/kerberos/krb5kdc/admin.keytab
-      keytabPath: ""
+      keytabPath: "/opt/compassCompile/keberosconf/admin.keytab"
 
   yarn:
     - clusterName: "bigdata"

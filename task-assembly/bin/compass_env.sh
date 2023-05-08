@@ -6,7 +6,7 @@ export SPRING_PROFILES_ACTIVE="hadoop,${SCHEDULER}"
 
 # Scheduler MySQL
 export SCHEDULER_MYSQL_ADDRESS="10.138.46.222:3306"
-export SCHEDULER_MYSQL_DB="airflow_3"
+export SCHEDULER_MYSQL_DB="airflow"
 export SCHEDULER_DATASOURCE_URL="jdbc:mysql://${SCHEDULER_MYSQL_ADDRESS}/${SCHEDULER_MYSQL_DB}?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai"
 export SCHEDULER_DATASOURCE_USERNAME="scan_binlog"
 export SCHEDULER_DATASOURCE_PASSWORD="Scan_Binlog123!@#"
