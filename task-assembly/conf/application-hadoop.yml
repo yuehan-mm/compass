@@ -9,7 +9,7 @@ hadoop:
       # scheduler platform hdfs log path keyword identification, used by task-application
       matchPathKeys: [ "flume" ]
       # kerberos
-      enableKerberos: false
+      enableKerberos: true
       # /etc/krb5.conf
       krb5Conf: "/opt/compassCompile/keberosconf/krb5.conf"
       # hdfs/*@EXAMPLE.COM
