@@ -18,7 +18,7 @@ spring:
     topics: mysqldata
     consumer:
       group-id: task-syncer-airflow
-      auto-offset-reset: earliest
+      auto-offset-reset: latest
       enable-auto-commit: false
       max-poll-interval-ms: 300000
 

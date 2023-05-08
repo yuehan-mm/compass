@@ -145,7 +145,6 @@ public class HDFSUtil {
      * 通配符获取文件列表, 带*通配
      */
     public static List<String> filesPattern(NameNodeConf nameNodeConf, String filePath) throws Exception {
-        filePath = checkLogPath(nameNodeConf, filePath);
         FileSystem fs = HDFSUtil.getFileSystem(nameNodeConf);
         FileStatus[] fileStatuses = fs.globStatus(new Path(filePath));
         List<String> result = new ArrayList<>();
@@ -161,10 +160,4 @@ public class HDFSUtil {
         return result;
     }
 
-    private static String checkLogPath(NameNodeConf nameNode, String logPath) {
-        if (logPath.contains(HDFS_SCHEME)) {
-            return logPath;
-        }
-        return String.format("%s%s:%s%s", HDFS_SCHEME, nameNode.getNameservices(), nameNode.getPort(), logPath);
-    }
 }

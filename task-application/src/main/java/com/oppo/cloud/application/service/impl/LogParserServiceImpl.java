@@ -431,7 +431,7 @@ public class LogParserServiceImpl implements LogParserService {
             }
             paths.add(data.get("flow_name").toString());
             paths.add(data.get("task_name").toString());
-            paths.add(String.valueOf(data.get("run_id"))
+            paths.add(String.valueOf(data.get("execution_time"))
                     .replace(":", "_")
                     .replace("+", "_") + "-" + data.get("retry_times"));
             return String.join("/", paths);
