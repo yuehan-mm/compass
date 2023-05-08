@@ -106,7 +106,7 @@ datasource:
         task_name: "task_id"
         start_time: "start_date"
         end_time: "end_date"
-        execution_time: ""
+        execution_time: "execution_date"
         task_state: "state"  # 映射
         task_type: "operator"
         retry_times: "try_number"
@@ -122,8 +122,5 @@ datasource:
           - { targetValue: "fail", originValue: [ "failed" ] }
           - { targetValue: "up_for_retry", originValue: [ "up_for_retry" ] }
           - { targetValue: "other", originValue: [ "none", "removed", "scheduled", "queued", "running", "shutdown", "up_for_reschedule", "upstream_failed", "skipped","sensing","deferred" ] }
-      columnDep:
-        columns: [ "execution_time" ]
-        queries: [ "select execution_date as execution_time from dag_run where dag_id=${flow_name} and run_id=${run_id}" ]
       # 写回 kafka topic
       writeKafkaTopic: task-instance
