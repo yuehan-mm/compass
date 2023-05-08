@@ -55,7 +55,7 @@ datasource:
         update_time: "last_updated"
       columnDep:
         columns: [ "user_id" ]
-        queries: [ "select u.id as user_id from dag as d inner join ab_user as u on d.owners = u.username where d.dag_id = ${project_name}" ]
+        queries: [ "select id as user_id from ab_user where username ='admin' limit 1" ]
 
 
     # flow 表映射
@@ -73,7 +73,7 @@ datasource:
         update_time: "last_updated"
       columnDep:
         columns: [ "user_id" ]
-        queries: [ "select u.id as user_id from dag as d inner join ab_user as u on d.owners = u.username where d.dag_id = ${flow_name}" ]
+        queries: [ "select id as user_id from ab_user where username ='admin' limit 1" ]
 
     # task 任务表映射
     - schema: "airflow"
@@ -93,7 +93,7 @@ datasource:
         update_time: ""
       columnDep:
         columns: [ "user_id", "update_time" ]
-        queries: [ "select u.id as user_id,d.last_parsed_time as update_time from dag as d  inner join ab_user as u on d.owners = u.username where d.dag_id = ${flow_name} limit 1" ]
+        queries: [ "select id as user_id from ab_user where username ='admin' limit 1" ]
 
     # task_instance 任务表映射
     - schema: "airflow"
