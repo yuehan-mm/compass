@@ -181,7 +181,7 @@ public class InitService implements CommandLineRunner {
 
         while (true) {
             String query = buildQuery(mapping.getTable(), page, pageSize);
-            List<Map<String, Object>> queryDatas = jdbcTemplate.queryForList(query);
+            List<Map<String, Object>> queryDatas = sourceJdbcTemplate.queryForList(query);
             if (queryDatas.size() == 0) {
                 break;
             }
@@ -202,7 +202,7 @@ public class InitService implements CommandLineRunner {
                         depQuery = StringUtil.replaceParams(depQuery, data);
                         Map<String, Object> result = null;
                         try {
-                            result = jdbcTemplate.queryForMap(depQuery);
+                            result = sourceJdbcTemplate.queryForMap(depQuery);
                         } catch (Exception e) {
                             log.error("failed to execute dep query: {},{}", depQuery, e.getMessage());
                         }
