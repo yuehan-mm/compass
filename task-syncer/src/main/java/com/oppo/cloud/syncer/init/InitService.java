@@ -152,21 +152,21 @@ public class InitService implements CommandLineRunner {
             });
         }
 
-        // target table = task
-        mapping = this.getTableMapping("task");
-        if (mapping == null) {
-            log.error("can not find `task` table mapping");
-        } else {
-            // save task table data
-            initTable(mapping, (Map<String, String> data) -> {
-                Task task = (Task) DataUtil.parseInstance(data, TaskBuilder.class);
-                try {
-                    taskMapper.saveSelective(task);
-                } catch (Exception e) {
-                    log.error(e.getMessage());
-                }
-            });
-        }
+//        // target table = task
+//        mapping = this.getTableMapping("task");
+//        if (mapping == null) {
+//            log.error("can not find `task` table mapping");
+//        } else {
+//            // save task table data
+//            initTable(mapping, (Map<String, String> data) -> {
+//                Task task = (Task) DataUtil.parseInstance(data, TaskBuilder.class);
+//                try {
+//                    taskMapper.saveSelective(task);
+//                } catch (Exception e) {
+//                    log.error(e.getMessage());
+//                }
+//            });
+//        }
 
     }
 
