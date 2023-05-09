@@ -425,9 +425,6 @@ public class LogParserServiceImpl implements LogParserService {
          * 获取日志路径
          */
         public String getLogPath() {
-            log.error("-----------"+JSONObject.toJSONString(data));
-            log.error("-----------"+  data.get("execution_time"));
-            log.error("-----------"+  data.get("execution_time").toString());
             log.error("-----------"+ JSONObject.parseObject(JSONObject.toJSONString(data)).getString("execution_time"));
             List<String> paths = new ArrayList<>();
             for (LogPathJoin logPathJoin : rule.getLogPathJoins()) {
@@ -435,7 +432,7 @@ public class LogParserServiceImpl implements LogParserService {
             }
             paths.add(data.get("flow_name").toString());
             paths.add(data.get("task_name").toString());
-            paths.add(convertTime(String.valueOf(data.get("execution_time")))
+            paths.add(convertTime(JSONObject.parseObject(JSONObject.toJSONString(data)).getString("execution_time"))
                     .replace(":", "_")
                     .replace("+", "_") + "-" + data.get("retry_times"));
             return String.join("/", paths);
