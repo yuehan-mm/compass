@@ -439,7 +439,7 @@ public class LogParserServiceImpl implements LogParserService {
         private String convertTime(String dateStr) {
             String res = "";
             try {
-                DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                DateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
                 DateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd'T'HH_mm_ssXXX");
                 sdf2.setTimeZone(TimeZone.getTimeZone("UTC"));
                 res = sdf2.format(new Date(sdf.parse(dateStr).getTime())).replaceAll("Z", "_00_00");
