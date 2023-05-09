@@ -183,6 +183,7 @@ public class LogParserServiceImpl implements LogParserService {
                     + taskInstance);
             return new ParseRet(RetCode.RET_EXCEPTION, taskInstance);
         }
+        log.error("-----------"+JSONObject.toJSONString(data));
         // 补充其他数据依赖
         if (rawData != null) {
             for (Map.Entry<String, String> map : rawData.entrySet()) {
@@ -424,6 +425,7 @@ public class LogParserServiceImpl implements LogParserService {
          * 获取日志路径
          */
         public String getLogPath() {
+            log.error("-----------"+JSONObject.toJSONString(data));
             List<String> paths = new ArrayList<>();
             for (LogPathJoin logPathJoin : rule.getLogPathJoins()) {
                 paths.add(logPathJoin.getData());
