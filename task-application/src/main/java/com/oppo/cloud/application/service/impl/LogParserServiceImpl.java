@@ -426,6 +426,9 @@ public class LogParserServiceImpl implements LogParserService {
          */
         public String getLogPath() {
             log.error("-----------"+JSONObject.toJSONString(data));
+            log.error("-----------"+  data.get("execution_time"));
+            log.error("-----------"+  data.get("execution_time").toString());
+            log.error("-----------"+ JSONObject.parseObject(JSONObject.toJSONString(data)).getString("execution_time"));
             List<String> paths = new ArrayList<>();
             for (LogPathJoin logPathJoin : rule.getLogPathJoins()) {
                 paths.add(logPathJoin.getData());
