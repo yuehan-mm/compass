@@ -30,7 +30,7 @@ public class RawTable {
     /**
      * 当前数据
      */
-    private List<Map<String, String>> data;
+    private Map<String, String> data;
     /**
      * 数据库
      */
@@ -54,7 +54,7 @@ public class RawTable {
     /**
      * 变更旧字段及值
      */
-    private List<Map<String, String>> old;
+    private Map<String, String> old;
     /**
      * 主键
      */
@@ -78,5 +78,5 @@ public class RawTable {
     /**
      * 变更操作类型: INSERT, UPDATE, DELETE...
      */
-    private String type;
+    private String optType;
 }

@@ -25,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -49,7 +50,7 @@ abstract public class CommonService {
         }
 
         Map<String, String> columnMapping = mapping.getColumnMapping();
-        List<Map<String, String>> datas = DataUtil.mapData(rawTable.getData(), columnMapping);
+        List<Map<String, String>> datas = DataUtil.mapData(Arrays.asList(rawTable.getData()), columnMapping);
 
         // 值映射
         DataUtil.mapColumnValue(datas, mapping.getColumnValueMapping());

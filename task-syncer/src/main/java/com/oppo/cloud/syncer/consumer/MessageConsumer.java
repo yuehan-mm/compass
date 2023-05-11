@@ -85,7 +85,7 @@ public class MessageConsumer {
      * 消费消息
      */
     public void consumeMessage(RawTable rawTable, Mapping mapping) {
-        switch (rawTable.getType()) {
+        switch (rawTable.getOptType()) {
             case "INSERT":
                 this.insertAction(rawTable, mapping);
                 break;
