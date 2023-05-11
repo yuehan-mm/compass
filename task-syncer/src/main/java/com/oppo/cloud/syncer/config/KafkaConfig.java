@@ -70,6 +70,17 @@ public class KafkaConfig {
      */
     @Value("${spring.kafka.consumer.max-poll-interval-ms}")
     private String maxPollIntervalMs;
+
+
+    @Value("${spring.kafka.consumer.security.protocol}")
+    private String securityprotocol;
+
+
+    @Value("${spring.kafka.consumer.sasl.mechanism}")
+    private String saslmechanism;
+
+    @Value("${spring.kafka.consumer.sasl.jaas.config}")
+    private String sasljaasconfig;
     /**
      * 最大消费数量
      */
@@ -86,6 +97,9 @@ public class KafkaConfig {
      */
     public Map<String, Object> consumerConfig() {
         Map<String, Object> config = new HashMap();
+        config.put("security.protocol", securityprotocol);
+        config.put("sasl.mechanism", saslmechanism);
+        config.put("sasl.jaas.config",sasljaasconfig);
         config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         config.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         config.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, autoOffsetReset);
@@ -143,6 +157,9 @@ public class KafkaConfig {
         // 值的序列化方式
         config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 
+        config.put("security.protocol", securityprotocol);
+        config.put("sasl.mechanism", saslmechanism);
+        config.put("sasl.jaas.config",sasljaasconfig);
         return config;
     }
 }
