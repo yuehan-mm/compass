@@ -19,7 +19,6 @@
         <module>task-syncer</module>
         <module>task-jacoco</module>
         <module>task-application</module>
-        <module>task-canal</module>
         <module>task-assembly</module>
         <module>task-ui</module>
     </modules>
