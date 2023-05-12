@@ -127,9 +127,3 @@ datasource:
           - { targetValue: "other", originValue: [ "none", "removed", "scheduled", "queued", "running", "shutdown", "up_for_reschedule", "upstream_failed", "skipped","sensing","deferred" ] }
       # 写回 kafka topic
       writeKafkaTopic: compass_test
-
-custom:
-  delayedTask:
-    enable: true
-    delayedSeconds: 5
-    tryTimes: 20
