@@ -43,7 +43,7 @@ public class DelayedCons implements CommandLineRunner {
     public void run(String... args) throws Exception {
         Properties props = new Properties();
         props.put("bootstrap.servers","10.163.137.150:9092,10.163.137.151:9092,10.163.137.152:9092");
-        props.put("group.id", "test-0925");
+        props.put("group.id", "test_airflow_cdc_data_22047328_d");
 //        props.put("enable.auto.commit", "false");
 //        props.put("auto.offset.reset", "earliest");
 //        props.put("auto.commit.interval.ms", "1000");
@@ -64,7 +64,7 @@ public class DelayedCons implements CommandLineRunner {
             }
             ConsumerRecords<String, String> records = consumer.poll(100);
             for (ConsumerRecord<String, String> record : records) {
-                log.error("partition= %d, offset = %d, key = %s, value = %s\n", record.partition(),
+                log.error("--------------------= %d, offset = %d, key = %s, value = %s\n", record.partition(),
                         record.offset(), record.key(), record.value());
                 //consumer.commitSync();
             }
