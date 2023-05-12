@@ -159,13 +159,4 @@ public class KafkaConfig {
         return this.groupId;
     }
 
-    /**
-     * 使用Kafka Admin Client API操作
-     */
-    @Bean(name = "kafkaAdminClient")
-    public AdminClient kafkaAdminClient() {
-        Properties properties = new Properties();
-        properties.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        return AdminClient.create(properties);
-    }
 }
