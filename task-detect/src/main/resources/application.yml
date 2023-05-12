@@ -40,6 +40,9 @@ spring:
     consumer:
       enable-auto-commit: false
       max-poll-records: 1
+    security.protocol: "SASL_PLAINTEXT"
+    sasl.mechanism: "SCRAM-SHA-512"
+    sasl.jaas.config: "org.apache.kafka.common.security.scram.ScramLoginModule required username='hdop' password='v41ieoEFhnPajg5L';"
 
 custom:
   schedulerType: ${SCHEDULER:dolphinscheduler}
@@ -60,8 +63,8 @@ custom:
 
   kafka:
     consumer:
-      group-id: cp-detection-task
-      topic-name: task-instance
+      group-id: compass_test_22047328
+      topic-name: compass_test
       auto:
         start: true
 

@@ -62,7 +62,8 @@ public class DetectedTask {
     @Autowired
     private BlocklistService blocklistService;
 
-    @KafkaListener(topics = "${custom.kafka.consumer.topic-name}", groupId = "${custom.kafka.consumer.group-id}", autoStartup = "${custom.kafka.consumer.auto.start}")
+    @KafkaListener(topics = "${custom.kafka.consumer.topic-name}", groupId = "${custom.kafka.consumer.group-id}",
+            autoStartup = "${custom.kafka.consumer.auto.start}",containerFactory = "kafkaListenerContainerFactory")
     public void consumerTask(@Payload List<String> tableChangeMessages, Acknowledgment ack) {
         for (String message : tableChangeMessages) {
             // 过滤非最终状态任务数据
