@@ -70,6 +70,14 @@ public class KafkaConfig {
     @Value("${spring.kafka.consumer.max-poll-interval-ms}")
     private String maxPollIntervalMs;
 
+    @Value("${spring.kafka.consumer.security.protocol}")
+    private String securityprotocol;
+
+    @Value("${spring.kafka.consumer.sasl.mechanism}")
+    private String saslmechanism;
+
+    @Value("${spring.kafka.consumer.sasl.jaas.config}")
+    private String sasljaasconfig;
     /**
      * 创建消费者
      */
@@ -83,6 +91,9 @@ public class KafkaConfig {
      */
     public Map<String, Object> consumerConfig() {
         return Stream.of(
+                new AbstractMap.SimpleEntry<>("security.protocol", securityprotocol),
+                new AbstractMap.SimpleEntry<>("sasl.mechanism", saslmechanism),
+                new AbstractMap.SimpleEntry<>("sasl.jaas.config",sasljaasconfig),
                 new AbstractMap.SimpleEntry<>(ConsumerConfig.CLIENT_ID_CONFIG, consumerClientId()),
                 new AbstractMap.SimpleEntry<>(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers),
                 new AbstractMap.SimpleEntry<>(ConsumerConfig.GROUP_ID_CONFIG, groupId),

@@ -1,18 +1,12 @@
-package com.oppo.cloud.syncer.consumer;
-
-import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
+package com.oppo.cloud.application;
 
 import java.util.Arrays;
 import java.util.Properties;
-@Slf4j
-public class MyConsumer implements Runnable{
-
-
-    @Override
-    public void run() {
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+public class Consumer {
+    public static void main(String[] args) {
         Properties props = new Properties();
         props.put("bootstrap.servers","10.163.137.150:9092,10.163.137.151:9092,10.163.137.152:9092");
         props.put("group.id", "test-0925");
@@ -29,14 +23,9 @@ public class MyConsumer implements Runnable{
         KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(props);
         consumer.subscribe(Arrays.asList("test_airflow_cdc_data"));
         while (true) {
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
             ConsumerRecords<String, String> records = consumer.poll(100);
             for (ConsumerRecord<String, String> record : records) {
-                log.debug("partition= %d, offset = %d, key = %s, value = %s\n", record.partition(),
+                System.out.printf("partition= %d, offset = %d, key = %s, value = %s\n", record.partition(),
                         record.offset(), record.key(), record.value());
                 //consumer.commitSync();
             }
