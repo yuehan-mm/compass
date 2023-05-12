@@ -17,9 +17,6 @@
 package com.oppo.cloud.detect.config;
 
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.admin.AdminClient;
-import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.RoundRobinAssignor;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -34,7 +31,6 @@ import org.springframework.kafka.listener.ContainerProperties;
 
 import java.util.AbstractMap;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -45,7 +41,6 @@ import java.util.stream.Stream;
 @Configuration
 @EnableKafka
 @Data
-@Slf4j
 public class KafkaConfig {
 
     /**
@@ -95,7 +90,6 @@ public class KafkaConfig {
      * 消费者配置
      */
     public Map<String, Object> consumerConfig() {
-        log.error("---------"+securityprotocol+"----"+saslmechanism+"---"+sasljaasconfig);
         return Stream.of(
                 new AbstractMap.SimpleEntry<>("security.protocol", securityprotocol),
                 new AbstractMap.SimpleEntry<>("sasl.mechanism", saslmechanism),
