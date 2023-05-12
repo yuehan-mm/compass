@@ -28,11 +28,14 @@ import com.oppo.cloud.detect.service.DetectService;
 import com.oppo.cloud.detect.service.TaskInstanceService;
 import com.oppo.cloud.model.TaskInstance;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.consumer.Consumer;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
@@ -62,32 +65,26 @@ public class DetectedTask {
     @Autowired
     private BlocklistService blocklistService;
 
-    @KafkaListener(topics = "${custom.kafka.consumer.topic-name}", groupId = "${custom.kafka.consumer.group-id}",
-            autoStartup = "${custom.kafka.consumer.auto.start}",containerFactory = "kafkaListenerContainerFactory")
-    public void consumerTask(@Payload List<String> tableChangeMessages, Acknowledgment ack) {
-        for (String message : tableChangeMessages) {
+
+    /**
+     * 日志消费
+     */
+    @KafkaListener(topics = "${custom.kafka.consumer.topic-name}", containerFactory = "kafkaListenerContainerFactory")
+    public void receive(@Payload String message, @Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partition,
+                        @Header(KafkaHeaders.RECEIVED_TOPIC) String topic, Consumer consumer,
+                        Acknowledgment ack) throws Exception {
+        try {
             // 过滤非最终状态任务数据
             if (preFilter(message)) {
                 log.info("message:{}", message);
-                TableMessage tableMessage;
-                try {
-                    tableMessage = JSON.parseObject(message, TableMessage.class);
-                } catch (Exception e) {
-                    log.error("parse kafka message failed, error msg:{}, kafka message:{}", e.getMessage(), message);
-                    continue;
-                }
-                TaskInstance taskInstance;
-                try {
-                    taskInstance = JSON.parseObject(tableMessage.getBody(), TaskInstance.class);
-                } catch (Exception e) {
-                    log.error("parse taskInstance message failed, error msg:{}, kafka message:{}", e.getMessage(),
-                            tableMessage.getBody());
-                    continue;
-                }
+                TableMessage tableMessage = JSON.parseObject(message, TableMessage.class);
+                TaskInstance taskInstance = JSON.parseObject(tableMessage.getBody(), TaskInstance.class);
                 if (judgeTaskFinished(taskInstance)) {
                     detectExecutorPool.execute(() -> detectTask(taskInstance));
                 }
             }
+        } catch (Exception e) {
+            log.error(e.getMessage());
         }
         ack.acknowledge();
     }
