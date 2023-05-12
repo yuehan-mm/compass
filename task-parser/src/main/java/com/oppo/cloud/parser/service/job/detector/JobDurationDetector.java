@@ -112,10 +112,10 @@ public class JobDurationDetector implements IDetector {
             if (ratio > threshold && jobDuration > duration) {
                 // 耗时异常
                 jobLists.add(
-                        new JobDurationAbnormal(job.getKey(), jobDuration, stageAcc, ratio, threshold, duration, true));
+                        new JobDurationAbnormal(job.getKey(), jobDuration, stageAcc, ratio, threshold, Double.valueOf(duration), true));
                 detectorResult.setAbnormal(true);
             } else {
-                jobLists.add(new JobDurationAbnormal(job.getKey(), jobDuration, stageAcc, ratio, threshold, duration,
+                jobLists.add(new JobDurationAbnormal(job.getKey(), jobDuration, stageAcc, ratio, threshold,  Double.valueOf(duration),
                         false));
             }
         }

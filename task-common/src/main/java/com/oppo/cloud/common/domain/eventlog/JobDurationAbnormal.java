@@ -39,7 +39,7 @@ public class JobDurationAbnormal {
     /**
      * 过滤时间
      */
-    private Long duration;
+    private Double duration;
     private Boolean abnormal;
 
 }
