@@ -39,9 +39,9 @@ spring:
       group-id: "compass_test_22047328"
       auto-offset-reset: "earliest"
       max-poll-interval-ms: 300000
-      security.protocol: "SASL_PLAINTEXT"
-      sasl.mechanism: "SCRAM-SHA-512"
-      sasl.jaas.config: "org.apache.kafka.common.security.scram.ScramLoginModule required username='hdop' password='v41ieoEFhnPajg5L';"
+      security-protocol: "SASL_PLAINTEXT"
+      sasl-mechanism: "SCRAM-SHA-512"
+      sasl-jaas-config: "org.apache.kafka.common.security.scram.ScramLoginModule required username='hdop' password='v41ieoEFhnPajg5L';"
 
 custom:
   schedulerType: ${SCHEDULER:dolphinscheduler}

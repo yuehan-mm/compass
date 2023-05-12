@@ -70,13 +70,13 @@ public class KafkaConfig {
     @Value("${spring.kafka.consumer.max-poll-interval-ms}")
     private String maxPollIntervalMs;
 
-    @Value("${spring.kafka.consumer.security.protocol}")
+    @Value("${spring.kafka.consumer.security-protocol}")
     private String securityprotocol;
 
-    @Value("${spring.kafka.consumer.sasl.mechanism}")
+    @Value("${spring.kafka.consumer.sasl-mechanism}")
     private String saslmechanism;
 
-    @Value("${spring.kafka.consumer.sasl.jaas.config}")
+    @Value("${spring.kafka.consumer.sasl-jaas-config}")
     private String sasljaasconfig;
     /**
      * 创建消费者
