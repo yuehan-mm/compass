@@ -69,7 +69,7 @@ public class DetectedTask {
     /**
      * 日志消费
      */
-    @KafkaListener(topics = "${custom.kafka.consumer.topic-name}", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "${spring.kafka.topics}", containerFactory = "kafkaListenerContainerFactory")
     public void receive(@Payload String message, @Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partition,
                         @Header(KafkaHeaders.RECEIVED_TOPIC) String topic, Consumer consumer,
                         Acknowledgment ack) throws Exception {
