@@ -97,9 +97,9 @@ public class KafkaConfig {
      */
     public Map<String, Object> consumerConfig() {
         Map<String, Object> config = new HashMap();
-        config.put("security.protocol", "SASL_PLAINTEXT");
-        config.put("sasl.mechanism", "SCRAM-SHA-512");
-        config.put("sasl.jaas.config","org.apache.kafka.common.security.scram.ScramLoginModule required username='hdop' password='v41ieoEFhnPajg5L';");
+        config.put("security.protocol", securityprotocol);
+        config.put("sasl.mechanism", saslmechanism);
+        config.put("sasl.jaas.config", sasljaasconfig);
         config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         config.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         config.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, autoOffsetReset);
