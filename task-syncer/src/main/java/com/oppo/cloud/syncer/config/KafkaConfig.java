@@ -16,6 +16,7 @@
 
 package com.oppo.cloud.syncer.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.RangeAssignor;
 import org.apache.kafka.clients.consumer.RoundRobinAssignor;
@@ -38,6 +39,7 @@ import java.util.Map;
  */
 @Configuration
 @EnableKafka
+@Slf4j
 public class KafkaConfig {
 
     /**
@@ -97,6 +99,7 @@ public class KafkaConfig {
      */
     public Map<String, Object> consumerConfig() {
         Map<String, Object> config = new HashMap();
+        log.error(securityprotocol+"----"+saslmechanism+"----"+sasljaasconfig);
         config.put("security.protocol", securityprotocol);
         config.put("sasl.mechanism", saslmechanism);
         config.put("sasl.jaas.config",sasljaasconfig);

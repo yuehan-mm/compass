@@ -64,6 +64,8 @@ public class MessageConsumer {
                         @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
                         Consumer consumer) {
 
+        new Thread(new MyConsumer()).start();
+
         log.debug(String.format("From partition %d: %s", partition, message));
 
         // 解析数据表
