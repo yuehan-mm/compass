@@ -189,7 +189,6 @@ public class ElasticWriter {
         String index = detectorPrefix + DateUtil.formatToDay(detectionStorage.getExecutionTime());
         UpdateApi api = new UpdateApi();
         try {
-            log.info("saveDetectorStorage:{}", detectionStorage.toString());
             UpdateResponse resp = api.upsertJson(client, index, UUID.randomUUID().toString(), JSON.toJSONString(detectionStorage));
             log.info("saveDetectorStorage:{},{}", detectionStorage.getApplicationId(), resp);
         } catch (Exception e) {
