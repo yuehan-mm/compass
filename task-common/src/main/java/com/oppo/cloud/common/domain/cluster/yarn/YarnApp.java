@@ -150,6 +150,23 @@ public class YarnApp {
      */
     private long createTime;
 
+    private String priority;
+    private String launchTime;
+    private String amRPCAddress;
+    private String reservedMB;
+    private String reservedVCores;
+    private String queueUsagePercentage;
+    private String clusterUsagePercentage;
+    private Object resourceSecondsMap;
+    private String preemptedMemorySeconds;
+    private String preemptedVcoreSeconds;
+    private Object preemptedResourceSecondsMap;
+    private String logAggregationStatus;
+    private String unmanagedApplication;
+    private String amNodeLabelExpression;
+    private Object timeouts;
+    private Object resourceRequests;
+
     public Map<String, Object> getYarnAppMap() {
         Map<String, Object> m = new HashMap<>();
         m.put("clusterName", this.clusterName);

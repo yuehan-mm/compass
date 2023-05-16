@@ -19,6 +19,7 @@ package com.oppo.cloud.meta.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oppo.cloud.common.constant.Constant;
+import com.oppo.cloud.common.domain.cluster.hadoop.NameNodeConf;
 import com.oppo.cloud.common.domain.cluster.yarn.YarnApp;
 import com.oppo.cloud.common.domain.cluster.yarn.YarnResponse;
 import com.oppo.cloud.common.util.DateUtil;
@@ -27,13 +28,13 @@ import com.oppo.cloud.meta.config.HadoopConfig;
 import com.oppo.cloud.meta.service.IClusterConfigService;
 import com.oppo.cloud.meta.service.ITaskSyncerMetaService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.util.EntityUtils;
 import org.elasticsearch.action.bulk.BulkItemResponse;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
@@ -85,9 +86,10 @@ public class YarnMetaServiceImpl implements ITaskSyncerMetaService {
     @Override
     public void syncer() {
         Map<String, String> yarnClusters = iClusterConfigService.getYarnClusters();
+        NameNodeConf nameNodeConf = iClusterConfigService.getHdfsConf();
         log.info("yarnClusters:{}", yarnClusters);
-        if (yarnClusters == null || yarnClusters.size() == 0) {
-            log.error("yarnClusters empty");
+        if (yarnClusters == null || yarnClusters.size() == 0 || nameNodeConf == null) {
+            log.error("yarnClusters or nameNodeConf empty");
             return;
         }
 
@@ -96,7 +98,7 @@ public class YarnMetaServiceImpl implements ITaskSyncerMetaService {
         for (Map.Entry<String, String> yarnCluster : yarnClusters.entrySet()) {
             array[i] = CompletableFuture.supplyAsync(() -> {
                 try {
-                    pull(yarnCluster.getKey(), yarnCluster.getValue());
+                    pull(yarnCluster.getKey(), yarnCluster.getValue(), nameNodeConf);
                 } catch (Exception e) {
                     log.error(e.getMessage());
                 }
@@ -115,9 +117,9 @@ public class YarnMetaServiceImpl implements ITaskSyncerMetaService {
     /**
      * 拉取集群app元数据
      */
-    public void pull(String ip, String clusterName) {
+    public void pull(String ip, String clusterName, NameNodeConf nameNodeConf) {
         log.info("start to pull yarn tasks:{}", ip);
-        List<YarnApp> apps = yarnRequest(ip);
+        List<YarnApp> apps = yarnRequest(ip, nameNodeConf);
         if (apps == null) {
             log.error("yarnMetaErr:appsNull:{}", ip);
             return;
@@ -153,25 +155,29 @@ public class YarnMetaServiceImpl implements ITaskSyncerMetaService {
     /**
      * yarn 任务获取
      */
-    public List<YarnApp> yarnRequest(String ip) {
+    public List<YarnApp> yarnRequest(String ip, NameNodeConf nameNodeConf) {
         long begin = System.currentTimeMillis() - startedTimeBegin * Constant.HOUR_MS;
         String url = String.format(YARN_APPS_URL, ip, begin);
         log.info("yarnUrl:{}", url);
-        ResponseEntity<String> responseEntity;
+
+        HttpClient httpClient = HttpClient.getInstance(ip, true, nameNodeConf.getLoginUser(),
+                nameNodeConf.getKeytabPath(), nameNodeConf.getKrb5Conf());
+        CloseableHttpResponse response;
         try {
-            responseEntity = restTemplate.getForEntity(url, String.class);
-        } catch (RestClientException e) {
-            log.error("yarnRequestErr:{},{}", ip, e.getMessage());
+            response = httpClient.get(url);
+        } catch (Exception e) {
+            log.error("send request fail url: " + url);
             return null;
         }
-        if (responseEntity.getBody() == null) {
-            log.error("yarnRequestErr:{}", ip);
+        int code = response.getStatusLine().getStatusCode();
+        if (code != 200) {
+            log.error("http response error for code:" + code + ",msg:" + response.getStatusLine().getReasonPhrase());
             return null;
         }
         YarnResponse value;
         try {
-            value = objectMapper.readValue(responseEntity.getBody(), YarnResponse.class);
-        } catch (JsonProcessingException e) {
+            value = objectMapper.readValue(EntityUtils.toString(response.getEntity()), YarnResponse.class);
+        } catch (Exception e) {
             log.error(e.getMessage());
             return null;
         }

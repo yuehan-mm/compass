@@ -18,6 +18,7 @@ package com.oppo.cloud.meta.service.impl;
 
 import com.alibaba.fastjson2.JSON;
 import com.oppo.cloud.common.constant.Constant;
+import com.oppo.cloud.common.domain.cluster.hadoop.NameNodeConf;
 import com.oppo.cloud.common.domain.cluster.hadoop.YarnConf;
 import com.oppo.cloud.common.domain.cluster.yarn.ClusterInfo;
 import com.oppo.cloud.common.service.RedisService;
@@ -70,6 +71,12 @@ public class ClusterConfigServiceImpl implements IClusterConfigService {
     @Override
     public List<String> getSparkHistoryServers() {
         return config.getSpark().getSparkHistoryServer();
+    }
+
+    @Override
+    public NameNodeConf getHdfsConf() {
+        List<NameNodeConf> confList = config.getNamenodes();
+        return (confList != null && confList.size() > 0) ? confList.get(0) : null;
     }
 
     /**

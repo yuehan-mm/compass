@@ -16,6 +16,8 @@
 
 package com.oppo.cloud.meta.service;
 
+import com.oppo.cloud.common.domain.cluster.hadoop.NameNodeConf;
+
 import java.util.List;
 import java.util.Map;
 
@@ -38,4 +40,10 @@ public interface IClusterConfigService {
      * 更新集群信息
      */
     void updateClusterConfig();
+
+    /**
+     * 获取hdfs配置信息
+     */
+    NameNodeConf getHdfsConf();
+
 }
