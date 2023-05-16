@@ -58,7 +58,7 @@ public class MessageConsumer {
     /**
      * 接收数据
      */
-    @KafkaListener(topics = "${spring.kafka.topics}", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "${spring.kafka.mysqldatatopics}", containerFactory = "kafkaListenerContainerFactory")
     public void receive(@Payload String message,
                         @Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partition,
                         @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
