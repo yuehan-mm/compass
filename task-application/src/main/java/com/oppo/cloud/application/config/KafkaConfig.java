@@ -46,13 +46,13 @@ public class KafkaConfig {
     /**
      * 消费主题
      */
-    @Value("${spring.kafka.topics}")
+    @Value("${spring.kafka.taskinstancetopics}")
     private String topics;
 
     /**
      * 消费组
      */
-    @Value("${spring.kafka.consumer.group-id}")
+    @Value("${spring.kafka.consumer.taskappgroupid}")
     private String groupId;
     /**
      * 消费模式: lastest, earliest

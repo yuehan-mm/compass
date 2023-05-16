@@ -15,9 +15,9 @@ spring:
 
   kafka:
     bootstrap-servers: localhost:9095
-    topics: test_airflow_cdc_data
+    mysqldatatopics: test_airflow_cdc_data
     consumer:
-      group-id: test_airflow_cdc_data_22047328_d
+      syncergroupid: test_airflow_cdc_data_22047328_d
       auto-offset-reset: latest
       enable-auto-commit: false
       max-poll-interval-ms: 300000
