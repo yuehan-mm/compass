@@ -29,9 +29,9 @@ spring:
 
   kafka:
     bootstrap-servers: "localhost:9095"
-    taskinstancetopics: "compass_test"
+    taskinstancetopics: "task_instance"
     consumer:
-      detectgroupid: "compass_test_22047328"
+      detectgroupid: "task_instance_group01"
       auto-offset-reset: "earliest"
       max-poll-interval-ms: 300000
       security-protocol: "SASL_PLAINTEXT"
