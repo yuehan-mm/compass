@@ -34,9 +34,9 @@ spring:
       detectgroupid: "task_instance_group01"
       auto-offset-reset: "earliest"
       max-poll-interval-ms: 300000
-      security-protocol: "SASL_PLAINTEXT"
-      sasl-mechanism: "SCRAM-SHA-512"
-      sasl-jaas-config: "org.apache.kafka.common.security.scram.ScramLoginModule required username='hdop' password='v41ieoEFhnPajg5L';"
+      security-protocol: ""
+      sasl-mechanism: ""
+      sasl-jaas-config: ""
 
 custom:
   schedulerType: ${SCHEDULER:dolphinscheduler}
