@@ -111,7 +111,7 @@ public class JobInstance extends EsInfo {
 
     public String genIndex(String baseIndex) {
         return StringUtils.isNotBlank(this.getIndex()) ? this.getIndex()
-                : baseIndex + "-" + DateUtil.format(this.getExecutionDate(), "yyyy-MM-dd");
+                : baseIndex + "-" + DateUtil.format(this.getExecutionDate(), "yyyy.MM.dd");
     }
 
     public String genDocId() {

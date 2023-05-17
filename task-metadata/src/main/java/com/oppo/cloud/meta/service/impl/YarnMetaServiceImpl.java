@@ -136,7 +136,7 @@ public class YarnMetaServiceImpl implements ITaskSyncerMetaService {
         }
         BulkResponse response;
         try {
-            response = BulkApi.bulkByIds(client, yarnAppPrefix + DateUtil.getDay(0), yarnAppMap);
+            response = BulkApi.bulkByIds(client, yarnAppPrefix + DateUtil.getIndex(0), yarnAppMap);
         } catch (IOException e) {
             log.error("bulkYarnAppsErr:{}", e.getMessage());
             return;

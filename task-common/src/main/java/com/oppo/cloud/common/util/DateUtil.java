@@ -67,7 +67,7 @@ public class DateUtil {
 
 
     public static String formatToDay(Date date) {
-        return getDateFormat("yyyy-MM-dd").format(date);
+        return getDateFormat("yyyy.MM.dd").format(date);
     }
 
 
@@ -177,6 +177,18 @@ public class DateUtil {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         return format.format(cal.getTime());
     }
+
+    /**
+     * 获取某一天yyyy-MM-dd格式字符换，例如：当天amount=0,昨天amount=-1
+     */
+    public static String getIndex(int amount) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(cal.getTime());
+        cal.add(Calendar.DATE, amount);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd");
+        return format.format(cal.getTime());
+    }
+
 
     /**
      * 获取 fastjson2 utc context

@@ -158,7 +158,7 @@ public class SparkMetaServiceImpl implements ITaskSyncerMetaService {
 
         BulkResponse response;
         try {
-            response = BulkApi.bulkByIds(client, sparkAppPrefix + DateUtil.getDay(0), sparkAppMap);
+            response = BulkApi.bulkByIds(client, sparkAppPrefix + DateUtil.getIndex(0), sparkAppMap);
         } catch (IOException e) {
             log.error("bulkSparkAppsErr:{}", e.getMessage());
             return;
