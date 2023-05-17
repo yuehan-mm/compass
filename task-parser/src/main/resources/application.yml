@@ -60,37 +60,44 @@ custom:
         - spark.sql.shuffle.partitions
       systemProperties:
         - sun.java.command
+    # 推测任务执行过多（app执行时间超过5分钟，且stage数量超过20）
     speculativeTaskConfig:
       disable: false
       threshold: 20
       # app duration(ms)
       duration: 300000
+    # 内存浪费（app执行时间超过5分钟，且内存浪费超过70%）
     memWasteConfig:
       disable: false
       threshold: 70
       # app duration(ms)
       duration: 300000
+    # 内存浪费（app执行时间超过5分钟，且cpu浪费超过50%）
     cpuWasteConfig:
       disable: false
       # app duration(ms)
       duration: 300000
       driverThreshold: 50
       executorThreshold: 50
+    # 作业耗时异常（job执行时间超过5分钟，（jobTime-stageTime）/jobTime > 30% ）
     jobDurationConfig:
       disable: false
       threshold: 30
       # job duration(ms)
       duration: 300000
+    # stage耗时异常（stage执行时间超过5分钟，（stageTime-taskTime）/stageTime > 30% ）
     stageDurationConfig:
       disable: false
       threshold: 30
       # stage duration(ms)
       duration: 300000
+    # task长尾（app执行时间超过5分钟，且 最大执行时间/50分位中位数 > 10% ）
     taskDurationConfig:
       disable: false
       threshold: 10
       # app duration(ms)
       duration: 300000
+    # hdfs卡顿（task执行时间超过5分钟，且hdfs文件读取速率小于10M/s）
     hdfsStuckConfig:
       disable: false
       threshold: 10
@@ -98,17 +105,20 @@ custom:
       taskSize: 10
       # task duration(ms)
       duration: 300000
+    # 全局排序异常（task执行时间超过20分钟，taskCount为1，扫描record大于5000W行）
     globalSortConfig:
       disable: false
       taskCount: 1
-      records: 50000000
+      records: 1000000
       # task duration
       duration: 1200000
+    # 大表扫描异常（app执行时间超过20分钟，扫描record大于50E行）
     largeTableScanConfig:
       disable: false
-      scanTable: 50000000000
+      scanTable: 50000000
       # app duration(ms)
       duration: 1200000
+    # OMM预警（app执行时间超过20分钟，广播行数大于500W行，广播数据的内存大于Driver/executor内存的40%）
     oomWarnConfig:
       disable: false
       oom: 40
@@ -116,6 +126,9 @@ custom:
       duration: 1200000
       broadcastRows: 5000000
       broadcastRowsOom: 30
+    # 数据倾斜配置（app执行时间超过20分钟，
+    # 最大执行时间>执行时间的50分位中位数 * 执行时间的50分位中位数对应的阈值，
+    # stage耗时/任务总耗时 < 20%
     dataSkewConfig:
       disable: false
       # app duration(ms)
