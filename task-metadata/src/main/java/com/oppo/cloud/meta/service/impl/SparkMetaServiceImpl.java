@@ -148,7 +148,7 @@ public class SparkMetaServiceImpl implements ITaskSyncerMetaService {
             Attempt attempt = info.getAttempts().get(0);
             try {
                 SparkApp sparkApp = new SparkApp(info.getId(), eventLogDirectory, attempt, shs);
-                log.info("sparkApp:{}", sparkApp);
+                log.debug("sparkApp:{}", sparkApp);
                 String id = sparkApp.getSparkHistoryServer() + "_" + sparkApp.getAppId();
                 sparkAppMap.put(id, sparkApp.getSparkAppMap());
             } catch (Exception e) {

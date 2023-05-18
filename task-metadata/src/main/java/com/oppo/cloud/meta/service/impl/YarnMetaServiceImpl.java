@@ -132,7 +132,7 @@ public class YarnMetaServiceImpl implements ITaskSyncerMetaService {
             app.setIp(ip);
             app.setClusterName(clusterName);
             yarnAppMap.put(id, app.getYarnAppMap());
-            log.info("yarnApp-->{},{},{},{}", ip, app.getId(), app.getFinishedTime(), app.getFinalStatus());
+            log.debug("yarnApp-->{},{},{},{}", ip, app.getId(), app.getFinishedTime(), app.getFinalStatus());
         }
         BulkResponse response;
         try {
