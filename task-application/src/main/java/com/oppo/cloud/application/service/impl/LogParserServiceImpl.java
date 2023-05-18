@@ -35,6 +35,7 @@ import com.oppo.cloud.model.TaskInstance;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -113,6 +114,9 @@ public class LogParserServiceImpl implements LogParserService {
      * 日志地址存储
      */
     private final static String LOG_PATH_KEY = "__log_path";
+
+    @Value("${spring.hdfs.base-path}")
+    private String HDFS_BASE_PATH;
 
     /**
      * 获取hadoop集群配置信息
@@ -425,9 +429,7 @@ public class LogParserServiceImpl implements LogParserService {
          */
         public String getLogPath() {
             List<String> paths = new ArrayList<>();
-            for (LogPathJoin logPathJoin : rule.getLogPathJoins()) {
-                paths.add(logPathJoin.getData());
-            }
+            paths.add(HDFS_BASE_PATH);
             paths.add(data.get("flow_name").toString());
             paths.add(data.get("task_name").toString());
             paths.add(convertTime(JSONObject.parseObject(JSONObject.toJSONString(data)).getString("execution_time"))
