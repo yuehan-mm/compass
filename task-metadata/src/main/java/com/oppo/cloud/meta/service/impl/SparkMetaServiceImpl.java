@@ -103,7 +103,7 @@ public class SparkMetaServiceImpl implements ITaskSyncerMetaService {
                 try {
                     pull(clusters.get(finalI));
                 } catch (Exception e) {
-                    log.error(e.getMessage());
+                    log.error("Exception: ", e);
                 }
                 return null;
             }, sparkMetaExecutor);
@@ -124,7 +124,7 @@ public class SparkMetaServiceImpl implements ITaskSyncerMetaService {
         try {
             eventLogDirectory = getEventLogDirectory(shs);
         } catch (Exception e) {
-            log.error("sparkMetaErr:eventLogDirectory:{},{}", shs, e.getMessage());
+            log.error("sparkMetaErr:eventLogDirectory:{}", shs, e);
             return;
         }
         if (StringUtils.isBlank(eventLogDirectory)) {
@@ -167,7 +167,7 @@ public class SparkMetaServiceImpl implements ITaskSyncerMetaService {
 
         for (BulkItemResponse r : responses) {
             if (r.isFailed()) {
-                log.info("failedInsertApp:{},{}", r.getId(), r.status());
+                log.error("failedInsertApp:{},{}", r.getId(), r.status());
             }
         }
 
