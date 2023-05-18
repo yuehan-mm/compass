@@ -44,7 +44,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -301,6 +300,8 @@ public class LogParserServiceImpl implements LogParserService {
          */
         private final int[] SLEEP_TIME = new int[]{20, 40, 60, 80, 100};
 
+        private static final String TMP_EXTENSION = ".tmp";
+
         /**
          * task type
          */
@@ -348,26 +349,20 @@ public class LogParserServiceImpl implements LogParserService {
                 log.error("logPath: {} does not have hadoop config", logPath);
                 return RetCode.RET_EXCEPTION;
             }
-            List<String> filePaths = null;
+            List<String> filePaths;
             try {
-                for (int i = 0; i < 10; i++) {
-                    filePaths = HDFSUtil.filesPattern(nameNodeConf, String.format("%s*", logPath));
-                    // flume文件未上传完成，有.tmp文件
-                    if (filePaths.size() != 0 && filePaths.get(filePaths.size() - 1).endsWith(".tmp")) {
-                        log.warn("tmp file retry times:{}, {}", i, filePaths.get(filePaths.size() - 1));
-                        // 等待完成
-                        TimeUnit.SECONDS.sleep(5);
-                    } else {
-                        break;
-                    }
-                }
+                filePaths = HDFSUtil.filesPattern(nameNodeConf, String.format("%s*", logPath));
             } catch (Exception e) {
-                log.error("filesPattern_error:" + e);
+                log.error("filesPattern {} error:", logPath, e);
                 return RetCode.RET_OP_NEED_RETRY;
             }
-
             if (filePaths.size() == 0) {
-                log.error("logPath: {} does not exist", logPath);
+                log.warn("logPath: {} does not exist", logPath);
+                return RetCode.RET_OP_NEED_RETRY;
+            }
+            String tmpFile = getTmpFile(filePaths);
+            if (tmpFile != null) {
+                log.warn("tmp file: {}", tmpFile);
                 return RetCode.RET_OP_NEED_RETRY;
             }
 
@@ -456,6 +451,18 @@ public class LogParserServiceImpl implements LogParserService {
          */
         public Map<String, Object> getData() {
             return this.data;
+        }
+
+        /**
+         * If it contains temporary file, need to retry and wait for completion.
+         */
+        private String getTmpFile(List<String> filePaths) {
+            for (String filePath : filePaths) {
+                if (filePath.endsWith(TMP_EXTENSION)) {
+                    return filePath;
+                }
+            }
+            return null;
         }
     }
 }
