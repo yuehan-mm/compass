@@ -82,33 +82,6 @@ public class TestCustomConfig {
     }
 
     @Test
-    public void testParseRuleLog3() {
-        Map<String, Object> m = jdbcTemplate.queryForMap("select * from t_ds_task_instance where id=284");
-        System.out.println(m);
-
-        List<String> paths = new ArrayList<>();
-        for (Rule rule : customConfig.getRules()) {
-            for (LogPathJoin logPathJoin : rule.getLogPathJoins()) {
-                if (logPathJoin.getColumn() == null || logPathJoin.getColumn().isEmpty()) {
-                    paths.add(logPathJoin.getData());
-                } else {
-                    String columnData = m.get(logPathJoin.getColumn()).toString();
-                    Pattern pattern = Pattern.compile(logPathJoin.getRegex());
-                    Matcher matcher = pattern.matcher(columnData);
-                    if (matcher.matches()) {
-                        String matchedData = matcher.group(logPathJoin.getName());
-                        paths.add(matchedData);
-                    }
-                }
-            }
-            break;
-        }
-        System.out.println(paths);
-        String path = String.join("/", paths);
-        System.out.println(path);
-    }
-
-    @Test
     public void testParseString2Map() {
         String str = "{\"age\": 24, \"name\": \"Bob\"}";
         Map<String, Object> m = JSON.parseObject(str);
