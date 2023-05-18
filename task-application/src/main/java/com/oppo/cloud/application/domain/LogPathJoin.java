@@ -27,17 +27,5 @@ public class LogPathJoin {
     /**
      * 依赖的数据列
      */
-    private String column;
-    /**
-     * 解析日志列正则
-     */
-    private String regex;
-    /**
-     * 匹配日志名称
-     */
-    private String name;
-    /**
-     * 静态数据，不需要正则匹配
-     */
-    private String data;
+    private String hdfsbasepath;
 }

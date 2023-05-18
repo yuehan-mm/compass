@@ -21,7 +21,6 @@ import com.oppo.cloud.application.config.CustomConfig;
 import com.oppo.cloud.application.config.HadoopConfig;
 import com.oppo.cloud.application.config.KafkaConfig;
 import com.oppo.cloud.application.constant.RetCode;
-import com.oppo.cloud.application.domain.LogPathJoin;
 import com.oppo.cloud.application.domain.ParseRet;
 import com.oppo.cloud.application.domain.Rule;
 import com.oppo.cloud.application.producer.MessageProducer;
@@ -425,9 +424,7 @@ public class LogParserServiceImpl implements LogParserService {
          */
         public String getLogPath() {
             List<String> paths = new ArrayList<>();
-            for (LogPathJoin logPathJoin : rule.getLogPathJoins()) {
-                paths.add(logPathJoin.getData());
-            }
+            paths.add(rule.getLogPathJoins().getHdfsbasepath());
             paths.add(data.get("flow_name").toString());
             paths.add(data.get("task_name").toString());
             paths.add(convertTime(JSONObject.parseObject(JSONObject.toJSONString(data)).getString("execution_time"))

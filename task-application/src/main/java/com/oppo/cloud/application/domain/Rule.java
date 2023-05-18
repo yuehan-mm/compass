@@ -18,8 +18,6 @@ package com.oppo.cloud.application.domain;
 
 import lombok.Data;
 
-import java.util.List;
-
 /**
  * 文本解析规则
  */
@@ -33,7 +31,7 @@ public class Rule {
     /**
      * 日志路径字段组成
      */
-    private List<LogPathJoin> logPathJoins;
+    private LogPathJoin logPathJoins;
     /**
      * 提取规则
      */
