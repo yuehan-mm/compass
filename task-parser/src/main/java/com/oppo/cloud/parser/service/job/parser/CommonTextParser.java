@@ -49,12 +49,10 @@ public abstract class CommonTextParser extends OneClickSubject {
         while (true) {
             String line;
             try {
-                log.error(readerObject.toString());
                 line = bufferedReader.readLine();
-                log.error(line);
             } catch (Exception e) {
                 log.error("Exception:", e);
-                break;
+                continue;
             }
             if (line == null) {
                 break;
@@ -62,7 +60,6 @@ public abstract class CommonTextParser extends OneClickSubject {
             headTextParser.parse(line);
         }
         if (this.readerObject.getFs() != null) {
-            log.error("close................");
             this.readerObject.getFs().close();
         }
         return headTextParser.getResults();
