@@ -60,6 +60,7 @@ public class SchedulerLogParser extends CommonTextParser implements IParser {
             try {
                 IReader reader = LogReaderFactory.create(logPath);
                 readerObjects = reader.getReaderObjects();
+                log.error(readerObjects.toString());
             } catch (Exception e) {
                 log.error("Exception:", e);
                 continue;
@@ -68,6 +69,7 @@ public class SchedulerLogParser extends CommonTextParser implements IParser {
             for (ReaderObject readerObject : readerObjects) {
                 Map<String, ParserAction> results;
                 try {
+                    log.error(readerObjects.toString());
                     results = super.parse(readerObject, actions);
                 } catch (Exception e) {
                     log.error("Exception:", e);
