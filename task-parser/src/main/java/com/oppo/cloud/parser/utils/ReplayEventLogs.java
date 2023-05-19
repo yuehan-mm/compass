@@ -75,9 +75,7 @@ public class ReplayEventLogs {
         while (true) {
             String line;
             try {
-                log.debug(readerObject.toString());
                 line = readerObject.getBufferedReader().readLine();
-                log.debug(line);
             } catch (IOException e) {
                 log.error(e.getMessage());
                 break;
