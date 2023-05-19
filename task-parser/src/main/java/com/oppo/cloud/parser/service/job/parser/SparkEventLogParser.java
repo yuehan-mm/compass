@@ -62,9 +62,12 @@ public class SparkEventLogParser extends OneClickSubject implements IParser {
             LogPath logPath = this.param.getLogPaths().get(0);
             ReaderObject readerObjects;
             try {
+                log.error("-------"+logPath.toString());
                 IReader reader = LogReaderFactory.create(logPath);
                 readerObjects = reader.getReaderObject();
+                log.error("-------"+readerObjects.toString());
             } catch (FileNotFoundException e) {
+                log.error("3333333333");
                 String path = logPath.getLogPath().substring(0, logPath.getLogPath().lastIndexOf("_"));
                 logPath.setLogPath(path);
                 try {
@@ -79,6 +82,7 @@ public class SparkEventLogParser extends OneClickSubject implements IParser {
                 updateParserProgress(ProgressState.FAILED, 0, 0);
                 return null;
             }
+            log.error("ddd"+readerObjects.toString());
             return parse(readerObjects);
         }
         return null;
