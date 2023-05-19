@@ -62,7 +62,7 @@ public class SparkEventLogParser extends OneClickSubject implements IParser {
             LogPath logPath = this.param.getLogPaths().get(0);
             ReaderObject readerObjects;
             try {
-                log.info("-------"+logPath.toString());
+                log.error("-------"+logPath.toString());
                 IReader reader = LogReaderFactory.create(logPath);
                 readerObjects = reader.getReaderObject();
                 log.error("-------"+readerObjects.toString());
