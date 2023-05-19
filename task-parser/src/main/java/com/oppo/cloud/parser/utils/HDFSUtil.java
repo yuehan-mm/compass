@@ -100,7 +100,6 @@ public class HDFSUtil {
 
     public static ReaderObject getReaderObject(NameNodeConf nameNode, String path) throws Exception {
         FileSystem fs = HDFSUtil.getFileSystem(nameNode);
-        log.error("----" + fs.hashCode());
         FSDataInputStream fsDataInputStream = fs.open(new Path(path));
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fsDataInputStream));
         ReaderObject readerObject = new ReaderObject();
