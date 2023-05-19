@@ -37,7 +37,7 @@ import java.util.*;
 public class HDFSUtil {
 
     private static final String HDFS_SCHEME = "hdfs://";
-    
+
     /**
      * get hdfs NameNode
      */
@@ -50,8 +50,10 @@ public class HDFSUtil {
         return null;
     }
 
-     private static FileSystem getFileSystem(NameNodeConf nameNodeConf) throws Exception {
+    private static FileSystem getFileSystem(NameNodeConf nameNodeConf) throws Exception {
         Configuration conf = new Configuration();
+        conf.addResource(new Path("/root/hadoop-conf/core-site.xml"));
+        conf.addResource(new Path("/root/hadoop-conf/hdfs-site.xml"));
         if (nameNodeConf.isEnableKerberos()) {
             return getAuthenticationFileSystem(nameNodeConf, conf);
         }

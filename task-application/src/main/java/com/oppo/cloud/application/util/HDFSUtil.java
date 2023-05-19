@@ -56,6 +56,8 @@ public class HDFSUtil {
      */
     private static FileSystem getFileSystem(NameNodeConf nameNodeConf) throws Exception {
         Configuration conf = new Configuration();
+        conf.addResource(new Path("/root/hadoop-conf/core-site.xml"));
+        conf.addResource(new Path("/root/hadoop-conf/hdfs-site.xml"));
         if (nameNodeConf.isEnableKerberos()) {
             return getAuthenticationFileSystem(nameNodeConf, conf);
         }
