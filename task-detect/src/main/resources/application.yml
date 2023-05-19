@@ -62,4 +62,4 @@ custom:
     alwaysFailedWarning: 10
 
   sparkUiProxy:
-    url: "http://%s:18018/history/%s"
+    url: "http://%s/history/%s"
