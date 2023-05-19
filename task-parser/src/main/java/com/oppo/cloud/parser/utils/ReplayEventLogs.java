@@ -75,9 +75,9 @@ public class ReplayEventLogs {
         while (true) {
             String line;
             try {
-                log.error(readerObject.toString());
+                log.debug(readerObject.toString());
                 line = readerObject.getBufferedReader().readLine();
-                log.error(line);
+                log.debug(line);
             } catch (IOException e) {
                 log.error(e.getMessage());
                 break;
@@ -88,7 +88,6 @@ public class ReplayEventLogs {
             parseLine(line);
         }
         if (readerObject.getFs() != null) {
-            log.error("close::::"+readerObject.toString());
             readerObject.getFs().close();
         }
         this.correlate();
