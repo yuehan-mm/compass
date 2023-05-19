@@ -70,7 +70,7 @@ public class HDFSUtil {
         UserGroupInformation.setConfiguration(conf);
         UserGroupInformation.loginUserFromKeytab(nameNodeConf.getLoginUser(), nameNodeConf.getKeytabPath());
         UserGroupInformation ugi = UserGroupInformation.getLoginUser();
-        return ugi.doAs((PrivilegedExceptionAction<FileSystem>) () -> FileSystem.get(conf));
+        return ugi.doAs((PrivilegedExceptionAction<FileSystem>) () -> FileSystem.newInstance(conf));
     }
 
     public static String[] readLines(NameNodeConf nameNode, String logPath) throws Exception {
