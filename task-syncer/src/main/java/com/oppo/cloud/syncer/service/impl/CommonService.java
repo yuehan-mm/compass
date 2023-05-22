@@ -83,7 +83,7 @@ abstract public class CommonService {
                         log.warn("query: {}, result is null!", query);
                         continue;
                     }
-                    log.info("table: {},query:{}, result: {}", mapping.getTargetTable(), query, result);
+                    log.debug("table: {},query:{}, result: {}", mapping.getTargetTable(), query, result);
                     for (String key : result.keySet()) {
                         Object v = result.get(key);
                         if (v == null) {
@@ -98,7 +98,7 @@ abstract public class CommonService {
             } else {
                 log.info("table: " + mapping.getTargetTable() + "; columnDep is null ");
             }
-            log.info("dataMapping table:{}, data: {}", mapping.getTargetTable(), data.toString());
+            log.debug("dataMapping table:{}, data: {}", mapping.getTargetTable(), data.toString());
 
             dataSave(data, mapping, action);
         }
