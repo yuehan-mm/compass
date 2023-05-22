@@ -113,7 +113,7 @@ public class TaskInstanceService extends CommonService implements ActionService 
                         JSON.toJSONString(instance),
                         action,
                         mapping.getTargetTable()));
-                log.info("push to kafka msg: " + message);
+                log.info("push to kafka. mapping:" + mapping + "\tmsg: " + message);
                 messageProducer.sendMessageSync(mapping.getWriteKafkaTopic(), message);
             } catch (Exception ex) {
                 log.error("failed to send insert data to kafka, err: " + ex.getMessage());
