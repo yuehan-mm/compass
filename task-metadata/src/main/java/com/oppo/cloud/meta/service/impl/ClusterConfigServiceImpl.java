@@ -23,20 +23,21 @@ import com.oppo.cloud.common.domain.cluster.hadoop.YarnConf;
 import com.oppo.cloud.common.domain.cluster.yarn.ClusterInfo;
 import com.oppo.cloud.common.service.RedisService;
 import com.oppo.cloud.meta.config.HadoopConfig;
-import com.oppo.cloud.meta.domain.Properties;
-import com.oppo.cloud.meta.domain.YarnConfProperties;
 import com.oppo.cloud.meta.service.IClusterConfigService;
-import com.oppo.cloud.meta.utils.MatcherUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.util.EntityUtils;
-import org.springframework.http.ResponseEntity;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -161,9 +162,9 @@ public class ClusterConfigServiceImpl implements IClusterConfigService {
      * 更新配置中jobhistoryserver hdfs路径信息
      */
     public void updateJHSConfig(List<YarnConf> list) {
-        for (YarnConf yarnClusterInfo : list) {
-            String host = yarnClusterInfo.getJobHistoryServer();
-            String hdfsPath = "hdfs://nameservice1/tmp/logs";
+        for (int i = 0; i < list.size(); i++) {
+            String host = list.get(i).getJobHistoryServer();
+            String hdfsPath = getHDFSPath(host, config.getNamenodes().get(i));
             if (StringUtils.isEmpty(hdfsPath)) {
                 log.error("get {}, hdfsPath empty", host);
                 continue;
@@ -177,45 +178,40 @@ public class ClusterConfigServiceImpl implements IClusterConfigService {
     /**
      * 获取jobhistoryserver hdfs路径信息
      */
-    public String getHDFSPath(String ip) {
+    public String getHDFSPath(String ip, NameNodeConf nameNodeConf) {
         String url = String.format(YARN_CONF, ip);
         log.info("getHDFSPath:{}", url);
-        ResponseEntity<String> responseEntity;
+        HttpClient httpClient = HttpClient.getInstance(ip, true, nameNodeConf.getLoginUser(),
+                nameNodeConf.getKeytabPath(), nameNodeConf.getKrb5Conf());
+        CloseableHttpResponse response;
         try {
-            responseEntity = restTemplate.getForEntity(url, String.class);
+            response = httpClient.get(url);
         } catch (Exception e) {
-            log.error("getHDFSPathErr:{},{}", url, e.getMessage());
+            log.error("send request fail url: " + url);
             return null;
-        }
-        if (responseEntity.getBody() == null) {
-            log.error("getHDFSPathErr:{}", url);
-            return null;
-        }
-        YarnConfProperties yarnConfProperties = null;
-        try {
-            yarnConfProperties = JSON.parseObject(responseEntity.getBody(), YarnConfProperties.class);
-        } catch (Exception e) {
-            log.error("Exception:", e);
         }
 
         String remoteDir = "";
         String defaultFS = "";
-        if (yarnConfProperties != null && yarnConfProperties.getProperties() != null) {
-            for (Properties properties : yarnConfProperties.getProperties()) {
-                String key = properties.getKey();
-                String value = properties.getValue();
-                if ("yarn.nodemanager.remote-app-log-dir".equals(key)) {
-                    log.info("yarnConfProperties key: yarn.nodemanager.remote-app-log-dir, value: {}", value);
-                    remoteDir = value;
-                }
-                if ("fs.defaultFS".equals(key)) {
-                    log.info("yarnConfProperties key: fs.defaultFS, value: {}", value);
-                    defaultFS = value;
-                }
+        org.dom4j.Document document;
+        try {
+            document = DocumentHelper.parseText(EntityUtils.toString(response.getEntity()));
+        } catch (DocumentException e) {
+            log.error("DocumentException : " + e.getMessage());
+            return null;
+        } catch (IOException e) {
+            log.error("IOException: " + e.getMessage());
+            return null;
+        }
+        Element rootElement = document.getRootElement();
+        for (Iterator i = rootElement.elementIterator(); i.hasNext(); ) {
+            Element next = (Element) i.next();
+            if (next.element("name").getData().equals("yarn.nodemanager.remote-app-log-dir")) {
+                remoteDir = String.valueOf(next.element("value").getData());
             }
-        } else {
-            remoteDir = MatcherUtil.getGroupData(responseEntity.getBody(), remoteDirPattern, "remoteDir");
-            defaultFS = MatcherUtil.getGroupData(responseEntity.getBody(), defaultFSPattern, "defaultFS");
+            if (next.element("name").getData().equals("fs.defaultFS")) {
+                defaultFS = String.valueOf(next.element("value").getData());
+            }
         }
 
         if (StringUtils.isEmpty(remoteDir)) {
