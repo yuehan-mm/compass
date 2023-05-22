@@ -29,6 +29,8 @@ import com.oppo.cloud.meta.service.IClusterConfigService;
 import com.oppo.cloud.meta.utils.MatcherUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.util.EntityUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -85,9 +87,12 @@ public class ClusterConfigServiceImpl implements IClusterConfigService {
     @Override
     public Map<String, String> getYarnClusters() {
         List<YarnConf> yarnConfList = config.getYarn();
+        List<NameNodeConf> namenodes = config.getNamenodes();
         Map<String, String> yarnClusters = new HashMap<>();
-        for (YarnConf yarnConf : yarnConfList) {
-            String activeHost = getRmActiveHost(yarnConf.getResourceManager());
+        for (int i = 0; i < yarnConfList.size(); i++) {
+            YarnConf yarnConf = yarnConfList.get(i);
+            NameNodeConf nameNodeConf = namenodes.get(i);
+            String activeHost = getRmActiveHost(yarnConf.getResourceManager(), nameNodeConf);
             if (StringUtils.isEmpty(activeHost)) {
                 continue;
             }
@@ -96,23 +101,21 @@ public class ClusterConfigServiceImpl implements IClusterConfigService {
         return yarnClusters;
     }
 
-    public String getRmActiveHost(List<String> list) {
+    public String getRmActiveHost(List<String> list, NameNodeConf nameNodeConf) {
         for (String host : list) {
             String clusterInfoUrl = String.format(YARN_CLUSTER_INFO, host);
-            ResponseEntity<String> responseEntity;
+            HttpClient httpClient = HttpClient.getInstance(host, true, nameNodeConf.getLoginUser(),
+                    nameNodeConf.getKeytabPath(), nameNodeConf.getKrb5Conf());
+            CloseableHttpResponse response ;
             try {
-                responseEntity = restTemplate.getForEntity(clusterInfoUrl, String.class);
+                response = httpClient.get(clusterInfoUrl);
             } catch (Exception e) {
                 log.error("Exception:", e);
                 continue;
             }
-            if (responseEntity.getBody() == null) {
-                log.error("get active host null:{}", clusterInfoUrl);
-                continue;
-            }
             ClusterInfo clusterInfo;
             try {
-                clusterInfo = JSON.parseObject(responseEntity.getBody(), ClusterInfo.class);
+                clusterInfo = JSON.parseObject(EntityUtils.toString(response.getEntity()), ClusterInfo.class);
             } catch (Exception e) {
                 log.error("Exception:", e);
                 continue;
@@ -160,7 +163,7 @@ public class ClusterConfigServiceImpl implements IClusterConfigService {
     public void updateJHSConfig(List<YarnConf> list) {
         for (YarnConf yarnClusterInfo : list) {
             String host = yarnClusterInfo.getJobHistoryServer();
-            String hdfsPath = getHDFSPath(host);
+            String hdfsPath = "hdfs://nameservice1/tmp/logs";
             if (StringUtils.isEmpty(hdfsPath)) {
                 log.error("get {}, hdfsPath empty", host);
                 continue;

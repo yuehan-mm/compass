@@ -169,11 +169,6 @@ public class YarnMetaServiceImpl implements ITaskSyncerMetaService {
             log.error("send request fail url: " + url);
             return null;
         }
-        int code = response.getStatusLine().getStatusCode();
-        if (code != 200) {
-            log.error("http response error for code:" + code + ",msg:" + response.getStatusLine().getReasonPhrase());
-            return null;
-        }
         YarnResponse value;
         try {
             value = objectMapper.readValue(EntityUtils.toString(response.getEntity()), YarnResponse.class);
