@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -68,6 +69,10 @@ public class ProjectService extends CommonService implements ActionService {
      */
     @Override
     public void update(RawTable rawTable, Mapping mapping) {
+        Set<String> oldKeys = rawTable.getOld().keySet();
+        if (oldKeys != null && oldKeys.size() == 1 && oldKeys.contains("last_parsed_time")) {
+            return;
+        }
         dataMapping(jdbcTemplate, rawTable, mapping, "UPDATE");
         // TODO: update other relative table
     }
