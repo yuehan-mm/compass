@@ -17,7 +17,6 @@
 package com.oppo.cloud.application.util;
 
 import com.oppo.cloud.common.domain.cluster.hadoop.NameNodeConf;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.*;
 import org.apache.hadoop.security.UserGroupInformation;
@@ -34,7 +33,6 @@ import java.util.Objects;
 /**
  * Hdfs工具类
  */
-@Slf4j
 public class HDFSUtil {
 
     private static final String HDFS_SCHEME = "hdfs://";
@@ -66,8 +64,6 @@ public class HDFSUtil {
         Configuration conf = new Configuration();
         conf.set("fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
         conf.set("fs.file.impl", org.apache.hadoop.fs.LocalFileSystem.class.getName());
-        log.error(new HDFSUtil().HDFS_CONF_CORE_SITE);
-        log.error(new HDFSUtil().HDFS_CONF_HDFS_SITE);
         conf.addResource(new Path(new HDFSUtil().HDFS_CONF_CORE_SITE));
         conf.addResource(new Path(new HDFSUtil().HDFS_CONF_HDFS_SITE));
         if (nameNodeConf.isEnableKerberos()) {

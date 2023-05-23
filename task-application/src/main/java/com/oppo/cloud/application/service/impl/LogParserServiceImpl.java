@@ -351,7 +351,6 @@ public class LogParserServiceImpl implements LogParserService {
             }
             List<String> filePaths;
             try {
-                log.error(HDFS_BASE_PATH);
                 filePaths = HDFSUtil.filesPattern(nameNodeConf, String.format("%s*", logPath));
             } catch (Exception e) {
                 log.error("filesPattern {} error:", logPath, e);
