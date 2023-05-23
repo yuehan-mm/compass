@@ -7,7 +7,7 @@ hadoop:
       password:
       port: 8020
       # scheduler platform hdfs log path keyword identification, used by task-application
-      matchPathKeys: [ "flume", "/airflow/log" ]
+      matchPathKeys: [ "flume" ]
       # kerberos
       enableKerberos: true
       # /etc/krb5.conf

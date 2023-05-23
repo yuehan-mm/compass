@@ -24,8 +24,6 @@ spring:
     database: 0
   hdfs:
     base-path: ""
-    core-site: ""
-    hdfs-site: ""
 
 custom:
   delayedTask:
