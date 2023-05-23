@@ -58,8 +58,8 @@ public class HDFSUtil {
         Configuration conf = new Configuration();
         conf.set("fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
         conf.set("fs.file.impl", org.apache.hadoop.fs.LocalFileSystem.class.getName());
-        conf.addResource(new Path("/opt/compassCompile/keberosconf/hadoop-conf/core-site.xml"));
-        conf.addResource(new Path("/opt/compassCompile/keberosconf/hadoop-conf/hdfs-site.xml"));
+        conf.addResource(new Path(nameNodeConf.getCoresite()));
+        conf.addResource(new Path(nameNodeConf.getHdfssite()));
         if (nameNodeConf.isEnableKerberos()) {
             return getAuthenticationFileSystem(nameNodeConf, conf);
         }

@@ -69,4 +69,8 @@ public class NameNodeConf {
     private String loginUser;
 
     private String keytabPath;
+
+    private String coresite;
+
+    private String hdfssite;
 }

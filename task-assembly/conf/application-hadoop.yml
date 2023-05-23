@@ -18,6 +18,10 @@ hadoop:
       loginUser: "admin"
       # /var/kerberos/krb5kdc/admin.keytab
       keytabPath: "/opt/compassCompile/keberosconf/admin.keytab"
+      # core-site.xml
+      coresite: "/opt/compassCompile/keberosconf/hadoop-conf/core-site.xml"
+      # hdfs-site.xml
+      hdfssite: "/opt/compassCompile/keberosconf/hadoop-conf/hdfs-site.xml"
 
   yarn:
     - clusterName: "bigdata"
