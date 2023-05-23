@@ -38,10 +38,10 @@ public class HDFSUtil {
     private static final String HDFS_SCHEME = "hdfs://";
 
     @Value("${spring.hdfs.core-site}")
-    private String HDFS_CONF_CORE_SITE;
+    private static String HDFS_CONF_CORE_SITE;
 
     @Value("${spring.hdfs.hdfs-site}")
-    private String HDFS_CONF_HDFS_SITE;
+    private static String HDFS_CONF_HDFS_SITE;
     /**
      * 获取Namnode, 根据配置matchPathKeys是否被包含在路径关键字中
      */
@@ -64,8 +64,8 @@ public class HDFSUtil {
         Configuration conf = new Configuration();
         conf.set("fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
         conf.set("fs.file.impl", org.apache.hadoop.fs.LocalFileSystem.class.getName());
-        conf.addResource(new Path(new HDFSUtil().HDFS_CONF_CORE_SITE));
-        conf.addResource(new Path(new HDFSUtil().HDFS_CONF_HDFS_SITE));
+        conf.addResource(new Path(HDFS_CONF_CORE_SITE));
+        conf.addResource(new Path(HDFS_CONF_HDFS_SITE));
         if (nameNodeConf.isEnableKerberos()) {
             return getAuthenticationFileSystem(nameNodeConf, conf);
         }
