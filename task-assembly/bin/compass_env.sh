@@ -62,3 +62,5 @@ export SPRING_KAFKA_CONSUMER_DETECTGROUPID="compass_test_22047328"
 
 # hdfs base path
 export SPRING_HDFS_BASEPATH="/flume/airflow_test/bigdata/bdp_jt/airflow/logs"
+export SPRING_HDFS_CORESITE="/opt/compassCompile/keberosconf/hadoop-conf/core-site.xml"
+export SPRING_HDFS_HDFSSITE="/opt/compassCompile/keberosconf/hadoop-conf/hdfs-site.xml"

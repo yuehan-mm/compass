@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.*;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -37,6 +38,12 @@ import java.util.*;
 public class HDFSUtil {
 
     private static final String HDFS_SCHEME = "hdfs://";
+
+    @Value("${spring.hdfs.core-site}")
+    private static String HDFS_CONF_CORE_SITE;
+
+    @Value("${spring.hdfs.hdfs-site}")
+    private static String HDFS_CONF_HDFS_SITE;
 
     /**
      * get hdfs NameNode
@@ -54,8 +61,8 @@ public class HDFSUtil {
         Configuration conf = new Configuration();
         conf.set("fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
         conf.set("fs.file.impl", org.apache.hadoop.fs.LocalFileSystem.class.getName());
-        conf.addResource(new Path("/opt/compassCompile/keberosconf/hadoop-conf/core-site.xml"));
-        conf.addResource(new Path("/opt/compassCompile/keberosconf/hadoop-conf/hdfs-site.xml"));
+        conf.addResource(new Path(HDFS_CONF_CORE_SITE));
+        conf.addResource(new Path(HDFS_CONF_HDFS_SITE));
         if (nameNodeConf.isEnableKerberos()) {
             return getAuthenticationFileSystem(nameNodeConf, conf);
         }

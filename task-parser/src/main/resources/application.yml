@@ -29,6 +29,9 @@ spring:
     gc-prefix: "compass-gc-log-"
     job-prefix: "compass-job-analysis-"
     task-app-prefix: "compass-task-app-"
+  hdfs:
+    core-site: ""
+    hdfs-site: ""
 
 custom:
   redisConsumer:
