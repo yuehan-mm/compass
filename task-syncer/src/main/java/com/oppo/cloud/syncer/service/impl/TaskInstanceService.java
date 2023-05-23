@@ -28,6 +28,7 @@ import com.oppo.cloud.syncer.util.DataUtil;
 import com.oppo.cloud.syncer.util.databuild.TaskInstanceBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -52,6 +53,9 @@ public class TaskInstanceService extends CommonService implements ActionService 
 
     @Autowired
     private MessageProducer messageProducer;
+
+    @Value("${datasource.writeKafkaTopic.taskinstance}")
+    private String TOPIC_TASK_INSTANCE;
 
     /**
      * 插入操作
@@ -106,15 +110,15 @@ public class TaskInstanceService extends CommonService implements ActionService 
         }
 
         // 数据写回kafka订阅
-        if (!DataUtil.isEmpty(mapping.getWriteKafkaTopic())) {
+        if (!DataUtil.isEmpty(TOPIC_TASK_INSTANCE)) {
             try {
                 String message = JSON.toJSONString(new TableMessage(
                         JSON.toJSONString(data),
                         JSON.toJSONString(instance),
                         action,
                         mapping.getTargetTable()));
-                log.info("push to kafka. mapping:" + mapping + "\tmsg: " + message);
-                messageProducer.sendMessageSync(mapping.getWriteKafkaTopic(), message);
+                log.info("push to kafka. topic:" + TOPIC_TASK_INSTANCE + "\tmsg: " + message);
+                messageProducer.sendMessageSync(TOPIC_TASK_INSTANCE, message);
             } catch (Exception ex) {
                 log.error("failed to send insert data to kafka, err: " + ex.getMessage());
             }
