@@ -56,7 +56,8 @@ public class DelayedTaskServiceImpl implements DelayedTaskService {
      */
     @Override
     public void pushDelayedQueue(DelayedTaskInfo delayedTaskInfo) {
-        redisService.zSetAdd(queue, JSON.toJSONString(delayedTaskInfo), System.currentTimeMillis() + delayedSeconds * 1000);
+        redisService.zSetAdd(queue, JSON.toJSONString(delayedTaskInfo), System.currentTimeMillis()
+                + delayedSeconds * delayedTaskInfo.getTryTimes() * 2000);
         log.info("pushDelayedQueue:{},{}", queue, JSON.toJSONString(delayedTaskInfo));
     }
 

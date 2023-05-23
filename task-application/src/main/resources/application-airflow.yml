@@ -12,7 +12,7 @@ spring:
     taskinstancetopics: "task_instance"
     consumer:
       taskappgroupid: "task_instance_group02"
-      auto-offset-reset: "earliest"
+      auto-offset-reset: "latest"
       max-poll-interval-ms: 300000
       security-protocol: ""
       sasl-mechanism: ""
@@ -31,7 +31,7 @@ custom:
     queue: "{lua}:task:application"
     processing: "{lua}:task-processing"
     delayedSeconds: 5
-    tryTimes: 20
+    tryTimes: 5
   # 从上到下串行执行解析到任务的applicationId
   rules:
     - logPathDep: # 日志依赖查询

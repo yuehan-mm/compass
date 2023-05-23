@@ -32,7 +32,7 @@ spring:
     taskinstancetopics: "task_instance"
     consumer:
       detectgroupid: "task_instance_group01"
-      auto-offset-reset: "earliest"
+      auto-offset-reset: "latest"
       max-poll-interval-ms: 300000
       security-protocol: ""
       sasl-mechanism: ""
