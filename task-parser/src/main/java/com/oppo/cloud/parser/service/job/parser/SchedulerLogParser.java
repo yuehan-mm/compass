@@ -59,6 +59,7 @@ public class SchedulerLogParser extends CommonTextParser implements IParser {
             List<ReaderObject> readerObjects;
             try {
                 IReader reader = LogReaderFactory.create(logPath);
+                log.error("aaaaaaaaaaa--"+logPath.toString());
                 readerObjects = reader.getReaderObjects();
             } catch (Exception e) {
                 log.error("Exception:", e);

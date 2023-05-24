@@ -63,6 +63,7 @@ public class HDFSUtil {
         conf.addResource(new Path(nameNodeConf.getCoresite()));
         conf.addResource(new Path(nameNodeConf.getHdfssite()));
         if (fsType.equals(FILE_SYSTEM_TYPE_OSS)) {
+            log.error("-------------------------------ssss");
             conf.set("fs.defaultFS", "oss://haier-hdop-presto");
         }
         if (nameNodeConf.isEnableKerberos()) {
