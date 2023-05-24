@@ -65,6 +65,7 @@ public class SparkEventLogParser extends OneClickSubject implements IParser {
                 IReader reader = LogReaderFactory.create(logPath);
                 readerObjects = reader.getReaderObject();
             } catch (FileNotFoundException e) {
+                log.error("----"+logPath.toString());
                 String path = logPath.getLogPath().substring(0, logPath.getLogPath().lastIndexOf("_"));
                 logPath.setLogPath(path);
                 try {

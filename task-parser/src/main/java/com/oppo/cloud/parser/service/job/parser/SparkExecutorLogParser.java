@@ -77,6 +77,7 @@ public class SparkExecutorLogParser extends CommonTextParser implements IParser 
                 IReader reader = LogReaderFactory.create(logPath);
                 readerObjects = reader.getReaderObjects();
             } catch (Exception e) {
+                log.error("----"+logPath.toString());
                 log.error("Exception:", e);
                 continue;
             }
