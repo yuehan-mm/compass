@@ -49,6 +49,9 @@ public class HDFSUtil {
                     return nameNodeConf;
                 }
             }
+            if (nameService != null && !nameService.isEmpty() && filePath.contains(nameService)) {
+                return nameNodeConf;
+            }
         }
         return null;
     }
