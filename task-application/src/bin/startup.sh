@@ -27,7 +27,7 @@ start() {
   check
 
   JAVA_OPTS="-DappName=${APP_NAME} -Djava.awt.headless=true -Djava.net.preferIPv4Stack=true -Dfile.encoding=UTF-8 -Djava.security.egd=file:/dev/./urandom"
-  JAVA_OPTS_GC="-server -XX:+UseG1GC -XX:G1HeapRegionSize=8m -verbose:GC -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${HOME_DIR}/logs/dump.hprof -Xloggc:${HOME_DIR}/logs/gc-${APP_NAME}.log"
+  JAVA_OPTS_GC="-server -XX:+UseG1GC -XX:G1HeapRegionSize=12m -verbose:GC -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${HOME_DIR}/logs/dump.hprof -Xloggc:${HOME_DIR}/logs/gc-${APP_NAME}.log"
 
   nohup java $JAVA_OPTS $JAVA_OPTS_GC -cp "${HOME_DIR}/conf":"${HOME_DIR}/lib/*" com.oppo.cloud.application.TaskApplication >/dev/null 2>&1 &
 
