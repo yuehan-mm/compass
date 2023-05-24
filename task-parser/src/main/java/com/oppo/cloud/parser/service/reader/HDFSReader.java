@@ -36,6 +36,8 @@ public class HDFSReader implements IReader {
      * 路径
      */
     private final LogPath logPath;
+
+    private final String FILE_SYSTEM_TYPE = "HDFS";
     /**
      * nameNode配置
      */
@@ -53,12 +55,12 @@ public class HDFSReader implements IReader {
 
     @Override
     public List<String> listFiles() throws Exception {
-        return HDFSUtil.listFiles(nameNode, logPath.getLogPath());
+        return HDFSUtil.listFiles(nameNode, logPath.getLogPath(), FILE_SYSTEM_TYPE);
     }
 
     @Override
     public ReaderObject getReaderObject() throws Exception {
-        return HDFSUtil.getReaderObject(nameNode, logPath.getLogPath());
+        return HDFSUtil.getReaderObject(nameNode, logPath.getLogPath(), FILE_SYSTEM_TYPE);
     }
 
     @Override
@@ -66,13 +68,13 @@ public class HDFSReader implements IReader {
         List<ReaderObject> list = new ArrayList<>();
         switch (logPath.getLogPathType()) {
             case FILE:
-                list.add(HDFSUtil.getReaderObject(nameNode, logPath.getLogPath()));
+                list.add(HDFSUtil.getReaderObject(nameNode, logPath.getLogPath(), FILE_SYSTEM_TYPE));
                 break;
             case DIRECTORY:
                 List<String> files = listFiles();
                 if (files.size() > 0) {
                     for (String path : files) {
-                        list.add(HDFSUtil.getReaderObject(nameNode, path));
+                        list.add(HDFSUtil.getReaderObject(nameNode, path, FILE_SYSTEM_TYPE));
                     }
                 }
                 break;

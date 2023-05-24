@@ -25,7 +25,7 @@ public class LogReaderFactory {
 
     private static final String HDFS = "hdfs";
     private static final String S3 = "s3";
-
+    private static final String OSS = "oss";
     /**
      * 创建读取类型
      */
@@ -33,6 +33,8 @@ public class LogReaderFactory {
         switch (logPath.getProtocol()) {
             case HDFS:
                 return new HDFSReader(logPath);
+            case OSS:
+                return new OSSReader(logPath);
             default:
                 break;
         }

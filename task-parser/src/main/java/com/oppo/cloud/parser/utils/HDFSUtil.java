@@ -37,7 +37,7 @@ import java.util.*;
 public class HDFSUtil {
 
     private static final String HDFS_SCHEME = "hdfs://";
-
+    private static final String FILE_SYSTEM_TYPE_OSS = "OSS";
     /**
      * get hdfs NameNode
      */
@@ -56,12 +56,15 @@ public class HDFSUtil {
         return null;
     }
 
-    private static FileSystem getFileSystem(NameNodeConf nameNodeConf) throws Exception {
+    private static FileSystem getFileSystem(NameNodeConf nameNodeConf, String fsType) throws Exception {
         Configuration conf = new Configuration();
         conf.set("fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
         conf.set("fs.file.impl", org.apache.hadoop.fs.LocalFileSystem.class.getName());
         conf.addResource(new Path(nameNodeConf.getCoresite()));
         conf.addResource(new Path(nameNodeConf.getHdfssite()));
+        if (fsType.equals(FILE_SYSTEM_TYPE_OSS)) {
+            conf.set("fs.defaultFS", "oss://haier-hdop-presto");
+        }
         if (nameNodeConf.isEnableKerberos()) {
             return getAuthenticationFileSystem(nameNodeConf, conf);
         }
@@ -79,10 +82,10 @@ public class HDFSUtil {
         return ugi.doAs((PrivilegedExceptionAction<FileSystem>) () -> FileSystem.newInstance(conf));
     }
 
-    public static String[] readLines(NameNodeConf nameNode, String logPath) throws Exception {
+    public static String[] readLines(NameNodeConf nameNode, String logPath, String fsType) throws Exception {
         FSDataInputStream fsDataInputStream = null;
         try {
-            FileSystem fs = HDFSUtil.getFileSystem(nameNode);
+            FileSystem fs = HDFSUtil.getFileSystem(nameNode, fsType);
             fsDataInputStream = fs.open(new Path(logPath));
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             // 64kb
@@ -104,8 +107,8 @@ public class HDFSUtil {
         }
     }
 
-    public static ReaderObject getReaderObject(NameNodeConf nameNode, String path) throws Exception {
-        FileSystem fs = HDFSUtil.getFileSystem(nameNode);
+    public static ReaderObject getReaderObject(NameNodeConf nameNode, String path, String fsType) throws Exception {
+        FileSystem fs = HDFSUtil.getFileSystem(nameNode, fsType);
         FSDataInputStream fsDataInputStream = fs.open(new Path(path));
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fsDataInputStream));
         ReaderObject readerObject = new ReaderObject();
@@ -115,8 +118,8 @@ public class HDFSUtil {
         return readerObject;
     }
 
-    public static List<String> listFiles(NameNodeConf nameNode, String path) throws Exception {
-        FileSystem fs = HDFSUtil.getFileSystem(nameNode);
+    public static List<String> listFiles(NameNodeConf nameNode, String path, String fsType) throws Exception {
+        FileSystem fs = HDFSUtil.getFileSystem(nameNode, fsType);
         RemoteIterator<LocatedFileStatus> it = fs.listFiles(new Path(path), true);
         List<String> result = new ArrayList<>();
         while (it.hasNext()) {

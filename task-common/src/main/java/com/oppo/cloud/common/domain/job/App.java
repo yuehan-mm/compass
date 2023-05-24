@@ -69,7 +69,7 @@ public class App {
         Map<String, List<LogPath>> logPathMap = new HashMap<>();
         List<LogPath> logPathList = new ArrayList<>();
         for (String schedulerLogPath : schedulerLogPathList) {
-            logPathList.add(new LogPath("hdfs", "scheduler", LogPathType.FILE, schedulerLogPath));
+            logPathList.add(new LogPath("oss", "scheduler", LogPathType.FILE, schedulerLogPath));
         }
         logPathMap.put("scheduler", logPathList);
         logInfo.setLogPathMap(logPathMap);
