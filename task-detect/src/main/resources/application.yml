@@ -39,7 +39,7 @@ spring:
       sasl-jaas-config: ""
 
 custom:
-  schedulerType: ${SCHEDULER:dolphinscheduler}
+  schedulerType: "Airflow"
   redis:
     logRecord: "{lua}:log:record"
     delayedQueue: "{lua}:delayed:task"

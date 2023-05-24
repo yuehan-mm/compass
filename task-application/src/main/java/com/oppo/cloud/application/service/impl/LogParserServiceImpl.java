@@ -357,7 +357,7 @@ public class LogParserServiceImpl implements LogParserService {
                 return RetCode.RET_OP_NEED_RETRY;
             }
             if (filePaths.size() == 0) {
-                log.warn("logPath: {} does not exist", logPath);
+                log.warn("logPath: {} does not exist，wait for retry", logPath);
                 return RetCode.RET_OP_NEED_RETRY;
             }
             String tmpFile = getTmpFile(filePaths);

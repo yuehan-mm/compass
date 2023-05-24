@@ -41,10 +41,13 @@ public class HDFSUtil {
     /**
      * get hdfs NameNode
      */
-    public static NameNodeConf getNameNode(Map<String, NameNodeConf> nameNodeMap, String path) {
-        for (String key : nameNodeMap.keySet()) {
-            if (key != null && !key.isEmpty() && path.contains(key)) {
-                return nameNodeMap.get(key);
+    public static NameNodeConf getNameNode(Map<String, NameNodeConf> nameNodeMap, String filePath) {
+        for (String nameService : nameNodeMap.keySet()) {
+            NameNodeConf nameNodeConf = nameNodeMap.get(nameService);
+            for (String pathKey : nameNodeConf.getMatchPathKeys()) {
+                if (filePath.contains(pathKey)) {
+                    return nameNodeConf;
+                }
             }
         }
         return null;
