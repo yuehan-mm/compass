@@ -35,6 +35,7 @@ import java.util.Objects;
 public class HDFSUtil {
 
     private static final String HDFS_SCHEME = "hdfs://";
+    private static final String OSS_SCHEME = "oss://";
 
     /**
      * 获取Namnode, 根据配置matchPathKeys是否被包含在路径关键字中
@@ -127,7 +128,7 @@ public class HDFSUtil {
     }
 
     private static String checkLogPath(NameNodeConf nameNode, String logPath) {
-        if (logPath.contains(HDFS_SCHEME)) {
+        if (logPath.contains(HDFS_SCHEME) || logPath.contains(OSS_SCHEME)) {
             return logPath;
         }
         return String.format("%s%s%s", HDFS_SCHEME, nameNode.getNameservices(), logPath);
