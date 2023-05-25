@@ -62,10 +62,7 @@ public class HDFSUtil {
         conf.addResource(new Path(nameNodeConf.getCoresite()));
         conf.addResource(new Path(nameNodeConf.getHdfssite()));
         conf.set("fs.defaultFS", "oss://haier-hdop-presto");
-        if (nameNodeConf.isEnableKerberos()) {
-            return getAuthenticationFileSystem(nameNodeConf, conf);
-        }
-        return FileSystem.get(conf);
+        return FileSystem.newInstance(conf);
     }
 
     private static FileSystem getAuthenticationFileSystem(NameNodeConf nameNodeConf, Configuration conf) throws Exception {
