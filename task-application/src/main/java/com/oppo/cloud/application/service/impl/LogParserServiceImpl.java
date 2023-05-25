@@ -366,6 +366,19 @@ public class LogParserServiceImpl implements LogParserService {
                 return RetCode.RET_OP_NEED_RETRY;
             }
 
+            /**
+             * TODO
+             *  fix：任务运行时间过长，调度日志过多，导致日志组合超长，无法插入task_application表
+             *  fix：任务运行时间过长，调度日志过多，解析过多无用日志文件（心跳），影响 compass 性能
+             *  bug：日志进行截取，取前20个日志文件，在有些极端情况下，前20个日志文件中不能完全匹配到 application_id
+             *  bug: 日志进行截取，取前20个日志文件，task-parser分析其他异常时可能会错过一些信息
+             */
+            if (filePaths.size() > 20) {
+                log.warn("Task: " + data.get("flow_name") + data.get("task_name") +
+                        data.get("execution_time") + "has too many scheduler logs. count: " + filePaths.size());
+                filePaths = filePaths.subList(0, 20);
+            }
+
             // 记录日志路径
             logPath = String.join(",", filePaths);
             data.put(LOG_PATH_KEY, logPath);
