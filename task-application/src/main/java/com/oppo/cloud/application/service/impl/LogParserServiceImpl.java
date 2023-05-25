@@ -374,8 +374,8 @@ public class LogParserServiceImpl implements LogParserService {
              *  bug: 日志进行截取，取前20个日志文件，task-parser分析其他异常时可能会错过一些信息
              */
             if (filePaths.size() > 20) {
-                log.warn("Task: " + data.get("flow_name") + data.get("task_name") +
-                        data.get("execution_time") + "has too many scheduler logs. count: " + filePaths.size());
+                log.warn("Task: " + data.get("flow_name") + "@" + data.get("task_name") + "@" +
+                        data.get("execution_time") + " has too many scheduler logs. count: " + filePaths.size());
                 filePaths = filePaths.subList(0, 20);
             }
 
