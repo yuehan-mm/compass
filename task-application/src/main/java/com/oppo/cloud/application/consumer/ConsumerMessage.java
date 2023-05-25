@@ -70,6 +70,7 @@ public class ConsumerMessage {
         TaskInstance taskInstance = JSON.parseObject(tableMessage.getBody(), TaskInstance.class);
         Map<String, String> rawData =
                 JSON.parseObject(tableMessage.getRawData(), new TypeReference<Map<String, String>>() {});
+        rawData.put("msg",message);
         try {
             ParseRet parseRet = logParserService.handle(taskInstance, rawData);
             // 加入延迟重试
