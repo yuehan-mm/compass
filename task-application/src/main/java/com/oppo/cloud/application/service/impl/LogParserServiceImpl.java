@@ -376,7 +376,6 @@ public class LogParserServiceImpl implements LogParserService {
 
             for (String filePath : filePaths) {
                 String[] lines = HDFSUtil.readLines(nameNodeConf, filePath);
-                log.info(filePath + " has no log content");
                 if (lines.length > 0) {
                     countFileIfHasContent += 1;
                 }
