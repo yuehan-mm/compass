@@ -62,7 +62,7 @@ public class HDFSUtil {
         conf.addResource(new Path(nameNodeConf.getCoresite()));
         conf.addResource(new Path(nameNodeConf.getHdfssite()));
         conf.set("fs.defaultFS", "oss://haier-hdop-presto");
-        return FileSystem.newInstance(conf);
+        return FileSystem.get(conf);
     }
 
     private static FileSystem getAuthenticationFileSystem(NameNodeConf nameNodeConf, Configuration conf) throws Exception {
