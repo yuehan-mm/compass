@@ -183,7 +183,7 @@ public class LogParserServiceImpl implements LogParserService {
             data = jdbcTemplate.queryForMap(sql, args);
         } catch (Exception e) {
             log.error("exception:" + e + ", sql=" + sql + ", args=" + Arrays.toString(args) + ",taskInstance="
-                    + taskInstance+",msg=" + rawData.get("msg"));
+                    + taskInstance);
             return new ParseRet(RetCode.RET_EXCEPTION, taskInstance);
         }
         // 补充其他数据依赖
