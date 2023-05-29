@@ -52,6 +52,10 @@ abstract public class CommonService {
         Map<String, String> columnMapping = mapping.getColumnMapping();
         List<Map<String, String>> datas = DataUtil.mapData(Arrays.asList(rawTable.getData()), columnMapping);
 
+        if (rawTable.getTable().equals(TaskInstanceService.TABLE_NAME)){
+            datas.get(0).put("isFinish", String.valueOf(TaskInstanceService.parseFinishAction(rawTable)));
+        }
+
         // 值映射
         DataUtil.mapColumnValue(datas, mapping.getColumnValueMapping());
 
