@@ -22,6 +22,7 @@ import org.apache.hadoop.fs.*;
 import org.apache.hadoop.security.UserGroupInformation;
 
 import java.io.ByteArrayOutputStream;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
@@ -55,14 +56,13 @@ public class HDFSUtil {
     /**
      * 获取FileSystem
      */
-    private static FileSystem getFileSystem(NameNodeConf nameNodeConf) throws Exception {
+    private static FileSystem getFileSystem(NameNodeConf nameNodeConf, String filePath) throws Exception {
         Configuration conf = new Configuration();
         conf.set("fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
         conf.set("fs.file.impl", org.apache.hadoop.fs.LocalFileSystem.class.getName());
         conf.addResource(new Path(nameNodeConf.getCoresite()));
         conf.addResource(new Path(nameNodeConf.getHdfssite()));
-        conf.set("fs.defaultFS", "oss://haier-hdop-presto");
-        return FileSystem.get(conf);
+        return FileSystem.newInstance(URI.create(filePath), conf);
     }
 
     private static FileSystem getAuthenticationFileSystem(NameNodeConf nameNodeConf, Configuration conf) throws Exception {
@@ -82,7 +82,7 @@ public class HDFSUtil {
     public static String[] readLines(NameNodeConf nameNodeConf, String filePath) throws Exception {
         FSDataInputStream fsDataInputStream = null;
         try {
-            FileSystem fs = HDFSUtil.getFileSystem(nameNodeConf);
+            FileSystem fs = HDFSUtil.getFileSystem(nameNodeConf, filePath);
             fsDataInputStream = fs.open(new Path(filePath));
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             // 64kb
@@ -110,7 +110,7 @@ public class HDFSUtil {
      */
     public static List<String> filesPattern(NameNodeConf nameNodeConf, String filePath) throws Exception {
         filePath = checkLogPath(nameNodeConf, filePath);
-        FileSystem fs = HDFSUtil.getFileSystem(nameNodeConf);
+        FileSystem fs = HDFSUtil.getFileSystem(nameNodeConf, filePath);
         FileStatus[] fileStatuses = fs.globStatus(new Path(filePath));
         List<String> result = new ArrayList<>();
         if (fileStatuses == null) {

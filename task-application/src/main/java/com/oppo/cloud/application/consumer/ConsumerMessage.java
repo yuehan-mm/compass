@@ -17,15 +17,8 @@
 package com.oppo.cloud.application.consumer;
 
 import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.TypeReference;
-import com.oppo.cloud.application.constant.RetCode;
-import com.oppo.cloud.application.domain.DelayedTaskInfo;
-import com.oppo.cloud.application.domain.ParseRet;
 import com.oppo.cloud.application.service.DelayTaskParserService;
-import com.oppo.cloud.application.service.DelayedTaskService;
-import com.oppo.cloud.application.service.LogParserService;
 import com.oppo.cloud.common.domain.syncer.TableMessage;
-import com.oppo.cloud.model.TaskInstance;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.springframework.beans.factory.annotation.Autowired;
