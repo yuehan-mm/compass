@@ -49,7 +49,7 @@ public class HttpClient {
     private static Map<String, HttpClient> httpClientMap = new HashMap<>();
 
     public static synchronized HttpClient getInstance(String ip, boolean isSecurity, String principal, String keyTabLocation, String krb5Location) {
-        HttpClient httpClient = httpClientMap.get("ip");
+        HttpClient httpClient = httpClientMap.get(ip);
         if (httpClient == null) {
             httpClient = new HttpClient(isSecurity, principal, keyTabLocation, krb5Location);
             httpClientMap.put(ip, httpClient);
