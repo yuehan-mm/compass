@@ -58,7 +58,11 @@ public class DelayTaskParserServiceImpl implements DelayTaskParserService {
   public void handle(TableMessage tableMessage) throws Exception {
     TaskInstance taskInstance = JSON.parseObject(tableMessage.getBody(), TaskInstance.class);
 
+    log.info("parse instance : {}", taskInstance);
+
     if(!taskInstance.isFinish() &&  !taskInstance.getTaskType().equals(TASK_TYPE_FLINK)) return;
+
+    log.info("add instance with queue : {}", taskInstance );
 
     taskInstanceQueue.add(tableMessage);
   }
