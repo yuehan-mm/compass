@@ -196,7 +196,7 @@ public class TaskInstance implements Serializable {
     }
 
     public void setFinish(boolean finish) {
-        finish = finish;
+        this.finish = finish;
     }
 
     public long getFinishTime() {
@@ -228,6 +228,8 @@ public class TaskInstance implements Serializable {
         sb.append(", triggerType=").append(triggerType);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateTime=").append(updateTime);
+        sb.append(", finish=").append(finish);
+        sb.append(", finishTime=").append(finishTime);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
