@@ -17,6 +17,7 @@
 package com.oppo.cloud.syncer.service.impl;
 
 import com.alibaba.fastjson2.JSON;
+import com.google.common.collect.ImmutableSet;
 import com.oppo.cloud.common.domain.syncer.TableMessage;
 import com.oppo.cloud.model.TaskInstance;
 import com.oppo.cloud.syncer.dao.TaskInstanceExtendMapper;
@@ -35,7 +36,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 任务或者job实例执行记录同步
@@ -43,6 +46,11 @@ import java.util.Map;
 @Slf4j
 @Service
 public class TaskInstanceService extends CommonService implements ActionService {
+
+    public static final String TABLE_NAME = "task_instance";
+
+
+    private static Set<String> finishStates = ImmutableSet.of("success", "failed");
 
     @Autowired
     private TaskInstanceExtendMapper taskInstanceMapper;
@@ -63,6 +71,28 @@ public class TaskInstanceService extends CommonService implements ActionService 
     @Override
     public void insert(RawTable rawTable, Mapping mapping) {
         dataMapping(jdbcTemplate, rawTable, mapping, "INSERT");
+    }
+
+
+    /***
+     * 校验是否是处于最终状态
+     * @param rawTable
+     * @return
+     */
+    public static boolean parseFinishAction(RawTable rawTable){
+
+        if (rawTable.getOptType().toUpperCase(Locale.ROOT).equals("UPDATE")){
+            if(rawTable.getOld().containsKey("state")){
+                String oldState = rawTable.getOld().get("state");
+                String newState = rawTable.getData().get("state");
+
+                if (oldState.equals("running") &&finishStates.contains(newState.toLowerCase(Locale.ROOT))){
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
