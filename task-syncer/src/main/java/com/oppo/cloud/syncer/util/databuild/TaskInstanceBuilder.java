@@ -54,6 +54,11 @@ public class TaskInstanceBuilder implements DataBuilder<TaskInstance> {
         taskInstance.setWorkerGroup(data.get("worker_group"));
         taskInstance.setCreateTime(DataUtil.parseDate(data.get("create_time")));
         taskInstance.setUpdateTime(DataUtil.parseDate(data.get("update_time")));
+        taskInstance.setFinish(Boolean.valueOf(data.get("isFinish")));
+
+        if (taskInstance.isFinish()){
+            taskInstance.setFinishTime(Long.valueOf(data.get("finishTime")));
+        }
 
         // 如果 定期执行周期时间没有，使用开始时间
         if (taskInstance.getExecutionTime() == null) {

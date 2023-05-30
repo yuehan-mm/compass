@@ -21,6 +21,7 @@ import com.alibaba.fastjson2.TypeReference;
 import com.oppo.cloud.application.constant.RetCode;
 import com.oppo.cloud.application.domain.DelayedTaskInfo;
 import com.oppo.cloud.application.domain.ParseRet;
+import com.oppo.cloud.application.service.DelayTaskParserService;
 import com.oppo.cloud.application.service.DelayedTaskService;
 import com.oppo.cloud.application.service.LogParserService;
 import com.oppo.cloud.common.domain.syncer.TableMessage;
@@ -45,17 +46,8 @@ import java.util.UUID;
 @Component
 public class ConsumerMessage {
 
-    /**
-     * 日志解析服务
-     */
     @Autowired
-    private LogParserService logParserService;
-
-    /**
-     * 任务日志延迟处理
-     */
-    @Autowired
-    private DelayedTaskService delayedTaskService;
+    private DelayTaskParserService delayTaskParserService;
 
     /**
      * 日志消费
@@ -67,19 +59,8 @@ public class ConsumerMessage {
         log.debug(String.format("%d, From partition %d: %s", consumer.hashCode(), partition, message));
 
         TableMessage tableMessage = JSON.parseObject(message, TableMessage.class);
-        TaskInstance taskInstance = JSON.parseObject(tableMessage.getBody(), TaskInstance.class);
-        Map<String, String> rawData =
-                JSON.parseObject(tableMessage.getRawData(), new TypeReference<Map<String, String>>() {});
-        try {
-            ParseRet parseRet = logParserService.handle(taskInstance, rawData);
-            // 加入延迟重试
-            if (parseRet.getRetCode() == RetCode.RET_OP_NEED_RETRY) {
-                delayedTaskService
-                        .pushDelayedQueue(new DelayedTaskInfo(UUID.randomUUID().toString(), 1, taskInstance, rawData));
-            }
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
+
+        delayTaskParserService.handle(tableMessage);
 
         consumer.commitSync();
     }

@@ -66,6 +66,9 @@ public class TaskInstance implements Serializable {
     @ApiModelProperty(value = "更新时间")
     private Date updateTime;
 
+    private boolean isFinish;
+    private long finishTime = 0;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -186,6 +189,22 @@ public class TaskInstance implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public boolean isFinish() {
+        return isFinish;
+    }
+
+    public void setFinish(boolean finish) {
+        isFinish = finish;
+    }
+
+    public long getFinishTime() {
+        return finishTime;
+    }
+
+    public void setFinishTime(long finishTime) {
+        this.finishTime = finishTime;
     }
 
     @Override
