@@ -18,6 +18,8 @@ package com.oppo.cloud.syncer.util;
 
 import com.oppo.cloud.model.User;
 import com.oppo.cloud.syncer.util.databuild.UserBuilder;
+import org.joda.time.DateTime;
+import org.joda.time.format.ISODateTimeFormat;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -29,5 +31,13 @@ public class TestDataUtil {
     public void testParseInstance() {
         User user = (User) DataUtil.parseInstance(new HashMap<>(), UserBuilder.class);
         Assertions.assertTrue(user != null);
+    }
+
+    @Test
+    public void testDataFormat(){
+        final String dateStr = "2023-05-30 10:59:46.182072".replace(" ", "T").split("\\.")[0];
+        final DateTime dateTime = ISODateTimeFormat.dateHourMinuteSecond().parseDateTime(dateStr);
+
+        System.out.println(dateTime.toString());
     }
 }

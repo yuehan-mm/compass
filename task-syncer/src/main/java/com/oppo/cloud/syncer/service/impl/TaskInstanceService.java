@@ -28,6 +28,7 @@ import com.oppo.cloud.syncer.service.ActionService;
 import com.oppo.cloud.syncer.util.DataUtil;
 import com.oppo.cloud.syncer.util.databuild.TaskInstanceBuilder;
 import lombok.extern.slf4j.Slf4j;
+import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -79,7 +80,7 @@ public class TaskInstanceService extends CommonService implements ActionService 
      * @param rawTable
      * @return
      */
-    public static boolean parseFinishAction(RawTable rawTable){
+    public static void parseFinishAction(RawTable rawTable, Map<String, String> data){
 
         if (rawTable.getOptType().toUpperCase(Locale.ROOT).equals("UPDATE")){
             if(rawTable.getOld().containsKey("state")){
@@ -87,12 +88,16 @@ public class TaskInstanceService extends CommonService implements ActionService 
                 String newState = rawTable.getData().get("state");
 
                 if (oldState.equals("running") &&finishStates.contains(newState.toLowerCase(Locale.ROOT))){
-                    return true;
+                    data.put("isFinish", String.valueOf(true));
+                    final String endStr = rawTable.getData().get("end_date").replace(" ", "T")
+                            .split("\\.")[0];
+                    data.put("finishTime", String.valueOf(ISODateTimeFormat.dateHourMinuteSecond().parseDateTime(endStr).getMillis()));
+                    return ;
                 }
             }
         }
-
-        return false;
+        data.put("isFinish", String.valueOf(false));
+        return ;
     }
 
     /**
