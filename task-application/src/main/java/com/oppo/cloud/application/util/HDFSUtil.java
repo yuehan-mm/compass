@@ -53,27 +53,34 @@ public class HDFSUtil {
         return null;
     }
 
-    /**
-     * 获取FileSystem
-     */
+//    /**
+//     * 获取FileSystem
+//     */
+//    private static FileSystem getFileSystem(NameNodeConf nameNodeConf, String filePath) throws Exception {
+//        Configuration conf = new Configuration();
+//        conf.set("fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
+//        conf.set("fs.file.impl", org.apache.hadoop.fs.LocalFileSystem.class.getName());
+//        conf.addResource(new Path(nameNodeConf.getCoresite()));
+//        conf.addResource(new Path(nameNodeConf.getHdfssite()));
+//        return FileSystem.newInstance(URI.create(filePath), conf);
+//    }
+
     private static FileSystem getFileSystem(NameNodeConf nameNodeConf, String filePath) throws Exception {
         Configuration conf = new Configuration();
-        conf.set("fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
-        conf.set("fs.file.impl", org.apache.hadoop.fs.LocalFileSystem.class.getName());
         conf.addResource(new Path(nameNodeConf.getCoresite()));
         conf.addResource(new Path(nameNodeConf.getHdfssite()));
-        return FileSystem.newInstance(URI.create(filePath), conf);
-    }
 
-    private static FileSystem getAuthenticationFileSystem(NameNodeConf nameNodeConf, Configuration conf) throws Exception {
-        conf.set("hadoop.security.authorization", "true");
-        conf.set("hadoop.security.authentication", "kerberos");
-        System.setProperty("java.security.krb5.conf", nameNodeConf.getKrb5Conf());
-        conf.set("dfs.namenode.kerberos.principal.pattern", nameNodeConf.getPrincipalPattern());
-        UserGroupInformation.setConfiguration(conf);
-        UserGroupInformation.loginUserFromKeytab(nameNodeConf.getLoginUser(), nameNodeConf.getKeytabPath());
-        UserGroupInformation ugi = UserGroupInformation.getLoginUser();
-        return ugi.doAs((PrivilegedExceptionAction<FileSystem>) () -> FileSystem.newInstance(conf));
+        if(conf.get("hadoop.security.authorization").equals("true") &&
+            conf.get("hadoop.security.authentication").equals("kerberos")){
+            System.setProperty("java.security.krb5.conf", nameNodeConf.getKrb5Conf());
+//            conf.set("dfs.namenode.kerberos.principal.pattern", nameNodeConf.getPrincipalPattern());
+            UserGroupInformation.setConfiguration(conf);
+            UserGroupInformation.loginUserFromKeytab(nameNodeConf.getLoginUser(), nameNodeConf.getKeytabPath());
+            UserGroupInformation ugi = UserGroupInformation.getLoginUser();
+            return ugi.doAs((PrivilegedExceptionAction<FileSystem>) () -> FileSystem.newInstance(URI.create(filePath), conf));
+        }else{
+            return FileSystem.newInstance(URI.create(filePath), conf);
+        }
     }
 
     /**
@@ -109,7 +116,7 @@ public class HDFSUtil {
      * 通配符获取文件列表, 带*通配
      */
     public static List<String> filesPattern(NameNodeConf nameNodeConf, String filePath) throws Exception {
-        filePath = checkLogPath(nameNodeConf, filePath);
+//        filePath = checkLogPath(nameNodeConf, filePath);
         FileSystem fs = HDFSUtil.getFileSystem(nameNodeConf, filePath);
         FileStatus[] fileStatuses = fs.globStatus(new Path(filePath));
         List<String> result = new ArrayList<>();
@@ -126,9 +133,12 @@ public class HDFSUtil {
     }
 
     private static String checkLogPath(NameNodeConf nameNode, String logPath) {
-        if (logPath.contains(HDFS_SCHEME) || logPath.contains(OSS_SCHEME)) {
-            return logPath;
-        }
-        return String.format("%s%s%s", HDFS_SCHEME, nameNode.getNameservices(), logPath);
+
+        return logPath;
+
+//        if (logPath.contains(HDFS_SCHEME) || logPath.contains(OSS_SCHEME)) {
+//            return logPath;
+//        }
+//        return String.format("%s%s%s", HDFS_SCHEME, nameNode.getNameservices(), logPath);
     }
 }

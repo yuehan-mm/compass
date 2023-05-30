@@ -5,7 +5,7 @@ spring:
   application:
     name: task-application
   profiles:
-    active: dolphinscheduler,hadoop
+    active: dolphinscheduler,${APPMODE}hadoop
 
 mybatis:
   mapper-locations:
