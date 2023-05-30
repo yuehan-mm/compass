@@ -39,6 +39,7 @@ public class DelayTaskParserServiceImpl implements DelayTaskParserService {
 
   private static final long DELAY_TIME = 5 * 60 * 1000;
   private static final int CONTAINER_SIZE = 2000;
+  private static final String TASK_TYPE_FLINK = "FLINK";
 
   private Queue<TableMessage> taskInstanceQueue = new LinkedBlockingQueue<>(CONTAINER_SIZE);
   private ExecutorService workExecutor = Executors.newSingleThreadExecutor();
@@ -57,7 +58,7 @@ public class DelayTaskParserServiceImpl implements DelayTaskParserService {
   public void handle(TableMessage tableMessage) throws Exception {
     TaskInstance taskInstance = JSON.parseObject(tableMessage.getBody(), TaskInstance.class);
 
-    if(!taskInstance.isFinish()) return;
+    if(!taskInstance.isFinish() &&  !taskInstance.getTaskType().equals(TASK_TYPE_FLINK)) return;
 
     taskInstanceQueue.add(tableMessage);
   }
