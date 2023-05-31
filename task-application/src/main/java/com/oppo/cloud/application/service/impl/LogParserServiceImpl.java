@@ -21,11 +21,13 @@ import com.oppo.cloud.application.config.CustomConfig;
 import com.oppo.cloud.application.config.HadoopConfig;
 import com.oppo.cloud.application.config.KafkaConfig;
 import com.oppo.cloud.application.constant.RetCode;
+import com.oppo.cloud.application.constant.RetryException;
 import com.oppo.cloud.application.domain.LogPathJoin;
 import com.oppo.cloud.application.domain.ParseRet;
 import com.oppo.cloud.application.domain.Rule;
 import com.oppo.cloud.application.producer.MessageProducer;
 import com.oppo.cloud.application.service.LogParserService;
+import com.oppo.cloud.application.util.HDFSReaderCallback;
 import com.oppo.cloud.application.util.HDFSUtil;
 import com.oppo.cloud.application.util.StringUtil;
 import com.oppo.cloud.common.domain.cluster.hadoop.NameNodeConf;
@@ -144,106 +146,104 @@ public class LogParserServiceImpl implements LogParserService {
 
     /**
      * filter task instance without matching rule.
-     */
-    public boolean skipTaskInstance(TaskInstance taskInstance) {
-        // 实例状态为空或者非成功、失败状态
-        if (StringUtils.isBlank(taskInstance.getTaskState())) {
-            return true;
-        }
-        if (taskInstance.getTaskState().equals(TASK_STATE_OTHER)) {
-            if (StringUtils.isBlank(taskInstance.getTaskType())
-                    || !taskInstance.getTaskType().equals(TASK_TYPE_FLINK)) {
-                return true;
-            }
-        }
-        return false;
-    }
+//     */
+//    public boolean skipTaskInstance(TaskInstance taskInstance) {
+//        // 实例状态为空或者非成功、失败状态
+//        if (StringUtils.isBlank(taskInstance.getTaskState())) {
+//            return true;
+//        }
+//        if (taskInstance.getTaskState().equals(TASK_STATE_OTHER)) {
+//            if (StringUtils.isBlank(taskInstance.getTaskType())
+//                    || !taskInstance.getTaskType().equals(TASK_TYPE_FLINK)) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
     /**
      * 任务处理
      */
     @Override
-    public ParseRet handle(TaskInstance taskInstance, Map<String, String> rawData) throws Exception {
+    public void handle(TaskInstance taskInstance, Map<String, String> rawData) throws Exception {
 //        if (skipTaskInstance(taskInstance)) {
 //            return new ParseRet(RetCode.RET_SKIP, null);
 //        }
         // 获取完整的数据
-        Map<String, Object> data;
-        String sql = null;
-        Object[] args = null;
-        try {
-            if (taskInstance.getId() != null && taskInstance.getId() != 0) {
-                sql = "SELECT * FROM task_instance WHERE id = ?";
-                args = new Object[]{taskInstance.getId()};
-            } else {
-                sql = "SELECT * FROM task_instance WHERE flow_name = ? and task_name = ? and execution_time = ?";
-                args = new Object[]{taskInstance.getFlowName(), taskInstance.getTaskName(),
-                        taskInstance.getExecutionTime()};
-            }
-            data = jdbcTemplate.queryForMap(sql, args);
-        } catch (Exception e) {
-            log.error("exception:" + e + ", sql=" + sql + ", args=" + Arrays.toString(args) + ",taskInstance="
-                    + taskInstance);
-            return new ParseRet(RetCode.RET_EXCEPTION, taskInstance);
-        }
-        // 补充其他数据依赖
-        if (rawData != null) {
-            for (Map.Entry<String, String> map : rawData.entrySet()) {
-                if (!data.containsKey(map.getKey())) {
-                    data.put(map.getKey(), map.getValue());
-                }
-            }
-        }
-        // 获取task instance全部信息
-        taskInstance = new JSONObject(data).toJavaObject(TaskInstance.class);
+//        Map<String, Object> data;
+//        String sql = null;
+//        Object[] args = null;
+//        try {
+//            if (taskInstance.getId() != null && taskInstance.getId() != 0) {
+//                sql = "SELECT * FROM task_instance WHERE id = ?";
+//                args = new Object[]{taskInstance.getId()};
+//            } else {
+//                sql = "SELECT * FROM task_instance WHERE flow_name = ? and task_name = ? and execution_time = ?";
+//                args = new Object[]{taskInstance.getFlowName(), taskInstance.getTaskName(),
+//                        taskInstance.getExecutionTime()};
+//            }
+//            data = jdbcTemplate.queryForMap(sql, args);
+//        } catch (Exception e) {
+//            log.error("exception:" + e + ", sql=" + sql + ", args=" + Arrays.toString(args) + ",taskInstance="
+//                    + taskInstance);
+//            return new ParseRet(RetCode.RET_EXCEPTION, taskInstance);
+//        }
+//        // 补充其他数据依赖
+//        if (rawData != null) {
+//            for (Map.Entry<String, String> map : rawData.entrySet()) {
+//                if (!data.containsKey(map.getKey())) {
+//                    data.put(map.getKey(), map.getValue());
+//                }
+//            }
+//        }
+//        // 获取task instance全部信息
+//        taskInstance = new JSONObject(data).toJavaObject(TaskInstance.class);
+//
+//        int count = 0;
+//        List<String> logPathList = new ArrayList<>();
+//        ParseRet parseRet = new ParseRet(RetCode.RET_SKIP, null);
 
-        int count = 0;
-        List<String> logPathList = new ArrayList<>();
-        ParseRet parseRet = new ParseRet(RetCode.RET_SKIP, null);
+        ApplicationMessage applicationMessage = new ApplicationMessage();
 
         for (Rule rule : customConfig.getRules()) {
-            LogParser logParser = new LogParser(data, rule, count, taskInstance.getTaskType());
-            try {
-                RetCode retCode = logParser.extract();
-                parseRet = new ParseRet(retCode, taskInstance);
-                data = logParser.getData();
-                logPathList.add((String) data.get(LOG_PATH_KEY));
-                if (retCode != RetCode.RET_OK) {
-                    break;
-                }
-                count++; // 计数
-            } catch (Exception e) {
-                log.error("parseError:", e);
-                parseRet = new ParseRet(RetCode.RET_EXCEPTION, taskInstance);
-                break;
-            }
+            LogParser logParser = new LogParser(taskInstance, rule, applicationMessage);
+            logParser.extract();
         }
 
-        log.debug("parseRet==>" + parseRet);
-        // 非成功解析的返回
-        if (parseRet.getRetCode() != RetCode.RET_OK && parseRet.getRetCode() != RetCode.RET_DATA_NOT_EXIST) {
-            return parseRet;
-        }
 
-        String logPath = String.join(",", logPathList);
+//            try {
+//                RetCode retCode = logParser.extract();
+//                parseRet = new ParseRet(retCode, taskInstance);
+//                data = logParser.getData();
+//                logPathList.add((String) data.get(LOG_PATH_KEY));
+//                if (retCode != RetCode.RET_OK) {
+//                    break;
+//                }
+//                count++; // 计数
+//            } catch (Exception e) {
+//                log.error("parseError:", e);
+//                parseRet = new ParseRet(RetCode.RET_EXCEPTION, taskInstance);
+//                break;
+//            }
+//        }
+
+//        log.debug("parseRet==>" + parseRet);
+//        // 非成功解析的返回
+//        if (parseRet.getRetCode() != RetCode.RET_OK && parseRet.getRetCode() != RetCode.RET_DATA_NOT_EXIST) {
+//            return parseRet;
+//        }
+
+        String logPath = String.join(",", applicationMessage.getLogPaths());
         // 保存 applicationId
-        Object applicationId = data.get(APPLICATION_ID);
-        if (applicationId instanceof List) {
-            // 去重 applicationId
-            Set<String> setId = new HashSet<>();
-            for (Object appId : (List) applicationId) {
-                if (setId.add((String) appId)) {
-                    addTaskApplication((String) appId, taskInstance, logPath);
-                }
-            }
-        } else {
-            addTaskApplication((String) applicationId, taskInstance, logPath);
+        Set<String> applicationIds = applicationMessage.getApplicationIds();
+
+        for (String appId :  applicationIds) {
+            addTaskApplication((String) appId, taskInstance, logPath);
         }
+
         log.info("project: {}, process:{}, task:{}, execute_time: {}, parse applicationId done!",
                 taskInstance.getProjectName(), taskInstance.getFlowName(), taskInstance.getTaskName(),
                 taskInstance.getExecutionTime());
-        parseRet.setRetCode(RetCode.RET_OK);
-        return parseRet;
     }
 
     /**
@@ -284,16 +284,19 @@ public class LogParserServiceImpl implements LogParserService {
         /**
          * 中间数据存储
          */
-        private Map<String, Object> data;
+        private TaskInstance taskInstance;
+        private ApplicationMessage applicationMessage;
+
         /**
          * 日志解析规则
          */
         private Rule rule;
 
-        /**
-         * 解析次序
-         */
-        private final int index;
+//        /**
+//         * 解析次序
+//         */
+//        private final int index;
+
 
         /**
          * 读取hadoop文件延迟时间
@@ -307,63 +310,74 @@ public class LogParserServiceImpl implements LogParserService {
          */
         private String taskType = "";
 
-        public LogParser(Map<String, Object> data, Rule rule, int index, String taskType) {
-            this.data = data;
+        public LogParser(TaskInstance taskInstance, Rule rule, ApplicationMessage applicationMessage) {
+            this.taskInstance = taskInstance;
             this.rule = rule;
-            this.index = index;
-
-            if (taskType != null) {
-                this.taskType = taskType;
-            }
+            this.applicationMessage =applicationMessage;
+//            this.data = data;
+//            this.rule = rule;
+//            this.index = index;
+//
+//            if (taskType != null) {
+//                this.taskType = taskType;
+//            }
 
         }
 
         /**
          * 日志提取
          */
-        public RetCode extract() throws Exception {
-            if (!StringUtils.isBlank(rule.getLogPathDep().getQuery())) {
-                String sql = StringUtil.replaceParams(rule.getLogPathDep().getQuery(), data);
-                log.info("extract SQL:{}, data:{}", sql, data);
-                Map<String, Object> depData = null;
-                try {
-                    depData = jdbcTemplate.queryForMap(sql);
-                } catch (Exception e) {
-                    log.error(e.getMessage());
-                    return RetCode.RET_EXCEPTION;
-                }
+        public void extract() throws Exception {
+//            if (!StringUtils.isBlank(rule.getLogPathDep().getQuery())) {
+//                String sql = StringUtil.replaceParams(rule.getLogPathDep().getQuery(), data);
+//                log.info("extract SQL:{}, data:{}", sql, data);
+//                Map<String, Object> depData = null;
+//                try {
+//                    depData = jdbcTemplate.queryForMap(sql);
+//                } catch (Exception e) {
+//                    log.error(e.getMessage());
+//                    return RetCode.RET_EXCEPTION;
+//                }
+//
+//                for (String key : depData.keySet()) {
+//                    data.put(key, depData.get(key));
+//                }
+//            }
 
-                for (String key : depData.keySet()) {
-                    data.put(key, depData.get(key));
-                }
-            }
-
+            // 1. 拿到日志路径
             String logPath = this.getLogPath();
+
             if (StringUtils.isBlank(logPath)) {
-                return RetCode.RET_DATA_NOT_EXIST;
+                throw new IllegalArgumentException();
             }
 
+            // 2. 拿到文件系统对应认证信息
             log.info("logPath:{}", logPath);
             NameNodeConf nameNodeConf = HDFSUtil.getNameNode(getNameNodeMap(), logPath);
+
             if (nameNodeConf == null) {
-                log.error("logPath: {} does not have hadoop config", logPath);
-                return RetCode.RET_EXCEPTION;
+                throw new IllegalArgumentException("logPath: " + logPath + "{} does not have hadoop config");
             }
+
+            // 3. 扫描文件
             List<String> filePaths;
+
             try {
                 filePaths = HDFSUtil.filesPattern(nameNodeConf, String.format("%s*", logPath));
             } catch (Exception e) {
-                log.error("filesPattern {} error:", logPath, e);
-                return RetCode.RET_OP_NEED_RETRY;
+                throw new RetryException("filesPattern " + logPath + " error: ", e);
             }
+
+            // 4. 判断有没有扫描到
             if (filePaths.size() == 0) {
-                log.warn("logPath: {} does not exist，wait for retry", logPath);
-                return RetCode.RET_OP_NEED_RETRY;
+                // 可能没来得及上传
+                throw new RetryException("logPath: " + logPath + " does not exist，wait for retry");
             }
+
+            // 5. 判断文件有没有处于正在写入状态的
             String tmpFile = getTmpFile(filePaths);
             if (tmpFile != null) {
-                log.warn("tmp file: {}", tmpFile);
-                return RetCode.RET_OP_NEED_RETRY;
+                throw new RetryException("logPath is not reday: {}" + logPath);
             }
 
             /**
@@ -374,62 +388,85 @@ public class LogParserServiceImpl implements LogParserService {
              *  bug: 日志进行截取，取前20个日志文件，task-parser分析其他异常时可能会错过一些信息
              */
             if (filePaths.size() > 20) {
-                log.warn("Task: " + data.get("flow_name") + "@" + data.get("task_name") + "@" +
-                        data.get("execution_time") + " has too many scheduler logs. count: " + filePaths.size());
+                log.warn("Task: "
+                        + taskInstance.getFlowName()
+                        + "@"
+                        + taskInstance.getTaskName()
+                        + "@"
+                        + taskInstance.getExecutionTime().toString()
+                        + " has too many scheduler logs. count: "
+                        + filePaths.size());
                 filePaths = filePaths.subList(0, 20);
             }
 
-            // 记录日志路径
-            logPath = String.join(",", filePaths);
-            data.put(LOG_PATH_KEY, logPath);
+            filePaths.stream().forEach(path -> applicationMessage.addLogPath(path));
 
-            boolean hasApplicationIds = false;
-            int countFileIfHasContent = 0;
+            // 记录日志路径
+//            logPath = String.join(",", filePaths);
+//            data.put(LOG_PATH_KEY, logPath);
+
+
+//            int countFileIfHasContent = 0;
             Pattern pattern = Pattern.compile(rule.getExtractLog().getRegex());
 
             for (String filePath : filePaths) {
-                String[] lines = HDFSUtil.readLines(nameNodeConf, filePath);
-                if (lines.length > 0) {
-                    countFileIfHasContent += 1;
-                }
-                // 提取关键字
-                for (String line : lines) {
-                    Matcher matcher = pattern.matcher(line);
-                    if (matcher.matches()) {
-                        String matchVal = matcher.group(rule.getExtractLog().getName());
-
-                        if (this.data.get(rule.getExtractLog().getName()) != null) { // 值已经存在， 原来值变为列表类型
-                            Object val = this.data.get(rule.getExtractLog().getName());
-                            // 如果是applicationId，可能有多个
-                            if (val instanceof List) {
-                                ((List) val).add(matchVal);
-                            } else {
-                                List l = new ArrayList<Object>();
-                                l.add(val);
-                                l.add(matchVal);
-                                val = l;
-                            }
-                            this.data.put(rule.getExtractLog().getName(), val);
-                        } else {
-                            this.data.put(rule.getExtractLog().getName(), matchVal);
+                HDFSUtil.readLines(nameNodeConf, filePath, new HDFSReaderCallback() {
+                    @Override
+                    public void call(String strLine) {
+                        Matcher matcher = pattern.matcher(strLine);
+                        if (matcher.matches()) {
+                            String appId = matcher.group(rule.getExtractLog().getName());
+                            LogParser.this.applicationMessage.addApplicationId(appId);
                         }
-                        hasApplicationIds = true;
                     }
-                }
+                });
             }
-
-            if (hasApplicationIds) {
-                return RetCode.RET_OK;
-            }
+        }
+//
+//                if (lines.length > 0) {
+//                    countFileIfHasContent += 1;
+//                }
+//                // 提取关键字
+//                for (String line : lines) {
+//                    Matcher matcher = pattern.matcher(line);
+//                    if (matcher.matches()) {
+//                        String matchVal = matcher.group(rule.getExtractLog().getName());
+//                        applicationIds.add(matchVal);
+////
+////                        if (this.data.get(rule.getExtractLog().getName()) != null) { // 值已经存在， 原来值变为列表类型
+////                            Object val = this.data.get(rule.getExtractLog().getName());
+////                            // 如果是applicationId，可能有多个
+////                            if (val instanceof List) {
+////                                ((List) val).add(matchVal);
+////                            } else {
+////                                List l = new ArrayList<Object>();
+////                                l.add(val);
+////                                l.add(matchVal);
+////                                val = l;
+////                            }
+////                            this.data.put(rule.getExtractLog().getName(), val);
+////                        } else {
+////                            this.data.put(rule.getExtractLog().getName(), matchVal);
+////                        }
+////                        hasApplicationIds = true;
+//                    }
+//                }
+//            }
+//
+//            this.data.put(APPLICATION_ID, applicationIds);
+//
+//            if (applicationIds.size() > 0) {
+//                return RetCode.RET_OK;
+//            }
 
             // 可能没有日志
-            if (taskType.equals(TASK_TYPE_FLINK)) {
-                log.info("filePaths Count=" + filePaths.size() + ", hasContentCount=" + countFileIfHasContent);
-                return RetCode.RET_OP_NEED_RETRY;
-            }
-
-            return RetCode.RET_DATA_NOT_EXIST;
-        }
+//            if (taskType.equals(TASK_TYPE_FLINK)) {
+//                log.info("filePaths Count=" + filePaths.size() + ", hasContentCount=" + countFileIfHasContent);
+//                return RetCode.RET_OP_NEED_RETRY;
+//            }
+//
+//            return RetCode.RET_DATA_NOT_EXIST;
+//        }
 
         /**
          * 获取日志路径
@@ -437,33 +474,32 @@ public class LogParserServiceImpl implements LogParserService {
         public String getLogPath() {
             List<String> paths = new ArrayList<>();
             paths.add(HDFS_BASE_PATH);
-            paths.add(data.get("flow_name").toString());
-            paths.add(data.get("task_name").toString());
-            paths.add(convertTime(JSONObject.parseObject(JSONObject.toJSONString(data)).getString("execution_time"))
+            paths.add(this.taskInstance.getFlowName());
+            paths.add(this.taskInstance.getTaskName());
+            paths.add(convertTime(this.taskInstance.getExecutionTime())
                     .replace(":", "_")
-                    .replace("+", "_") + "-" + data.get("retry_times"));
+                    .replace("+", "_")
+                    + "-"
+                    + this.taskInstance.getRetryTimes()
+            );
             return String.join("/", paths);
         }
 
-        private String convertTime(String dateStr) {
+        private String convertTime(Date date) {
             String res = "";
-            try {
-                DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                DateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd'T'HH_mm_ssXXX");
-                sdf2.setTimeZone(TimeZone.getTimeZone("UTC"));
-                res = sdf2.format(new Date(sdf.parse(dateStr).getTime())).replaceAll("Z", "_00_00");
-            } catch (ParseException e) {
-                log.error("Time Parse Exception: " + dateStr);
-            }
+            DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            DateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd'T'HH_mm_ssXXX");
+            sdf2.setTimeZone(TimeZone.getTimeZone("UTC"));
+            res = sdf2.format(date).replaceAll("Z", "_00_00");
             return res;
         }
 
         /**
          * 获取数据
          */
-        public Map<String, Object> getData() {
-            return this.data;
-        }
+//        public Map<String, Object> getData() {
+//            return this.data;
+//        }
 
         /**
          * If it contains temporary file, need to retry and wait for completion.
@@ -475,6 +511,32 @@ public class LogParserServiceImpl implements LogParserService {
                 }
             }
             return null;
+        }
+    }
+
+    class ApplicationMessage{
+
+        private Set<String> applicationIds = new HashSet<String>();
+        private Set<String> logPaths = new HashSet<String>();
+
+        public ApplicationMessage(){
+
+        }
+
+        public void addApplicationId(String appId){
+            this.applicationIds.add(appId);
+        }
+
+        public void addLogPath(String logPath){
+            this.logPaths.add(logPath);
+        }
+
+        public Set<String> getApplicationIds() {
+            return applicationIds;
+        }
+
+        public Set<String> getLogPaths() {
+            return logPaths;
         }
     }
 }

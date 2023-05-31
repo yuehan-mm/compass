@@ -17,12 +17,15 @@
 package com.oppo.cloud.application.util;
 
 import com.oppo.cloud.common.domain.cluster.hadoop.NameNodeConf;
+import com.sun.jna.Callback;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.*;
 import org.apache.hadoop.security.UserGroupInformation;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.security.PrivilegedExceptionAction;
@@ -52,17 +55,6 @@ public class HDFSUtil {
         return null;
     }
 
-//    /**
-//     * 获取FileSystem
-//     */
-//    private static FileSystem getFileSystem(NameNodeConf nameNodeConf, String filePath) throws Exception {
-//        Configuration conf = new Configuration();
-//        conf.set("fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
-//        conf.set("fs.file.impl", org.apache.hadoop.fs.LocalFileSystem.class.getName());
-//        conf.addResource(new Path(nameNodeConf.getCoresite()));
-//        conf.addResource(new Path(nameNodeConf.getHdfssite()));
-//        return FileSystem.newInstance(URI.create(filePath), conf);
-//    }
 
     private static FileSystem getFileSystem(NameNodeConf nameNodeConf, String filePath) throws Exception {
         Configuration conf = new Configuration();
@@ -74,8 +66,6 @@ public class HDFSUtil {
             System.setProperty("java.security.krb5.conf", nameNodeConf.getKrb5Conf());
 //            conf.set("dfs.namenode.kerberos.principal.pattern", nameNodeConf.getPrincipalPattern());
             UserGroupInformation.setConfiguration(conf);
-            log.info("hadoop login user : {}" , nameNodeConf.getLoginUser());
-            log.info("hadoop user keytable : {}", nameNodeConf.getKeytabPath());
             UserGroupInformation.loginUserFromKeytab(nameNodeConf.getLoginUser(), nameNodeConf.getKeytabPath());
             UserGroupInformation ugi = UserGroupInformation.getLoginUser();
             return ugi.doAs((PrivilegedExceptionAction<FileSystem>) () -> FileSystem.newInstance(URI.create(filePath), conf));
@@ -87,23 +77,30 @@ public class HDFSUtil {
     /**
      * 读取文件，返回日志内容
      */
-    public static String[] readLines(NameNodeConf nameNodeConf, String filePath) throws Exception {
+    public static void readLines(NameNodeConf nameNodeConf, String filePath, HDFSReaderCallback callback) throws Exception {
         FSDataInputStream fsDataInputStream = null;
         try {
             FileSystem fs = HDFSUtil.getFileSystem(nameNodeConf, filePath);
             fsDataInputStream = fs.open(new Path(filePath));
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            // 64kb
-            byte[] buffer = new byte[65536];
-            int byteRead;
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fsDataInputStream));
 
-            while ((byteRead = fsDataInputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, byteRead);
+
+//            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+            for(String strLine = reader.readLine(); strLine != null; strLine = reader.readLine()){
+                callback.call(strLine);
             }
-
-            byte[] bytes = outputStream.toByteArray();
-            String datas = new String(bytes, StandardCharsets.UTF_8);
-            return datas.split("\n");
+//            // 64kb
+//            byte[] buffer = new byte[65536];
+//            int byteRead;
+//
+//            while ((byteRead = fsDataInputStream.read(buffer)) != -1) {
+//                outputStream.write(buffer, 0, byteRead);
+//            }
+//
+//            byte[] bytes = outputStream.toByteArray();
+//            String datas = new String(bytes, StandardCharsets.UTF_8);
+//            return datas.split("\n");
         } catch (Exception e) {
             throw new Exception(String.format("failed to read file: %s, err: %s", filePath, e.getMessage()));
         } finally {
