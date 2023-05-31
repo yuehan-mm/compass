@@ -16,6 +16,7 @@
 
 package com.oppo.cloud.application.service.impl;
 
+import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.oppo.cloud.application.config.CustomConfig;
 import com.oppo.cloud.application.config.HadoopConfig;
@@ -67,6 +68,10 @@ public class LogParserServiceImpl implements LogParserService {
 
     @Autowired
     private KafkaConfig kafkaConfig;
+
+    // SPRING_KAFKA_TASKINSTANCEAPPLICATION_TOPICS
+    @Value("${spring.kafka.taskinstanceapplicationtopics}")
+    private String TASKINSTANCEAPPLICATIONTOPICS;
 
     @Autowired
     private MessageProducer messageProducer;
@@ -238,7 +243,11 @@ public class LogParserServiceImpl implements LogParserService {
         Set<String> applicationIds = applicationMessage.getApplicationIds();
 
         for (String appId :  applicationIds) {
-            addTaskApplication((String) appId, taskInstance, logPath);
+            addTaskApplication(appId, taskInstance, logPath);
+        }
+
+        if(applicationIds.size() > 0){
+            messageProducer.sendMessageSync(TASKINSTANCEAPPLICATIONTOPICS, JSON.toJSONString(taskInstance));
         }
 
         log.info("project: {}, process:{}, task:{}, execute_time: {}, parse applicationId done!",
@@ -410,16 +419,18 @@ public class LogParserServiceImpl implements LogParserService {
             Pattern pattern = Pattern.compile(rule.getExtractLog().getRegex());
 
             for (String filePath : filePaths) {
-                HDFSUtil.readLines(nameNodeConf, filePath, new HDFSReaderCallback() {
-                    @Override
-                    public void call(String strLine) {
+                try{
+                    HDFSUtil.readLines(nameNodeConf, filePath, (String strLine) -> {
                         Matcher matcher = pattern.matcher(strLine);
                         if (matcher.matches()) {
                             String appId = matcher.group(rule.getExtractLog().getName());
                             LogParser.this.applicationMessage.addApplicationId(appId);
                         }
-                    }
-                });
+                    });
+                }catch (Exception e){
+                    throw new RetryException(e);
+                }
+
             }
         }
 //

@@ -69,20 +69,20 @@ public class DetectedTask {
     /**
      * 日志消费
      */
-    @KafkaListener(topics = "${spring.kafka.taskinstancetopics}", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "${spring.kafka.taskinstanceapplicationtopics}", containerFactory = "kafkaListenerContainerFactory")
     public void receive(@Payload String message, @Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partition,
                         @Header(KafkaHeaders.RECEIVED_TOPIC) String topic, Consumer consumer,
                         Acknowledgment ack) throws Exception {
         try {
             // 过滤非最终状态任务数据
-            if (preFilter(message)) {
+//            if (preFilter(message)) {
                 log.info("message:{}", message);
-                TableMessage tableMessage = JSON.parseObject(message, TableMessage.class);
-                TaskInstance taskInstance = JSON.parseObject(tableMessage.getBody(), TaskInstance.class);
+                TaskInstance taskInstance = JSON.parseObject(message, TaskInstance.class);
+//                TaskInstance taskInstance = JSON.parseObject(tableMessage.getBody(), TaskInstance.class);
                 if (judgeTaskFinished(taskInstance)) {
                     detectExecutorPool.execute(() -> detectTask(taskInstance));
                 }
-            }
+//            }
         } catch (Exception e) {
             log.error(e.getMessage());
         }
