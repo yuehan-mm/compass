@@ -17,6 +17,7 @@
 package com.oppo.cloud.application.util;
 
 import com.oppo.cloud.common.domain.cluster.hadoop.NameNodeConf;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.*;
 import org.apache.hadoop.security.UserGroupInformation;
@@ -33,10 +34,8 @@ import java.util.Objects;
 /**
  * Hdfs工具类
  */
+@Slf4j
 public class HDFSUtil {
-
-    private static final String HDFS_SCHEME = "hdfs://";
-    private static final String OSS_SCHEME = "oss://";
 
     /**
      * 获取Namnode, 根据配置matchPathKeys是否被包含在路径关键字中
@@ -75,6 +74,8 @@ public class HDFSUtil {
             System.setProperty("java.security.krb5.conf", nameNodeConf.getKrb5Conf());
 //            conf.set("dfs.namenode.kerberos.principal.pattern", nameNodeConf.getPrincipalPattern());
             UserGroupInformation.setConfiguration(conf);
+            log.info("hadoop login user : {}" , nameNodeConf.getLoginUser());
+            log.info("hadoop user keytable : {}", nameNodeConf.getKeytabPath());
             UserGroupInformation.loginUserFromKeytab(nameNodeConf.getLoginUser(), nameNodeConf.getKeytabPath());
             UserGroupInformation ugi = UserGroupInformation.getLoginUser();
             return ugi.doAs((PrivilegedExceptionAction<FileSystem>) () -> FileSystem.newInstance(URI.create(filePath), conf));
