@@ -3,6 +3,7 @@ package com.oppo.cloud.application.service.impl;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
 import com.oppo.cloud.application.constant.RetCode;
+import com.oppo.cloud.application.constant.RetryException;
 import com.oppo.cloud.application.domain.DelayedTaskInfo;
 import com.oppo.cloud.application.domain.ParseRet;
 import com.oppo.cloud.application.service.DelayTaskParserService;
@@ -98,15 +99,21 @@ public class DelayTaskParserServiceImpl implements DelayTaskParserService {
         log.info("get table message success and parse now");
 
         try {
-          ParseRet parseRet = logParserService.handle(taskInstance, rawData);
-          // 加入延迟重试
-          if (parseRet.getRetCode() == RetCode.RET_OP_NEED_RETRY) {
-            delayedTaskService
-                    .pushDelayedQueue(new DelayedTaskInfo(UUID.randomUUID().toString(), 1, taskInstance, rawData));
-          }
-        } catch (Exception e) {
+          logParserService.handle(taskInstance, rawData);
+        }catch (RetryException e){
+          delayedTaskService
+                  .pushDelayedQueue(new DelayedTaskInfo(UUID.randomUUID().toString(), 1, taskInstance, rawData));
+        }catch (Exception e){
           log.error(e.getMessage());
         }
+          // 加入延迟重试
+//          if (parseRet.getRetCode() == RetCode.RET_OP_NEED_RETRY) {
+//            delayedTaskService
+//                    .pushDelayedQueue(new DelayedTaskInfo(UUID.randomUUID().toString(), 1, taskInstance, rawData));
+//          }
+//        } catch (Exception e) {
+//
+//        }
       }
     }
   }

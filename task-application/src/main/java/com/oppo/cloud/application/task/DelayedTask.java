@@ -18,6 +18,7 @@ package com.oppo.cloud.application.task;
 
 import com.oppo.cloud.application.config.ThreadPoolConfig;
 import com.oppo.cloud.application.constant.RetCode;
+import com.oppo.cloud.application.constant.RetryException;
 import com.oppo.cloud.application.domain.DelayedTaskInfo;
 import com.oppo.cloud.application.domain.ParseRet;
 import com.oppo.cloud.application.service.DelayedTaskService;
@@ -117,21 +118,18 @@ public class DelayedTask implements CommandLineRunner {
         }
         Map<String, String> rawData = delayedTaskInfo.getRawData();
         try {
-            ParseRet parseRet = logParserService.handle(instance, rawData);
-            // 重试不成功
-            if (parseRet.getRetCode() != RetCode.RET_OK) {
-                if (delayedTaskInfo.getTryTimes() > tryTimes) {
-                    log.error("discard delay task:{}", delayedTaskInfo);
-                    redisService.hDel(processingKey, delayedTaskInfo.getKey());
-                    return;
-                }
-                delayedTaskInfo.setTryTimes(delayedTaskInfo.getTryTimes() + 1);
-                delayedTaskService.pushDelayedQueue(delayedTaskInfo);
-            } else {
-                // 成功删除缓存
+            logParserService.handle(instance, rawData);
+            redisService.hDel(processingKey, delayedTaskInfo.getKey());
+
+        } catch (RetryException e){
+            if (delayedTaskInfo.getTryTimes() > tryTimes) {
+                log.error("discard delay task:{}", delayedTaskInfo);
                 redisService.hDel(processingKey, delayedTaskInfo.getKey());
+                return;
             }
-        } catch (Exception e) {
+            delayedTaskInfo.setTryTimes(delayedTaskInfo.getTryTimes() + 1);
+            delayedTaskService.pushDelayedQueue(delayedTaskInfo);
+        }catch (Exception e) {
             log.error("delay task retry err: ", e);
         }
     }
