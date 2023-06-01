@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 任务诊断父类
@@ -170,7 +171,9 @@ public abstract class DetectServiceImpl implements DetectService {
         JobAnalysis esJobAnalysis = abnormalJobService.searchJob(detectJobAnalysis);
         if (esJobAnalysis != null) {
             // 更新操作
-            esJobAnalysis.getCategories().addAll(detectJobAnalysis.getCategories());
+            List<String> oldCategories = esJobAnalysis.getCategories();
+            oldCategories.addAll(detectJobAnalysis.getCategories());
+            esJobAnalysis.setCategories(oldCategories.stream().distinct().collect(Collectors.toList()));
             if (Strings.isNotBlank(detectJobAnalysis.getSuccessExecutionDay())) {
                 esJobAnalysis.setSuccessExecutionDay(detectJobAnalysis.getSuccessExecutionDay());
             }
