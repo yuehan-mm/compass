@@ -64,11 +64,14 @@ public class HDFSUtil {
         conf.addResource(new Path(nameNodeConf.getHdfssite()));
         if (fsType.equals(FILE_SYSTEM_TYPE_OSS)) {
             conf.set("fs.defaultFS", "oss://haier-hdop-presto");
+            return FileSystem.newInstance(conf);
+        } else {
+            if (nameNodeConf.isEnableKerberos()) {
+                return getAuthenticationFileSystem(nameNodeConf, conf);
+            } else {
+                return FileSystem.newInstance(conf);
+            }
         }
-        if (nameNodeConf.isEnableKerberos()) {
-            return getAuthenticationFileSystem(nameNodeConf, conf);
-        }
-        return FileSystem.get(conf);
     }
 
     private static FileSystem getAuthenticationFileSystem(NameNodeConf nameNodeConf, Configuration conf) throws Exception {
@@ -80,31 +83,6 @@ public class HDFSUtil {
         UserGroupInformation.loginUserFromKeytab(nameNodeConf.getLoginUser(), nameNodeConf.getKeytabPath());
         UserGroupInformation ugi = UserGroupInformation.getLoginUser();
         return ugi.doAs((PrivilegedExceptionAction<FileSystem>) () -> FileSystem.newInstance(conf));
-    }
-
-    public static String[] readLines(NameNodeConf nameNode, String logPath, String fsType) throws Exception {
-        FSDataInputStream fsDataInputStream = null;
-        try {
-            FileSystem fs = HDFSUtil.getFileSystem(nameNode, fsType);
-            fsDataInputStream = fs.open(new Path(logPath));
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            // 64kb
-            byte[] buffer = new byte[65536];
-            int byteRead;
-
-            while ((byteRead = fsDataInputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, byteRead);
-            }
-            byte[] contents = outputStream.toByteArray();
-            String s = new String(contents, StandardCharsets.UTF_8);
-            return s.split("\n");
-        } catch (Exception e) {
-            throw new Exception();
-        } finally {
-            if (Objects.nonNull(fsDataInputStream)) {
-                fsDataInputStream.close();
-            }
-        }
     }
 
     public static ReaderObject getReaderObject(NameNodeConf nameNode, String path, String fsType) throws Exception {
