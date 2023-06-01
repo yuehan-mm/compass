@@ -58,10 +58,11 @@ export SPRING_KAFKA_TASKINSTANCETOPICS="compass_test"
 export DATASOURCE_WRITEKAFKATOPIC_TASKINSTANCE=${SPRING_KAFKA_TASKINSTANCETOPICS}
 
 # task_instance_application topic
-export SPRING_KAFKA_TASKINSTANCEAPPLICATIONTOPICS="compass_taskinstance_application_20012523_test"
+export SPRING_KAFKA_TASKINSTANCEAPPLICATIONTOPICS="compass_taskinstance_application"
 # task_instance consumer
 export SPRING_KAFKA_CONSUMER_TASKAPPGROUPID="compass_test_22047328_d"
-export SPRING_KAFKA_CONSUMER_DETECTGROUPID="compass_test_22047328"
+#export SPRING_KAFKA_CONSUMER_DETECTGROUPID="compass_test_22047328"
+export SPRING_KAFKA_CONSUMER_DETECTGROUPID="compass_taskinstance_application_20012523_test"
 
 # hdfs base path
 export SPRING_HDFS_BASEPATH="/flume/airflow_test/bigdata/bdp_jt/airflow/logs"
