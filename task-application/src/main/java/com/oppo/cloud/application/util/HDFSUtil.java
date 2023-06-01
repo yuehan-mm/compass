@@ -79,8 +79,9 @@ public class HDFSUtil {
      */
     public static void readLines(NameNodeConf nameNodeConf, String filePath, HDFSReaderCallback callback) throws Exception {
         FSDataInputStream fsDataInputStream = null;
+        FileSystem fs = null;
         try {
-            FileSystem fs = HDFSUtil.getFileSystem(nameNodeConf, filePath);
+            fs = HDFSUtil.getFileSystem(nameNodeConf, filePath);
             fsDataInputStream = fs.open(new Path(filePath));
             BufferedReader reader = new BufferedReader(new InputStreamReader(fsDataInputStream));
 
@@ -107,6 +108,9 @@ public class HDFSUtil {
             if (Objects.nonNull(fsDataInputStream)) {
                 fsDataInputStream.close();
             }
+            if (fs != null) {
+                fs.close();
+            }
         }
     }
 
@@ -127,6 +131,7 @@ public class HDFSUtil {
                 result.add(fileStatus.getPath().toString());
             }
         }
+        fs.close();
         return result;
     }
 
