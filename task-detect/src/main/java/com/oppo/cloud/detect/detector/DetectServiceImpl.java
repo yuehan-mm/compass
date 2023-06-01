@@ -160,7 +160,7 @@ public abstract class DetectServiceImpl implements DetectService {
      */
     public void sendLogRecordMsg(LogRecord logRecord) {
         Long size = redisService.lLeftPush(logRecordQueue, JSONObject.toJSONString(logRecord));
-        log.info("send logRecord: key:{}, size:{}, data:{}", logRecordQueue, size, logRecord);
+        log.info("send logRecord: key:{}, size:{}, data:{}", logRecordQueue, size, JSONObject.toJSONString(logRecord));
     }
 
     /**
