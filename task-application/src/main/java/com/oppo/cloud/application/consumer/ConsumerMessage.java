@@ -19,6 +19,7 @@ package com.oppo.cloud.application.consumer;
 import com.alibaba.fastjson2.JSON;
 import com.oppo.cloud.application.service.DelayTaskParserService;
 import com.oppo.cloud.common.domain.syncer.TableMessage;
+import com.oppo.cloud.model.TaskInstance;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,8 +53,9 @@ public class ConsumerMessage {
         log.debug(String.format("%d, From partition %d: %s", consumer.hashCode(), partition, message));
 
         TableMessage tableMessage = JSON.parseObject(message, TableMessage.class);
+        TaskInstance taskInstance = JSON.parseObject(tableMessage.getBody(), TaskInstance.class);
 
-        delayTaskParserService.handle(tableMessage);
+        delayTaskParserService.handle(taskInstance);
 
         consumer.commitSync();
     }

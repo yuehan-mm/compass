@@ -20,7 +20,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.Date;
 
-public class TaskInstance implements Serializable {
+public class TaskInstance  implements Serializable, Comparable<TaskInstance> {
     @ApiModelProperty(value = "任务执行id")
     private Integer id;
 
@@ -233,5 +233,10 @@ public class TaskInstance implements Serializable {
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
+    }
+
+    @Override
+    public int compareTo(TaskInstance o) {
+        return (int) (this.finishTime - o.finishTime);
     }
 }
