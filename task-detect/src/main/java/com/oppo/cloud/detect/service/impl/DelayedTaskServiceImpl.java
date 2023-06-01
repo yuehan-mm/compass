@@ -59,9 +59,9 @@ public class DelayedTaskServiceImpl implements DelayedTaskService {
      * 延迟队列任务
      */
     @Override
-    public void pushDelayedQueue(JobAnalysis detectJobAnalysis, String handledApps, String exception) {
+    public void pushDelayedQueue(JobAnalysis detectJobAnalysis, String exception, int tryNumber) {
         DelayedTaskInfo delayedTaskInfo = new DelayedTaskInfo();
-        delayedTaskInfo.setDelayProcessTask(detectJobAnalysis, handledApps, exception);
+        delayedTaskInfo.setDelayProcessTask(detectJobAnalysis, exception, tryNumber + 1);
         redisService.zSetAdd(delayQueue, JSON.toJSONString(delayedTaskInfo),
                 System.currentTimeMillis() + delayedSeconds * 1000);
         log.info("pushDelayQueue:{},{}", delayQueue, JSON.toJSONString(delayedTaskInfo));

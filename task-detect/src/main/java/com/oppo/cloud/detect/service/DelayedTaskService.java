@@ -29,7 +29,7 @@ public interface DelayedTaskService {
     /**
      * 添加延迟队列任务
      */
-    void pushDelayedQueue(JobAnalysis detectJobAnalysis, String handledApps, String exception);
+    void pushDelayedQueue(JobAnalysis detectJobAnalysis, String exception, int tryNumber);
 
     /**
      * 重新添加延迟队列任务

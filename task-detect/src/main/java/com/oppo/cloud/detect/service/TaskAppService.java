@@ -31,7 +31,7 @@ public interface TaskAppService {
     /**
      * 获取异常任务Apps的结果信息（包括异常信息）
      */
-    AbnormalTaskAppInfo getAbnormalTaskAppsInfo(JobAnalysis jobAnalysis, String handledApps);
+    AbnormalTaskAppInfo getAbnormalTaskAppsInfo(JobAnalysis jobAnalysis);
 
     /**
      * 获取任务下所有的的AbnormalTaskApp数据，包括没有taskApp的数据

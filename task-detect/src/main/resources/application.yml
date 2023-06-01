@@ -47,7 +47,7 @@ custom:
   delayedTaskQueue:
     enable: true
     delayedSeconds: 10
-    tryTimes: 5
+    tryTimes: 3
   elasticsearch:
     yarn-app-index: "compass-yarn-app"
     spark-app-index: "compass-spark-app"

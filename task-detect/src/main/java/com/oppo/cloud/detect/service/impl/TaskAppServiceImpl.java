@@ -73,13 +73,11 @@ public class TaskAppServiceImpl implements TaskAppService {
      * 获取异常任务的App列表信息
      */
     @Override
-    public AbnormalTaskAppInfo getAbnormalTaskAppsInfo(JobAnalysis jobAnalysis, String handledApps) {
+    public AbnormalTaskAppInfo getAbnormalTaskAppsInfo(JobAnalysis jobAnalysis) {
         AbnormalTaskAppInfo abnormalTaskAppInfo = new AbnormalTaskAppInfo();
         List<TaskApp> taskAppList = new ArrayList<>();
         // 收集每个appId的异常信息
         StringBuilder exceptionInfo = new StringBuilder();
-        // 本次新处理的taskApps
-        StringBuilder handledAppsNew = new StringBuilder();
         // 判断任务每次重试的appId是否已经找到
         Map<Integer, Boolean> needed = new HashMap<>();
         for (int i = 0; i <= jobAnalysis.getRetryTimes(); i++) {
@@ -92,11 +90,6 @@ public class TaskAppServiceImpl implements TaskAppService {
         for (TaskApplication taskApplication : taskApplicationList) {
             taskApplication.setRetryTimes(TryNumberUtil.updateTryNumber(taskApplication.getRetryTimes(), schedulerType));
             try {
-                if (handledApps != null && handledApps.contains(taskApplication.getApplicationId())) {
-                    // 该appId已经被处理
-                    needed.put(taskApplication.getRetryTimes(), true);
-                    continue;
-                }
                 if (needed.containsKey(taskApplication.getRetryTimes())) {
                     needed.put(taskApplication.getRetryTimes(), true);
                 } else {
@@ -112,7 +105,6 @@ public class TaskAppServiceImpl implements TaskAppService {
                 taskApp.setProjectId(jobAnalysis.getProjectId());
                 taskApp.setUsers(jobAnalysis.getUsers());
                 taskAppList.add(taskApp);
-                handledAppsNew.append(taskApp.getApplicationId()).append(";");
             } catch (Exception e) {
                 exceptionInfo.append(e.getMessage()).append(";");
             }
@@ -130,7 +122,6 @@ public class TaskAppServiceImpl implements TaskAppService {
         }
         abnormalTaskAppInfo.setTaskAppList(taskAppList);
         abnormalTaskAppInfo.setExceptionInfo(exceptionInfo.toString());
-        abnormalTaskAppInfo.setHandleApps(handledAppsNew.toString());
         return abnormalTaskAppInfo;
     }
 

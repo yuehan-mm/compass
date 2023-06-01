@@ -37,10 +37,6 @@ public class DelayedTaskInfo {
      * 延迟任务信息
      */
     private JobAnalysis jobAnalysis;
-    /**
-     * 已处理完成的taskApp集合
-     */
-    private String handledApps;
 
     /**
      * 处理状态(processing, success, failed)
@@ -66,13 +62,12 @@ public class DelayedTaskInfo {
 
     }
 
-    public void setDelayProcessTask(JobAnalysis detectJobAnalysis, String handledApps, String exception) {
+    public void setDelayProcessTask(JobAnalysis detectJobAnalysis, String exception,int processRetries) {
         this.key = UUID.randomUUID().toString();
         this.jobAnalysis = detectJobAnalysis;
-        this.handledApps = handledApps;
         this.exceptionInfo = exception;
         this.createTime = new Date();
         this.updateTime = new Date();
-        this.processRetries = 1;
+        this.processRetries = processRetries;
     }
 }

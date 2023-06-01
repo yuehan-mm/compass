@@ -90,21 +90,21 @@ public abstract class DetectServiceImpl implements DetectService {
      * 正常作业任务处理
      */
     @Override
-    public void handleNormalJob(JobAnalysis detectJobAnalysis) throws Exception {
+    public void handleNormalJob(JobAnalysis detectJobAnalysis, int tryNumber) throws Exception {
         // 补充用户信息
         updateUserInfo(detectJobAnalysis);
         // 查询该任务下的appIds
-        AbnormalTaskAppInfo abnormalTaskAppInfo = taskAppService.getAbnormalTaskAppsInfo(detectJobAnalysis, null);
+        AbnormalTaskAppInfo abnormalTaskAppInfo = taskAppService.getAbnormalTaskAppsInfo(detectJobAnalysis);
         if (!"".equals(abnormalTaskAppInfo.getExceptionInfo())) {
             // 完全构造完成再发送
-            delayTaskService.pushDelayedQueue(detectJobAnalysis, abnormalTaskAppInfo.getHandleApps(),
-                    abnormalTaskAppInfo.getExceptionInfo());
+            delayTaskService.pushDelayedQueue(detectJobAnalysis,abnormalTaskAppInfo.getExceptionInfo(), tryNumber);
             return;
         }
         // 引擎维度诊断必须要有appId
         if (abnormalTaskAppInfo.getTaskAppList().size() != 0) {
-            // 生成解析日志消息体logRecord
+            // 更新vcoreSeconds 和 memorySeconds
             abnormalJobService.updateResource(detectJobAnalysis, abnormalTaskAppInfo.getTaskAppList());
+            // 生成解析日志消息体logRecord
             LogRecord logRecord = this.genLogRecord(abnormalTaskAppInfo, detectJobAnalysis);
             this.sendLogRecordMsg(logRecord);
         }
@@ -116,39 +116,28 @@ public abstract class DetectServiceImpl implements DetectService {
      * 异常作业任务处理
      */
     @Override
-    public void handleAbnormalJob(JobAnalysis detectJobAnalysis) throws Exception {
+    public void handleAbnormalJob(JobAnalysis detectJobAnalysis, int tryNumber) throws Exception {
         // 补充用户信息
         updateUserInfo(detectJobAnalysis);
-        sendAbnormalJobApp(detectJobAnalysis);
-        // 保存异常任务
-        this.addOrUpdate(detectJobAnalysis);
-    }
-
-
-    public void sendAbnormalJobApp(JobAnalysis detectJobAnalysis) throws Exception {
         // 查询该任务下的appIds
-        AbnormalTaskAppInfo abnormalTaskAppInfo = taskAppService.getAbnormalTaskAppsInfo(detectJobAnalysis, null);
+        AbnormalTaskAppInfo abnormalTaskAppInfo = taskAppService.getAbnormalTaskAppsInfo(detectJobAnalysis);
+        if (!"".equals(abnormalTaskAppInfo.getExceptionInfo())) {
+            delayTaskService.pushDelayedQueue(detectJobAnalysis, abnormalTaskAppInfo.getExceptionInfo(), tryNumber);
+            return;
+        }
+        // 引擎维度诊断必须要有appId
         if (abnormalTaskAppInfo.getTaskAppList().size() != 0) {
             taskAppService.insertTaskApps(abnormalTaskAppInfo.getTaskAppList());
             // 更新vcoreSeconds 和 memorySeconds
             abnormalJobService.updateResource(detectJobAnalysis, abnormalTaskAppInfo.getTaskAppList());
+            // 生成解析日志消息体logRecord
+            LogRecord logRecord = this.genLogRecord(abnormalTaskAppInfo, detectJobAnalysis);
+            this.sendLogRecordMsg(logRecord);
         }
-        // 生成解析日志消息体logRecord
-        LogRecord logRecord = this.genLogRecord(abnormalTaskAppInfo, detectJobAnalysis);
-
-        // 有异常[某次重试的信息缺失、appId的日志路径没有获取到等]则暂存该任务,等待重试
-        if (!"".equals(abnormalTaskAppInfo.getExceptionInfo())) {
-            delayTaskService.pushDelayedQueue(detectJobAnalysis, abnormalTaskAppInfo.getHandleApps(),
-                    abnormalTaskAppInfo.getExceptionInfo());
-        }
-        // 没有可发送的信息
-        if (logRecord.getApps().size() == 0) {
-            return;
-        }
-        // 发送解析消息
-        this.sendLogRecordMsg(logRecord);
         // 保存jobInstance信息
         jobInstanceService.insertOrUpdate(detectJobAnalysis);
+        // 保存异常任务
+        this.addOrUpdate(detectJobAnalysis);
     }
 
 
@@ -162,13 +151,7 @@ public abstract class DetectServiceImpl implements DetectService {
         logRecord.setJobAnalysis(detectJobAnalysis);
         logRecord.formatTaskAppList(abnormalTaskAppInfo.getTaskAppList());
         List<App> appLogPath = logRecordService.getAppLog(abnormalTaskAppInfo.getTaskAppList());
-        List<App> schedulerLogApp = logRecordService.getSchedulerLog(detectJobAnalysis);
-        appLogPath.addAll(schedulerLogApp);
         logRecord.setApps(appLogPath);
-        if (schedulerLogApp.size() != 0) {
-            // 更新已处理的事件信息【记录调度日志已成功发送】
-            abnormalTaskAppInfo.setHandleApps(abnormalTaskAppInfo.getHandleApps() + "scheduler" + ";");
-        }
         return logRecord;
     }
 
