@@ -21,10 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.Queue;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.*;
 
 /**************************************************************************************************
  * <pre>                                                                                          *
@@ -42,7 +39,7 @@ public class DelayTaskParserServiceImpl implements DelayTaskParserService {
   private static final int CONTAINER_SIZE = 2000;
   private static final String TASK_TYPE_FLINK = "FLINK";
 
-  private LinkedBlockingQueue<TableMessage> taskInstanceQueue = new LinkedBlockingQueue<>(CONTAINER_SIZE);
+  private BlockingQueue<TaskInstance> taskInstanceQueue = new PriorityBlockingQueue<>(CONTAINER_SIZE);
   private ExecutorService workExecutor = Executors.newSingleThreadExecutor();
 
   @Autowired
@@ -56,12 +53,12 @@ public class DelayTaskParserServiceImpl implements DelayTaskParserService {
   }
 
   @Override
-  public void handle(TableMessage tableMessage) throws Exception {
-    TaskInstance taskInstance = JSON.parseObject(tableMessage.getBody(), TaskInstance.class);
+  public void handle(TaskInstance taskInstance) throws Exception {
 
     if(!taskInstance.isFinish() &&  !taskInstance.getTaskType().equals(TASK_TYPE_FLINK)) return;
 
-    taskInstanceQueue.add(tableMessage);
+    log.debug("Add new task instance : {}", taskInstance);
+    taskInstanceQueue.add(taskInstance);
   }
 
   public void setLogParserService(LogParserService logParserService) {
@@ -81,39 +78,25 @@ public class DelayTaskParserServiceImpl implements DelayTaskParserService {
 
       while (true){
 
-        log.info("wait to get table message ....");
-        TableMessage tableMessage = taskInstanceQueue.take();
+        TaskInstance taskInstance = taskInstanceQueue.take();
 
-        TaskInstance taskInstance = JSON.parseObject(tableMessage.getBody(), TaskInstance.class);
-        Map<String, String> rawData =
-                JSON.parseObject(tableMessage.getRawData(), new TypeReference<Map<String, String>>() {});
 
         long delayTime = DELAY_TIME - (DateTime.now().getMillis() - taskInstance.getFinishTime());
 
-        log.info("get table message success and now wait {} millis", delayTime);
         // 延迟处理
         if (delayTime > 0){
           Thread.sleep(delayTime);
         }
 
-        log.info("get table message success and parse now");
+        log.debug("Deal with task instance : {}", taskInstance);
 
         try {
-          logParserService.handle(taskInstance, rawData);
+          logParserService.handle(taskInstance);
         }catch (RetryException e){
-          delayedTaskService
-                  .pushDelayedQueue(new DelayedTaskInfo(UUID.randomUUID().toString(), 1, taskInstance, rawData));
+          delayedTaskService.pushDelayedQueue(new DelayedTaskInfo(UUID.randomUUID().toString(), 1, taskInstance, null));
         }catch (Exception e){
           log.error(e.getMessage());
         }
-          // 加入延迟重试
-//          if (parseRet.getRetCode() == RetCode.RET_OP_NEED_RETRY) {
-//            delayedTaskService
-//                    .pushDelayedQueue(new DelayedTaskInfo(UUID.randomUUID().toString(), 1, taskInstance, rawData));
-//          }
-//        } catch (Exception e) {
-//
-//        }
       }
     }
   }

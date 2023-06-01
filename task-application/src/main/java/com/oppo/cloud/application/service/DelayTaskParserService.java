@@ -1,6 +1,7 @@
 package com.oppo.cloud.application.service;
 
 import com.oppo.cloud.common.domain.syncer.TableMessage;
+import com.oppo.cloud.model.TaskInstance;
 
 
 /**************************************************************************************************
@@ -12,5 +13,5 @@ import com.oppo.cloud.common.domain.syncer.TableMessage;
  * @date : 2023/5/30                                                                              *
  *================================================================================================*/
 public interface DelayTaskParserService {
-  public void handle(TableMessage tableMessage) throws Exception;
+  public void handle(TaskInstance taskInstance) throws Exception;
 }
