@@ -1,25 +1,7 @@
 [
   {
     "logType": "scheduler",
-    "actions": [
-      {
-        "action": "otherError",
-        "desc": "其他错误信息",
-        "category": "otherException",
-        "step": 1,
-        "skip": false,
-        "parserType": "DEFAULT",
-        "parserTemplate": {
-          "heads": [
-            "^.+ERROR.+$"
-          ],
-          "middles": [],
-          "tails": []
-        },
-        "groupNames": [],
-        "children": []
-      }
-    ]
+    "actions": []
   },
   {
     "logType": "driver",
@@ -240,25 +222,6 @@
           "datetime"
         ],
         "children": []
-      },
-      {
-        "action": "otherError",
-        "desc": "其他错误信息",
-        "category": "otherException",
-        "step": 6,
-        "skip": false,
-        "parserType": "DEFAULT",
-        "parserTemplate": {
-          "heads": [
-            "^(?<datetime>\\d{2,4}.\\d{2}.\\d{2}\\D+\\d{2}:\\d{2}:\\d{2}).+ERROR.+$"
-          ],
-          "middles": [],
-          "tails": []
-        },
-        "groupNames": [
-          "datetime"
-        ],
-        "children": []
       }
     ]
   },
@@ -414,25 +377,6 @@
           "tails": [
             "^(?<datetime>\\d{2,4}.\\d{2}.\\d{2}\\D+\\d{2}:\\d{2}:\\d{2}).+$"
           ]
-        },
-        "groupNames": [
-          "datetime"
-        ],
-        "children": []
-      },
-      {
-        "action": "otherError",
-        "desc": "其他错误信息",
-        "category": "otherException",
-        "step": 8,
-        "skip": false,
-        "parserType": "DEFAULT",
-        "parserTemplate": {
-          "heads": [
-            "^(?<datetime>\\d{2,4}.\\d{2}.\\d{2}\\D+\\d{2}:\\d{2}:\\d{2}).+ERROR.+$"
-          ],
-          "middles": [],
-          "tails": []
         },
         "groupNames": [
           "datetime"
