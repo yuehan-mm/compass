@@ -70,6 +70,16 @@ public class MessageConsumer {
             // 解析数据表
             RawTable rawTable = JSON.parseObject(message, RawTable.class);
 
+            //  目前cdc同时采集了 airflow4， airflow5， airflow6，三个集群
+            //  airflow.dag,airflow.task_instance,airflow.ab_user 三张表
+            //  目前只采集了airflow5的scheduler log，因此再此处暂将非airflow5集群的binlog过滤
+            // TODO 目前compass暂不支持多airflow、多集群作业交叉提交，待后续完善
+            if (!rawTable.getDatabase().equals("airflow5")) {
+                log.debug("not currently supported msg: " + message);
+                consumer.commitAsync();
+                return;
+            }
+
             List<Mapping> mappings = this.getTableMapping(rawTable.getTable());
             if (mappings == null || mappings.isEmpty()) {
                 consumer.commitAsync();
@@ -79,7 +89,7 @@ public class MessageConsumer {
                 this.consumeMessage(rawTable, mapping);
             }
         } catch (Exception e) {
-           log.error("sync data error : {}", e);
+            log.error("sync data error : {}", e);
         }
 
         consumer.commitAsync();
