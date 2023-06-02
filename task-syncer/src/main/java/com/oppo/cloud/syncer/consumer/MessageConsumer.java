@@ -64,18 +64,22 @@ public class MessageConsumer {
                         @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
                         Consumer consumer) {
 
-        log.debug(String.format("From partition %d: %s", partition, message));
+        try {
+            log.debug(String.format("From partition %d: %s", partition, message));
 
-        // 解析数据表
-        RawTable rawTable = JSON.parseObject(message, RawTable.class);
+            // 解析数据表
+            RawTable rawTable = JSON.parseObject(message, RawTable.class);
 
-        List<Mapping> mappings = this.getTableMapping(rawTable.getTable());
-        if (mappings == null || mappings.isEmpty()) {
-            consumer.commitAsync();
-            return;
-        }
-        for (Mapping mapping : mappings) {
-            this.consumeMessage(rawTable, mapping);
+            List<Mapping> mappings = this.getTableMapping(rawTable.getTable());
+            if (mappings == null || mappings.isEmpty()) {
+                consumer.commitAsync();
+                return;
+            }
+            for (Mapping mapping : mappings) {
+                this.consumeMessage(rawTable, mapping);
+            }
+        } catch (Exception e){
+            log.error("sync table msg fail: "+ e);
         }
 
         consumer.commitAsync();
