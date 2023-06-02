@@ -84,8 +84,10 @@ public class TaskInstanceService extends CommonService implements ActionService 
 
         if (rawTable.getOptType().toUpperCase(Locale.ROOT).equals("UPDATE")){
             if(rawTable.getOld().containsKey("state")){
-                String oldState = rawTable.getOld().get("state");
+
                 String newState = rawTable.getData().get("state");
+
+                if (newState == null) return;
 
                 if (finishStates.contains(newState.toLowerCase(Locale.ROOT))){
                     data.put("isFinish", String.valueOf(true));
