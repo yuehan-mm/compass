@@ -116,12 +116,12 @@ public class DelayedTask implements CommandLineRunner {
             redisService.hDel(processingKey, delayedTaskInfo.getKey());
             return;
         }
-//        Map<String, String> rawData = delayedTaskInfo.getRawData();
         try {
             logParserService.handle(instance);
             redisService.hDel(processingKey, delayedTaskInfo.getKey());
 
         } catch (RetryException e){
+            log.error("handleDelayTask fail :{} {}", delayedTaskInfo, e);
             if (delayedTaskInfo.getTryTimes() > tryTimes) {
                 log.error("discard delay task:{}", delayedTaskInfo);
                 redisService.hDel(processingKey, delayedTaskInfo.getKey());
