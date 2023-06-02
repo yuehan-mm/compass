@@ -101,7 +101,7 @@ abstract public class CommonService {
                     }
                 }
             } else {
-                log.info("table: " + mapping.getTargetTable() + "; columnDep is null ");
+                log.debug("table: " + mapping.getTargetTable() + "; columnDep is null ");
             }
             log.debug("dataMapping table:{}, data: {}", mapping.getTargetTable(), data.toString());
 

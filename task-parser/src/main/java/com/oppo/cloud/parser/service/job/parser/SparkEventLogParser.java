@@ -70,7 +70,7 @@ public class SparkEventLogParser extends OneClickSubject implements IParser {
                 try {
                     readerObjects = LogReaderFactory.create(logPath).getReaderObject();
                 } catch (Exception ex) {
-                    log.error("SparkEventLogParser fail:", e.getMessage());
+                    log.error("SparkEventLogParser fail:" + e.getMessage());
                     updateParserProgress(ProgressState.FAILED, 0, 0);
                     return null;
                 }
