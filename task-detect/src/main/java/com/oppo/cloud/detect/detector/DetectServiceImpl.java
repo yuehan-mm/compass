@@ -217,7 +217,7 @@ public abstract class DetectServiceImpl implements DetectService {
         detectJobAnalysis.setProjectId(task.getProjectId());
         detectJobAnalysis.setFlowId(task.getFlowId());
         UserExample userExample = new UserExample();
-        userExample.createCriteria().andUserIdEqualTo(task.getUserId());
+        userExample.createCriteria().andIdEqualTo(task.getUserId());
         List<User> users = userMapper.selectByExample(userExample);
         if (users.size() > 0) {
             User user = users.get(0);
