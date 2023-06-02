@@ -46,8 +46,8 @@ custom:
     processing: "{lua}:detected:processing"
   delayedTaskQueue:
     enable: true
-    delayedSeconds: 10
-    tryTimes: 3
+    delayedSeconds: 90
+    tryTimes: 5
   elasticsearch:
     yarn-app-index: "compass-yarn-app"
     spark-app-index: "compass-spark-app"
