@@ -78,8 +78,8 @@ public class MessageConsumer {
             for (Mapping mapping : mappings) {
                 this.consumeMessage(rawTable, mapping);
             }
-        } catch (Exception e){
-            log.error("sync table msg fail: " + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         consumer.commitAsync();
