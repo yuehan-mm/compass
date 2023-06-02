@@ -139,7 +139,7 @@ public class SparkTask extends Task {
             ElasticWriter.getInstance().saveDetectorStorage(detectorStorage);
         } else {
             // save event log env
-            detectorStorage.setDataList(null);
+            detectorStorage.setDataList(new ArrayList<>());
             ElasticWriter.getInstance().saveDetectorStorage(detectorStorage);
         }
         eventLogCategories.addAll(executorCategories);
