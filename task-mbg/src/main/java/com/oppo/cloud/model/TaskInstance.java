@@ -20,7 +20,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.Date;
 
-public class TaskInstance implements Serializable {
+public class TaskInstance  implements Serializable, Comparable<TaskInstance> {
     @ApiModelProperty(value = "任务执行id")
     private Integer id;
 
@@ -65,6 +65,9 @@ public class TaskInstance implements Serializable {
 
     @ApiModelProperty(value = "更新时间")
     private Date updateTime;
+
+    private boolean finish;
+    private long finishTime = 0;
 
     private static final long serialVersionUID = 1L;
 
@@ -188,6 +191,22 @@ public class TaskInstance implements Serializable {
         this.updateTime = updateTime;
     }
 
+    public boolean isFinish() {
+        return finish;
+    }
+
+    public void setFinish(boolean finish) {
+        this.finish = finish;
+    }
+
+    public long getFinishTime() {
+        return finishTime;
+    }
+
+    public void setFinishTime(long finishTime) {
+        this.finishTime = finishTime;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -209,8 +228,15 @@ public class TaskInstance implements Serializable {
         sb.append(", triggerType=").append(triggerType);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateTime=").append(updateTime);
+        sb.append(", finish=").append(finish);
+        sb.append(", finishTime=").append(finishTime);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
+    }
+
+    @Override
+    public int compareTo(TaskInstance o) {
+        return (int) (this.finishTime - o.finishTime);
     }
 }

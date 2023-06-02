@@ -29,6 +29,6 @@ public interface LogParserService {
     /**
      * 具体处理函数
      */
-    ParseRet handle(TaskInstance taskInstance, Map<String, String> rawData) throws Exception;
+    void handle(TaskInstance taskInstance) throws Exception;
 
 }

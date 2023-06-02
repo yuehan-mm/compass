@@ -45,23 +45,11 @@ const getStatistics = async () => {
   }
 }
 onMounted(() => {
-  getProjectList()
   getStatistics()
 })
 </script>
 
 <template>
-  <el-card>
-    项目
-    <el-select @change="getStatistics" v-model="projectName">
-      <el-option
-        v-for="item in projectList"
-        :key="item"
-        :label="item"
-        :value="item"
-      />
-    </el-select>
-  </el-card>
 
   <el-card class="m-t-5">
     <div m-b-5>

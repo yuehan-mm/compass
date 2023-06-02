@@ -22,6 +22,7 @@ import com.oppo.cloud.syncer.domain.RawTable;
 import com.oppo.cloud.syncer.util.DataUtil;
 import com.oppo.cloud.syncer.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.joda.time.DateTime;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.time.LocalDateTime;
@@ -54,6 +55,10 @@ abstract public class CommonService {
 
         // 值映射
         DataUtil.mapColumnValue(datas, mapping.getColumnValueMapping());
+
+        if (rawTable.getTable().equals(TaskInstanceService.TABLE_NAME)){
+            TaskInstanceService.parseFinishAction(rawTable, datas.get(0));
+        }
 
         // 增加常数列
         DataUtil.constantColumnValue(datas, mapping.getConstantColumn());

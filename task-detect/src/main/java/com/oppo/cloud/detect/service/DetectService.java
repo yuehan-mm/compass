@@ -36,12 +36,12 @@ public interface DetectService {
      * @param jobAnalysis
      * @throws Exception
      */
-    void handleAbnormalJob(JobAnalysis jobAnalysis) throws Exception;
+    void handleAbnormalJob(JobAnalysis jobAnalysis, int tryNumber) throws Exception;
 
     /**
      * 正常作业任务处理
      * @param jobAnalysis
      * @throws Exception
      */
-    void handleNormalJob(JobAnalysis jobAnalysis) throws Exception;
+    void handleNormalJob(JobAnalysis jobAnalysis, int tryNumber) throws Exception;
 }

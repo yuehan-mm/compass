@@ -17,6 +17,7 @@
 package com.oppo.cloud.application.producer;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFutureCallback;
@@ -32,6 +33,7 @@ import java.util.concurrent.TimeoutException;
 public class MessageProducer {
 
     @Autowired
+    @Qualifier("kafkaTemplate")
     private KafkaTemplate kafkaTemplate;
 
     /**
