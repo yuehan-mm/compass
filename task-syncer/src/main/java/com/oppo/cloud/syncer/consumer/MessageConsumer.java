@@ -79,7 +79,7 @@ public class MessageConsumer {
                 this.consumeMessage(rawTable, mapping);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+           log.error("sync data error : {}", e);
         }
 
         consumer.commitAsync();

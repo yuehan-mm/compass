@@ -87,17 +87,17 @@ public class TaskInstanceService extends CommonService implements ActionService 
                 String oldState = rawTable.getOld().get("state");
                 String newState = rawTable.getData().get("state");
 
-                if (oldState.equals("running") &&finishStates.contains(newState.toLowerCase(Locale.ROOT))){
+                if (finishStates.contains(newState.toLowerCase(Locale.ROOT))){
                     data.put("isFinish", String.valueOf(true));
-                    final String endStr = rawTable.getData().get("end_date").replace(" ", "T")
+                    final String endStr = rawTable.getData().get("end_date")
+                            .replace(" ", "T")
                             .split("\\.")[0];
                     data.put("finishTime", String.valueOf(ISODateTimeFormat.dateHourMinuteSecond().parseDateTime(endStr).getMillis()));
-                    return ;
                 }
             }
+        }else{
+            data.put("isFinish", String.valueOf(false));
         }
-        data.put("isFinish", String.valueOf(false));
-        return ;
     }
 
     /**
