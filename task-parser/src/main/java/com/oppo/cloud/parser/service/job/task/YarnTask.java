@@ -65,7 +65,6 @@ public class YarnTask extends Task {
         Map<String, ParserAction> results = ParserManager.parse(new String[]{diagnostics}, actions);
         if (results == null || results.size() == 0) {
             List<String> list = new ArrayList<>();
-            list.add(AppCategoryEnum.OTHER_EXCEPTION.getCategory());
             return new TaskResult(this.taskParam.getApp().getAppId(), list);
         }
 
@@ -75,6 +74,6 @@ public class YarnTask extends Task {
         List<String> list = ElasticWriter.getInstance()
                 .saveParserActions(LogType.YARN.getName(), "", param, results);
 
-        return new TaskResult(this.taskParam.getApp().getAppId(), new ArrayList<>(list));
+        return new TaskResult(this.taskParam.getApp().getAppId(), list);
     }
 }
