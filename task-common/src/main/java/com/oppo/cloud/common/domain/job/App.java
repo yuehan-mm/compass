@@ -22,9 +22,7 @@ import lombok.Data;
 
 import java.util.*;
 
-/**
- * yarn app元数据
- */
+
 @Data
 public class App {
 
@@ -33,7 +31,7 @@ public class App {
      */
     private String appId;
     /**
-     * 重试次数
+     * Application 重试次数
      */
     private Integer tryNumber;
 

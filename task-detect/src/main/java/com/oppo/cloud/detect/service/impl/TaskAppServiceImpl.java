@@ -69,9 +69,7 @@ public class TaskAppServiceImpl implements TaskAppService {
     @Value("${custom.schedulerType}")
     private String schedulerType;
 
-    /**
-     * 获取异常任务的App列表信息
-     */
+
     @Override
     public AbnormalTaskAppInfo getAbnormalTaskAppsInfo(JobAnalysis jobAnalysis, String handledApps) {
         AbnormalTaskAppInfo abnormalTaskAppInfo = new AbnormalTaskAppInfo();
@@ -86,11 +84,19 @@ public class TaskAppServiceImpl implements TaskAppService {
             needed.put(i, false);
         }
 
+        // 获取到 Yarn application Id
+        // 历史所有重试过的 ??
         List<TaskApplication> taskApplicationList = getTaskApplications(jobAnalysis.getProjectName(),
-                jobAnalysis.getFlowName(), jobAnalysis.getTaskName(), jobAnalysis.getExecutionDate());
+                jobAnalysis.getFlowName(),
+                jobAnalysis.getTaskName(),
+                jobAnalysis.getExecutionDate()
+        );
 
+        // 遍历所有的Application信息
         for (TaskApplication taskApplication : taskApplicationList) {
+            // 校正重试次数
             taskApplication.setRetryTimes(TryNumberUtil.updateTryNumber(taskApplication.getRetryTimes(), schedulerType));
+
             try {
                 if (handledApps != null && handledApps.contains(taskApplication.getApplicationId())) {
                     // 该appId已经被处理
@@ -128,9 +134,9 @@ public class TaskAppServiceImpl implements TaskAppService {
         if (notFound.size() > 0) {
             exceptionInfo.append(String.format("can not find appId by tryNum: %s", String.join(",", notFound)));
         }
-        abnormalTaskAppInfo.setTaskAppList(taskAppList);
-        abnormalTaskAppInfo.setExceptionInfo(exceptionInfo.toString());
-        abnormalTaskAppInfo.setHandleApps(handledAppsNew.toString());
+        abnormalTaskAppInfo.setTaskAppList(taskAppList);                  // Application 信息
+        abnormalTaskAppInfo.setExceptionInfo(exceptionInfo.toString());   // 解析过程中的异常信息
+        abnormalTaskAppInfo.setHandleApps(handledAppsNew.toString());     // ApplicationId 集合
         return abnormalTaskAppInfo;
     }
 
@@ -230,11 +236,9 @@ public class TaskAppServiceImpl implements TaskAppService {
         // 单位MB,数值保留两位小数
         taskApp.setMemorySeconds((double) Math.round(yarnApp.getMemorySeconds()));
         String attemptId = StringUtils.isNotEmpty(sparkApp.getAttemptId()) ? sparkApp.getAttemptId() : "1";
-        taskApp.setEventLogPath(
-                sparkApp.getEventLogDirectory() + "/" + taskApplication.getApplicationId() + "_" + attemptId);
+        taskApp.setEventLogPath(sparkApp.getEventLogDirectory() + "/" + taskApplication.getApplicationId() + "_" + attemptId);
 
-        taskApp.setSparkUI(
-                String.format(sparkUiProxy, sparkApp.getSparkHistoryServer(), taskApplication.getApplicationId()));
+        taskApp.setSparkUI(String.format(sparkUiProxy, sparkApp.getSparkHistoryServer(), taskApplication.getApplicationId()));
         String yarnLogPath = getYarnLogPath(yarnApp.getIp());
         if ("".equals(yarnLogPath)) {
             throw new Exception(String.format("can not find yarn log path: rm ip : %s", yarnApp.getIp()));
@@ -302,8 +306,7 @@ public class TaskAppServiceImpl implements TaskAppService {
             if (redisService.hasKey(key)) {
                 return (String) redisService.get(key);
             } else {
-                throw new Exception(String.format("search redis error,msg: can not find key %s, rmJhsMap:%s, rmIp:%s",
-                        key, rmJhsMap, rmIp));
+                throw new Exception(String.format("search redis error,msg: can not find key %s, rmJhsMap:%s, rmIp:%s", key, rmJhsMap, rmIp));
             }
 
         } else {

@@ -47,9 +47,12 @@ public class LogRecordServiceImpl implements LogRecordService {
         List<App> apps = new ArrayList<>();
         // 根据任务重试次数构造出调度日志
         for (int i = 0; i <= detectJobAnalysis.getRetryTimes(); i++) {
+            // 获取每次的执行日志信息
             List<String> logPaths = schedulerLogService.getSchedulerLog(detectJobAnalysis.getProjectName(),
                     detectJobAnalysis.getFlowName(), detectJobAnalysis.getTaskName(),
                     detectJobAnalysis.getExecutionDate(), i);
+
+            // 封装成日志信息
             if (logPaths != null && logPaths.size() != 0) {
                 App app = new App();
                 app.formatSchedulerLog(logPaths, i);

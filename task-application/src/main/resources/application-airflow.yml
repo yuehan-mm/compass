@@ -32,12 +32,11 @@ custom:
     processing: "{lua}:task-processing"
     delayedSeconds: 5
     tryTimes: 5
-  # 从上到下串行执行解析到任务的applicationId
+
   rules:
-    - logPathDep: # 日志依赖查询
-        query: ""    # 变量依赖查询
-      logPathJoins: # 拼接日志绝对路径
-        hdfsbasepath: "" # 相当于根目录，常量
-      extractLog: # 根据组装的日志路径解析日志
-        regex: "^.*Submitted application (?<applicationId>application_[0-9]+_[0-9]+).*$"     # 匹配规则
-        name: "applicationId"      # 匹配文本名，最后必须有applicationId
+    - type : "SPARK"
+      regex: "^.*Submitted application (?<applicationId>application_[0-9]+_[0-9]+).*$"     # 匹配规则
+      name: "applicationId"      # 匹配文本名，最后必须有applicationId
+    - type: "MR"
+      regex: "The url to Track the job: .*?(?<applicationId>application_[0-9]+_[0-9]+).*"     # 匹配规则
+      name: "applicationId"      # 匹配文本名，最后必须有applicationId

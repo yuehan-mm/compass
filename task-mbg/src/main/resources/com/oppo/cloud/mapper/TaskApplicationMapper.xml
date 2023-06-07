@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.oppo.cloud.model.TaskApplication">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="application_id" jdbcType="VARCHAR" property="applicationId" />
+    <result column="application_type" jdbcType="VARCHAR" property="applicationType" />
     <result column="task_name" jdbcType="VARCHAR" property="taskName" />
     <result column="flow_name" jdbcType="VARCHAR" property="flowName" />
     <result column="project_name" jdbcType="VARCHAR" property="projectName" />
@@ -12,9 +13,9 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.oppo.cloud.model.TaskApplication">
-    <result column="log_path" jdbcType="LONGVARCHAR" property="logPath" />
-  </resultMap>
+<!--  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.oppo.cloud.model.TaskApplication">-->
+<!--    <result column="log_path" jdbcType="LONGVARCHAR" property="logPath" />-->
+<!--  </resultMap>-->
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -74,20 +75,20 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, application_id, task_name, flow_name, project_name, execute_time, retry_times, 
+    id, application_id, application_type, task_name, flow_name, project_name, execute_time, retry_times,
     create_time, update_time
   </sql>
-  <sql id="Blob_Column_List">
-    log_path
-  </sql>
-  <select id="selectByExampleWithBLOBs" parameterType="com.oppo.cloud.model.TaskApplicationExample" resultMap="ResultMapWithBLOBs">
+<!--  <sql id="Blob_Column_List">-->
+<!--    log_path-->
+<!--  </sql>-->
+  <select id="selectByExampleWithBLOBs" parameterType="com.oppo.cloud.model.TaskApplicationExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
+<!--    ,-->
+<!--    <include refid="Blob_Column_List" />-->
     from task_application
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -110,11 +111,11 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
+<!--    ,-->
+<!--    <include refid="Blob_Column_List" />-->
     from task_application
     where id = #{id,jdbcType=INTEGER}
   </select>
@@ -132,13 +133,13 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into task_application (application_id, task_name, flow_name, 
+    insert into task_application (application_id, application_type, task_name, flow_name,
       project_name, execute_time, retry_times, 
-      create_time, update_time, log_path
+      create_time, update_time
       )
-    values (#{applicationId,jdbcType=VARCHAR}, #{taskName,jdbcType=VARCHAR}, #{flowName,jdbcType=VARCHAR}, 
+    values (#{applicationId,jdbcType=VARCHAR}, #{applicationType,jdbcType=VARCHAR}, #{taskName,jdbcType=VARCHAR}, #{flowName,jdbcType=VARCHAR},
       #{projectName,jdbcType=VARCHAR}, #{executeTime,jdbcType=TIMESTAMP}, #{retryTimes,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{logPath,jdbcType=LONGVARCHAR}
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.oppo.cloud.model.TaskApplication">
@@ -149,6 +150,9 @@
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="applicationId != null">
         application_id,
+      </if>
+      <if test="applicationType != null">
+        application_type,
       </if>
       <if test="taskName != null">
         task_name,
@@ -171,13 +175,16 @@
       <if test="updateTime != null">
         update_time,
       </if>
-      <if test="logPath != null">
-        log_path,
-      </if>
+<!--      <if test="logPath != null">-->
+<!--        log_path,-->
+<!--      </if>-->
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="applicationId != null">
         #{applicationId,jdbcType=VARCHAR},
+      </if>
+      <if test="applicationType != null">
+        #{applicationType,jdbcType=VARCHAR},
       </if>
       <if test="taskName != null">
         #{taskName,jdbcType=VARCHAR},
@@ -200,9 +207,9 @@
       <if test="updateTime != null">
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="logPath != null">
-        #{logPath,jdbcType=LONGVARCHAR},
-      </if>
+<!--      <if test="logPath != null">-->
+<!--        #{logPath,jdbcType=LONGVARCHAR},-->
+<!--      </if>-->
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.oppo.cloud.model.TaskApplicationExample" resultType="java.lang.Long">
@@ -219,6 +226,9 @@
       </if>
       <if test="record.applicationId != null">
         application_id = #{record.applicationId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.applicationType != null">
+        application_type = #{record.applicationType,jdbcType=VARCHAR},
       </if>
       <if test="record.taskName != null">
         task_name = #{record.taskName,jdbcType=VARCHAR},
@@ -241,9 +251,6 @@
       <if test="record.updateTime != null">
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.logPath != null">
-        log_path = #{record.logPath,jdbcType=LONGVARCHAR},
-      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -253,14 +260,14 @@
     update task_application
     set id = #{record.id,jdbcType=INTEGER},
       application_id = #{record.applicationId,jdbcType=VARCHAR},
+      application_type = #{record.applicationType,jdbcType=VARCHAR},
       task_name = #{record.taskName,jdbcType=VARCHAR},
       flow_name = #{record.flowName,jdbcType=VARCHAR},
       project_name = #{record.projectName,jdbcType=VARCHAR},
       execute_time = #{record.executeTime,jdbcType=TIMESTAMP},
       retry_times = #{record.retryTimes,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      log_path = #{record.logPath,jdbcType=LONGVARCHAR}
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -269,6 +276,7 @@
     update task_application
     set id = #{record.id,jdbcType=INTEGER},
       application_id = #{record.applicationId,jdbcType=VARCHAR},
+      application_type = #{record.applicationType,jdbcType=VARCHAR},
       task_name = #{record.taskName,jdbcType=VARCHAR},
       flow_name = #{record.flowName,jdbcType=VARCHAR},
       project_name = #{record.projectName,jdbcType=VARCHAR},
@@ -285,6 +293,9 @@
     <set>
       <if test="applicationId != null">
         application_id = #{applicationId,jdbcType=VARCHAR},
+      </if>
+      <if test="applicationType != null">
+        application_type = #{applicationType,jdbcType=VARCHAR},
       </if>
       <if test="taskName != null">
         task_name = #{taskName,jdbcType=VARCHAR},
@@ -307,28 +318,26 @@
       <if test="updateTime != null">
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="logPath != null">
-        log_path = #{logPath,jdbcType=LONGVARCHAR},
-      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.oppo.cloud.model.TaskApplication">
     update task_application
     set application_id = #{applicationId,jdbcType=VARCHAR},
+      application_type = #{applicationType,jdbcType=VARCHAR},
       task_name = #{taskName,jdbcType=VARCHAR},
       flow_name = #{flowName,jdbcType=VARCHAR},
       project_name = #{projectName,jdbcType=VARCHAR},
       execute_time = #{executeTime,jdbcType=TIMESTAMP},
       retry_times = #{retryTimes,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      log_path = #{logPath,jdbcType=LONGVARCHAR}
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.oppo.cloud.model.TaskApplication">
     update task_application
     set application_id = #{applicationId,jdbcType=VARCHAR},
+      application_type = #{applicationType,jdbcType=VARCHAR},
       task_name = #{taskName,jdbcType=VARCHAR},
       flow_name = #{flowName,jdbcType=VARCHAR},
       project_name = #{projectName,jdbcType=VARCHAR},

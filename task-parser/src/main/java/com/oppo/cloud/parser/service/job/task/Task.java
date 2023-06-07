@@ -43,11 +43,18 @@ public abstract class Task {
 
     public List<IParser> createTasks() {
         List<IParser> parsers = new ArrayList<>();
+        // 获取日志路径
         Map<String, List<LogPath>> logPathMap = this.taskParam.getLogInfo().getLogPathMap();
         if (logPathMap != null && logPathMap.size() > 0) {
             for (Map.Entry<String, List<LogPath>> map : logPathMap.entrySet()) {
-                IParser parser = ParserFactory.create(new ParserParam(map.getKey(), this.taskParam.getLogRecord(),
-                        this.taskParam.getApp(), map.getValue()), new ProgressListener());
+                IParser parser = ParserFactory.create(
+                        new ParserParam(map.getKey(),
+                                this.taskParam.getLogRecord(),
+                                this.taskParam.getApp(),
+                                map.getValue()
+                        ),
+                        new ProgressListener()
+                );
                 if (parser != null) {
                     parsers.add(parser);
                 }

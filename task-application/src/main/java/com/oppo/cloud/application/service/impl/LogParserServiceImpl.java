@@ -151,44 +151,45 @@ public class LogParserServiceImpl implements LogParserService {
 
         ApplicationMessage applicationMessage = new ApplicationMessage();
 
-        for (Rule rule : customConfig.getRules()) {
-            LogParser logParser = new LogParser(taskInstance, rule, applicationMessage);
-            logParser.extract();
-        }
 
-        String logPath = String.join(",", applicationMessage.getLogPaths());
+        LogParser logParser = new LogParser(taskInstance, customConfig.getRules(), applicationMessage);
+        logParser.extract();
+
+//        String logPath = String.join(",", applicationMessage.getLogPaths());
         // 保存 applicationId
-        Set<String> applicationIds = applicationMessage.getApplicationIds();
+        Map<String,String> applications = applicationMessage.getApplications();
 
-        for (String appId :  applicationIds) {
-            addTaskApplication(appId, taskInstance, logPath);
+        for (Map.Entry<String, String> application :  applications.entrySet()) {
+            addTaskApplication(application.getKey(), application.getValue(), taskInstance);
         }
 
-        if(applicationIds.size() > 0){
+        if(applications.size() > 0){
             messageProducer.sendMessageSync(TASKINSTANCEAPPLICATIONTOPICS, JSON.toJSONString(taskInstance));
         }
 
         log.info("project: {}, process:{}, task:{}, execute_time: {}, parse applicationId done!",
                 taskInstance.getProjectName(), taskInstance.getFlowName(), taskInstance.getTaskName(),
-                taskInstance.getExecutionTime());
+                taskInstance.getExecutionTime()
+        );
     }
 
     /**
      * 添加任务applicationId
      */
-    public void addTaskApplication(String applicationId, TaskInstance taskInstance, String logPath) {
+    public void addTaskApplication(String applicationId, String applicationType, TaskInstance taskInstance) {
         // 数据写回kafka订阅
-        log.info("application save: applicationId=" + applicationId + " task_instance=" + taskInstance + ",lopPath="
-                + logPath);
+        log.info("application save: applicationId=" + applicationId +
+                " task_instance=" + taskInstance +
+                ",appType=" + applicationType);
 
         TaskApplication taskApplication = new TaskApplication();
         taskApplication.setApplicationId(applicationId);
+        taskApplication.setApplicationType(applicationType);
         taskApplication.setProjectName(taskInstance.getProjectName());
         taskApplication.setTaskName(taskInstance.getTaskName());
         taskApplication.setFlowName(taskInstance.getFlowName());
         taskApplication.setExecuteTime(taskInstance.getExecutionTime());
         taskApplication.setRetryTimes(taskInstance.getRetryTimes());
-        taskApplication.setLogPath(logPath);
         taskApplication.setCreateTime(new Date());
         taskApplication.setUpdateTime(new Date());
 
@@ -211,13 +212,13 @@ public class LogParserServiceImpl implements LogParserService {
         private TaskInstance taskInstance;
         private ApplicationMessage applicationMessage;
 
-        private Rule rule;
+        private List<Rule> rules;
 
         private static final String TMP_EXTENSION = ".tmp";
 
-        public LogParser(TaskInstance taskInstance, Rule rule, ApplicationMessage applicationMessage) {
+        public LogParser(TaskInstance taskInstance, List<Rule> rules, ApplicationMessage applicationMessage) {
             this.taskInstance = taskInstance;
-            this.rule = rule;
+            this.rules = rules;
             this.applicationMessage =applicationMessage;
         }
 
@@ -281,18 +282,26 @@ public class LogParserServiceImpl implements LogParserService {
                 filePaths = filePaths.subList(0, 20);
             }
 
-            filePaths.stream().forEach(path -> applicationMessage.addLogPath(path));
-
-            Pattern pattern = Pattern.compile(rule.getExtractLog().getRegex());
-
             for (String filePath : filePaths) {
                 try{
                     HDFSUtil.readLines(nameNodeConf, filePath, (String strLine) -> {
-                        Matcher matcher = pattern.matcher(strLine);
-                        if (matcher.matches()) {
-                            String appId = matcher.group(rule.getExtractLog().getName());
-                            LogParser.this.applicationMessage.addApplicationId(appId);
+                        for (Rule rule : this.rules){
+                            Pattern pattern = rule.getPattern();
+                            Matcher matcher = pattern.matcher(strLine);
+                            if (matcher.matches()) {
+                                if((rule.getName() != null) && (rule.getName().trim().length() != 0)){
+                                    String appId = matcher.group(rule.getName());
+                                    this.applicationMessage.addApplication(appId, rule.getType());
+                                }else{
+                                    String appId = String.format("v_%s_%s",
+                                            System.currentTimeMillis(),
+                                            (int)(Math.random() * System.currentTimeMillis() % 1000)
+                                    );
+                                    this.applicationMessage.addApplication(appId, rule.getType());
+                                }
+                            }
                         }
+
                     });
                 }catch (Exception e){
                     throw new RetryException(e);
@@ -342,27 +351,17 @@ public class LogParserServiceImpl implements LogParserService {
 
     static class ApplicationMessage{
 
-        private Set<String> applicationIds = new HashSet<String>();
-        private Set<String> logPaths = new HashSet<String>();
+        private Map<String, String> applicationMap = new HashMap<>();
 
         public ApplicationMessage(){
 
         }
-
-        public void addApplicationId(String appId){
-            this.applicationIds.add(appId);
+        public void addApplication(String appId, String type){
+            this.applicationMap.put(appId, type);
         }
 
-        public void addLogPath(String logPath){
-            this.logPaths.add(logPath);
-        }
-
-        public Set<String> getApplicationIds() {
-            return applicationIds;
-        }
-
-        public Set<String> getLogPaths() {
-            return logPaths;
+        public Map<String, String> getApplications() {
+            return applicationMap;
         }
     }
 }

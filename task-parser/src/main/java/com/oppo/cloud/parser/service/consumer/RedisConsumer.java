@@ -88,8 +88,12 @@ public class RedisConsumer implements CommandLineRunner {
         Semaphore semaphore = new Semaphore(config.getMaxThreadPoolSize());
         while (true) {
             try {
-                String msg = (String) redisService.executeScript(logRecordConsumerScript,
-                        Arrays.asList(config.getLogRecordList(), config.getProcessingHash()));
+
+                String msg = (String) redisService.executeScript(
+                        logRecordConsumerScript,
+                        Arrays.asList(config.getLogRecordList(), config.getProcessingHash())
+                );
+
                 if (msg == null) {
                     Thread.sleep(5000);
                     continue;
