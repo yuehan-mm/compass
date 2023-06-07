@@ -62,6 +62,7 @@ public class JobManager {
         List<Task> tasks = new ArrayList<>();
         if (logRecord.getApps() != null) {
             for (App app : logRecord.getApps()) {
+                // 遍历日志任务，生成日志解析任务
                 for (LogInfo logInfo : app.getLogInfoList()) {
                     Task task = TaskFactory.create(new TaskParam(logInfo.getLogGroup(), logRecord, app, logInfo));
                     if (task == null) {
@@ -70,6 +71,7 @@ public class JobManager {
                     }
                     tasks.add(task);
                 }
+                // 遍历解析Application
                 tasks.add(TaskFactory.create(new TaskParam(LogType.YARN.getName(), logRecord, app, null)));
             }
         }
@@ -96,10 +98,13 @@ public class JobManager {
         return futures;
     }
 
-
+    /***
+     *
+     * @param logRecord
+     * @throws Exception
+     */
     public void run(LogRecord logRecord) throws Exception {
-        log.info("start job logRecord:{}", logRecord.getId());
-
+        log.info("start job logRecord : {}", logRecord.getId());
         List<Task> tasks = createTasks(logRecord);
 
         if (tasks.size() == 0) {
@@ -109,7 +114,6 @@ public class JobManager {
         long start = System.currentTimeMillis();
 
         List<CompletableFuture<TaskResult>> futures = createFutures(tasks, jobExecutorPool);
-
         List<TaskResult> taskResults = new ArrayList<>();
 
         for (Future<TaskResult> result : futures) {

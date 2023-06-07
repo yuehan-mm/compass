@@ -94,16 +94,18 @@ public abstract class DetectServiceImpl implements DetectService {
     public void handleNormalJob(JobAnalysis detectJobAnalysis, int tryNumber) throws Exception {
         // 补充用户信息
         updateUserInfo(detectJobAnalysis);
-        // 查询该任务下的appIds
-        AbnormalTaskAppInfo abnormalTaskAppInfo = taskAppService.getAbnormalTaskAppsInfo(detectJobAnalysis);
+
+        // 解析task下面的Application信息
+        AbnormalTaskAppInfo abnormalTaskAppInfo = taskAppService.getAbnormalTaskAppsInfo(detectJobAnalysis, null);
+
         if (!"".equals(abnormalTaskAppInfo.getExceptionInfo())) {
             // 完全构造完成再发送
             delayTaskService.pushDelayedQueue(detectJobAnalysis,abnormalTaskAppInfo.getExceptionInfo(), tryNumber);
             return;
         }
+
         // 引擎维度诊断必须要有appId
         if (abnormalTaskAppInfo.getTaskAppList().size() != 0) {
-            // 更新vcoreSeconds 和 memorySeconds
             abnormalJobService.updateResource(detectJobAnalysis, abnormalTaskAppInfo.getTaskAppList());
             // 生成解析日志消息体logRecord
             LogRecord logRecord = this.genLogRecord(abnormalTaskAppInfo, detectJobAnalysis);
@@ -121,7 +123,7 @@ public abstract class DetectServiceImpl implements DetectService {
         // 补充用户信息
         updateUserInfo(detectJobAnalysis);
         // 查询该任务下的appIds
-        AbnormalTaskAppInfo abnormalTaskAppInfo = taskAppService.getAbnormalTaskAppsInfo(detectJobAnalysis);
+        AbnormalTaskAppInfo abnormalTaskAppInfo = taskAppService.getAbnormalTaskAppsInfo(detectJobAnalysis, null);
         if (!"".equals(abnormalTaskAppInfo.getExceptionInfo())) {
             delayTaskService.pushDelayedQueue(detectJobAnalysis, abnormalTaskAppInfo.getExceptionInfo(), tryNumber);
             return;
@@ -151,13 +153,19 @@ public abstract class DetectServiceImpl implements DetectService {
         logRecord.setIsOneClick(false);
         logRecord.setJobAnalysis(detectJobAnalysis);
         logRecord.formatTaskAppList(abnormalTaskAppInfo.getTaskAppList());
-        List<App> appLogPath = logRecordService.getAppLog(abnormalTaskAppInfo.getTaskAppList());
-        logRecord.setApps(appLogPath);
+        List<App> appLogPath = logRecordService.getAppLog(abnormalTaskAppInfo.getTaskAppList());    // 转化SparkAppLog信息
+        List<App> schedulerLogApp = logRecordService.getSchedulerLog(detectJobAnalysis);            // 转化 AirFlow 日志信息
+        appLogPath.addAll(schedulerLogApp);
+        logRecord.setApps(appLogPath);     //
+        if (schedulerLogApp.size() != 0) {
+            // 更新已处理的事件信息【记录调度日志已成功发送】
+            abnormalTaskAppInfo.setHandleApps(abnormalTaskAppInfo.getHandleApps() + "scheduler" + ";");
+        }
         return logRecord;
     }
 
     /**
-     * 发送解析
+     * 写到 Redis ?
      */
     public void sendLogRecordMsg(LogRecord logRecord) {
         Long size = redisService.lLeftPush(logRecordQueue, JSONObject.toJSONString(logRecord));
@@ -169,6 +177,7 @@ public abstract class DetectServiceImpl implements DetectService {
      */
     public void addOrUpdate(JobAnalysis detectJobAnalysis) throws Exception {
         JobAnalysis esJobAnalysis = abnormalJobService.searchJob(detectJobAnalysis);
+
         if (esJobAnalysis != null) {
             // 更新操作
             List<String> oldCategories = esJobAnalysis.getCategories();
@@ -187,8 +196,7 @@ public abstract class DetectServiceImpl implements DetectService {
                 esJobAnalysis.setEndTimeBaseline(detectJobAnalysis.getEndTimeBaseline());
             }
             esJobAnalysis.setUpdateTime(new Date());
-            elasticSearchService.insertOrUpDateEs(esJobAnalysis.getIndex(), esJobAnalysis.getDocId(),
-                    esJobAnalysis.genDoc());
+            elasticSearchService.insertOrUpDateEs(esJobAnalysis.getIndex(), esJobAnalysis.getDocId(), esJobAnalysis.genDoc());
         } else {
             // 新增操作
             detectJobAnalysis.setCreateTime(new Date());
@@ -207,15 +215,20 @@ public abstract class DetectServiceImpl implements DetectService {
      * 补充任务的用户信息
      */
     public void updateUserInfo(JobAnalysis detectJobAnalysis) {
-        Task task = taskService.getTask(detectJobAnalysis.getProjectName(), detectJobAnalysis.getFlowName(),
+
+        Task task = taskService.getTask(detectJobAnalysis.getProjectName(),
+                detectJobAnalysis.getFlowName(),
                 detectJobAnalysis.getTaskName());
+
         if (task == null) {
             log.error("get task null:{}", detectJobAnalysis);
             return;
         }
+
         detectJobAnalysis.setTaskId(task.getId());
         detectJobAnalysis.setProjectId(task.getProjectId());
         detectJobAnalysis.setFlowId(task.getFlowId());
+
         UserExample userExample = new UserExample();
         userExample.createCriteria().andIdEqualTo(task.getUserId());
         List<User> users = userMapper.selectByExample(userExample);
