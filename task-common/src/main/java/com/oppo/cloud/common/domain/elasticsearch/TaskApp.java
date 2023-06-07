@@ -16,6 +16,8 @@
 
 package com.oppo.cloud.common.domain.elasticsearch;
 
+import com.google.common.collect.Lists;
+import com.oppo.cloud.common.domain.job.LogPath;
 import com.oppo.cloud.common.util.DateUtil;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -35,16 +37,16 @@ public class TaskApp extends EsInfo {
     private String applicationType;
 
     @ApiModelProperty(value = "执行用户")
-    private String executeUser;
+    private String executeUser = "None";
 
     @ApiModelProperty(value = "执行队列")
-    private String queue;
+    private String queue = "None";
 
     @ApiModelProperty(value = "集群名称")
-    private String clusterName;
+    private String clusterName = "None";
 
     @ApiModelProperty(value = "用户列表")
-    private List<SimpleUser> users;
+    private List<SimpleUser> users = Lists.newArrayList();
 
     @ApiModelProperty(value = "项目名称")
     private String projectName;
@@ -80,10 +82,10 @@ public class TaskApp extends EsInfo {
     private String taskAppState;
 
     @ApiModelProperty(value = "执行消耗memory·seconds[mb·s]")
-    private Double memorySeconds;
+    private Double memorySeconds = 0.0;
 
     @ApiModelProperty(value = "执行消耗vcore·seconds")
-    private Double vcoreSeconds;
+    private Double vcoreSeconds = 0.0;
 
     @ApiModelProperty(value = "am异常信息")
     private String diagnostics;
@@ -100,17 +102,8 @@ public class TaskApp extends EsInfo {
     @ApiModelProperty(value = "诊断结果")
     private String diagnoseResult;
 
-    @ApiModelProperty(value = "跳转SparkUI")
-    private String sparkUI;
-
-    @ApiModelProperty(value = "event log路径")
-    private String eventLogPath;
-
-    @ApiModelProperty(value = "yarn log路径")
-    private String yarnLogPath;
-
     @ApiModelProperty(value = "am 主机名")
-    private String amHost;
+    private String amHost = "";
 
     @ApiModelProperty(value = "是否删除")
     private Integer deleted = 0;
@@ -120,6 +113,8 @@ public class TaskApp extends EsInfo {
 
     @ApiModelProperty(value = "修改时间")
     private Date updateTime;
+
+    private Map<String, List<LogPath>> logPaths = new HashMap<>();
 
     public Map<String, Object> genDoc() throws Exception {
         Map<String, Object> res = new HashMap<>();
@@ -146,6 +141,15 @@ public class TaskApp extends EsInfo {
             }
         }
         return res;
+    }
+
+    public void addLogPath(String logType, LogPath logPath){
+        if(!this.logPaths.containsKey(logType)){
+            this.logPaths.put(logType, new LinkedList<>());
+        }
+
+        List<LogPath> logPathList = this.logPaths.get(logType);
+        logPathList.add(logPath);
     }
 
     public String genIndex(String baseIndex) {

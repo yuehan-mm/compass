@@ -83,43 +83,6 @@ public class DetectedTask {
         ack.acknowledge();
     }
 
-    /**
-     * 判断是否最终状态
-     */
-    public boolean preFilter(String message) {
-        // 只检测task_instance表的非删除操作
-        if (message.contains("\"table\":\"task_instance\"") && !message.contains("\"eventType\":\"DELETE\"")) {
-            if (message.contains("\\\"taskState\\\":\\\"success\\\"")
-                    || message.contains("\\\"taskState\\\":\\\"fail\\\"")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * 判断任务是否已将结束
-     */
-
-    public boolean judgeTaskFinished(TaskInstance taskInstance) {
-        // 成功任务直接检测
-        if (TaskStateEnum.success.name().equals(taskInstance.getTaskState())) {
-            return true;
-        }
-        if (TaskStateEnum.fail.name().equals(taskInstance.getTaskState())) {
-            // 手动执行的重试当成单次执行周期
-            if ("manual".equals(taskInstance.getTriggerType())) {
-                return true;
-            } else {
-                // 非手动执行的判断是否重试完成
-                Integer tryNumber = TryNumberUtil.updateTryNumber(taskInstance.getRetryTimes(), schedulerType);
-                log.info("schedulerType:{},{},{}, {}", schedulerType, taskInstance.getRetryTimes(), tryNumber, taskInstance.getMaxRetryTimes());
-                return tryNumber.equals(taskInstance.getMaxRetryTimes());
-            }
-        }
-        return false;
-    }
-
 
     /**
      * 对每个任务进行诊断
