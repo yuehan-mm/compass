@@ -49,7 +49,7 @@ public class App {
         this.setAppId(taskApp.getApplicationId());
         this.setTryNumber(taskApp.getRetryTimes());
         LogInfo logInfo = new LogInfo();
-        logInfo.setLogGroup("spark");
+
         Map<String, List<LogPath>> logPathMap = new HashMap<>();
         logPathMap.put("event", Collections.singletonList(new LogPath("hdfs", "event", LogPathType.FILE,
                 taskApp.getEventLogPath())));

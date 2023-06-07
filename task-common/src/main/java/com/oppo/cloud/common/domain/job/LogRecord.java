@@ -47,7 +47,7 @@ public class LogRecord {
     /**
      * app日志
      */
-    private List<App> apps;
+//    private List<App> apps;
 
     /**
      * 一键诊断

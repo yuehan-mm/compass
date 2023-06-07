@@ -24,6 +24,7 @@ import com.oppo.cloud.common.domain.cluster.yarn.YarnApp;
 import com.oppo.cloud.common.domain.elasticsearch.EsInfo;
 import com.oppo.cloud.common.util.DateUtil;
 import com.oppo.cloud.detect.service.ElasticSearchService;
+import com.oppo.cloud.detect.util.AppNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -169,7 +170,7 @@ public class ElasticSearchServiceImp implements ElasticSearchService {
             yarnApp = JSON.parseObject(hit.getSourceAsString(), YarnApp.class);
         }
         if (yarnApp == null) {
-            throw new Exception(String.format("yarnApp is null, appId:%s", applicationId));
+            throw new AppNotFoundException(String.format("yarnApp is null, appId:%s", applicationId));
         }
         if (yarnApp.getFinalStatus().equals(YarnAppFinalStatus.SUCCEEDED.toString()) ||
                 yarnApp.getFinalStatus().equals(YarnAppFinalStatus.FAILED.toString()) ||

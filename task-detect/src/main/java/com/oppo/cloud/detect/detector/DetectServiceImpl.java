@@ -153,14 +153,14 @@ public abstract class DetectServiceImpl implements DetectService {
         logRecord.setIsOneClick(false);
         logRecord.setJobAnalysis(detectJobAnalysis);
         logRecord.formatTaskAppList(abnormalTaskAppInfo.getTaskAppList());
-        List<App> appLogPath = logRecordService.getAppLog(abnormalTaskAppInfo.getTaskAppList());    // 转化SparkAppLog信息
-        List<App> schedulerLogApp = logRecordService.getSchedulerLog(detectJobAnalysis);            // 转化 AirFlow 日志信息
-        appLogPath.addAll(schedulerLogApp);
-        logRecord.setApps(appLogPath);     //
-        if (schedulerLogApp.size() != 0) {
-            // 更新已处理的事件信息【记录调度日志已成功发送】
-            abnormalTaskAppInfo.setHandleApps(abnormalTaskAppInfo.getHandleApps() + "scheduler" + ";");
-        }
+//        List<App> appLogPath = logRecordService.getAppLog(abnormalTaskAppInfo.getTaskAppList());    // 转化SparkAppLog信息
+//        List<App> schedulerLogApp = logRecordService.getSchedulerLog(detectJobAnalysis);            // 转化 AirFlow 日志信息
+//        appLogPath.addAll(schedulerLogApp);
+//        logRecord.setApps(appLogPath);     //
+//        if (schedulerLogApp.size() != 0) {
+//            // 更新已处理的事件信息【记录调度日志已成功发送】
+//            abnormalTaskAppInfo.setHandleApps(abnormalTaskAppInfo.getHandleApps() + "scheduler" + ";");
+//        }
         return logRecord;
     }
 

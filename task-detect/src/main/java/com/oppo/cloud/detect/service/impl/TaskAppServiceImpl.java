@@ -29,6 +29,7 @@ import com.oppo.cloud.common.util.DateUtil;
 import com.oppo.cloud.common.util.ui.TryNumberUtil;
 import com.oppo.cloud.detect.domain.AbnormalTaskAppInfo;
 import com.oppo.cloud.detect.service.*;
+import com.oppo.cloud.detect.util.AppNotFoundException;
 import com.oppo.cloud.mapper.TaskApplicationMapper;
 import com.oppo.cloud.model.*;
 import lombok.extern.slf4j.Slf4j;
@@ -207,42 +208,33 @@ public class TaskAppServiceImpl implements TaskAppService {
     public TaskApp buildAbnormalTaskApp(TaskApplication taskApplication) throws Exception {
         TaskApp taskApp = new TaskApp();
         BeanUtils.copyProperties(taskApplication, taskApp);
-        YarnApp yarnApp = elasticSearchService.searchYarnApp(taskApplication.getApplicationId());
-        SparkApp sparkApp = elasticSearchService.searchSparkApp(taskApplication.getApplicationId());
+        taskApp.setApplicationId(taskApp.getApplicationId());
         taskApp.setExecutionDate(taskApplication.getExecuteTime());
-        taskApp.setStartTime(new Date(yarnApp.getStartedTime()));
-        taskApp.setFinishTime(new Date(yarnApp.getFinishedTime()));
-        // yarnApp的elapsedTime的单位为ms
-        taskApp.setElapsedTime((double) yarnApp.getElapsedTime());
-        taskApp.setClusterName(yarnApp.getClusterName());
-        taskApp.setApplicationType(yarnApp.getApplicationType());
-        taskApp.setQueue(yarnApp.getQueue());
-        taskApp.setDiagnostics(yarnApp.getDiagnostics());
-        taskApp.setDiagnoseResult(StringUtils.isNotBlank(yarnApp.getDiagnostics()) ? "abnormal" : "");
-        taskApp.setCategories(StringUtils.isNotBlank(yarnApp.getDiagnostics())
-                ? Collections.singletonList(AppCategoryEnum.OTHER_EXCEPTION.getCategory())
-                : new ArrayList<>());
-        taskApp.setExecuteUser(yarnApp.getUser());
-        taskApp.setVcoreSeconds((double) yarnApp.getVcoreSeconds());
-        taskApp.setTaskAppState(yarnApp.getFinalStatus());
         taskApp.setRetryTimes(taskApplication.getRetryTimes());
+        try{
+
+
+        }catch (AppNotFoundException e){
+        }
+
+//        SparkApp sparkApp = elasticSearchService.searchSparkApp(taskApplication.getApplicationId());
+
+        // yarnApp的elapsedTime的单位为ms
+
+
         // 单位MB,数值保留两位小数
-        taskApp.setMemorySeconds((double) Math.round(yarnApp.getMemorySeconds()));
-        String attemptId = StringUtils.isNotEmpty(sparkApp.getAttemptId()) ? sparkApp.getAttemptId() : "1";
-        taskApp.setEventLogPath(sparkApp.getEventLogDirectory() + "/" + taskApplication.getApplicationId() + "_" + attemptId);
 
-        taskApp.setSparkUI(String.format(sparkUiProxy, sparkApp.getSparkHistoryServer(), taskApplication.getApplicationId()));
-        String yarnLogPath = getYarnLogPath(yarnApp.getIp());
-        if ("".equals(yarnLogPath)) {
-            throw new Exception(String.format("can not find yarn log path: rm ip : %s", yarnApp.getIp()));
-        }
+//        String attemptId = StringUtils.isNotEmpty(sparkApp.getAttemptId()) ? sparkApp.getAttemptId() : "1";
+//        taskApp.setEventLogPath(sparkApp.getEventLogDirectory() + "/" + taskApplication.getApplicationId() + "_" + attemptId);
+//
+//        taskApp.setSparkUI(String.format(sparkUiProxy, sparkApp.getSparkHistoryServer(), taskApplication.getApplicationId()));
+//        String yarnLogPath = getYarnLogPath(yarnApp.getIp());
+//        if ("".equals(yarnLogPath)) {
+//            throw new Exception(String.format("can not find yarn log path: rm ip : %s", yarnApp.getIp()));
+//        }
 
-        String[] amHost = yarnApp.getAmHostHttpAddress().split(":");
-        if (amHost.length == 0) {
-            throw new Exception(String.format("parse amHost error, amHost:%s", yarnApp.getAmHostHttpAddress()));
-        }
-        taskApp.setAmHost(amHost[0]);
-        taskApp.setYarnLogPath(yarnLogPath + "/" + yarnApp.getUser() + "/logs/" + taskApplication.getApplicationId());
+
+//        taskApp.setYarnLogPath(yarnLogPath + "/" + yarnApp.getUser() + "/logs/" + taskApplication.getApplicationId());
 
         return taskApp;
     }
@@ -265,11 +257,11 @@ public class TaskAppServiceImpl implements TaskAppService {
             taskApp.setVcoreSeconds((double) yarnApp.getVcoreSeconds());
             taskApp.setMemorySeconds((double) Math.round(yarnApp.getMemorySeconds()));
             taskApp.setTaskAppState(yarnApp.getState());
-            String yarnLogPath = getYarnLogPath(yarnApp.getIp());
-            if (!"".equals(yarnLogPath)) {
-                taskApp.setYarnLogPath(
-                        yarnLogPath + "/" + yarnApp.getUser() + "/logs/" + taskApplication.getApplicationId());
-            }
+//            String yarnLogPath = getYarnLogPath(yarnApp.getIp());
+//            if (!"".equals(yarnLogPath)) {
+//                taskApp.setYarnLogPath(
+//                        yarnLogPath + "/" + yarnApp.getUser() + "/logs/" + taskApplication.getApplicationId());
+//            }
             String[] amHost = yarnApp.getAmHostHttpAddress().split(":");
             if (amHost.length != 0) {
                 taskApp.setAmHost(amHost[0]);
@@ -277,35 +269,15 @@ public class TaskAppServiceImpl implements TaskAppService {
         } catch (Exception e) {
             log.error("try complete yarn info failed, msg:", e);
         }
-        try {
-            SparkApp sparkApp = elasticSearchService.searchSparkApp(taskApplication.getApplicationId());
-            taskApp.setEventLogPath(sparkApp.getEventLogDirectory() + "/" + taskApplication.getApplicationId());
-        } catch (Exception e) {
-            log.error("try complete spark info failed, msg:", e);
-        }
+//        try {
+//            SparkApp sparkApp = elasticSearchService.searchSparkApp(taskApplication.getApplicationId());
+//            taskApp.setEventLogPath(sparkApp.getEventLogDirectory() + "/" + taskApplication.getApplicationId());
+//        } catch (Exception e) {
+//            log.error("try complete spark info failed, msg:", e);
+//        }
         return taskApp;
     }
 
-    /**
-     * 查询redis,获取yarn 日志路径
-     */
-    public String getYarnLogPath(String rmIp) throws Exception {
-        if (redisService.hasKey(Constant.RM_JHS_MAP)) {
-            Map<String, String> rmJhsMap = JSON.parseObject((String) redisService.get(Constant.RM_JHS_MAP),
-                    new TypeReference<Map<String, String>>() {
-                    });
-            String jhsIp = rmJhsMap.get(rmIp);
-            String key = Constant.JHS_HDFS_PATH + jhsIp;
-            if (redisService.hasKey(key)) {
-                return (String) redisService.get(key);
-            } else {
-                throw new Exception(String.format("search redis error,msg: can not find key %s, rmJhsMap:%s, rmIp:%s", key, rmJhsMap, rmIp));
-            }
-
-        } else {
-            throw new Exception(String.format("search redis error,msg: can not find key %s", Constant.RM_JHS_MAP));
-        }
-    }
 
 
     public List<TaskApplication> getTaskApplications(String projectName, String flowName, String taskName,
