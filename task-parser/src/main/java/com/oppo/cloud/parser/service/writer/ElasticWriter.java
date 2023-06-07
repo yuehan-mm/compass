@@ -368,8 +368,11 @@ public class ElasticWriter {
 
     public void saveTaskResults(LogRecord logRecord, List<TaskResult> taskResults) throws Exception {
 
+        // 作业 级别异常汇总
         Map<String, Boolean> jobCategoryMap = new HashMap<>();
+        // app 级别异常汇总
         Map<String, List<String>> appCategoryMap = new HashMap<>();
+
         for (TaskResult result : taskResults) {
             if (result.getCategories() != null) {
                 for (String category : result.getCategories()) {
@@ -385,12 +388,13 @@ public class ElasticWriter {
                 }
             }
         }
-        // update job categories
+        // 更新作业异常信息
         if (jobCategoryMap.size() > 0) {
             log.info("updateJob:{},{}", logRecord.getId(), jobCategoryMap);
             ElasticWriter.getInstance().updateJob(logRecord.getJobAnalysis(), jobCategoryMap);
         }
 
+        // 更新 app 异常信息
         for (Map.Entry<String, List<String>> map : appCategoryMap.entrySet()) {
             TaskApp taskApp = logRecord.getTaskAppList().get(map.getKey());
             if (taskApp == null) {
@@ -405,9 +409,7 @@ public class ElasticWriter {
             if (appCategories.size() > 0) {
                 ElasticWriter.getInstance().updateTaskApp(taskApp, appCategories);
             }
-
         }
-
     }
 
     private enum Elastic {

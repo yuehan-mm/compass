@@ -28,6 +28,9 @@ public class TaskApplication implements Serializable {
     @ApiModelProperty(value = "appId")
     private String applicationId;
 
+    @ApiModelProperty(value = "appType")
+    private String applicationType;
+
     @ApiModelProperty(value = "任务名称")
     private String taskName;
 
@@ -49,8 +52,8 @@ public class TaskApplication implements Serializable {
     @ApiModelProperty(value = "更新时间")
     private Date updateTime;
 
-    @ApiModelProperty(value = "任务调度器日志,多个用逗号隔开")
-    private String logPath;
+//    @ApiModelProperty(value = "任务调度器日志,多个用逗号隔开")
+//    private String logPath;
 
     private static final long serialVersionUID = 1L;
 
@@ -68,6 +71,14 @@ public class TaskApplication implements Serializable {
 
     public void setApplicationId(String applicationId) {
         this.applicationId = applicationId;
+    }
+
+    public String getApplicationType() {
+        return applicationType;
+    }
+
+    public void setApplicationType(String applicationType) {
+        this.applicationType = applicationType;
     }
 
     public String getTaskName() {
@@ -125,14 +136,14 @@ public class TaskApplication implements Serializable {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
-
-    public String getLogPath() {
-        return logPath;
-    }
-
-    public void setLogPath(String logPath) {
-        this.logPath = logPath;
-    }
+//
+//    public String getLogPath() {
+//        return logPath;
+//    }
+//
+//    public void setLogPath(String logPath) {
+//        this.logPath = logPath;
+//    }
 
     @Override
     public String toString() {
@@ -142,14 +153,15 @@ public class TaskApplication implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
         sb.append(", applicationId=").append(applicationId);
+        sb.append(", appType=").append(applicationType);
         sb.append(", taskName=").append(taskName);
         sb.append(", flowName=").append(flowName);
         sb.append(", projectName=").append(projectName);
         sb.append(", executeTime=").append(executeTime);
         sb.append(", retryTimes=").append(retryTimes);
         sb.append(", createTime=").append(createTime);
-        sb.append(", updateTime=").append(updateTime);
-        sb.append(", logPath=").append(logPath);
+        sb.append(", updateTime=").append(updateTime );
+//        sb.append(", logPath=").append(logPath);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

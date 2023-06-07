@@ -121,12 +121,12 @@ CREATE TABLE `task_instance`(
 CREATE TABLE `task_application` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '异常任务id',
   `application_id` varchar(64) DEFAULT NULL COMMENT 'appId',
+  `application_type` varchar(64) DEFAULT NULL COMMENT 'appType',
   `task_name` varchar(64) DEFAULT NULL COMMENT '任务名称',
   `flow_name` varchar(64) DEFAULT NULL COMMENT '工作流名称',
   `project_name` varchar(64) DEFAULT NULL COMMENT '项目名称',
   `execute_time` datetime DEFAULT NULL COMMENT '任务计划执行时间',
   `retry_times` int(2) DEFAULT NULL COMMENT '任务重试第n次',
-  `log_path` text DEFAULT NULL COMMENT '任务调度器日志,多个用逗号隔开',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),

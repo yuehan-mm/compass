@@ -34,9 +34,11 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Task getTask(String projectName, String flowName, String taskName) {
         TaskExample taskExample = new TaskExample();
-        taskExample.createCriteria().andTaskNameEqualTo(taskName)
+        taskExample.createCriteria()
+                .andTaskNameEqualTo(taskName)
                 .andFlowNameEqualTo(flowName)
                 .andProjectNameEqualTo(projectName);
+
         List<Task> tasks = taskMapper.selectByExample(taskExample);
         if (tasks.size() > 0) {
             return tasks.get(0);
