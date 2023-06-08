@@ -56,7 +56,7 @@ public class SchedulerTask extends Task {
         List<CompletableFuture<CommonResult>> futures = super.createFutures(parsers, taskThreadPool);
 
         TaskResult taskResult = new TaskResult();
-        taskResult.setAppId(this.taskParam.getApp().getAppId());
+        taskResult.setAppId(this.taskParam.getTaskApp().getApplicationId());
 
         List<String> categories = new ArrayList<>();
         for (Future<CommonResult> result : futures) {

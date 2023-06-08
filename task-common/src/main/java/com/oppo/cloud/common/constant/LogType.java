@@ -27,7 +27,9 @@ public enum LogType {
     SPARK_DRIVER("driver"),
     SPARK_EXECUTOR("executor"),
     CONTAINER("container"),
-
+    JOB_MANAGER("jobManger"),
+    TASK_MANAGER("taskManager"),
+    MAPREDUCE_EVENT("event"),
     YARN("yarn"),
 
     SPARK_GC("gc");

@@ -17,6 +17,10 @@
 package com.oppo.cloud.common.constant;
 
 
+import java.util.Collections;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 public enum ApplicationType {
 
     SPARK("SPARK"),
@@ -40,5 +44,19 @@ public enum ApplicationType {
             }
         }
         throw new IllegalArgumentException("invalid app type : " + strAppType);
+    }
+
+    private static final Map<String, ApplicationType> MAP;
+
+    static {
+        Map<String, ApplicationType> map = new ConcurrentHashMap<>();
+        for (ApplicationType instance : ApplicationType.values()) {
+            map.put(instance.getValue(), instance);
+        }
+        MAP = Collections.unmodifiableMap(map);
+    }
+
+    public static ApplicationType get(String name) {
+        return MAP.get(name);
     }
 }

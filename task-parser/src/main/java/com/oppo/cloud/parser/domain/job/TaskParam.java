@@ -30,18 +30,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Data
 public class TaskParam {
-    private LogRecord logRecord;
     private TaskApp taskApp;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private Boolean isOneClick;
 
-    public TaskParam() {
-
-    }
-
-    public TaskParam(LogRecord logRecord, TaskApp taskApp) {
-        this.logRecord = logRecord;
+    public TaskParam(TaskApp taskApp, Boolean isOneClick) {
         this.taskApp = taskApp;
+        this.isOneClick = isOneClick;
     }
 
 }

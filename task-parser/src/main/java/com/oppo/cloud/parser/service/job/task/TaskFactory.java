@@ -21,19 +21,16 @@ import com.oppo.cloud.parser.domain.job.TaskParam;
 
 public class TaskFactory {
 
-    private static final String SCHEDULER = "scheduler";
-    private static final String SPARK = "spark";
-    private static final String YARN = "yarn";
 
 
     public static Task create(TaskParam taskParam) {
-        switch (taskParam.getCategory()) {
-            case SCHEDULER:
-                return new SchedulerTask(taskParam);
+        switch (taskParam.getTaskApp().getApplicationType()) {
+//            case MAPREDUCE:
+//                return new MapReduceTask(taskParam);
             case SPARK:
                 return new SparkTask(taskParam);
-            case YARN:
-                return new YarnTask(taskParam);
+//            case YARN:
+//                return new YarnTask(taskApp);
             default:
                 return null;
         }

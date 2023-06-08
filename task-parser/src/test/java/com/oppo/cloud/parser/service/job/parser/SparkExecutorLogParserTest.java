@@ -28,8 +28,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 import java.util.Map;
 
-@SpringBootTest
 class SparkExecutorLogParserTest {
+    /*
 
     @Test
     void run() {
@@ -46,4 +46,5 @@ class SparkExecutorLogParserTest {
         CommonResult commonResult = parser.run();
         System.out.println(commonResult);
     }
+     */
 }

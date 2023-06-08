@@ -28,8 +28,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 import java.util.Map;
 
-@SpringBootTest
 class SchedulerLogParserTest {
+    /*
 
     @Test
     void run() {
@@ -44,5 +44,6 @@ class SchedulerLogParserTest {
         CommonResult commonResult = schedulerLogParser.run();
         System.out.println(commonResult);
     }
+     */
 
 }

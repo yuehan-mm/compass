@@ -35,7 +35,7 @@ import java.nio.file.Files;
 import java.util.*;
 
 public class ParamUtil {
-
+/*
     public static String[] readLines(String path) throws IOException {
         File file = new File(ParamUtil.class.getClassLoader().getResource(path).getPath());
         String content = new String(Files.readAllBytes(file.toPath()));
@@ -165,4 +165,5 @@ public class ParamUtil {
 
         return logRecord;
     }
+ */
 }

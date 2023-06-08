@@ -60,21 +60,16 @@ public class JobManager {
 
     private List<Task> createTasks(LogRecord logRecord) {
         List<Task> tasks = new ArrayList<>();
-        if (logRecord.getApps() != null) {
-            for (App app : logRecord.getApps()) {
-                // 遍历日志任务，生成日志解析任务
-                for (LogInfo logInfo : app.getLogInfoList()) {
-                    Task task = TaskFactory.create(new TaskParam(logInfo.getLogGroup(), logRecord, app, logInfo));
-                    if (task == null) {
-                        log.warn("unsupported log group:{}", logInfo.getLogGroup());
-                        continue;
-                    }
-                    tasks.add(task);
-                }
-                // 遍历解析Application
-                tasks.add(TaskFactory.create(new TaskParam(LogType.YARN.getName(), logRecord, app, null)));
+        logRecord.getApplications().forEach((appid, taskApp) -> {
+            Task task = TaskFactory.create(new TaskParam(taskApp, logRecord.getIsOneClick()));
+            if (task == null) {
+                log.warn("unsupported log group:{},{}", appid, taskApp);
+                return;
             }
-        }
+            tasks.add(task);
+//            // YARN 日志诊断？
+//            tasks.add(TaskFactory.create(taskApp));
+        });
         return tasks;
     }
 

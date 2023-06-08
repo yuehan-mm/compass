@@ -52,7 +52,7 @@ public class SparkEventLogParser extends OneClickSubject implements IParser {
         this.param = param;
         JobRulesConfigService jobRulesConfigService = (JobRulesConfigService) SpringBeanUtil.getBean(JobRulesConfigService.class);
         this.config = jobRulesConfigService.detectorConfig;
-        this.isOneClick = param.getLogRecord().getIsOneClick();
+        this.isOneClick = param.getTaskParam().getIsOneClick();
     }
 
     @Override
@@ -104,13 +104,13 @@ public class SparkEventLogParser extends OneClickSubject implements IParser {
             appDuration = 0L;
         }
 
-        DetectorParam detectorParam = new DetectorParam(this.param.getLogRecord().getJobAnalysis().getFlowName(),
-                this.param.getLogRecord().getJobAnalysis().getProjectName(),
-                this.param.getLogRecord().getJobAnalysis().getTaskName(),
-                this.param.getLogRecord().getJobAnalysis().getExecutionDate(),
-                this.param.getLogRecord().getJobAnalysis().getRetryTimes(),
-                this.param.getApp().getAppId(), appDuration, logPath, config, replayEventLogs,
-                this.param.getLogRecord().getIsOneClick());
+        DetectorParam detectorParam = new DetectorParam(this.param.getTaskParam().getTaskApp().getFlowName(),
+                this.param.getTaskParam().getTaskApp().getProjectName(),
+                this.param.getTaskParam().getTaskApp().getTaskName(),
+                this.param.getTaskParam().getTaskApp().getExecutionDate(),
+                this.param.getTaskParam().getTaskApp().getRetryTimes(),
+                this.param.getTaskParam().getTaskApp().getApplicationId(), appDuration, logPath, config, replayEventLogs,
+                isOneClick);
 
         DetectorManager detectorManager = new DetectorManager(detectorParam);
         // run all detector
@@ -183,7 +183,7 @@ public class SparkEventLogParser extends OneClickSubject implements IParser {
             return;
         }
         OneClickProgress oneClickProgress = new OneClickProgress();
-        oneClickProgress.setAppId(this.param.getApp().getAppId());
+        oneClickProgress.setAppId(this.param.getTaskParam().getTaskApp().getApplicationId());
         oneClickProgress.setLogType(this.param.getLogType());
         ProgressInfo executorProgress = new ProgressInfo();
         executorProgress.setCount(count);
