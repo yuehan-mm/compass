@@ -16,11 +16,7 @@
 
 package com.oppo.cloud.parser.domain.job;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oppo.cloud.common.domain.elasticsearch.TaskApp;
-import com.oppo.cloud.common.domain.job.App;
-import com.oppo.cloud.common.domain.job.LogInfo;
-import com.oppo.cloud.common.domain.job.LogRecord;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 

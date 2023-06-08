@@ -19,7 +19,6 @@ package com.oppo.cloud.detect.detector;
 import com.alibaba.fastjson2.JSONObject;
 import com.oppo.cloud.common.domain.elasticsearch.JobAnalysis;
 import com.oppo.cloud.common.domain.elasticsearch.SimpleUser;
-import com.oppo.cloud.common.domain.job.App;
 import com.oppo.cloud.common.domain.job.LogRecord;
 import com.oppo.cloud.common.service.RedisService;
 import com.oppo.cloud.common.util.DateUtil;
@@ -58,9 +57,6 @@ public abstract class DetectServiceImpl implements DetectService {
 
     @Autowired
     private UserMapper userMapper;
-
-    @Autowired
-    private LogRecordService logRecordService;
 
     @Autowired
     private TaskAppService taskAppService;
