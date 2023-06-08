@@ -16,6 +16,7 @@
 
 package com.oppo.cloud.application.domain;
 
+import com.oppo.cloud.common.constant.ApplicationType;
 import lombok.Data;
 
 import java.util.regex.Pattern;
@@ -38,5 +39,9 @@ public class Rule {
             pattern = Pattern.compile(regex);
         }
         return pattern;
+    }
+
+    public ApplicationType getType(){
+        return ApplicationType.getInstance(type);
     }
 }

@@ -17,6 +17,8 @@
 package com.oppo.cloud.common.domain.elasticsearch;
 
 import com.google.common.collect.Lists;
+import com.oppo.cloud.common.constant.ApplicationType;
+import com.oppo.cloud.common.constant.LogType;
 import com.oppo.cloud.common.domain.job.LogPath;
 import com.oppo.cloud.common.util.DateUtil;
 import io.swagger.annotations.ApiModelProperty;
@@ -34,7 +36,7 @@ public class TaskApp extends EsInfo {
     private String applicationId;
 
     @ApiModelProperty(value = "applicationType类型")
-    private String applicationType;
+    private ApplicationType applicationType;
 
     @ApiModelProperty(value = "执行用户")
     private String executeUser = "None";
@@ -114,7 +116,7 @@ public class TaskApp extends EsInfo {
     @ApiModelProperty(value = "修改时间")
     private Date updateTime;
 
-    private Map<String, List<LogPath>> logPaths = new HashMap<>();
+    private Map<LogType, List<LogPath>> logPaths = new HashMap<>();
 
     public Map<String, Object> genDoc() throws Exception {
         Map<String, Object> res = new HashMap<>();
@@ -143,7 +145,7 @@ public class TaskApp extends EsInfo {
         return res;
     }
 
-    public void addLogPath(String logType, LogPath logPath){
+    public void addLogPath(LogType logType, LogPath logPath){
         if(!this.logPaths.containsKey(logType)){
             this.logPaths.put(logType, new LinkedList<>());
         }

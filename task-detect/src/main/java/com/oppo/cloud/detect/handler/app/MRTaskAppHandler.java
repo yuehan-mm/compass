@@ -5,6 +5,7 @@ import com.alibaba.fastjson2.TypeReference;
 import com.oppo.cloud.common.constant.AppCategoryEnum;
 import com.oppo.cloud.common.constant.Constant;
 import com.oppo.cloud.common.constant.LogPathType;
+import com.oppo.cloud.common.constant.LogType;
 import com.oppo.cloud.common.domain.cluster.spark.SparkApp;
 import com.oppo.cloud.common.domain.cluster.yarn.YarnApp;
 import com.oppo.cloud.common.domain.elasticsearch.TaskApp;
@@ -37,7 +38,7 @@ public class MRTaskAppHandler implements TaskAppHandler {
     taskApp.setFinishTime(new Date(yarnApp.getFinishedTime()));
     taskApp.setElapsedTime((double) yarnApp.getElapsedTime());
     taskApp.setClusterName(yarnApp.getClusterName());
-    taskApp.setApplicationType(yarnApp.getApplicationType());
+    taskApp.setApplicationType(taskApplication.getApplicationType());
     taskApp.setQueue(yarnApp.getQueue());
     taskApp.setDiagnostics(yarnApp.getDiagnostics());
     taskApp.setDiagnoseResult(StringUtils.isNotBlank(yarnApp.getDiagnostics()) ? "abnormal" : "");
@@ -61,7 +62,7 @@ public class MRTaskAppHandler implements TaskAppHandler {
       throw new Exception(String.format("can not find yarn log path: rm ip : %s", yarnApp.getIp()));
     }
 
-    taskApp.addLogPath("executor", new LogPath("hdfs", "event", LogPathType.FILE, yarnLogPath));
+    taskApp.addLogPath(LogType.CONTAINER, new LogPath("hdfs", "event", LogPathType.FILE, yarnLogPath));
   }
 
   /**

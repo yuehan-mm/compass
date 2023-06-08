@@ -16,6 +16,7 @@
 
 package com.oppo.cloud.model;
 
+import com.oppo.cloud.common.constant.ApplicationType;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.Date;
@@ -29,7 +30,7 @@ public class TaskApplication implements Serializable {
     private String applicationId;
 
     @ApiModelProperty(value = "appType")
-    private String applicationType;
+    private ApplicationType applicationType;
 
     @ApiModelProperty(value = "任务名称")
     private String taskName;
@@ -73,11 +74,11 @@ public class TaskApplication implements Serializable {
         this.applicationId = applicationId;
     }
 
-    public String getApplicationType() {
+    public ApplicationType getApplicationType() {
         return applicationType;
     }
 
-    public void setApplicationType(String applicationType) {
+    public void setApplicationType(ApplicationType applicationType) {
         this.applicationType = applicationType;
     }
 
