@@ -36,7 +36,7 @@ public class LogRecord {
     private JobAnalysis jobAnalysis;
 
     // taskApp信息: Map<applicationId,taskApp>
-    private Map<String, TaskApp> apps = new HashMap<>();
+    private Map<String, TaskApp> applications = new HashMap<>();
 
     private Boolean isOneClick = false;
 
@@ -46,11 +46,7 @@ public class LogRecord {
 
     public void formatTaskAppList(List<TaskApp> taskAppList) {
         taskAppList.stream()
-                .forEach(taskApp -> apps.put(taskApp.getApplicationId(), taskApp));
-    }
-
-    public Map<String, TaskApp> getApplications(){
-        return this.apps;
+                .forEach(taskApp -> applications.put(taskApp.getApplicationId(), taskApp));
     }
 
 }

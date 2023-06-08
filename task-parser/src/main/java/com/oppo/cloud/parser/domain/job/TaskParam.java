@@ -17,6 +17,7 @@
 package com.oppo.cloud.parser.domain.job;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.oppo.cloud.common.domain.elasticsearch.TaskApp;
 import com.oppo.cloud.common.domain.job.App;
 import com.oppo.cloud.common.domain.job.LogInfo;
 import com.oppo.cloud.common.domain.job.LogRecord;
@@ -29,28 +30,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Data
 public class TaskParam {
-
-    /**
-     * 任务类型
-     */
-    private String category;
-    /**
-     * job元数据
-     */
     private LogRecord logRecord;
-    /**
-     * app元数据
-     */
-    private App app;
-    /**
-     * 日志信息
-     */
-    private LogInfo logInfo;
-
-    /**
-     * 任务重试次数
-     */
-    private int retry;
+    private TaskApp taskApp;
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -58,11 +39,9 @@ public class TaskParam {
 
     }
 
-    public TaskParam(String category, LogRecord logRecord, App app, LogInfo logInfo) {
-        this.category = category;
+    public TaskParam(LogRecord logRecord, TaskApp taskApp) {
         this.logRecord = logRecord;
-        this.app = app;
-        this.logInfo = logInfo;
+        this.taskApp = taskApp;
     }
 
 }

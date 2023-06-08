@@ -28,6 +28,8 @@ import com.oppo.cloud.common.service.RedisService;
 import com.oppo.cloud.common.util.DateUtil;
 import com.oppo.cloud.common.util.ui.TryNumberUtil;
 import com.oppo.cloud.detect.domain.AbnormalTaskAppInfo;
+import com.oppo.cloud.detect.handler.app.TaskAppHandler;
+import com.oppo.cloud.detect.handler.app.TaskAppHandlerFactory;
 import com.oppo.cloud.detect.service.*;
 import com.oppo.cloud.detect.util.AppNotFoundException;
 import com.oppo.cloud.mapper.TaskApplicationMapper;
@@ -211,30 +213,10 @@ public class TaskAppServiceImpl implements TaskAppService {
         taskApp.setApplicationId(taskApp.getApplicationId());
         taskApp.setExecutionDate(taskApplication.getExecuteTime());
         taskApp.setRetryTimes(taskApplication.getRetryTimes());
-        try{
 
+        final TaskAppHandler taskAppHandler = TaskAppHandlerFactory.getTaskAppHandler(taskApplication);
 
-        }catch (AppNotFoundException e){
-        }
-
-//        SparkApp sparkApp = elasticSearchService.searchSparkApp(taskApplication.getApplicationId());
-
-        // yarnApp的elapsedTime的单位为ms
-
-
-        // 单位MB,数值保留两位小数
-
-//        String attemptId = StringUtils.isNotEmpty(sparkApp.getAttemptId()) ? sparkApp.getAttemptId() : "1";
-//        taskApp.setEventLogPath(sparkApp.getEventLogDirectory() + "/" + taskApplication.getApplicationId() + "_" + attemptId);
-//
-//        taskApp.setSparkUI(String.format(sparkUiProxy, sparkApp.getSparkHistoryServer(), taskApplication.getApplicationId()));
-//        String yarnLogPath = getYarnLogPath(yarnApp.getIp());
-//        if ("".equals(yarnLogPath)) {
-//            throw new Exception(String.format("can not find yarn log path: rm ip : %s", yarnApp.getIp()));
-//        }
-
-
-//        taskApp.setYarnLogPath(yarnLogPath + "/" + yarnApp.getUser() + "/logs/" + taskApplication.getApplicationId());
+        taskAppHandler.handler(taskApplication, taskApp, elasticSearchService, redisService);
 
         return taskApp;
     }
@@ -244,37 +226,15 @@ public class TaskAppServiceImpl implements TaskAppService {
         BeanUtils.copyProperties(taskApplication, taskApp);
         taskApp.setExecutionDate(taskApplication.getExecuteTime());
         taskApp.setRetryTimes(taskApplication.getRetryTimes());
+
+        final TaskAppHandler taskAppHandler = TaskAppHandlerFactory.getTaskAppHandler(taskApplication);
+
         try {
-            YarnApp yarnApp = elasticSearchService.searchYarnApp(taskApplication.getApplicationId());
-            taskApp.setStartTime(new Date(yarnApp.getStartedTime()));
-            taskApp.setFinishTime(new Date(yarnApp.getFinishedTime()));
-            taskApp.setElapsedTime((double) yarnApp.getElapsedTime());
-            taskApp.setClusterName(yarnApp.getClusterName());
-            taskApp.setApplicationType(yarnApp.getApplicationType());
-            taskApp.setQueue(yarnApp.getQueue());
-            taskApp.setDiagnoseResult(yarnApp.getDiagnostics());
-            taskApp.setExecuteUser(yarnApp.getUser());
-            taskApp.setVcoreSeconds((double) yarnApp.getVcoreSeconds());
-            taskApp.setMemorySeconds((double) Math.round(yarnApp.getMemorySeconds()));
-            taskApp.setTaskAppState(yarnApp.getState());
-//            String yarnLogPath = getYarnLogPath(yarnApp.getIp());
-//            if (!"".equals(yarnLogPath)) {
-//                taskApp.setYarnLogPath(
-//                        yarnLogPath + "/" + yarnApp.getUser() + "/logs/" + taskApplication.getApplicationId());
-//            }
-            String[] amHost = yarnApp.getAmHostHttpAddress().split(":");
-            if (amHost.length != 0) {
-                taskApp.setAmHost(amHost[0]);
-            }
+            taskAppHandler.handler(taskApplication, taskApp, elasticSearchService, redisService);
         } catch (Exception e) {
             log.error("try complete yarn info failed, msg:", e);
         }
-//        try {
-//            SparkApp sparkApp = elasticSearchService.searchSparkApp(taskApplication.getApplicationId());
-//            taskApp.setEventLogPath(sparkApp.getEventLogDirectory() + "/" + taskApplication.getApplicationId());
-//        } catch (Exception e) {
-//            log.error("try complete spark info failed, msg:", e);
-//        }
+
         return taskApp;
     }
 
