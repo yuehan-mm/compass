@@ -19,17 +19,19 @@ package com.oppo.cloud.detect.config;
 import lombok.Data;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.RoundRobinAssignor;
+import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
-import org.springframework.kafka.core.ConsumerFactory;
-import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.core.*;
 import org.springframework.kafka.listener.ContainerProperties;
 
 import java.util.AbstractMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -151,6 +153,46 @@ public class KafkaConfig {
     @Bean(name = "groupId")
     public String getGroupId() {
         return this.groupId;
+    }
+
+
+    /**
+     * 生产者配置
+     */
+    @Bean(name = "kafkaTemplate")
+    public KafkaTemplate<String, String> kafkaTemplate() {
+        return new KafkaTemplate<>(producerFactory());
+    }
+
+    /**
+     * 创建生产者
+     */
+    @Bean
+    public ProducerFactory<String, String> producerFactory() {
+        return new DefaultKafkaProducerFactory<>(producerConfigs());
+    }
+
+    /**
+     * 生产者配置
+     */
+    public Map<String, Object> producerConfigs() {
+        Map<String, Object> config = new HashMap<>();
+        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        // 重试次数，0为不启用重试机制
+        config.put(ProducerConfig.RETRIES_CONFIG, 0);
+        // 控制批量处理，单位为字节
+        config.put(ProducerConfig.BATCH_SIZE_CONFIG, 4096);
+        // 批量发送，延迟为1毫秒，启用该功能能有效减少生产者发送消息次数，从而提高并发量
+        config.put(ProducerConfig.LINGER_MS_CONFIG, 1);
+        // 健的序列化方式
+        config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        // 值的序列化方式
+        config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+
+        config.put("security.protocol", securityprotocol);
+        config.put("sasl.mechanism", saslmechanism);
+        config.put("sasl.jaas.config",sasljaasconfig);
+        return config;
     }
 
 }

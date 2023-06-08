@@ -32,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -47,6 +48,10 @@ public abstract class DetectServiceImpl implements DetectService {
 
     @Value("${custom.elasticsearch.job-index}")
     private String jobIndex;
+
+    // SPRING_KAFKA_TASKRECORD_TOPIC
+    @Value("${spring.kafka.taskrecord.topic}")
+    private String recordTopic;
 
     @Autowired
     public TaskService taskService;
@@ -74,6 +79,9 @@ public abstract class DetectServiceImpl implements DetectService {
 
     @Autowired
     private JobInstanceService jobInstanceService;
+
+    @Autowired
+    private KafkaTemplate kafkaTemplate;
 
     /**
      * 解析消息发送redis队列
@@ -165,11 +173,10 @@ public abstract class DetectServiceImpl implements DetectService {
     }
 
     /**
-     * 写到 Redis ?
      */
     public void sendLogRecordMsg(LogRecord logRecord) {
-        Long size = redisService.lLeftPush(logRecordQueue, JSONObject.toJSONString(logRecord));
-        log.info("send logRecord: key:{}, size:{}, data:{}", logRecordQueue, size, JSONObject.toJSONString(logRecord));
+        String recordMessage = JSONObject.toJSONString(logRecord);
+        kafkaTemplate.send(recordTopic, recordMessage);
     }
 
     /**
