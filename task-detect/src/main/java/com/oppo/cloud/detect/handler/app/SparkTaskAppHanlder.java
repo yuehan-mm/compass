@@ -10,6 +10,7 @@ import com.oppo.cloud.common.domain.cluster.yarn.YarnApp;
 import com.oppo.cloud.common.domain.elasticsearch.TaskApp;
 import com.oppo.cloud.common.domain.job.LogPath;
 import com.oppo.cloud.common.service.RedisService;
+import com.oppo.cloud.model.TaskApplication;
 import org.apache.commons.lang3.StringUtils;
 import com.oppo.cloud.detect.service.ElasticSearchService;
 
@@ -28,44 +29,44 @@ import java.util.Map;
  *================================================================================================*/
 public class SparkTaskAppHanlder implements TaskAppHandler{
   @Override
-  public void handler(TaskApp taskApplication, ElasticSearchService elasticSearchService, RedisService redisService) throws Exception {
+  public void handler(TaskApplication taskApplication, TaskApp taskApp, ElasticSearchService elasticSearchService, RedisService redisService) throws Exception {
 
     SparkApp sparkApp = elasticSearchService.searchSparkApp(taskApplication.getApplicationId());
     YarnApp yarnApp = elasticSearchService.searchYarnApp(taskApplication.getApplicationId());
 
-    taskApplication.setStartTime(new Date(yarnApp.getStartedTime()));
-    taskApplication.setFinishTime(new Date(yarnApp.getFinishedTime()));
-    taskApplication.setElapsedTime((double) yarnApp.getElapsedTime());
-    taskApplication.setClusterName(yarnApp.getClusterName());
-    taskApplication.setApplicationType(yarnApp.getApplicationType());
-    taskApplication.setQueue(yarnApp.getQueue());
-    taskApplication.setDiagnostics(yarnApp.getDiagnostics());
-    taskApplication.setDiagnoseResult(StringUtils.isNotBlank(yarnApp.getDiagnostics()) ? "abnormal" : "");
-    taskApplication.setCategories(StringUtils.isNotBlank(yarnApp.getDiagnostics())
+    taskApp.setStartTime(new Date(yarnApp.getStartedTime()));
+    taskApp.setFinishTime(new Date(yarnApp.getFinishedTime()));
+    taskApp.setElapsedTime((double) yarnApp.getElapsedTime());
+    taskApp.setClusterName(yarnApp.getClusterName());
+    taskApp.setApplicationType(yarnApp.getApplicationType());
+    taskApp.setQueue(yarnApp.getQueue());
+    taskApp.setDiagnostics(yarnApp.getDiagnostics());
+    taskApp.setDiagnoseResult(StringUtils.isNotBlank(yarnApp.getDiagnostics()) ? "abnormal" : "");
+    taskApp.setCategories(StringUtils.isNotBlank(yarnApp.getDiagnostics())
             ? Collections.singletonList(AppCategoryEnum.OTHER_EXCEPTION.getCategory())
             : new ArrayList<>());
-    taskApplication.setExecuteUser(yarnApp.getUser());
-    taskApplication.setVcoreSeconds((double) yarnApp.getVcoreSeconds());
-    taskApplication.setTaskAppState(yarnApp.getFinalStatus());
-    taskApplication.setMemorySeconds((double) Math.round(yarnApp.getMemorySeconds()));
+    taskApp.setExecuteUser(yarnApp.getUser());
+    taskApp.setVcoreSeconds((double) yarnApp.getVcoreSeconds());
+    taskApp.setTaskAppState(yarnApp.getFinalStatus());
+    taskApp.setMemorySeconds((double) Math.round(yarnApp.getMemorySeconds()));
 
     String[] amHost = yarnApp.getAmHostHttpAddress().split(":");
     if (amHost.length == 0) {
       throw new Exception(String.format("parse amHost error, amHost:%s", yarnApp.getAmHostHttpAddress()));
     }
 
-    taskApplication.setAmHost(amHost[0]);
+    taskApp.setAmHost(amHost[0]);
     String attemptId = StringUtils.isNotEmpty(sparkApp.getAttemptId()) ? sparkApp.getAttemptId() : "1";
     String eventLogPath = sparkApp.getEventLogDirectory() + "/" + taskApplication.getApplicationId() + "_" + attemptId;
 
-    taskApplication.addLogPath("event", new LogPath("hdfs", "event", LogPathType.FILE, eventLogPath));
+    taskApp.addLogPath("event", new LogPath("hdfs", "event", LogPathType.FILE, eventLogPath));
 
     String yarnLogPath = getYarnLogPath(yarnApp.getIp(), redisService);
     if ("".equals(yarnLogPath)) {
         throw new Exception(String.format("can not find yarn log path: rm ip : %s", yarnApp.getIp()));
     }
 
-    taskApplication.addLogPath("executor", new LogPath("hdfs", "event", LogPathType.FILE, yarnLogPath));
+    taskApp.addLogPath("executor", new LogPath("hdfs", "event", LogPathType.FILE, yarnLogPath));
   }
 
   /**
