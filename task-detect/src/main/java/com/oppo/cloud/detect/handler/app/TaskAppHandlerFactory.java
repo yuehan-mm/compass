@@ -15,9 +15,9 @@ public class TaskAppHandlerFactory {
   public static TaskAppHandler getTaskAppHandler(TaskApplication taskApplication){
 
     switch (taskApplication.getApplicationType()){
-      case "SPARK" :
+      case SPARK :
         return new SparkTaskAppHanlder();
-      case "MAPREDUCE":
+      case MAPREDUCE:
         return new MRTaskAppHandler();
       default:
         throw new IllegalArgumentException("Invalid taskApp type : " + taskApplication.getApplicationType());

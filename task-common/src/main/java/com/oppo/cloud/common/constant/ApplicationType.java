@@ -21,7 +21,8 @@ public enum ApplicationType {
 
     SPARK("SPARK"),
     MAPREDUCE("MAPREDUCE"),
-    FLINK("Apache Flink");
+    FLINK("Apache Flink"),
+    DATAX("DATAX");
 
     private final String value;
     ApplicationType(String value) {
@@ -30,5 +31,14 @@ public enum ApplicationType {
 
     public String getValue() {
         return this.value;
+    }
+
+    public static ApplicationType getInstance(String strAppType) throws IllegalArgumentException{
+        for (ApplicationType applicationType : ApplicationType.values()){
+            if(applicationType.value.equals(strAppType)){
+                return applicationType;
+            }
+        }
+        throw new IllegalArgumentException("invalid app type : " + strAppType);
     }
 }

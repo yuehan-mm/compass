@@ -26,6 +26,7 @@ public enum LogType {
     SPARK_EVENT("event"),
     SPARK_DRIVER("driver"),
     SPARK_EXECUTOR("executor"),
+    CONTAINER("container"),
 
     YARN("yarn"),
 

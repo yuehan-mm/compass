@@ -37,6 +37,6 @@ custom:
     - type : "SPARK"
       regex: "^.*Submitted application (?<applicationId>application_[0-9]+_[0-9]+).*$"     # 匹配规则
       name: "applicationId"      # 匹配文本名，最后必须有applicationId
-    - type: "MR"
+    - type: "MAPREDUCE"
       regex: "The url to Track the job: .*?(?<applicationId>application_[0-9]+_[0-9]+).*"     # 匹配规则
       name: "applicationId"      # 匹配文本名，最后必须有applicationId

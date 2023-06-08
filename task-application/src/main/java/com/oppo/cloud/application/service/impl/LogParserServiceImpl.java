@@ -31,6 +31,7 @@ import com.oppo.cloud.application.service.LogParserService;
 import com.oppo.cloud.application.util.HDFSReaderCallback;
 import com.oppo.cloud.application.util.HDFSUtil;
 import com.oppo.cloud.application.util.StringUtil;
+import com.oppo.cloud.common.constant.ApplicationType;
 import com.oppo.cloud.common.domain.cluster.hadoop.NameNodeConf;
 import com.oppo.cloud.mapper.TaskApplicationMapper;
 import com.oppo.cloud.model.TaskApplication;
@@ -157,9 +158,9 @@ public class LogParserServiceImpl implements LogParserService {
 
 //        String logPath = String.join(",", applicationMessage.getLogPaths());
         // 保存 applicationId
-        Map<String,String> applications = applicationMessage.getApplications();
+        Map<String,ApplicationType> applications = applicationMessage.getApplications();
 
-        for (Map.Entry<String, String> application :  applications.entrySet()) {
+        for (Map.Entry<String, ApplicationType> application :  applications.entrySet()) {
             addTaskApplication(application.getKey(), application.getValue(), taskInstance);
         }
 
@@ -176,7 +177,7 @@ public class LogParserServiceImpl implements LogParserService {
     /**
      * 添加任务applicationId
      */
-    public void addTaskApplication(String applicationId, String applicationType, TaskInstance taskInstance) {
+    public void addTaskApplication(String applicationId, ApplicationType applicationType, TaskInstance taskInstance) {
         // 数据写回kafka订阅
         log.info("application save: applicationId=" + applicationId +
                 " task_instance=" + taskInstance +
@@ -351,16 +352,16 @@ public class LogParserServiceImpl implements LogParserService {
 
     static class ApplicationMessage{
 
-        private Map<String, String> applicationMap = new HashMap<>();
+        private Map<String, ApplicationType> applicationMap = new HashMap<>();
 
         public ApplicationMessage(){
 
         }
-        public void addApplication(String appId, String type){
+        public void addApplication(String appId, ApplicationType type){
             this.applicationMap.put(appId, type);
         }
 
-        public Map<String, String> getApplications() {
+        public Map<String, ApplicationType> getApplications() {
             return applicationMap;
         }
     }
