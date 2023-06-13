@@ -16,6 +16,7 @@
 
 package com.oppo.cloud.parser.service.job.detector;
 
+import com.oppo.cloud.common.constant.ApplicationType;
 import com.oppo.cloud.common.domain.eventlog.DetectorResult;
 import com.oppo.cloud.common.domain.eventlog.DetectorStorage;
 import com.oppo.cloud.common.domain.eventlog.config.*;
@@ -114,10 +115,16 @@ public class DetectorManager {
 
     public DetectorStorage run() {
         List<IDetector> detectors;
-        if (this.param.isOneClick()) {
-            detectors = createOneClickDetectors();
+        if (this.param.getAppType().equals(ApplicationType.SPARK)) {
+            if (this.param.isOneClick()) {
+                detectors = createOneClickDetectors();
+            } else {
+                detectors = createDetectors();
+            }
+        } else if (this.param.getAppType().equals(ApplicationType.SPARK)) {
+            detectors = createMRDetectors();
         } else {
-            detectors = createDetectors();
+            detectors = new ArrayList<>();
         }
 
         DetectorStorage detectorStorage = new DetectorStorage(
@@ -145,6 +152,12 @@ public class DetectorManager {
         }
 
         return detectorStorage;
+    }
+
+    private List<IDetector> createMRDetectors() {
+        List<IDetector> detectors = new ArrayList<>();
+        detectors.add(new SpeculativeMapReduceDetector(param));
+        return detectors;
     }
 
 }

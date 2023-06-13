@@ -59,9 +59,7 @@ public abstract class CommonTextParser extends OneClickSubject {
             }
             headTextParser.parse(line);
         }
-        if (this.readerObject.getFs() != null) {
-            this.readerObject.getFs().close();
-        }
+        this.readerObject.close();
         return headTextParser.getResults();
     }
 

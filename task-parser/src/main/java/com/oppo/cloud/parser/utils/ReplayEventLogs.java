@@ -16,8 +16,11 @@
 
 package com.oppo.cloud.parser.utils;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.oppo.cloud.common.constant.ApplicationType;
+import com.oppo.cloud.parser.domain.mapreduce.jobhistory.JobFinishedEvent;
 import com.oppo.cloud.parser.domain.reader.ReaderObject;
 import com.oppo.cloud.parser.domain.spark.eventlog.*;
 import lombok.Data;
@@ -37,6 +40,7 @@ import java.util.Map;
 @Data
 public class ReplayEventLogs {
 
+    private ApplicationType applicationType;
     private SparkApplication application;
     private Map<Integer, SparkJob> jobs;
     private Map<Integer, Long> jobSQLExecIDMap;
@@ -53,7 +57,11 @@ public class ReplayEventLogs {
     private Map<Integer, Integer> stageIDToJobID;
     private long logSize;
 
-    public ReplayEventLogs() {
+    // map reduce
+    private JobFinishedEvent jobFinishedEvent;
+
+    public ReplayEventLogs(ApplicationType applicationType) {
+        this.applicationType = applicationType;
         application = new SparkApplication();
         jobs = new HashMap<>();
         jobSQLExecIDMap = new HashMap<>();
@@ -72,23 +80,43 @@ public class ReplayEventLogs {
     }
 
     public void replay(ReaderObject readerObject) throws Exception {
-        while (true) {
-            String line;
-            try {
-                line = readerObject.getBufferedReader().readLine();
-            } catch (IOException e) {
-                log.error(e.getMessage());
-                break;
+        if (this.applicationType == ApplicationType.SPARK) {
+            while (true) {
+                String line;
+                try {
+                    line = readerObject.getBufferedReader().readLine();
+                } catch (IOException e) {
+                    log.error(e.getMessage());
+                    break;
+                }
+                if (line == null) {
+                    break;
+                }
+                parseLine(line);
             }
-            if (line == null) {
-                break;
+
+            readerObject.close();
+            this.correlate();
+        } else if (this.applicationType == ApplicationType.MAPREDUCE) {
+            while (true) {
+                String line;
+                try {
+                    line = readerObject.getBufferedReader().readLine();
+                } catch (IOException e) {
+                    log.error(e.getMessage());
+                    break;
+                }
+                if (line == null) {
+                    break;
+                }
+                parseMRLine(line);
             }
-            parseLine(line);
+
+            readerObject.close();
+        } else {
+            log.error("unknow applicationType :" + this.applicationType.getValue());
         }
-        if (readerObject.getFs() != null) {
-            readerObject.getFs().close();
-        }
-        this.correlate();
+
     }
 
     public void replay(String[] lines) throws Exception {
@@ -245,6 +273,21 @@ public class ReplayEventLogs {
                 break;
         }
 
+    }
+    private void parseMRLine(String line) {
+        String type = JSONObject.parseObject(line).getString("type");
+        switch (type) {
+            case "JOB_FINISHED":
+                JSONObject event = JSONObject.parseObject(line).getJSONObject("event");
+                JSONObject eventJSONObject = event.getJSONObject("org.apache.hadoop.mapreduce.jobhistory.JobFinished");
+                JobFinishedEvent jobFinishedEvent = new JobFinishedEvent();
+                jobFinishedEvent.setFinishedMaps(eventJSONObject.getInteger("finishedMaps"));
+                jobFinishedEvent.setFailedReduces(eventJSONObject.getInteger("finishedReduces"));
+                this.jobFinishedEvent = jobFinishedEvent;
+                break;
+            default:
+                break;
+        }
     }
 
     /**

@@ -85,7 +85,7 @@ public class SparkEventLogParser extends OneClickSubject implements IParser {
     }
 
     private CommonResult<SparkEventLogParserResult> parse(ReaderObject readerObject) {
-        ReplayEventLogs replayEventLogs = new ReplayEventLogs();
+        ReplayEventLogs replayEventLogs = new ReplayEventLogs(this.param.getTaskParam().getTaskApp().getApplicationType());
         try {
             replayEventLogs.replay(readerObject);
         } catch (Exception e) {
@@ -109,7 +109,9 @@ public class SparkEventLogParser extends OneClickSubject implements IParser {
                 this.param.getTaskParam().getTaskApp().getTaskName(),
                 this.param.getTaskParam().getTaskApp().getExecutionDate(),
                 this.param.getTaskParam().getTaskApp().getRetryTimes(),
-                this.param.getTaskParam().getTaskApp().getApplicationId(), appDuration, logPath, config, replayEventLogs,
+                this.param.getTaskParam().getTaskApp().getApplicationId(),
+                this.param.getTaskParam().getTaskApp().getApplicationType(),
+                appDuration, logPath, config, replayEventLogs,
                 isOneClick);
 
         DetectorManager detectorManager = new DetectorManager(detectorParam);

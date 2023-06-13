@@ -198,9 +198,9 @@ public class SparkExecutorLogParser extends CommonTextParser implements IParser 
             }
 
         }
-        if (readerObject.getFs() != null) {
-            readerObject.getFs().close();
-        }
+
+        readerObject.close();
+
 
         SparkExecutorLogParserResult result = new SparkExecutorLogParserResult();
         result.setActionMap(headTextParser.getResults());

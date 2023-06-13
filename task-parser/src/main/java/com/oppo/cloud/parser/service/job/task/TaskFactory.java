@@ -25,8 +25,8 @@ public class TaskFactory {
 
     public static Task create(TaskParam taskParam) {
         switch (taskParam.getTaskApp().getApplicationType()) {
-//            case MAPREDUCE:
-//                return new MapReduceTask(taskParam);
+            case MAPREDUCE:
+                return new MapReduceTask(taskParam);
             case SPARK:
                 return new SparkTask(taskParam);
 //            case YARN:

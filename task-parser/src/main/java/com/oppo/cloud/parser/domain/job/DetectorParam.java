@@ -16,6 +16,7 @@
 
 package com.oppo.cloud.parser.domain.job;
 
+import com.oppo.cloud.common.constant.ApplicationType;
 import com.oppo.cloud.common.domain.eventlog.config.DetectorConfig;
 import com.oppo.cloud.parser.utils.ReplayEventLogs;
 import lombok.AllArgsConstructor;
@@ -58,6 +59,11 @@ public class DetectorParam {
      * spark applicationId
      */
     private String appId;
+
+    /**
+     * appType
+     */
+    private ApplicationType appType;
 
     /**
      * spark app duration(ms)

@@ -33,7 +33,7 @@ class ReplayEventLogsTest {
         File file = new File(ReplayEventLogsTest.class.getClassLoader().getResource("log/event/eventlog").getPath());
         String content = new String(Files.readAllBytes(file.toPath()));
         String[] lines = content.split("\n");
-        ReplayEventLogs replayEventLogs = new ReplayEventLogs();
+        ReplayEventLogs replayEventLogs = new ReplayEventLogs(null);
         replayEventLogs.replay(lines);
         log.info("{}", replayEventLogs.getApplication());
         log.info("{}", replayEventLogs.getJobs());
