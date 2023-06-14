@@ -34,5 +34,5 @@ public class ClusterInfo {
     private String executeUser;
 
     @ApiModelProperty(value = "SparkUi")
-    private String sparkUi;
+    private String sparkUi = "None";
 }

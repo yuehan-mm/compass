@@ -76,7 +76,7 @@ public class RunInfoService {
             clusterInfo.setClusterName(taskApp.getClusterName());
             clusterInfo.setExecuteUser(taskApp.getExecuteUser());
             clusterInfo.setExecuteQueue(taskApp.getQueue());
-            clusterInfo.setSparkUi(taskApp.getSparkUI());
+//            clusterInfo.setSparkUi(taskApp.getSparkUI());
             taskInfo.setExecutionTime(DateUtil.format(taskApp.getExecutionDate()));
             taskInfo.setTaskName(taskApp.getTaskName());
             taskInfo.setFlowName(taskApp.getFlowName());

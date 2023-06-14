@@ -48,34 +48,34 @@ public class SchedulerLogServiceImpl implements SchedulerLogService {
     @Override
     public List<String> getSchedulerLog(String projectName, String flowName, String taskName, Date executionDate,
                                         Integer tryNum) {
-        TaskApplicationExample taskApplicationExample = new TaskApplicationExample();
-        taskApplicationExample.createCriteria()
-                .andProjectNameEqualTo(projectName)
-                .andFlowNameEqualTo(flowName)
-                .andTaskNameEqualTo(taskName)
-                .andExecuteTimeEqualTo(executionDate);
-        List<TaskApplication> taskApplicationList =
-                taskApplicationMapper.selectByExampleWithBLOBs(taskApplicationExample);
-        if (taskApplicationList.size() != 0) {
-            TaskApplication taskApplication = null;
-            for (TaskApplication temp : taskApplicationList) {
-                temp.setRetryTimes(TryNumberUtil.updateTryNumber(temp.getRetryTimes(), schedulerType));
-                if (temp.getRetryTimes().equals(tryNum)) {
-                    taskApplication = temp;
-                    break;
-                }
-            }
-            // 兼容无调度周期的任务重试次数默认为0
-            if (taskApplication == null) {
-                taskApplication = taskApplicationList.get(0);
-            }
-            if (!StringUtils.isEmpty(taskApplication.getLogPath())) {
-                return Arrays.asList(taskApplication.getLogPath().split(","));
-            }
-        }
-        log.error(
-                "can not find scheduler log from task_application,taskName:{},flowName:{}, executionDate:{}, tryNum:{}",
-                taskName, flowName, executionDate, tryNum);
+//        TaskApplicationExample taskApplicationExample = new TaskApplicationExample();
+//        taskApplicationExample.createCriteria()
+//                .andProjectNameEqualTo(projectName)
+//                .andFlowNameEqualTo(flowName)
+//                .andTaskNameEqualTo(taskName)
+//                .andExecuteTimeEqualTo(executionDate);
+//        List<TaskApplication> taskApplicationList =
+//                taskApplicationMapper.selectByExampleWithBLOBs(taskApplicationExample);
+//        if (taskApplicationList.size() != 0) {
+//            TaskApplication taskApplication = null;
+//            for (TaskApplication temp : taskApplicationList) {
+//                temp.setRetryTimes(TryNumberUtil.updateTryNumber(temp.getRetryTimes(), schedulerType));
+//                if (temp.getRetryTimes().equals(tryNum)) {
+//                    taskApplication = temp;
+//                    break;
+//                }
+//            }
+//            // 兼容无调度周期的任务重试次数默认为0
+//            if (taskApplication == null) {
+//                taskApplication = taskApplicationList.get(0);
+//            }
+//            if (!StringUtils.isEmpty(taskApplication.getLogPath())) {
+//                return Arrays.asList(taskApplication.getLogPath().split(","));
+//            }
+//        }
+//        log.error(
+//                "can not find scheduler log from task_application,taskName:{},flowName:{}, executionDate:{}, tryNum:{}",
+//                taskName, flowName, executionDate, tryNum);
         return null;
     }
 }
