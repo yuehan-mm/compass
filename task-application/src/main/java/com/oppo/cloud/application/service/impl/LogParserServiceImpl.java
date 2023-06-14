@@ -165,7 +165,10 @@ public class LogParserServiceImpl implements LogParserService {
         }
 
         if(applications.size() > 0){
+            log.info("send to kafka. taskInstance: " + JSON.toJSONString(taskInstance));
             messageProducer.sendMessageSync(TASKINSTANCEAPPLICATIONTOPICS, JSON.toJSONString(taskInstance));
+        } else {
+            log.warn("can not match appid. taskInstance: "+ JSON.toJSONString(taskInstance));
         }
 
         log.info("project: {}, process:{}, task:{}, execute_time: {}, parse applicationId done!",
