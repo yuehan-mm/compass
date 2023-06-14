@@ -28,7 +28,7 @@ import java.util.Map;
  */
 public interface TaskAppService {
 
-    AbnormalTaskAppInfo getAbnormalTaskAppsInfo(JobAnalysis jobAnalysis, String handledApps);
+    AbnormalTaskAppInfo getAbnormalTaskAppsInfo(JobAnalysis jobAnalysis);
     /**
      * 获取任务下所有的的AbnormalTaskApp数据，包括没有taskApp的数据
      */

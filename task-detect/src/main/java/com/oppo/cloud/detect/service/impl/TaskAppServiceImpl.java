@@ -74,7 +74,7 @@ public class TaskAppServiceImpl implements TaskAppService {
 
 
     @Override
-    public AbnormalTaskAppInfo getAbnormalTaskAppsInfo(JobAnalysis jobAnalysis, String handledAppsNew) {
+    public AbnormalTaskAppInfo getAbnormalTaskAppsInfo(JobAnalysis jobAnalysis) {
         AbnormalTaskAppInfo abnormalTaskAppInfo = new AbnormalTaskAppInfo();
         List<TaskApp> taskAppList = new ArrayList<>();
         // 收集每个appId的异常信息
@@ -132,7 +132,6 @@ public class TaskAppServiceImpl implements TaskAppService {
 
         abnormalTaskAppInfo.setTaskAppList(taskAppList);                  // Application 信息
         abnormalTaskAppInfo.setExceptionInfo(exceptionInfo.toString());   // 解析过程中的异常信息
-        abnormalTaskAppInfo.setHandleApps(handledAppsNew.toString());     // ApplicationId 集合
         return abnormalTaskAppInfo;
     }
 

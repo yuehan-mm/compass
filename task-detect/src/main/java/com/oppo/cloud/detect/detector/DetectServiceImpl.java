@@ -100,7 +100,7 @@ public abstract class DetectServiceImpl implements DetectService {
         updateUserInfo(detectJobAnalysis);
 
         // 解析task下面的Application信息
-        AbnormalTaskAppInfo abnormalTaskAppInfo = taskAppService.getAbnormalTaskAppsInfo(detectJobAnalysis, null);
+        AbnormalTaskAppInfo abnormalTaskAppInfo = taskAppService.getAbnormalTaskAppsInfo(detectJobAnalysis);
 
         if (!"".equals(abnormalTaskAppInfo.getExceptionInfo())) {
             // 完全构造完成再发送
@@ -127,7 +127,7 @@ public abstract class DetectServiceImpl implements DetectService {
         // 补充用户信息
         updateUserInfo(detectJobAnalysis);
         // 查询该任务下的appIds
-        AbnormalTaskAppInfo abnormalTaskAppInfo = taskAppService.getAbnormalTaskAppsInfo(detectJobAnalysis, null);
+        AbnormalTaskAppInfo abnormalTaskAppInfo = taskAppService.getAbnormalTaskAppsInfo(detectJobAnalysis);
         if (!"".equals(abnormalTaskAppInfo.getExceptionInfo())) {
             delayTaskService.pushDelayedQueue(detectJobAnalysis, abnormalTaskAppInfo.getExceptionInfo(), tryNumber);
             return;
