@@ -64,10 +64,10 @@ import java.util.*;
 @Slf4j
 public class ElasticSearchServiceImpl implements ElasticSearchService {
 
-    @Value("${custom.elasticsearch.yarn-app-index}")
+    @Value("${custom.elasticsearch.yarnIndex.name}")
     private String yarnAppIndex;
 
-    @Value("${custom.elasticsearch.spark-app-index}")
+    @Value("${custom.elasticsearch.yarnIndex.name}}")
     private String sparkAppIndex;
 
     @Autowired
