@@ -45,20 +45,20 @@ public class App {
      */
     private List<LogInfo> logInfoList;
 
-    public void formatAppLog(TaskApp taskApp) {
-        this.setAppId(taskApp.getApplicationId());
-        this.setTryNumber(taskApp.getRetryTimes());
-        LogInfo logInfo = new LogInfo();
-
-        Map<String, List<LogPath>> logPathMap = new HashMap<>();
-        logPathMap.put("event", Collections.singletonList(new LogPath("hdfs", "event", LogPathType.FILE,
-                taskApp.getEventLogPath())));
-        logPathMap.put("executor", Collections.singletonList(new LogPath("hdfs", "executor", LogPathType.DIRECTORY,
-                taskApp.getYarnLogPath())));
-        logInfo.setLogPathMap(logPathMap);
-        this.setAmHost(taskApp.getAmHost());
-        this.setLogInfoList(Collections.singletonList(logInfo));
-    }
+//    public void formatAppLog(TaskApp taskApp) {
+//        this.setAppId(taskApp.getApplicationId());
+//        this.setTryNumber(taskApp.getRetryTimes());
+//        LogInfo logInfo = new LogInfo();
+//
+//        Map<String, List<LogPath>> logPathMap = new HashMap<>();
+//        logPathMap.put("event", Collections.singletonList(new LogPath("hdfs", "event", LogPathType.FILE,
+//                taskApp.getEventLogPath())));
+//        logPathMap.put("executor", Collections.singletonList(new LogPath("hdfs", "executor", LogPathType.DIRECTORY,
+//                taskApp.getYarnLogPath())));
+//        logInfo.setLogPathMap(logPathMap);
+//        this.setAmHost(taskApp.getAmHost());
+//        this.setLogInfoList(Collections.singletonList(logInfo));
+//    }
 
     public void formatSchedulerLog(List<String> schedulerLogPathList, Integer tryNumber) {
         this.setTryNumber(tryNumber);
