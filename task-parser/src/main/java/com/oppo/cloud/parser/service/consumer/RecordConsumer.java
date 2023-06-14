@@ -47,6 +47,7 @@ public class RecordConsumer {
                       @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
                       Consumer consumer) {
     try{
+      log.debug("consumer msg: "+ message);
       if(semaphore == null){
         semaphore = new Semaphore(config.getMaxThreadPoolSize());
       }
@@ -54,6 +55,7 @@ public class RecordConsumer {
       semaphore.acquire();
       LogRecord logRecord = JSONObject.parseObject(message, LogRecord.class);
       consumerExecutorPool.execute(() -> consume(logRecord, semaphore));
+      consumer.commitSync();
     }catch (Exception e){
       log.error("consume log record error : {}", e);
     }
