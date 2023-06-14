@@ -30,6 +30,14 @@ spring:
     job-prefix: "compass-job-analysis-"
     task-app-prefix: "compass-task-app-"
 
+  kafka:
+    consumer:
+      auto-offset-reset: "latest"
+      max-poll-interval-ms: 300000
+      security-protocol: ""
+      sasl-mechanism: ""
+      sasl-jaas-config: ""
+
 custom:
   redisConsumer:
     enable: true
