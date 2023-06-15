@@ -62,7 +62,7 @@ public class MRTaskAppHandler implements TaskAppHandler {
       throw new Exception(String.format("can not find yarn log path: rm ip : %s", yarnApp.getIp()));
     }
 
-    taskApp.addLogPath(LogType.CONTAINER, new LogPath("hdfs", "event", LogPathType.FILE, yarnLogPath));
+    taskApp.addLogPath(LogType.CONTAINER, new LogPath("hdfs", LogPathType.FILE, yarnLogPath));
   }
 
   /**

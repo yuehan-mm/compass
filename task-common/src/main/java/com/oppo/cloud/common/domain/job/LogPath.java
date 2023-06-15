@@ -16,6 +16,8 @@
 
 package com.oppo.cloud.common.domain.job;
 
+import com.alibaba.fastjson2.JSONWriter;
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.oppo.cloud.common.constant.LogPathType;
 import lombok.Data;
 
@@ -30,14 +32,13 @@ public class LogPath {
      */
     private String protocol;
 
-    /**
-     * 类型: scheduler,event,executor,gc
-     */
-    private String logType;
+
 
     /**
      * 日志路径类型: file,directory
      */
+
+    @JSONField(serializeFeatures= JSONWriter.Feature.WriteEnumsUsingName)
     private LogPathType logPathType;
 
     /**
@@ -49,9 +50,9 @@ public class LogPath {
 
     }
 
-    public LogPath(String protocol, String logType, LogPathType logPathType, String logPath) {
+    public LogPath(String protocol, LogPathType logPathType, String logPath) {
         this.protocol = protocol;
-        this.logType = logType;
+
         this.logPathType = logPathType;
         this.logPath = logPath;
     }

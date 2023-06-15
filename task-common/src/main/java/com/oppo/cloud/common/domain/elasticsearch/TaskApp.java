@@ -119,6 +119,7 @@ public class TaskApp extends EsInfo {
     @ApiModelProperty(value = "修改时间")
     private Date updateTime;
 
+    @JSONField(serializeFeatures= JSONWriter.Feature.WriteEnumsUsingName)
     private Map<LogType, List<LogPath>> logPaths = new HashMap<>();
 
     public Map<String, Object> genDoc() throws Exception {
