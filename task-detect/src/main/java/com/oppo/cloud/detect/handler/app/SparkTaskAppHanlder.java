@@ -63,6 +63,7 @@ public class SparkTaskAppHanlder implements TaskAppHandler{
     taskApp.addLogPath(LogType.SPARK_EVENT, new LogPath("hdfs", "event", LogPathType.FILE, eventLogPath));
 
     String yarnLogPath = getYarnLogPath(yarnApp.getIp(), redisService);
+    yarnLogPath = yarnLogPath + "/" + yarnApp.getUser() + "/logs/" + taskApplication.getApplicationId();
     if ("".equals(yarnLogPath)) {
         throw new Exception(String.format("can not find yarn log path: rm ip : %s", yarnApp.getIp()));
     }

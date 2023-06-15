@@ -133,6 +133,8 @@ public class TaskInstanceService extends CommonService implements ActionService 
                 taskInstanceMapper.saveSelective(instance);
                 break;
             case "UPDATE":
+                if (!instance.isFinish()) return;
+
                 if (instance.getUpdateTime() == null) {
                     instance.setUpdateTime(new Date());
                 }
