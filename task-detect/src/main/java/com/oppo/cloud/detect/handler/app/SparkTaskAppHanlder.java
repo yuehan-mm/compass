@@ -60,7 +60,7 @@ public class SparkTaskAppHanlder implements TaskAppHandler{
     String attemptId = StringUtils.isNotEmpty(sparkApp.getAttemptId()) ? sparkApp.getAttemptId() : "1";
     String eventLogPath = sparkApp.getEventLogDirectory() + "/" + taskApplication.getApplicationId() + "_" + attemptId;
 
-    taskApp.addLogPath(LogType.SPARK_EVENT, new LogPath("hdfs", "event", LogPathType.FILE, eventLogPath));
+    taskApp.addLogPath(LogType.SPARK_EVENT, new LogPath("hdfs", LogPathType.FILE, eventLogPath));
 
     String yarnLogPath = getYarnLogPath(yarnApp.getIp(), redisService);
     yarnLogPath = yarnLogPath + "/" + yarnApp.getUser() + "/logs/" + taskApplication.getApplicationId();
@@ -68,7 +68,7 @@ public class SparkTaskAppHanlder implements TaskAppHandler{
         throw new Exception(String.format("can not find yarn log path: rm ip : %s", yarnApp.getIp()));
     }
 
-    taskApp.addLogPath(LogType.SPARK_EXECUTOR, new LogPath("hdfs", "event", LogPathType.FILE, yarnLogPath));
+    taskApp.addLogPath(LogType.SPARK_EXECUTOR, new LogPath("hdfs", LogPathType.DIRECTORY, yarnLogPath));
   }
 
   /**
