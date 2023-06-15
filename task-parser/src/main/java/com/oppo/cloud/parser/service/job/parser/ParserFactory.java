@@ -27,12 +27,6 @@ public class ParserFactory {
      */
     public static IParser create(ParserParam parserParam, IProgressListener listener) {
         switch (parserParam.getLogType()) {
-
-//            case SCHEDULER:
-//                SchedulerLogParser schedulerLogParser = new SchedulerLogParser(parserParam);
-//                schedulerLogParser.addListener(listener);
-//                return schedulerLogParser;
-
             case SPARK_EVENT:
                 SparkEventLogParser sparkEventLogParser = new SparkEventLogParser(parserParam);
                 sparkEventLogParser.addListener(listener);
@@ -43,11 +37,10 @@ public class ParserFactory {
                 sparkExecutorLogParser.addListener(listener);
                 return sparkExecutorLogParser;
 
-//            case JOB_MANAGER:
-//            case TASK_MANAGER:
-//                MapReduceTaskManagerLogParser mapReduceTaskManagerLogParser = new MapReduceTaskManagerLogParser(parserParam);
-//                mapReduceTaskManagerLogParser.addListener(listener);
-//                return mapReduceTaskManagerLogParser;
+            case CONTAINER:
+                MapReduceTaskManagerLogParser mapReduceTaskManagerLogParser = new MapReduceTaskManagerLogParser(parserParam);
+                mapReduceTaskManagerLogParser.addListener(listener);
+                return mapReduceTaskManagerLogParser;
 
             case MAPREDUCE_EVENT:
                 MapReduceEventLogParser mapReduceEventLogParser = new MapReduceEventLogParser(parserParam);
