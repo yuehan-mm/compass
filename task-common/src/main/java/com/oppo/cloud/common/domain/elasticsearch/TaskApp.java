@@ -16,6 +16,8 @@
 
 package com.oppo.cloud.common.domain.elasticsearch;
 
+import com.alibaba.fastjson2.JSONWriter;
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.google.common.collect.Lists;
 import com.oppo.cloud.common.constant.ApplicationType;
 import com.oppo.cloud.common.constant.LogType;
@@ -36,6 +38,7 @@ public class TaskApp extends EsInfo {
     private String applicationId;
 
     @ApiModelProperty(value = "applicationType类型")
+    @JSONField(serializeFeatures= JSONWriter.Feature.WriteEnumsUsingName)
     private ApplicationType applicationType;
 
     @ApiModelProperty(value = "执行用户")
@@ -144,6 +147,8 @@ public class TaskApp extends EsInfo {
         }
         return res;
     }
+
+
 
     public void addLogPath(LogType logType, LogPath logPath){
         if(!this.logPaths.containsKey(logType)){

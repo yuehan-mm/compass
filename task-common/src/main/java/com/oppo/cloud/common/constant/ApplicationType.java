@@ -59,4 +59,9 @@ public enum ApplicationType {
     public static ApplicationType get(String name) {
         return MAP.get(name);
     }
+
+    @Override
+    public String toString() {
+        return value;
+    }
 }
