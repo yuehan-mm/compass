@@ -67,7 +67,7 @@ public class SparkTaskAppHanlder implements TaskAppHandler{
         throw new Exception(String.format("can not find yarn log path: rm ip : %s", yarnApp.getIp()));
     }
 
-    taskApp.addLogPath(LogType.CONTAINER, new LogPath("hdfs", "event", LogPathType.FILE, yarnLogPath));
+    taskApp.addLogPath(LogType.SPARK_EXECUTOR, new LogPath("hdfs", "event", LogPathType.FILE, yarnLogPath));
   }
 
   /**

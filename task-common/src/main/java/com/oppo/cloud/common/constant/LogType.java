@@ -57,4 +57,8 @@ public enum LogType {
         return MAP.get(name);
     }
 
+    @Override
+    public String toString() {
+      return this.name;
+    }
 }
