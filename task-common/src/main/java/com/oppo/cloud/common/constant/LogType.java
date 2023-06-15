@@ -29,7 +29,7 @@ public enum LogType {
     CONTAINER("container"),
     JOB_MANAGER("jobManger"),
     TASK_MANAGER("taskManager"),
-    MAPREDUCE_EVENT("event"),
+    MAPREDUCE_EVENT("mapReduceEvent"),
     YARN("yarn"),
 
     SPARK_GC("gc");
