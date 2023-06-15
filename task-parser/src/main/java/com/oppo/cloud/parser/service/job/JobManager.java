@@ -16,6 +16,7 @@
 
 package com.oppo.cloud.parser.service.job;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.oppo.cloud.common.domain.job.LogRecord;
 import com.oppo.cloud.common.service.RedisService;
 import com.oppo.cloud.parser.config.CustomConfig;
@@ -94,7 +95,7 @@ public class JobManager {
      * @throws Exception
      */
     public void run(LogRecord logRecord) throws Exception {
-        log.info("start job logRecord : {}", logRecord);
+        log.info("start job logRecord : {}", JSONObject.toJSONString(logRecord));
         List<Task> tasks = createTasks(logRecord);
 
         if (tasks.size() == 0) {
