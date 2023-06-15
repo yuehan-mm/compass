@@ -38,7 +38,7 @@ public class LogPath {
      * 日志路径类型: file,directory
      */
 
-    @JSONField(serializeFeatures= JSONWriter.Feature.WriteEnumsUsingName)
+//    @JSONField(serializeFeatures= JSONWriter.Feature.WriteEnumsUsingName)
     private LogPathType logPathType;
 
     /**
