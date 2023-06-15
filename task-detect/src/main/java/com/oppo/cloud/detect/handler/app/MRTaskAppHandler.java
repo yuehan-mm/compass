@@ -14,6 +14,7 @@ import com.oppo.cloud.common.service.RedisService;
 import com.oppo.cloud.detect.service.ElasticSearchService;
 import com.oppo.cloud.model.TaskApplication;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -62,7 +63,23 @@ public class MRTaskAppHandler implements TaskAppHandler {
       throw new Exception(String.format("can not find yarn log path: rm ip : %s", yarnApp.getIp()));
     }
 
+    yarnLogPath = yarnLogPath + "/" + yarnApp.getUser() + "/logs/" + taskApplication.getApplicationId();
+
     taskApp.addLogPath(LogType.CONTAINER, new LogPath("hdfs", LogPathType.FILE, yarnLogPath));
+
+
+    DateTime dirDate = new DateTime(yarnApp.getFinishedTime());
+    String[] appArray = taskApplication.getApplicationId().split("_");
+    String path = String.format("/user/history/done/%4d/%2d/%2d/0000%s/job_%s_%s",
+            dirDate.getYear(),
+            dirDate.getMonthOfYear(),
+            dirDate.getDayOfMonth(),
+            appArray[2].substring(0, 2),
+            appArray[1],
+            appArray[2]);
+
+    taskApp.addLogPath(LogType.MAPREDUCE_EVENT, new LogPath("hdfs", LogPathType.FILE, path));
+
   }
 
   /**
