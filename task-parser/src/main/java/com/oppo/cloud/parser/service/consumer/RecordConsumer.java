@@ -41,7 +41,7 @@ public class RecordConsumer {
   @Resource
   private JobManager jobManager;
 
-  @KafkaListener(topics = "${spring.kafka.mysqldatatopics}", containerFactory = "kafkaListenerContainerFactory")
+  @KafkaListener(topics = "${spring.kafka.taskrecord.topic}", containerFactory = "kafkaListenerContainerFactory")
   public void receive(@Payload String message,
                       @Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partition,
                       @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
