@@ -64,8 +64,6 @@ public class JobManager {
                 return;
             }
             tasks.add(task);
-//            // YARN 日志诊断？
-//            tasks.add(TaskFactory.create(taskApp));
         });
         return tasks;
     }
@@ -96,7 +94,7 @@ public class JobManager {
      * @throws Exception
      */
     public void run(LogRecord logRecord) throws Exception {
-        log.info("start job logRecord : {}", logRecord.getId());
+        log.info("start job logRecord : {}", logRecord);
         List<Task> tasks = createTasks(logRecord);
 
         if (tasks.size() == 0) {

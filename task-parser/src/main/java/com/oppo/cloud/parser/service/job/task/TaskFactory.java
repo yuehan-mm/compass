@@ -29,8 +29,6 @@ public class TaskFactory {
                 return new MapReduceTask(taskParam);
             case SPARK:
                 return new SparkTask(taskParam);
-//            case YARN:
-//                return new YarnTask(taskApp);
             default:
                 return null;
         }
