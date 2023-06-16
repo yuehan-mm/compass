@@ -48,4 +48,9 @@ public class Constant {
      */
     public static final String JHS_HDFS_PATH = "jhs:hdfs:path:";
 
+    /**
+     * jobHistoryServer event 路径
+     */
+    public static final String JHS_EVENT_PATH = "jhs:event:path:";
+
 }
