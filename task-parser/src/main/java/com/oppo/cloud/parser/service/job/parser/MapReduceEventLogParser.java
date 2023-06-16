@@ -102,10 +102,10 @@ public class MapReduceEventLogParser extends OneClickSubject implements IParser 
     private CommonResult<MapReduceEventLogParserResult> detect(ReplayEventLogs replayEventLogs, String logPath) {
 //        Map<String, Object> env = getSparkEnvironmentConfig(replayEventLogs);
 
-        Long appDuration = replayEventLogs.getApplication().getAppDuration();
-        if (appDuration == null || appDuration < 0) {
-            appDuration = 0L;
-        }
+//        Long appDuration = replayEventLogs.getApplication().getAppDuration();
+//        if (appDuration == null || appDuration < 0) {
+//            appDuration = 0L;
+//        }
 
         DetectorParam detectorParam = new DetectorParam(this.param.getTaskParam().getTaskApp().getFlowName(),
                 this.param.getTaskParam().getTaskApp().getProjectName(),
@@ -114,7 +114,7 @@ public class MapReduceEventLogParser extends OneClickSubject implements IParser 
                 this.param.getTaskParam().getTaskApp().getRetryTimes(),
                 this.param.getTaskParam().getTaskApp().getApplicationId(),
                 this.param.getTaskParam().getTaskApp().getApplicationType(),
-                appDuration, logPath, config, replayEventLogs,
+                0l, logPath, config, replayEventLogs,
                 isOneClick);
 
         DetectorManager detectorManager = new DetectorManager(detectorParam);

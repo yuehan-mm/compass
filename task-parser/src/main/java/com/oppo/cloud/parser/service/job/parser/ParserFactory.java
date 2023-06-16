@@ -37,10 +37,10 @@ public class ParserFactory {
                 sparkExecutorLogParser.addListener(listener);
                 return sparkExecutorLogParser;
 
-            case CONTAINER:
-                MapReduceTaskManagerLogParser mapReduceTaskManagerLogParser = new MapReduceTaskManagerLogParser(parserParam);
-                mapReduceTaskManagerLogParser.addListener(listener);
-                return mapReduceTaskManagerLogParser;
+//            case CONTAINER:
+//                MapReduceTaskManagerLogParser mapReduceTaskManagerLogParser = new MapReduceTaskManagerLogParser(parserParam);
+//                mapReduceTaskManagerLogParser.addListener(listener);
+//                return mapReduceTaskManagerLogParser;
 
             case MAPREDUCE_EVENT:
                 MapReduceEventLogParser mapReduceEventLogParser = new MapReduceEventLogParser(parserParam);
