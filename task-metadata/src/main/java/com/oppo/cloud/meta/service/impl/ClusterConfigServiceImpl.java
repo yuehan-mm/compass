@@ -28,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.util.EntityUtils;
+import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -40,6 +41,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -149,8 +151,15 @@ public class ClusterConfigServiceImpl implements IClusterConfigService {
         List<YarnConf> yarnConfList = config.getYarn();
         // resourceManager 对应的 jobHistoryServer
         Map<String, String> rmJhsMap = new HashMap<>();
-        yarnConfList.forEach(clusterInfo -> clusterInfo.getResourceManager()
-                .forEach(rm -> rmJhsMap.put(rm, clusterInfo.getJobHistoryServer())));
+
+        yarnConfList.forEach(
+                clusterInfo -> clusterInfo
+                        .getResourceManager()
+                        .forEach(
+                                rm -> rmJhsMap.put(rm, clusterInfo.getJobHistoryServer())
+                        )
+        );
+
         redisService.set(Constant.YARN_CLUSTERS, JSON.toJSONString(sparkHistoryServerList));
         log.info("{}:{}", Constant.YARN_CLUSTERS, yarnConfList);
         redisService.set(Constant.RM_JHS_MAP, JSON.toJSONString(rmJhsMap));
@@ -164,15 +173,83 @@ public class ClusterConfigServiceImpl implements IClusterConfigService {
     public void updateJHSConfig(List<YarnConf> list) {
         for (int i = 0; i < list.size(); i++) {
             String host = list.get(i).getJobHistoryServer();
-            String hdfsPath = getHDFSPath(host, config.getNamenodes().get(i));
-            if (StringUtils.isEmpty(hdfsPath)) {
-                log.error("get {}, hdfsPath empty", host);
-                continue;
+//            String hdfsPath = getHDFSPath(host, config.getNamenodes().get(i));
+//
+//            if (StringUtils.isEmpty(hdfsPath)) {
+//                log.error("get {}, hdfsPath empty", host);
+//                continue;
+//            }
+
+//            String key = Constant.JHS_HDFS_PATH + host;
+//            log.info("cache hdfsPath:{},{}", key, hdfsPath);
+//            redisService.set(key, hdfsPath);
+
+            try{
+                Document jobHistoryConfig = getJobHistoryConfig(host, config.getNamenodes().get(i));
+                String remoteDir = getValueFromDocument(jobHistoryConfig, "yarn.nodemanager.remote-app-log-dir");
+                String defaultFS = getValueFromDocument(jobHistoryConfig, "fs.defaultFS");
+                String eventDir = getValueFromDocument(jobHistoryConfig, "mapreduce.jobhistory.done-dir");
+
+                redisService.set(Constant.JHS_HDFS_PATH + host, defaultFS + remoteDir);
+                redisService.set(Constant.JHS_EVENT_PATH + host, defaultFS + eventDir );
+            }catch (Exception e){
+
             }
-            String key = Constant.JHS_HDFS_PATH + host;
-            log.info("cache hdfsPath:{},{}", key, hdfsPath);
-            redisService.set(key, hdfsPath);
+
+
         }
+    }
+
+
+    private String getValueFromDocument(org.dom4j.Document document, String key){
+        final Pattern qutoPattern = Pattern.compile("\\$\\{(.*?)\\}");
+
+        Element rootElement = document.getRootElement();
+        for (Iterator i = rootElement.elementIterator(); i.hasNext(); ) {
+            Element next = (Element) i.next();
+            if (next.element("name").getData().equals(key)) {
+                String value = String.valueOf(next.element("value").getData());
+
+                while (true){
+                    Matcher matcher = qutoPattern.matcher(value);
+                    if(!matcher.find()) return value;
+
+                    String findKey = matcher.group(1);
+                    String findValue = getValueFromDocument(document, findKey);
+
+                    value = value.replaceFirst("\\$\\{(.*?)\\}", findValue);
+                }
+
+            }
+        }
+
+        throw new IllegalArgumentException("cannot found key with : " + key);
+    }
+
+    /***
+     * 获取 JobHistoryServer 配置
+     * @param ip
+     * @param nameNodeConf
+     * @return
+     */
+    public Document getJobHistoryConfig(String ip, NameNodeConf nameNodeConf){
+
+        String url = String.format(YARN_CONF, ip);
+
+        log.info("getHDFSPath:{}", url);
+
+        HttpClient httpClient = HttpClient.getInstance(ip, true, nameNodeConf.getLoginUser(),
+                nameNodeConf.getKeytabPath(), nameNodeConf.getKrb5Conf());
+
+        try {
+            CloseableHttpResponse response = httpClient.get(url);
+            return DocumentHelper.parseText(EntityUtils.toString(response.getEntity()));
+        } catch (Exception e) {
+            log.error("send request fail url: " + url);
+            log.error("{}", e);
+            return null;
+        }
+
     }
 
     /**
@@ -180,7 +257,9 @@ public class ClusterConfigServiceImpl implements IClusterConfigService {
      */
     public String getHDFSPath(String ip, NameNodeConf nameNodeConf) {
         String url = String.format(YARN_CONF, ip);
+
         log.info("getHDFSPath:{}", url);
+
         HttpClient httpClient = HttpClient.getInstance(ip, true, nameNodeConf.getLoginUser(),
                 nameNodeConf.getKeytabPath(), nameNodeConf.getKrb5Conf());
         CloseableHttpResponse response;
@@ -203,16 +282,19 @@ public class ClusterConfigServiceImpl implements IClusterConfigService {
             log.error("IOException: " + e.getMessage());
             return null;
         }
-        Element rootElement = document.getRootElement();
-        for (Iterator i = rootElement.elementIterator(); i.hasNext(); ) {
-            Element next = (Element) i.next();
-            if (next.element("name").getData().equals("yarn.nodemanager.remote-app-log-dir")) {
-                remoteDir = String.valueOf(next.element("value").getData());
-            }
-            if (next.element("name").getData().equals("fs.defaultFS")) {
-                defaultFS = String.valueOf(next.element("value").getData());
-            }
-        }
+
+
+        try{
+            remoteDir = getValueFromDocument(document, "yarn.nodemanager.remote-app-log-dir");
+        }catch (IllegalArgumentException e){}
+
+        try{
+            defaultFS = getValueFromDocument(document, "fs.defaultFS");
+        }catch (IllegalArgumentException e){}
+
+
+
+
 
         if (StringUtils.isEmpty(remoteDir)) {
             log.error("remoteDirEmpty:{}", url);
