@@ -70,7 +70,8 @@ public class MRTaskAppHandler implements TaskAppHandler {
 
     DateTime dirDate = new DateTime(yarnApp.getFinishedTime());
     String[] appArray = taskApplication.getApplicationId().split("_");
-    String path = String.format("hdfs:///user/history/done/%4d/%02d/%02d/0000%s/job_%s_%s",
+    String path = String.format("%s/%4d/%02d/%02d/0000%s/job_%s_%s",
+            getJobHisotyLogPath(yarnApp.getIp(), redisService),
             dirDate.getYear(),
             dirDate.getMonthOfYear(),
             dirDate.getDayOfMonth(),
@@ -92,6 +93,24 @@ public class MRTaskAppHandler implements TaskAppHandler {
               });
       String jhsIp = rmJhsMap.get(rmIp);
       String key = Constant.JHS_HDFS_PATH + jhsIp;
+      if (redisService.hasKey(key)) {
+        return (String) redisService.get(key);
+      } else {
+        throw new Exception(String.format("search redis error,msg: can not find key %s, rmJhsMap:%s, rmIp:%s", key, rmJhsMap, rmIp));
+      }
+
+    } else {
+      throw new Exception(String.format("search redis error,msg: can not find key %s", Constant.RM_JHS_MAP));
+    }
+  }
+
+  public String getJobHisotyLogPath(String rmIp, RedisService redisService) throws Exception {
+    if (redisService.hasKey(Constant.RM_JHS_MAP)) {
+      Map<String, String> rmJhsMap = JSON.parseObject((String) redisService.get(Constant.RM_JHS_MAP),
+              new TypeReference<Map<String, String>>() {
+              });
+      String jhsIp = rmJhsMap.get(rmIp);
+      String key = Constant.JHS_EVENT_PATH + jhsIp;
       if (redisService.hasKey(key)) {
         return (String) redisService.get(key);
       } else {
