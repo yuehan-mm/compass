@@ -97,7 +97,7 @@ public class MapReduceEventLogParser extends OneClickSubject implements IParser 
             updateParserProgress(ProgressState.FAILED, 0, 0);
             return null;
         }
-        log.info("replay result: " + JSON.toJSONString(replayEventLogs));
+        log.info("replay result: " + JSON.toJSONString(replayEventLogs.getJobFinishedEvent()));
         return detect(replayEventLogs, readerObject.getLogPath());
     }
 
