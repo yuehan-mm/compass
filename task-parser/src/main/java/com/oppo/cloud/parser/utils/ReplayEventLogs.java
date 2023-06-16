@@ -259,7 +259,7 @@ public class ReplayEventLogs {
 
     }
     private void parseMRLine(String line) {
-        if (line.equals("Avro-Json")) return;
+        if (line.equals("Avro-Json") || StringUtils.isEmpty(line)) return;
         String type = JSONObject.parseObject(line).getString("type");
         switch (type) {
             case "JOB_FINISHED":
