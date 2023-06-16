@@ -85,4 +85,9 @@ public class OSSReader implements IReader {
         return list;
     }
 
+    @Override
+    public void setMapReduceEventLogPath() {
+
+    }
+
 }

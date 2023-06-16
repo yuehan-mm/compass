@@ -66,8 +66,8 @@ public class MapReduceTask extends Task {
         TaskResult taskResult = new TaskResult();
         taskResult.setAppId(this.taskParam.getTaskApp().getApplicationId());
 
-//        List<GCReport> gcReports = new ArrayList<>();
-//        List<MapReduceTaskManagerLogParserResult> mapReduceTaskManagerLogParserResults = null;
+        List<GCReport> gcReports = new ArrayList<>();
+        List<MapReduceTaskManagerLogParserResult> mapReduceTaskManagerLogParserResults = null;
         MapReduceEventLogParserResult mapReduceEventLogParserResult = null;
 
         for (Future<CommonResult> result : futures) {
@@ -76,11 +76,10 @@ public class MapReduceTask extends Task {
                 commonResult = result.get();
                 if (commonResult != null) {
                     switch (commonResult.getLogType()) {
-//                        case JOB_MANAGER:
-//                        case TASK_MANAGER:
-//                            mapReduceTaskManagerLogParserResults =
-//                                    (List<MapReduceTaskManagerLogParserResult>) commonResult.getResult();
-//                            break;
+                        case CONTAINER:
+                            mapReduceTaskManagerLogParserResults =
+                                    (List<MapReduceTaskManagerLogParserResult>) commonResult.getResult();
+                            break;
                         case MAPREDUCE_EVENT:
                             mapReduceEventLogParserResult = (MapReduceEventLogParserResult) commonResult.getResult();
                             break;
@@ -97,27 +96,34 @@ public class MapReduceTask extends Task {
             log.error("sparkEventLogParserResultNull:{}", taskParam);
             return null;
         }
-
+        // get driver/executor categories
+        if (mapReduceTaskManagerLogParserResults != null) {
+            for (MapReduceTaskManagerLogParserResult result : mapReduceTaskManagerLogParserResults) {
+                if (result.getGcReports() != null) {
+                    gcReports.addAll(result.getGcReports());
+                }
+            }
+        }
 
         DetectorStorage detectorStorage = mapReduceEventLogParserResult.getDetectorStorage();
         if (detectorStorage == null) {
             log.error("detectorStorageNull:{}", taskParam);
             return taskResult;
         }
-//        // calculate memory metrics
-//        if (!this.memWasteConfig.getDisable() && gcReports.size() > 0
-//                && mapReduceEventLogParserResult.getMemoryCalculateParam() != null) {
-//            MemWasteDetector memWasteDetector = new MemWasteDetector(this.memWasteConfig);
-//            DetectorResult detectorResult =
-//                    memWasteDetector.detect(gcReports, mapReduceEventLogParserResult.getMemoryCalculateParam());
-//            detectorStorage.addDetectorResult(detectorResult);
-//            if (detectorResult.getAbnormal()) {
-//                detectorStorage.setAbnormal(true);
-//            }
-//        }
+        // calculate memory metrics
+        if (!this.memWasteConfig.getDisable() && gcReports.size() > 0
+                && mapReduceEventLogParserResult.getMemoryCalculateParam() != null) {
+            MemWasteDetector memWasteDetector = new MemWasteDetector(this.memWasteConfig);
+            DetectorResult detectorResult =
+                    memWasteDetector.detect(gcReports, mapReduceEventLogParserResult.getMemoryCalculateParam());
+            detectorStorage.addDetectorResult(detectorResult);
+            if (detectorResult.getAbnormal()) {
+                detectorStorage.setAbnormal(true);
+            }
+        }
         // get event log categories
         List<String> eventLogCategories = new ArrayList<>();
-        if (detectorStorage.getAbnormal()) {
+        if (this.taskParam.getIsOneClick() || detectorStorage.getAbnormal()) {
             for (DetectorResult detectorResult : detectorStorage.getDataList()) {
                 if (detectorResult.getAbnormal()) {
                     eventLogCategories.add(detectorResult.getAppCategory());
@@ -134,24 +140,24 @@ public class MapReduceTask extends Task {
         // set all spark categories
         taskResult.setCategories(eventLogCategories);
 
-//        // save gc reports
-//        if (eventLogCategories.size() > 0 && gcReports.size() > 0) {
-//            gcReports.sort(Comparator.comparing(GCReport::getMaxHeapUsedSize));
-//            if (gcReports.size() > 11) {
-//                List<GCReport> results = new ArrayList<>();
-//                GCReport driverGc = gcReports.stream().filter(gc -> gc.getExecutorId() == 0).findFirst().orElse(null);
-//                List<GCReport> executorGcs = gcReports.subList(gcReports.size() - 10, gcReports.size());
-//                if (driverGc != null) {
-//                    results.add(driverGc);
-//                }
-//                results.addAll(executorGcs);
-//                ElasticWriter.getInstance().saveGCReports(results, detectorStorage.getExecutionTime(),
-//                        detectorStorage.getApplicationId());
-//            } else {
-//                ElasticWriter.getInstance().saveGCReports(gcReports, detectorStorage.getExecutionTime(),
-//                        detectorStorage.getApplicationId());
-//            }
-//        }
+        // save gc reports
+        if ((this.taskParam.getIsOneClick() || eventLogCategories.size() > 0) && gcReports.size() > 0) {
+            gcReports.sort(Comparator.comparing(GCReport::getMaxHeapUsedSize));
+            if (gcReports.size() > 11) {
+                List<GCReport> results = new ArrayList<>();
+                GCReport driverGc = gcReports.stream().filter(gc -> gc.getExecutorId() == 0).findFirst().orElse(null);
+                List<GCReport> executorGcs = gcReports.subList(gcReports.size() - 10, gcReports.size());
+                if (driverGc != null) {
+                    results.add(driverGc);
+                }
+                results.addAll(executorGcs);
+                ElasticWriter.getInstance().saveGCReports(results, detectorStorage.getExecutionTime(),
+                        detectorStorage.getApplicationId());
+            } else {
+                ElasticWriter.getInstance().saveGCReports(gcReports, detectorStorage.getExecutionTime(),
+                        detectorStorage.getApplicationId());
+            }
+        }
 
         return taskResult;
     }

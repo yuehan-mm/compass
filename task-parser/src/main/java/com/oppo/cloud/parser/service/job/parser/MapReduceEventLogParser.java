@@ -64,6 +64,8 @@ public class MapReduceEventLogParser extends OneClickSubject implements IParser 
             ReaderObject readerObjects;
             try {
                 IReader reader = LogReaderFactory.create(logPath);
+                reader.setMapReduceEventLogPath();
+                log.info("update ReduceEventLogPath : "+ reader.getReaderObject().getLogPath());
                 readerObjects = reader.getReaderObject();
             } catch (FileNotFoundException e) {
                 String path = logPath.getLogPath().substring(0, logPath.getLogPath().lastIndexOf("_"));

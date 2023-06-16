@@ -121,7 +121,7 @@ public class DetectorManager {
             } else {
                 detectors = createDetectors();
             }
-        } else if (this.param.getAppType().equals(ApplicationType.SPARK)) {
+        } else if (this.param.getAppType().equals(ApplicationType.MAPREDUCE)) {
             detectors = createMRDetectors();
         } else {
             detectors = new ArrayList<>();
