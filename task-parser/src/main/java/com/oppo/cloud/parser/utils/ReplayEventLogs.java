@@ -80,41 +80,25 @@ public class ReplayEventLogs {
     }
 
     public void replay(ReaderObject readerObject) throws Exception {
-        if (this.applicationType == ApplicationType.SPARK) {
-            while (true) {
+        try {
+            if (this.applicationType == ApplicationType.SPARK) {
                 String line;
-                try {
-                    line = readerObject.getBufferedReader().readLine();
-                } catch (IOException e) {
-                    log.error(e.getMessage());
-                    break;
+                while ((line = readerObject.getBufferedReader().readLine()) != null) {
+                    parseLine(line);
                 }
-                if (line == null) {
-                    break;
-                }
-                parseLine(line);
-            }
-
-            readerObject.close();
-            this.correlate();
-        } else if (this.applicationType == ApplicationType.MAPREDUCE) {
-            while (true) {
+                this.correlate();
+            } else if (this.applicationType == ApplicationType.MAPREDUCE) {
                 String line;
-                try {
-                    line = readerObject.getBufferedReader().readLine();
-                } catch (IOException e) {
-                    log.error(e.getMessage());
-                    break;
+                while ((line = readerObject.getBufferedReader().readLine()) != null) {
+                    parseMRLine(line);
                 }
-                if (line == null) {
-                    break;
-                }
-                parseMRLine(line);
+            } else {
+                log.error("unknow applicationType :" + this.applicationType.getValue());
             }
-
+        } catch (Exception e) {
+            log.warn("replay event log error.  msg: " + e.getMessage());
+        } finally {
             readerObject.close();
-        } else {
-            log.error("unknow applicationType :" + this.applicationType.getValue());
         }
 
     }
@@ -275,6 +259,7 @@ public class ReplayEventLogs {
 
     }
     private void parseMRLine(String line) {
+        if (line.equals("Avro-Json")) return;
         String type = JSONObject.parseObject(line).getString("type");
         switch (type) {
             case "JOB_FINISHED":
