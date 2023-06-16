@@ -16,6 +16,7 @@
 
 package com.oppo.cloud.parser.service.job.parser;
 
+import com.alibaba.fastjson2.JSON;
 import com.oppo.cloud.common.constant.ProgressState;
 import com.oppo.cloud.common.domain.eventlog.DetectorStorage;
 import com.oppo.cloud.common.domain.eventlog.config.DetectorConfig;
@@ -65,7 +66,7 @@ public class MapReduceEventLogParser extends OneClickSubject implements IParser 
             try {
                 IReader reader = LogReaderFactory.create(logPath);
                 reader.setMapReduceEventLogPath();
-                log.info("update ReduceEventLogPath : "+ reader.getReaderObject().getLogPath());
+                log.info("update ReduceEventLogPath : " + reader.getReaderObject().getLogPath());
                 readerObjects = reader.getReaderObject();
             } catch (FileNotFoundException e) {
                 String path = logPath.getLogPath().substring(0, logPath.getLogPath().lastIndexOf("_"));
@@ -96,6 +97,7 @@ public class MapReduceEventLogParser extends OneClickSubject implements IParser 
             updateParserProgress(ProgressState.FAILED, 0, 0);
             return null;
         }
+        log.info("replay result: " + JSON.toJSONString(replayEventLogs));
         return detect(replayEventLogs, readerObject.getLogPath());
     }
 
