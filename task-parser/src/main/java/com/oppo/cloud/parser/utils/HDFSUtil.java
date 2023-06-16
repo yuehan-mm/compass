@@ -110,7 +110,8 @@ public class HDFSUtil {
 
     public static String getMapReduceEventLogPath(NameNodeConf nameNode, String path, String fsType) throws Exception {
         FileSystem fs = HDFSUtil.getFileSystem(nameNode, fsType);
-        FileStatus[] fileStatuses = fs.globStatus(new Path(path), matchPath -> matchPath.toString().contains("jhist"));
+        FileStatus[] fileStatuses = fs.globStatus(new Path(String.format("%s*", path)),
+                matchPath -> matchPath.toString().contains("jhist"));
         fs.close();
         if (fileStatuses.length == 0) {
             throw new RuntimeException("can not find getMapReduceEventLogParser. path:" + path);
