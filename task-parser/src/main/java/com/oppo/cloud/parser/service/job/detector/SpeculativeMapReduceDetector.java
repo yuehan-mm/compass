@@ -51,7 +51,7 @@ public class SpeculativeMapReduceDetector implements IDetector {
                 jobFinishedEvent.getFinishedReduces() > config.getReduceThreshold()) {
             speculativeMapReduceAbnormal.setAbnormal(true);
             speculativeMapReduceAbnormal.setFinishedMaps(jobFinishedEvent.getFinishedMaps());
-            speculativeMapReduceAbnormal.setFinishedReduces(jobFinishedEvent.getFailedReduces());
+            speculativeMapReduceAbnormal.setFinishedReduces(jobFinishedEvent.getFinishedReduces());
             detectorResult.setData(speculativeMapReduceAbnormal);
             detectorResult.setAbnormal(true);
             return detectorResult;
