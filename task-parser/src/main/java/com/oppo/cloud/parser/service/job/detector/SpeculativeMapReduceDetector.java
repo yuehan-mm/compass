@@ -16,10 +16,11 @@
 
 package com.oppo.cloud.parser.service.job.detector;
 
+import com.alibaba.fastjson2.JSON;
 import com.oppo.cloud.common.constant.AppCategoryEnum;
 import com.oppo.cloud.common.domain.eventlog.DetectorResult;
 import com.oppo.cloud.common.domain.eventlog.SpeculativeMapReduceAbnormal;
-import com.oppo.cloud.common.domain.eventlog.config.GlobalSortConfig;
+import com.oppo.cloud.common.domain.eventlog.config.SpeculativeMapReduceConfig;
 import com.oppo.cloud.parser.domain.job.DetectorParam;
 import com.oppo.cloud.parser.domain.mapreduce.jobhistory.JobFinishedEvent;
 import lombok.extern.slf4j.Slf4j;
@@ -29,28 +30,29 @@ public class SpeculativeMapReduceDetector implements IDetector {
 
     private final DetectorParam param;
 
-    private final GlobalSortConfig config;
+    private final SpeculativeMapReduceConfig config;
 
     public SpeculativeMapReduceDetector(DetectorParam param) {
         this.param = param;
-        this.config = param.getConfig().getGlobalSortConfig();
+        this.config = param.getConfig().getSpeculativeMapReduceConfig();
 
     }
 
     @Override
     public DetectorResult detect() {
         log.info("start SpeculativeMapReduceDetector");
+        log.info("SpeculativeMapReduceConfig : " + JSON.toJSONString(config));
         DetectorResult<SpeculativeMapReduceAbnormal> detectorResult =
                 new DetectorResult<>(AppCategoryEnum.SPECULATIVE_MAP_REDUCE.getCategory(), false);
 
-        SpeculativeMapReduceAbnormal globalSortAbnormalList = new SpeculativeMapReduceAbnormal();
+        SpeculativeMapReduceAbnormal speculativeMapReduceAbnormal = new SpeculativeMapReduceAbnormal();
         JobFinishedEvent jobFinishedEvent = this.param.getReplayEventLogs().getJobFinishedEvent();
-        // TODO add configuration
-        if (jobFinishedEvent.getFinishedMaps() > -1) {
-            globalSortAbnormalList.setAbnormal(true);
-            globalSortAbnormalList.setFinishedMaps(jobFinishedEvent.getFinishedMaps());
-            globalSortAbnormalList.setFinishedReduces(jobFinishedEvent.getFailedReduces());
-            detectorResult.setData(globalSortAbnormalList);
+        if (jobFinishedEvent.getFinishedMaps() > config.getMapThreshold() ||
+                jobFinishedEvent.getFinishedMaps() > config.getReduceThreshold()) {
+            speculativeMapReduceAbnormal.setAbnormal(true);
+            speculativeMapReduceAbnormal.setFinishedMaps(jobFinishedEvent.getFinishedMaps());
+            speculativeMapReduceAbnormal.setFinishedReduces(jobFinishedEvent.getFailedReduces());
+            detectorResult.setData(speculativeMapReduceAbnormal);
             detectorResult.setAbnormal(true);
             return detectorResult;
         }

@@ -14,21 +14,18 @@
  * limitations under the License.
  */
 
-package com.oppo.cloud.common.domain.eventlog;
+package com.oppo.cloud.common.domain.eventlog.config;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class SpeculativeMapReduceAbnormal {
+public class SpeculativeMapReduceConfig {
 
-    private int finishedMaps;
+    private Boolean disable;
 
-    private int finishedReduces;
+    private Long duration;
 
-    private Boolean abnormal;
+    private int mapThreshold;
 
+    private int reduceThreshold;
 }

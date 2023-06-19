@@ -84,4 +84,8 @@ public class DetectorConfig {
      */
     private DataSkewConfig dataSkewConfig;
 
+    /**
+     * Map/Reduce数量过多配置
+     */
+    private SpeculativeMapReduceConfig speculativeMapReduceConfig;
 }
