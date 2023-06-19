@@ -16,6 +16,7 @@
 
 package com.oppo.cloud.parser.service.job.task;
 
+import com.alibaba.fastjson2.JSON;
 import com.oppo.cloud.common.domain.eventlog.DetectorResult;
 import com.oppo.cloud.common.domain.eventlog.DetectorStorage;
 import com.oppo.cloud.common.domain.eventlog.config.MemWasteConfig;
@@ -106,6 +107,7 @@ public class MapReduceTask extends Task {
         }
 
         DetectorStorage detectorStorage = mapReduceEventLogParserResult.getDetectorStorage();
+        log.info("MR DetectorStorage : " + JSON.toJSONString(detectorStorage));
         if (detectorStorage == null) {
             log.error("detectorStorageNull:{}", taskParam);
             return taskResult;

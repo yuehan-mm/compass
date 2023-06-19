@@ -43,14 +43,8 @@ public class HDFSUtil {
      */
     public static NameNodeConf getNameNode(Map<String, NameNodeConf> nameNodeMap, String filePath) {
         for (String nameService : nameNodeMap.keySet()) {
-            NameNodeConf nameNodeConf = nameNodeMap.get(nameService);
-            for (String pathKey : nameNodeConf.getMatchPathKeys()) {
-                if (filePath.contains(pathKey)) {
-                    return nameNodeConf;
-                }
-            }
             if (nameService != null && !nameService.isEmpty() && filePath.contains(nameService)) {
-                return nameNodeConf;
+                return nameNodeMap.get(nameService);
             }
         }
         return null;

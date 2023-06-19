@@ -45,7 +45,8 @@ public class SpeculativeMapReduceDetector implements IDetector {
 
         SpeculativeMapReduceAbnormal globalSortAbnormalList = new SpeculativeMapReduceAbnormal();
         JobFinishedEvent jobFinishedEvent = this.param.getReplayEventLogs().getJobFinishedEvent();
-        if (jobFinishedEvent.getFinishedMaps() > 0) {
+        // TODO add configuration
+        if (jobFinishedEvent.getFinishedMaps() > -1) {
             globalSortAbnormalList.setAbnormal(true);
             globalSortAbnormalList.setFinishedMaps(jobFinishedEvent.getFinishedMaps());
             globalSortAbnormalList.setFinishedReduces(jobFinishedEvent.getFailedReduces());
