@@ -48,7 +48,7 @@ public class SpeculativeMapReduceDetector implements IDetector {
         SpeculativeMapReduceAbnormal speculativeMapReduceAbnormal = new SpeculativeMapReduceAbnormal();
         JobFinishedEvent jobFinishedEvent = this.param.getReplayEventLogs().getJobFinishedEvent();
         if (jobFinishedEvent.getFinishedMaps() > config.getMapThreshold() ||
-                jobFinishedEvent.getFinishedMaps() > config.getReduceThreshold()) {
+                jobFinishedEvent.getFinishedReduces() > config.getReduceThreshold()) {
             speculativeMapReduceAbnormal.setAbnormal(true);
             speculativeMapReduceAbnormal.setFinishedMaps(jobFinishedEvent.getFinishedMaps());
             speculativeMapReduceAbnormal.setFinishedReduces(jobFinishedEvent.getFailedReduces());
