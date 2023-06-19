@@ -267,7 +267,7 @@ public class ReplayEventLogs {
                 JSONObject eventJSONObject = event.getJSONObject("org.apache.hadoop.mapreduce.jobhistory.JobFinished");
                 JobFinishedEvent jobFinishedEvent = new JobFinishedEvent();
                 jobFinishedEvent.setFinishedMaps(eventJSONObject.getInteger("finishedMaps"));
-                jobFinishedEvent.setFailedReduces(eventJSONObject.getInteger("finishedReduces"));
+                jobFinishedEvent.setFinishedReduces(eventJSONObject.getInteger("finishedReduces"));
                 this.jobFinishedEvent = jobFinishedEvent;
                 break;
             default:
