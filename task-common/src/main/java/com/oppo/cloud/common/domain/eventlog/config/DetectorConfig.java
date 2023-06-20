@@ -30,6 +30,11 @@ public class DetectorConfig {
     private SparkEnvironmentConfig sparkEnvironmentConfig;
 
     /**
+     * mapreduce environment
+     */
+    private MapReduceEnvironmentConfig mapReduceEnvironmentConfig;
+
+    /**
      * 推测执行Task配置
      */
     private SpeculativeTaskConfig speculativeTaskConfig;

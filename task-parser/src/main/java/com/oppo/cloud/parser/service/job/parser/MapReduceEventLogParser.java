@@ -20,21 +20,21 @@ import com.alibaba.fastjson2.JSON;
 import com.oppo.cloud.common.constant.ProgressState;
 import com.oppo.cloud.common.domain.eventlog.DetectorStorage;
 import com.oppo.cloud.common.domain.eventlog.config.DetectorConfig;
-import com.oppo.cloud.common.domain.eventlog.config.SparkEnvironmentConfig;
+import com.oppo.cloud.common.domain.eventlog.config.MapReduceEnvironmentConfig;
 import com.oppo.cloud.common.domain.job.LogPath;
 import com.oppo.cloud.common.domain.oneclick.OneClickProgress;
 import com.oppo.cloud.common.domain.oneclick.ProgressInfo;
 import com.oppo.cloud.common.util.spring.SpringBeanUtil;
 import com.oppo.cloud.parser.domain.job.*;
 import com.oppo.cloud.parser.domain.reader.ReaderObject;
-import com.oppo.cloud.parser.domain.spark.eventlog.SparkApplication;
-import com.oppo.cloud.parser.domain.spark.eventlog.SparkExecutor;
-import com.oppo.cloud.parser.service.job.detector.DetectorManager;
+import com.oppo.cloud.parser.service.job.detector.manager.DetectorManager;
+import com.oppo.cloud.parser.service.job.detector.manager.MapReduceDetectorManager;
 import com.oppo.cloud.parser.service.job.oneclick.OneClickSubject;
 import com.oppo.cloud.parser.service.reader.IReader;
 import com.oppo.cloud.parser.service.reader.LogReaderFactory;
 import com.oppo.cloud.parser.service.rules.JobRulesConfigService;
 import com.oppo.cloud.parser.utils.ReplayEventLogs;
+import com.oppo.cloud.parser.utils.ReplayMapReduceEventLogs;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.FileNotFoundException;
@@ -89,7 +89,7 @@ public class MapReduceEventLogParser extends OneClickSubject implements IParser 
     }
 
     private CommonResult<MapReduceEventLogParserResult> parse(ReaderObject readerObject) {
-        ReplayEventLogs replayEventLogs = new ReplayEventLogs(this.param.getTaskParam().getTaskApp().getApplicationType());
+        ReplayMapReduceEventLogs replayEventLogs = new ReplayMapReduceEventLogs(this.param.getTaskParam().getTaskApp().getApplicationType());
         try {
             replayEventLogs.replay(readerObject);
         } catch (Exception e) {
@@ -102,12 +102,7 @@ public class MapReduceEventLogParser extends OneClickSubject implements IParser 
     }
 
     private CommonResult<MapReduceEventLogParserResult> detect(ReplayEventLogs replayEventLogs, String logPath) {
-//        Map<String, Object> env = getSparkEnvironmentConfig(replayEventLogs);
-
-//        Long appDuration = replayEventLogs.getApplication().getAppDuration();
-//        if (appDuration == null || appDuration < 0) {
-//            appDuration = 0L;
-//        }
+        Map<String, Object> env = getMapReduceEnvironmentConfig(replayEventLogs);
 
         DetectorParam detectorParam = new DetectorParam(this.param.getTaskParam().getTaskApp().getFlowName(),
                 this.param.getTaskParam().getTaskApp().getProjectName(),
@@ -116,14 +111,14 @@ public class MapReduceEventLogParser extends OneClickSubject implements IParser 
                 this.param.getTaskParam().getTaskApp().getRetryTimes(),
                 this.param.getTaskParam().getTaskApp().getApplicationId(),
                 this.param.getTaskParam().getTaskApp().getApplicationType(),
-                0l, logPath, config, replayEventLogs,
-                isOneClick);
+                replayEventLogs.getMapReduceApplication().getAppDuration(),
+                logPath, config, replayEventLogs, isOneClick);
 
-        DetectorManager detectorManager = new DetectorManager(detectorParam);
+        DetectorManager detectorManager = new MapReduceDetectorManager(detectorParam);
         // run all detector
         DetectorStorage detectorStorage = detectorManager.run();
 
-//        detectorStorage.setEnv(env);
+        detectorStorage.setEnv(env);
         MapReduceEventLogParserResult mapReduceEventLogParserResult = new MapReduceEventLogParserResult();
         mapReduceEventLogParserResult.setDetectorStorage(detectorStorage);
 //        mapReduceEventLogParserResult.setMemoryCalculateParam(getMemoryCalculateParam(replayEventLogs));
@@ -136,17 +131,17 @@ public class MapReduceEventLogParser extends OneClickSubject implements IParser 
         return result;
     }
 
-    private Map<String, Object> getSparkEnvironmentConfig(ReplayEventLogs replayEventLogs) {
+    private Map<String, Object> getMapReduceEnvironmentConfig(ReplayEventLogs replayEventLogs) {
         Map<String, Object> env = new HashMap<>();
-        SparkEnvironmentConfig envConfig = config.getSparkEnvironmentConfig();
+        MapReduceEnvironmentConfig envConfig = config.getMapReduceEnvironmentConfig();
         if (envConfig != null) {
             if (envConfig.getJvmInformation() != null) {
                 for (String key : envConfig.getJvmInformation()) {
                     env.put(key, replayEventLogs.getApplication().getJvmInformation().get(key));
                 }
             }
-            if (envConfig.getSparkProperties() != null) {
-                for (String key : envConfig.getSparkProperties()) {
+            if (envConfig.getMapReduceProperties() != null) {
+                for (String key : envConfig.getMapReduceProperties()) {
                     env.put(key, replayEventLogs.getApplication().getSparkProperties().get(key));
                 }
             }
@@ -160,29 +155,29 @@ public class MapReduceEventLogParser extends OneClickSubject implements IParser 
     }
 
 
-    public MemoryCalculateParam getMemoryCalculateParam(ReplayEventLogs replayEventLogs) {
-        SparkApplication application = replayEventLogs.getApplication();
-        long appTotalTime = application.getAppEndTimestamp() - application.getAppStartTimestamp();
-        MemoryCalculateParam memoryCalculateParam = new MemoryCalculateParam();
-        memoryCalculateParam.setAppTotalTime(appTotalTime > 0 ? appTotalTime : 0);
-        memoryCalculateParam.setDriverMemory(application.getDriverMemory());
-        memoryCalculateParam.setExecutorMemory(application.getExecutorMemory());
-
-        Map<String, Long> executorRuntimeMap = new HashMap<>();
-        for (Map.Entry<String, SparkExecutor> executor : replayEventLogs.getExecutors().entrySet()) {
-            SparkExecutor sparkExecutor = executor.getValue();
-            long endTime = sparkExecutor.getRemoveTimestamp() > 0 ? sparkExecutor.getRemoveTimestamp()
-                    : application.getAppEndTimestamp();
-
-            long startTime = sparkExecutor.getStartTimestamp() > 0 ? sparkExecutor.getStartTimestamp()
-                    : application.getAppStartTimestamp();
-
-            long executorRuntime = endTime - startTime;
-            executorRuntimeMap.put(executor.getValue().getId(), executorRuntime);
-        }
-        memoryCalculateParam.setExecutorRuntimeMap(executorRuntimeMap);
-        return memoryCalculateParam;
-    }
+//    public MemoryCalculateParam getMemoryCalculateParam(ReplayEventLogs replayEventLogs) {
+//        SparkApplication application = replayEventLogs.getApplication();
+//        long appTotalTime = application.getAppEndTimestamp() - application.getAppStartTimestamp();
+//        MemoryCalculateParam memoryCalculateParam = new MemoryCalculateParam();
+//        memoryCalculateParam.setAppTotalTime(appTotalTime > 0 ? appTotalTime : 0);
+//        memoryCalculateParam.setDriverMemory(application.getDriverMemory());
+//        memoryCalculateParam.setExecutorMemory(application.getExecutorMemory());
+//
+//        Map<String, Long> executorRuntimeMap = new HashMap<>();
+//        for (Map.Entry<String, SparkExecutor> executor : replayEventLogs.getExecutors().entrySet()) {
+//            SparkExecutor sparkExecutor = executor.getValue();
+//            long endTime = sparkExecutor.getRemoveTimestamp() > 0 ? sparkExecutor.getRemoveTimestamp()
+//                    : application.getAppEndTimestamp();
+//
+//            long startTime = sparkExecutor.getStartTimestamp() > 0 ? sparkExecutor.getStartTimestamp()
+//                    : application.getAppStartTimestamp();
+//
+//            long executorRuntime = endTime - startTime;
+//            executorRuntimeMap.put(executor.getValue().getId(), executorRuntime);
+//        }
+//        memoryCalculateParam.setExecutorRuntimeMap(executorRuntimeMap);
+//        return memoryCalculateParam;
+//    }
 
 
     public void updateParserProgress(ProgressState state, Integer progress, Integer count) {

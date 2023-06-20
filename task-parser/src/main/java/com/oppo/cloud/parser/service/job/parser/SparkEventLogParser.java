@@ -28,12 +28,13 @@ import com.oppo.cloud.parser.domain.job.*;
 import com.oppo.cloud.parser.domain.reader.ReaderObject;
 import com.oppo.cloud.parser.domain.spark.eventlog.SparkApplication;
 import com.oppo.cloud.parser.domain.spark.eventlog.SparkExecutor;
-import com.oppo.cloud.parser.service.job.detector.DetectorManager;
+import com.oppo.cloud.parser.service.job.detector.manager.DetectorManager;
+import com.oppo.cloud.parser.service.job.detector.manager.SparkDetectorManager;
 import com.oppo.cloud.parser.service.job.oneclick.OneClickSubject;
 import com.oppo.cloud.parser.service.reader.IReader;
 import com.oppo.cloud.parser.service.reader.LogReaderFactory;
 import com.oppo.cloud.parser.service.rules.JobRulesConfigService;
-import com.oppo.cloud.parser.utils.ReplayEventLogs;
+import com.oppo.cloud.parser.utils.ReplaySparkEventLogs;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.FileNotFoundException;
@@ -85,7 +86,7 @@ public class SparkEventLogParser extends OneClickSubject implements IParser {
     }
 
     private CommonResult<SparkEventLogParserResult> parse(ReaderObject readerObject) {
-        ReplayEventLogs replayEventLogs = new ReplayEventLogs(this.param.getTaskParam().getTaskApp().getApplicationType());
+        ReplaySparkEventLogs replayEventLogs = new ReplaySparkEventLogs(this.param.getTaskParam().getTaskApp().getApplicationType());
         try {
             replayEventLogs.replay(readerObject);
         } catch (Exception e) {
@@ -96,13 +97,8 @@ public class SparkEventLogParser extends OneClickSubject implements IParser {
         return detect(replayEventLogs, readerObject.getLogPath());
     }
 
-    private CommonResult<SparkEventLogParserResult> detect(ReplayEventLogs replayEventLogs, String logPath) {
+    private CommonResult<SparkEventLogParserResult> detect(ReplaySparkEventLogs replayEventLogs, String logPath) {
         Map<String, Object> env = getSparkEnvironmentConfig(replayEventLogs);
-
-        Long appDuration = replayEventLogs.getApplication().getAppDuration();
-        if (appDuration == null || appDuration < 0) {
-            appDuration = 0L;
-        }
 
         DetectorParam detectorParam = new DetectorParam(this.param.getTaskParam().getTaskApp().getFlowName(),
                 this.param.getTaskParam().getTaskApp().getProjectName(),
@@ -111,10 +107,10 @@ public class SparkEventLogParser extends OneClickSubject implements IParser {
                 this.param.getTaskParam().getTaskApp().getRetryTimes(),
                 this.param.getTaskParam().getTaskApp().getApplicationId(),
                 this.param.getTaskParam().getTaskApp().getApplicationType(),
-                appDuration, logPath, config, replayEventLogs,
-                isOneClick);
+                replayEventLogs.getApplication().getAppDuration(),
+                logPath, config, replayEventLogs, isOneClick);
 
-        DetectorManager detectorManager = new DetectorManager(detectorParam);
+        DetectorManager detectorManager = new SparkDetectorManager(detectorParam);
         // run all detector
         DetectorStorage detectorStorage = detectorManager.run();
 
@@ -131,7 +127,7 @@ public class SparkEventLogParser extends OneClickSubject implements IParser {
         return result;
     }
 
-    private Map<String, Object> getSparkEnvironmentConfig(ReplayEventLogs replayEventLogs) {
+    private Map<String, Object> getSparkEnvironmentConfig(ReplaySparkEventLogs replayEventLogs) {
         Map<String, Object> env = new HashMap<>();
         SparkEnvironmentConfig envConfig = config.getSparkEnvironmentConfig();
         if (envConfig != null) {
@@ -155,7 +151,7 @@ public class SparkEventLogParser extends OneClickSubject implements IParser {
     }
 
 
-    public MemoryCalculateParam getMemoryCalculateParam(ReplayEventLogs replayEventLogs) {
+    public MemoryCalculateParam getMemoryCalculateParam(ReplaySparkEventLogs replayEventLogs) {
         SparkApplication application = replayEventLogs.getApplication();
         long appTotalTime = application.getAppEndTimestamp() - application.getAppStartTimestamp();
         MemoryCalculateParam memoryCalculateParam = new MemoryCalculateParam();

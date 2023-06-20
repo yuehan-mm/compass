@@ -68,6 +68,13 @@ custom:
         - spark.sql.shuffle.partitions
       systemProperties:
         - sun.java.command
+    mapReduceEnvironmentConfig:
+      jvmInformation:
+        - Java Version
+      mapReduceProperties:
+        - xxx.xxx.xxx
+      systemProperties:
+        - sun.java.command
     # 推测任务执行过多（app执行时间超过5分钟，且stage数量超过20）
     speculativeTaskConfig:
       disable: false
