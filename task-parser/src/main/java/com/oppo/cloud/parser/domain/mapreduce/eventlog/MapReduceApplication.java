@@ -31,7 +31,7 @@ public class MapReduceApplication {
     private Properties jobConfiguration;
 
     public MapReduceApplication() {
-        jobConfiguration = new Properties();
+
     }
 
 
