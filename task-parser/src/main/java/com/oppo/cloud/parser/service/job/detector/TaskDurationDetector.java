@@ -38,7 +38,7 @@ public class TaskDurationDetector implements IDetector {
 
     private final TaskDurationConfig config;
 
-    TaskDurationDetector(DetectorParam param) {
+    public TaskDurationDetector(DetectorParam param) {
         this.param = param;
         this.config = param.getConfig().getTaskDurationConfig();
     }

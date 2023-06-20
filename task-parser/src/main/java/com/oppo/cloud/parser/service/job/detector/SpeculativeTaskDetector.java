@@ -29,6 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 @Slf4j
 public class SpeculativeTaskDetector implements IDetector {
 
@@ -36,7 +37,7 @@ public class SpeculativeTaskDetector implements IDetector {
 
     private SpeculativeTaskConfig config;
 
-    SpeculativeTaskDetector(DetectorParam detectorParam) {
+    public SpeculativeTaskDetector(DetectorParam detectorParam) {
         this.param = detectorParam;
         this.config = detectorParam.getConfig().getSpeculativeTaskConfig();
     }

@@ -38,7 +38,7 @@ public class CpuWasteDetector implements IDetector {
 
     private final CpuWasteConfig config;
 
-    CpuWasteDetector(DetectorParam param) {
+    public CpuWasteDetector(DetectorParam param) {
         this.param = param;
         this.config = param.getConfig().getCpuWasteConfig();
     }

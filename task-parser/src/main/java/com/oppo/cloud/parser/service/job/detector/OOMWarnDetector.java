@@ -34,7 +34,7 @@ public class OOMWarnDetector implements IDetector {
 
     private final OOMWarnConfig config;
 
-    OOMWarnDetector(DetectorParam param) {
+    public OOMWarnDetector(DetectorParam param) {
         this.param = param;
         this.config = param.getConfig().getOomWarnConfig();
     }
