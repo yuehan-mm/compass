@@ -1,4 +1,4 @@
-package com.oppo.cloud.parser.domain.mapreduce.jobhistory;
+package com.oppo.cloud.parser.domain.mapreduce.eventlog;
 
 import lombok.Data;
 

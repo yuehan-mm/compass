@@ -22,7 +22,7 @@ import com.oppo.cloud.common.domain.eventlog.DetectorResult;
 import com.oppo.cloud.common.domain.eventlog.SpeculativeMapReduceAbnormal;
 import com.oppo.cloud.common.domain.eventlog.config.SpeculativeMapReduceConfig;
 import com.oppo.cloud.parser.domain.job.DetectorParam;
-import com.oppo.cloud.parser.domain.mapreduce.jobhistory.JobFinishedEvent;
+import com.oppo.cloud.parser.domain.mapreduce.eventlog.JobFinishedEvent;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

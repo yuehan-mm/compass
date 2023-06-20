@@ -18,8 +18,8 @@ package com.oppo.cloud.parser.utils;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.oppo.cloud.common.constant.ApplicationType;
-import com.oppo.cloud.parser.domain.mapreduce.jobhistory.JobFinishedEvent;
-import com.oppo.cloud.parser.domain.mapreduce.jobhistory.MapReduceApplication;
+import com.oppo.cloud.parser.domain.mapreduce.eventlog.JobFinishedEvent;
+import com.oppo.cloud.parser.domain.mapreduce.eventlog.MapReduceApplication;
 import com.oppo.cloud.parser.domain.spark.eventlog.*;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;

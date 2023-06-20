@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.oppo.cloud.parser.domain.mapreduce.jobhistory;
+package com.oppo.cloud.parser.domain.mapreduce.eventlog;
 
 import com.oppo.cloud.parser.domain.spark.eventlog.SparkListenerEnvironmentUpdate;
 import com.oppo.cloud.parser.utils.UnitUtil;
