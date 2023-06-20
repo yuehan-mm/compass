@@ -40,6 +40,8 @@ public class ReplayMapReduceEventLogs extends ReplayEventLogs {
 
     public ReplayMapReduceEventLogs(ApplicationType applicationType) {
         super(applicationType);
+        mapReduceApplication = new MapReduceApplication();
+        jobFinishedEvent = new JobFinishedEvent();
     }
 
     @Override
