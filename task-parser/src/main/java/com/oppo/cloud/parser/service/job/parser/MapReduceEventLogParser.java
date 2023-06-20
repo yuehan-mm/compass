@@ -89,7 +89,8 @@ public class MapReduceEventLogParser extends OneClickSubject implements IParser 
     }
 
     private CommonResult<MapReduceEventLogParserResult> parse(ReaderObject readerObject) {
-        ReplayMapReduceEventLogs replayEventLogs = new ReplayMapReduceEventLogs(this.param.getTaskParam().getTaskApp().getApplicationType());
+        ReplayMapReduceEventLogs replayEventLogs = new ReplayMapReduceEventLogs(
+                this.param.getTaskParam().getTaskApp().getApplicationType(), readerObject.getLogPath());
         try {
             replayEventLogs.replay(readerObject);
         } catch (Exception e) {
@@ -137,17 +138,17 @@ public class MapReduceEventLogParser extends OneClickSubject implements IParser 
         if (envConfig != null) {
             if (envConfig.getJvmInformation() != null) {
                 for (String key : envConfig.getJvmInformation()) {
-                    env.put(key, "replayEventLogs.getApplication().getJvmInformation().get(key)");
+                    env.put(key, replayEventLogs.getMapReduceApplication().getJobConfiguration().get(key));
                 }
             }
             if (envConfig.getMapReduceProperties() != null) {
                 for (String key : envConfig.getMapReduceProperties()) {
-                    env.put(key, "replayEventLogs.getApplication().getSparkProperties().get(key)");
+                    env.put(key, replayEventLogs.getMapReduceApplication().getJobConfiguration().get(key));
                 }
             }
             if (envConfig.getSystemProperties() != null) {
                 for (String key : envConfig.getSystemProperties()) {
-                    env.put(key, "replayEventLogs.getApplication().getSystemProperties().get(key)");
+                    env.put(key, replayEventLogs.getMapReduceApplication().getJobConfiguration().get(key));
                 }
             }
         }

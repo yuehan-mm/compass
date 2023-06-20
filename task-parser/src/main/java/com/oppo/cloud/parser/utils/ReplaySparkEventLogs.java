@@ -55,8 +55,8 @@ public class ReplaySparkEventLogs extends ReplayEventLogs {
     private long logSize;
 
 
-    public ReplaySparkEventLogs(ApplicationType applicationType) {
-        super(applicationType);
+    public ReplaySparkEventLogs(ApplicationType applicationType, String logPath) {
+        super(applicationType, logPath);
         application = new SparkApplication();
         jobs = new HashMap<>();
         jobSQLExecIDMap = new HashMap<>();

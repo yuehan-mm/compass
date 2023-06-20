@@ -16,8 +16,6 @@
 
 package com.oppo.cloud.parser.domain.mapreduce.eventlog;
 
-import com.oppo.cloud.parser.domain.spark.eventlog.SparkListenerEnvironmentUpdate;
-import com.oppo.cloud.parser.utils.UnitUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,33 +28,12 @@ public class MapReduceApplication {
     private Long appDuration;
     private Long appStartTimestamp;
     private Long appEndTimestamp;
-    private Properties jvmInformation;
-    private Properties mapReduceProperties;
-    private Properties systemProperties;
-    private Properties classpathEntries;
-
-    private Long executorMemory;
-
-    private Long driverMemory;
-
-    private String sparkExecutorCores;
+    private Properties jobConfiguration;
 
     public MapReduceApplication() {
 
     }
 
-    /**
-     * SparkListenerEnvironmentUpdate属性
-     */
-    public void setSparkApplication(SparkListenerEnvironmentUpdate env) {
-        this.jvmInformation = env.getJvmInformation();
-        this.mapReduceProperties = env.getSparkProperties();
-        this.systemProperties = env.getSystemProperties();
-        this.classpathEntries = env.getClasspathEntries();
-        this.executorMemory = UnitUtil.toBytes(env.getSparkProperty("spark.executor.memory"));
-        this.driverMemory = UnitUtil.toBytes(env.getSparkProperty("spark.driver.memory"));
-        this.sparkExecutorCores = env.getSparkProperty("spark.executor.cores");
-    }
 
     public Long getAppDuration() {
         return this.appEndTimestamp - this.appStartTimestamp;

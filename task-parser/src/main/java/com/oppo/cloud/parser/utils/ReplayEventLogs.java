@@ -37,11 +37,15 @@ public abstract class ReplayEventLogs {
     // APP 类型
     private ApplicationType applicationType;
 
+    // 日志路径
+    private String logPath;
+
     public ReplayEventLogs() {
     }
 
-    public ReplayEventLogs(ApplicationType applicationType) {
+    public ReplayEventLogs(ApplicationType applicationType, String logPath) {
         this.applicationType = applicationType;
+        this.logPath = logPath;
     }
 
     public void replay(ReaderObject readerObject) throws Exception {

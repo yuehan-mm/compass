@@ -72,7 +72,9 @@ custom:
       jvmInformation:
         - Java Version
       mapReduceProperties:
-        - xxx.xxx.xxx
+        - yarn.app.mapreduce.am.resource.mb
+        - mapreduce.reduce.memory.mb
+        - mapreduce.map.memory.mb
       systemProperties:
         - sun.java.command
     # 推测任务执行过多（app执行时间超过5分钟，且stage数量超过20）

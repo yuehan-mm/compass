@@ -16,17 +16,25 @@
 
 package com.oppo.cloud.parser.utils;
 
+import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.oppo.cloud.common.constant.ApplicationType;
+import com.oppo.cloud.common.constant.LogPathType;
+import com.oppo.cloud.common.domain.job.LogPath;
 import com.oppo.cloud.parser.domain.mapreduce.eventlog.JobFinishedEvent;
 import com.oppo.cloud.parser.domain.mapreduce.eventlog.MapReduceApplication;
 import com.oppo.cloud.parser.domain.spark.eventlog.*;
+import com.oppo.cloud.parser.service.reader.IReader;
+import com.oppo.cloud.parser.service.reader.LogReaderFactory;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.dom4j.Document;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
 
-import java.util.List;
-import java.util.Map;
+import java.io.BufferedReader;
+import java.util.*;
 
 /**
  * spark event log 解析
@@ -38,8 +46,8 @@ public class ReplayMapReduceEventLogs extends ReplayEventLogs {
     private MapReduceApplication mapReduceApplication;
     private JobFinishedEvent jobFinishedEvent;
 
-    public ReplayMapReduceEventLogs(ApplicationType applicationType) {
-        super(applicationType);
+    public ReplayMapReduceEventLogs(ApplicationType applicationType, String logPath) {
+        super(applicationType, logPath);
         mapReduceApplication = new MapReduceApplication();
         jobFinishedEvent = new JobFinishedEvent();
     }
@@ -55,6 +63,7 @@ public class ReplayMapReduceEventLogs extends ReplayEventLogs {
                 jobFinishedEvent.setFinishedMaps(eventJSONObject.getInteger("finishedMaps"));
                 jobFinishedEvent.setFinishedReduces(eventJSONObject.getInteger("finishedReduces"));
                 mapReduceApplication.setAppEndTimestamp(eventJSONObject.getLong("finishTime"));
+                mapReduceApplication.setJobConfiguration(getJobConfiguration(eventJSONObject.getLong("jobid")));
                 break;
             case "JOB_SUBMITTED":
                 JSONObject jobSubmitEvent = JSONObject.parseObject(line).getJSONObject("event");
@@ -63,6 +72,39 @@ public class ReplayMapReduceEventLogs extends ReplayEventLogs {
                 break;
             default:
                 break;
+        }
+    }
+
+    private Properties getJobConfiguration(Long jobId) {
+        Properties properties = new Properties();
+        String jobConfPath = this.getLogPath().toString()
+                .substring(0, this.getLogPath().lastIndexOf("/")) + jobId + "_conf.xml";
+        log.info("job conf path : " + jobConfPath);
+        try {
+            IReader reader = LogReaderFactory.create(new LogPath("hdfs", LogPathType.FILE, jobConfPath));
+            copyProperties(reader.getReaderObject().getBufferedReader(), properties);
+            log.info(JSON.toJSONString(properties));
+        } catch (Exception e) {
+            log.error("getJobConfiguration error : ", e);
+        }
+        return properties;
+    }
+
+    public static void copyProperties(BufferedReader bufferedReader, Properties properties) {
+        try {
+            // 创建SAXReader对象
+            SAXReader reader = new SAXReader();
+            // 加载xml文件
+            Document dc = reader.read(bufferedReader);
+            // 获取迭代器
+            Iterator it = dc.getRootElement().elementIterator();
+            // 遍历迭代器，获取根节点信息
+            while (it.hasNext()) {
+                Element book = (Element) it.next();
+                properties.put(book.element("name").getText(), book.element("value").getText());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
