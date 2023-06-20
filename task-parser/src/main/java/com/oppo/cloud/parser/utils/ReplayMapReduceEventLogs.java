@@ -63,7 +63,7 @@ public class ReplayMapReduceEventLogs extends ReplayEventLogs {
                 jobFinishedEvent.setFinishedMaps(eventJSONObject.getInteger("finishedMaps"));
                 jobFinishedEvent.setFinishedReduces(eventJSONObject.getInteger("finishedReduces"));
                 mapReduceApplication.setAppEndTimestamp(eventJSONObject.getLong("finishTime"));
-                mapReduceApplication.setJobConfiguration(getJobConfiguration(eventJSONObject.getLong("jobid")));
+                mapReduceApplication.setJobConfiguration(getJobConfiguration(eventJSONObject.getString("jobid")));
                 break;
             case "JOB_SUBMITTED":
                 JSONObject jobSubmitEvent = JSONObject.parseObject(line).getJSONObject("event");
@@ -75,7 +75,7 @@ public class ReplayMapReduceEventLogs extends ReplayEventLogs {
         }
     }
 
-    private Properties getJobConfiguration(Long jobId) {
+    private Properties getJobConfiguration(String jobId) {
         Properties properties = new Properties();
         String jobConfPath = this.getLogPath().toString()
                 .substring(0, this.getLogPath().lastIndexOf("/")) + jobId + "_conf.xml";
