@@ -78,7 +78,7 @@ public class ReplayMapReduceEventLogs extends ReplayEventLogs {
     private Properties getJobConfiguration(String jobId) {
         Properties properties = new Properties();
         String jobConfPath = this.getLogPath().toString()
-                .substring(0, this.getLogPath().lastIndexOf("/")) + jobId + "_conf.xml";
+                .substring(0, this.getLogPath().lastIndexOf("/") + 1) + jobId + "_conf.xml";
         log.info("job conf path : " + jobConfPath);
         try {
             IReader reader = LogReaderFactory.create(new LogPath("hdfs", LogPathType.FILE, jobConfPath));
