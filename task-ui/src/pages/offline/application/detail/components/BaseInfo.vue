@@ -47,7 +47,7 @@ const props = defineProps({
       运行参数
     </div>
     <div style="border: 1px solid #d7d7d7; border-top: none;">
-      <div v-for="(item, index) in Math.ceil(appInfo.length / 3)" :key="index" class="text-group" >
+      <div v-for="(item, index) in appInfo?Math.ceil(appInfo.length / 3):[]" :key="index" class="text-group" >
         <span
           class="industry-box"
           v-for="(a, b) in appInfo.slice(
