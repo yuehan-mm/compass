@@ -7,6 +7,12 @@ const props = defineProps({
       return {}
     },
   },
+  appInfo: {
+    type: Array,
+    defalult: () => {
+      return []
+    },
+  }
 })
 </script>
 
