@@ -25,12 +25,12 @@ import lombok.Data;
 public class MapReduceAppInfo extends AppInfo{
 
     @ApiModelProperty(value = "yarn.app.mapreduce.am.resource.mb")
-    private String amMemory;
+    private String yarn_app_mapreduce_am_resource_mb;
 
     @ApiModelProperty(value = "mapreduce.reduce.memory.mb")
-    private String reduceMemory;
+    private String mapreduce_reduce_memory_mb;
 
     @ApiModelProperty(value = "mapreduce.map.memory.mb")
-    private String mapMemory;
+    private String mapreduce_map_memory_mb;
 
 }

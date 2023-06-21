@@ -25,26 +25,26 @@ import lombok.Data;
 public class SparkAppInfo extends AppInfo {
 
     @ApiModelProperty(value = "spark.driver.memoryOverhead")
-    private String driverOverhead;
+    private String spark_driver_memoryOverhead;
 
     @ApiModelProperty(value = "spark.driver.memory")
-    private String driverMemory;
+    private String spark_driver_memory;
 
     @ApiModelProperty(value = "spark.executor.memoryOverhead")
-    private String executorOverhead;
+    private String spark_executor_memoryOverhead;
 
     @ApiModelProperty(value = "spark.executor.memory")
-    private String executorMemory;
+    private String spark_executor_memory;
 
     @ApiModelProperty(value = "spark.dynamicAllocation.maxExecutors")
-    private String maxExecutors;
+    private String spark_dynamicAllocation_maxExecutors;
 
     @ApiModelProperty(value = "spark.executor.cores")
-    private String executorCores;
+    private String spark_executor_cores;
 
     @ApiModelProperty(value = "spark.default.parallelism")
-    private String parallelism;
+    private String spark_default_parallelism;
 
     @ApiModelProperty(value = "spark.sql.shuffle.partitions")
-    private String shufflePartitions;
+    private String spark_sql_shuffle_partitions;
 }

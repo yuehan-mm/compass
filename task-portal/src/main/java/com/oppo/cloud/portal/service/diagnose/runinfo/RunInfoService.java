@@ -122,13 +122,13 @@ public class RunInfoService {
             String value = (String) env.get(name);
             switch (name) {
                 case "yarn.app.mapreduce.am.resource.mb":
-                    appInfo.setAmMemory(value);
+                    appInfo.setYarn_app_mapreduce_am_resource_mb(value);
                     break;
                 case "mapreduce.reduce.memory.mb":
-                    appInfo.setReduceMemory(value);
+                    appInfo.setMapreduce_reduce_memory_mb(value);
                     break;
                 case "mapreduce.map.memory.mb":
-                    appInfo.setMapMemory(value);
+                    appInfo.setMapreduce_map_memory_mb(value);
                     break;
                 default:
             }
@@ -149,28 +149,28 @@ public class RunInfoService {
             String value = (String) env.get(name);
             switch (name) {
                 case "spark.executor.memory":
-                    appInfo.setExecutorMemory(value);
+                    appInfo.setSpark_executor_memory(value);
                     break;
                 case "spark.driver.memory":
-                    appInfo.setDriverMemory(value);
+                    appInfo.setSpark_driver_memory(value);
                     break;
                 case "spark.driver.memoryOverhead":
-                    appInfo.setDriverOverhead(value);
+                    appInfo.setSpark_driver_memoryOverhead(value);
                     break;
                 case "spark.executor.memoryOverhead":
-                    appInfo.setExecutorOverhead(value);
+                    appInfo.setSpark_executor_memoryOverhead(value);
                     break;
                 case "spark.default.parallelism":
-                    appInfo.setParallelism(value);
+                    appInfo.setSpark_default_parallelism(value);
                     break;
                 case "spark.executor.cores":
-                    appInfo.setExecutorCores(value);
+                    appInfo.setSpark_executor_cores(value);
                     break;
                 case "spark.dynamicAllocation.maxExecutors":
-                    appInfo.setMaxExecutors(value);
+                    appInfo.setSpark_dynamicAllocation_maxExecutors(value);
                     break;
                 case "spark.sql.shuffle.partitions":
-                    appInfo.setShufflePartitions(value);
+                    appInfo.setSpark_sql_shuffle_partitions(value);
                     break;
                 default:
             }
