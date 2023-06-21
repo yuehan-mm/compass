@@ -34,8 +34,8 @@ public class SpeculativeMapReduce extends IsAbnormal {
 
     public SpeculativeMapReduce() {
         LinkedHashMap<String, String> titleMap = new LinkedHashMap<>();
-        titleMap.put("taskType", "任务类型");
-        titleMap.put("count", "任务数量");
+        titleMap.put("taskType", "Task类型");
+        titleMap.put("count", "Task数量");
         titleMap.put("threshold", "阈值");
         table.setTitles(titleMap);
     }
@@ -43,10 +43,10 @@ public class SpeculativeMapReduce extends IsAbnormal {
     @Data
     public static class TaskInfo {
 
-        @ApiModelProperty(value = "任务类型")
+        @ApiModelProperty(value = "Task类型")
         private String taskType;
 
-        @ApiModelProperty(value = "任务数量")
+        @ApiModelProperty(value = "Task数量")
         private int count;
 
         @ApiModelProperty(value = "阈值")

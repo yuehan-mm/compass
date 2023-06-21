@@ -27,13 +27,23 @@ onMounted(async () => {
 
   // 处理运行参数 （appInfo），
   const oneArr = res[1]?res[1].appInfo:[]
-  const appInfo = []
+  let appInfo = []
   for(var a in oneArr) {
     let obj = {
-        key: a.replace(/\_/g,"."),
-        value: oneArr[a]
+      key: a.replace(/\_/g,"."),
+      value: oneArr[a]
     }
     appInfo.push(obj)
+  }
+
+  let n = appInfo.length
+  let remaindNum = 3-(n%3)
+  if(remaindNum != 3) {
+    var arr = []
+    for(var i = 1; i <= remaindNum ; i++) {
+      arr.push({})
+    }
+    appInfo = appInfo.concat(arr)
   }
 
 
