@@ -24,13 +24,13 @@ onMounted(async () => {
     get(`/api/v1/app/report/runTime?applicationId=${route.query.applicationId}`),
   ])
 
-  
+
   // 处理运行参数 （appInfo），
   const oneArr = res[1]?res[1].appInfo:[]
   const appInfo = []
   for(var a in oneArr) {
     let obj = {
-        key: a.replace(/\./g,"-"),
+        key: a.replace(/\_/g,"."),
         value: oneArr[a]
     }
     appInfo.push(obj)
