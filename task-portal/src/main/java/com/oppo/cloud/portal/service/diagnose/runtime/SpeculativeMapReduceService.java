@@ -64,14 +64,16 @@ public class SpeculativeMapReduceService extends RunTimeBaseService<SpeculativeM
 
         speculativeMapReduce.getVars().put("mapThreshold", String.valueOf(config.getSpeculativeMapReduceConfig().getMapThreshold()));
         speculativeMapReduce.getVars().put("reduceThreshold", String.valueOf(config.getSpeculativeMapReduceConfig().getReduceThreshold()));
+        speculativeMapReduce.getVars().put("mapCount", String.valueOf(speculativeMapReduceAbnormal.getFinishedMaps()));
+        speculativeMapReduce.getVars().put("reduceCount", String.valueOf(speculativeMapReduceAbnormal.getFinishedReduces()));
         return speculativeMapReduce;
     }
 
     @Override
     public String generateConclusionDesc(Map<String, String> thresholdMap) {
         return String.format("任务的Map数量建议不要超过%s,任务的Reduce数量建议不要超过%s",
-                thresholdMap.getOrDefault("mapThreshold", ""),
-                thresholdMap.getOrDefault("reduceThreshold", ""));
+                thresholdMap.getOrDefault("mapThreshold", thresholdMap.get("mapThreshold")),
+                thresholdMap.getOrDefault("reduceThreshold", thresholdMap.get("reduceThreshold")));
     }
 
     @Override
