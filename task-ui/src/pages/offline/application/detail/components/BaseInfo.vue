@@ -41,12 +41,21 @@ const props = defineProps({
       运行参数
     </div>
     <div style="border: 1px solid #d7d7d7; border-top: none;">
-      <div class="text-group">
-        <span class="text">spark.driver.memoryOverhead: &nbsp;{{ info.appInfo?.driverOverhead || '-' }}</span>
-        <span class="text">spark.driver.memory: &nbsp;{{ info.appInfo?.driverMemory || '-' }}</span>
-        <span class="text">spark.executor.memoryOverhead: &nbsp;{{ info.appInfo?.executorOverhead || '-' }}</span>
+      <div v-for="(item, index) in Math.ceil(appInfo.length / 3)" :key="index" class="text-group" >
+        <span
+          class="industry-box"
+          v-for="(a, b) in appInfo.slice(
+          index * 3,
+          item * 3
+          )"
+          :key="'carousel' + b">
+          {{a.key}}: &nbsp;{{a.value||'-'}}
+        </span>
+        <!-- <span class="text">spark.driver.memoryOverhead: &nbsp;{{ info.appInfo?.driverOverhead || '-' }}</span> -->
+        <!-- <span class="text">spark.driver.memory: &nbsp;{{ info.appInfo?.driverMemory || '-' }}</span>
+        <span class="text">spark.executor.memoryOverhead: &nbsp;{{ info.appInfo?.executorOverhead || '-' }}</span> -->
       </div>
-      <div class="text-group">
+      <!-- <div class="text-group">
         <span class="text">spark.executor.memory: &nbsp;{{ info.appInfo?.executorMemory || '-' }}</span>
         <span class="text">spark.executor.cores: &nbsp;{{ info.appInfo?.executorCores || '-' }}</span>
         <span class="text">spark.dynamicAllocation.maxExecutors: &nbsp;{{ info.appInfo?.maxExecutors || '-' }}</span>
@@ -55,7 +64,7 @@ const props = defineProps({
         <span class="text">spark.default.parallelism: &nbsp;{{ info.appInfo?.parallelism || '-' }}</span>
         <span class="text">spark.sql.shuffle.partitions: &nbsp;{{ info.appInfo?.shufflePartitions || '-' }}</span>
         <span class="text" />
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

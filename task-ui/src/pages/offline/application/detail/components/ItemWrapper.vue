@@ -38,17 +38,17 @@ const props = defineProps({
     <div v-if="gcInfo.length" class="item-footer">
       <GcAnalyze :gc-info="gcInfo" />
     </div>
-    <div v-if="conclusion.conclusion" class="item-footer">
+    <div v-if="conclusion?.conclusion" class="item-footer">
       <div class="item-footer-title">
         分析结论：
         <el-tooltip placement="top">
           <template  #content>
-            <div v-html="conclusion.conclusionDesc"></div>
+            <div v-html="conclusion?.conclusionDesc"></div>
           </template >
           <el-icon><QuestionFilled /></el-icon>
         </el-tooltip>
       </div>
-      <div class="item-footer-content" v-html="conclusion.conclusion" />
+      <div class="item-footer-content" v-html="conclusion?.conclusion" />
     </div>
   </div>
 </template>
