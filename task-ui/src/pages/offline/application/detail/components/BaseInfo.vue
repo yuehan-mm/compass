@@ -49,7 +49,7 @@ const props = defineProps({
     <div style="border: 1px solid #d7d7d7; border-top: none;">
       <div v-for="(item, index) in appInfo?Math.ceil(appInfo.length / 3):[]" :key="index" class="text-group" >
         <span
-          class="industry-box"
+          class="text"
           v-for="(a, b) in appInfo.slice(
           index * 3,
           item * 3
