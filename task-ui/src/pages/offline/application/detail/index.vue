@@ -40,6 +40,7 @@ onMounted(async () => {
   detailInfo = {
     runErrorAnalyze: res[0].filter((item: any) => item.item),
     runInfo: res[1],
+    appInfo: appInfo || [],
     resourcesAnalyze: res[2],
     runTimeAnalyze: res[3].filter((item: any) => item.item),
   }
@@ -65,7 +66,7 @@ onMounted(async () => {
           </span>
         </div>
       </ItemWrapper>
-      <BaseInfo :info="detailInfo.runInfo" :appInfo="appInfo"/>
+      <BaseInfo :info="detailInfo.runInfo" :appInfo="detailInfo.appInfo"/>
       <ItemWrapper v-for="(item, index) in detailInfo.runErrorAnalyze" :key="item.name" :title="item.name" :conclusion="item.conclusion">
         <ErrorTable :data="item.item.table" :width-list="[120, 180, 180, '', 270]" />
       </ItemWrapper>
