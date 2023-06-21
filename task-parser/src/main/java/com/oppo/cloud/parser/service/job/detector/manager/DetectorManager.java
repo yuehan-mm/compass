@@ -41,6 +41,7 @@ public abstract class DetectorManager {
         List<IDetector> detectors = this.createDetectors();
 
         DetectorStorage detectorStorage = new DetectorStorage(
+                this.param.getAppType().getValue(),
                 this.param.getFlowName(), this.param.getProjectName(),
                 this.param.getTaskName(), this.param.getExecutionTime(),
                 this.param.getTryNumber(), this.param.getAppId(),

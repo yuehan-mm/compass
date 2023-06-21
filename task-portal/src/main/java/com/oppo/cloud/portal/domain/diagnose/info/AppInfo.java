@@ -17,34 +17,9 @@
 package com.oppo.cloud.portal.domain.diagnose.info;
 
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
 @ApiModel("App运行参数")
 public class AppInfo {
-
-    @ApiModelProperty(value = "spark.driver.memoryOverhead")
-    private String driverOverhead;
-
-    @ApiModelProperty(value = "spark.driver.memory")
-    private String driverMemory;
-
-    @ApiModelProperty(value = "spark.executor.memoryOverhead")
-    private String executorOverhead;
-
-    @ApiModelProperty(value = "spark.executor.memory")
-    private String executorMemory;
-
-    @ApiModelProperty(value = "spark.dynamicAllocation.maxExecutors")
-    private String maxExecutors;
-
-    @ApiModelProperty(value = "spark.executor.cores")
-    private String executorCores;
-
-    @ApiModelProperty(value = "spark.default.parallelism")
-    private String parallelism;
-
-    @ApiModelProperty(value = "spark.sql.shuffle.partitions")
-    private String shufflePartitions;
 }

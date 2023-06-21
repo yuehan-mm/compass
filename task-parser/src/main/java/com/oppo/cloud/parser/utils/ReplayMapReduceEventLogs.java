@@ -83,7 +83,7 @@ public class ReplayMapReduceEventLogs extends ReplayEventLogs {
         try {
             IReader reader = LogReaderFactory.create(new LogPath("hdfs", LogPathType.FILE, jobConfPath));
             copyProperties(reader.getReaderObject().getBufferedReader(), properties);
-            log.info(JSON.toJSONString(properties));
+            log.debug("JobConfiguration : " + JSON.toJSONString(properties));
         } catch (Exception e) {
             log.error("getJobConfiguration error : ", e);
         }

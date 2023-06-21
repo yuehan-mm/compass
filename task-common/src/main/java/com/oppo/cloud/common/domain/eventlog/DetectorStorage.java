@@ -25,6 +25,12 @@ import java.util.*;
 public class DetectorStorage {
 
     Boolean abnormal;
+
+    /**
+     * app 类型
+     */
+    private String appType;
+
     /**
      * 工作流名称
      */
@@ -62,10 +68,11 @@ public class DetectorStorage {
     public DetectorStorage() {
     }
 
-    public DetectorStorage(String flowName, String projectName, String taskName, Date executionTime, Integer tryNumber,
-                           String applicationId, String logPath, DetectorConfig config) {
+    public DetectorStorage(String appType, String flowName, String projectName, String taskName, Date executionTime,
+                           Integer tryNumber, String applicationId, String logPath, DetectorConfig config) {
         env = new HashMap<>();
         dataList = new ArrayList<>();
+        this.appType = appType;
         this.abnormal = false;
         this.flowName = flowName;
         this.projectName = projectName;
