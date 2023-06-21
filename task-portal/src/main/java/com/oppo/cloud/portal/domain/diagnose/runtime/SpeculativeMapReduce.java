@@ -30,14 +30,14 @@ import java.util.LinkedHashMap;
 public class SpeculativeMapReduce extends IsAbnormal {
 
     @ApiModelProperty(value = "Map/Reduce数量过多表单数据")
-    private Table<TaskInfo> taskList = new Table<>();
+    private Table<TaskInfo> table = new Table<>();
 
     public SpeculativeMapReduce() {
         LinkedHashMap<String, String> titleMap = new LinkedHashMap<>();
         titleMap.put("taskType", "任务类型");
         titleMap.put("count", "任务数量");
         titleMap.put("threshold", "阈值");
-        taskList.setTitles(titleMap);
+        table.setTitles(titleMap);
     }
 
     @Data

@@ -46,7 +46,7 @@ public class SpeculativeMapReduceService extends RunTimeBaseService<SpeculativeM
 
         SpeculativeMapReduce speculativeMapReduce = new SpeculativeMapReduce();
         speculativeMapReduce.setAbnormal(speculativeMapReduceAbnormal.getAbnormal() != null && speculativeMapReduceAbnormal.getAbnormal());
-        List<SpeculativeMapReduce.TaskInfo> data = speculativeMapReduce.getTaskList().getData();
+        List<SpeculativeMapReduce.TaskInfo> data = speculativeMapReduce.getTable().getData();
 
         // map 信息配置
         SpeculativeMapReduce.TaskInfo mapTaskInfo = new SpeculativeMapReduce.TaskInfo();
