@@ -48,15 +48,15 @@ const props = defineProps({
     </div>
     <div style="border: 1px solid #d7d7d7; border-top: none;">
       <div v-for="(item, index) in appInfo?Math.ceil(appInfo.length / 3):[]" :key="index" class="text-group" >
-        <span
+        <div
           class="text"
           v-for="(a, b) in appInfo.slice(
           index * 3,
           item * 3
           )"
           :key="'carousel' + b">
-          {{a.key}}: &nbsp;{{a.value||'-'}}
-        </span>
+          <span v-if="JSON.stringify(a) != '{}'">{{a.key }} : &nbsp; {{ a.value||'-'}}</span>
+        </div>
         <!-- <span class="text">spark.driver.memoryOverhead: &nbsp;{{ info.appInfo?.driverOverhead || '-' }}</span> -->
         <!-- <span class="text">spark.driver.memory: &nbsp;{{ info.appInfo?.driverMemory || '-' }}</span>
         <span class="text">spark.executor.memoryOverhead: &nbsp;{{ info.appInfo?.executorOverhead || '-' }}</span> -->
