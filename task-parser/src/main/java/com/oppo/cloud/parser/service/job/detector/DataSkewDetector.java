@@ -173,11 +173,11 @@ public class DataSkewDetector implements IDetector {
         if (threshold == 0) {
             return false;
         }
-        // stage耗时/任务总耗时 占比小于阈值的stage or app duration < configDuration
-        if (percentage < this.config.getStageDurationPercentage()
-                || this.param.getAppDuration() < this.config.getDuration()) {
-            return false;
-        }
+//        // stage耗时/任务总耗时 占比小于阈值的stage or app duration < configDuration
+//        if (percentage < this.config.getStageDurationPercentage()
+//                || this.param.getAppDuration() < this.config.getDuration()) {
+//            return false;
+//        }
         return max > threshold;
     }
 
