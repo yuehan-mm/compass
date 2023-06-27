@@ -38,7 +38,7 @@ public class LargeTableScanDetector implements IDetector {
 
     private final LargeTableScanConfig config;
 
-    LargeTableScanDetector(DetectorParam param) {
+    public LargeTableScanDetector(DetectorParam param) {
         this.param = param;
         this.config = param.getConfig().getLargeTableScanConfig();
     }

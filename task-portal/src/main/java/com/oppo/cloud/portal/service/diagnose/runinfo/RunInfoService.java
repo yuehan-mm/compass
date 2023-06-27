@@ -17,14 +17,14 @@
 package com.oppo.cloud.portal.service.diagnose.runinfo;
 
 import com.oppo.cloud.common.constant.AppCategoryEnum;
+import com.oppo.cloud.common.constant.ApplicationType;
 import com.oppo.cloud.common.domain.elasticsearch.TaskApp;
 import com.oppo.cloud.common.domain.eventlog.DetectorStorage;
 import com.oppo.cloud.common.util.DateUtil;
 import com.oppo.cloud.portal.domain.diagnose.DiagnoseReport;
-import com.oppo.cloud.portal.domain.diagnose.info.AppInfo;
-import com.oppo.cloud.portal.domain.diagnose.info.ClusterInfo;
-import com.oppo.cloud.portal.domain.diagnose.info.TaskInfo;
+import com.oppo.cloud.portal.domain.diagnose.info.*;
 import com.oppo.cloud.portal.service.ElasticSearchService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -47,6 +47,7 @@ public class RunInfoService {
 
     /**
      * 产生诊断报告的运行信息
+     *
      * @param detectorStorage
      * @return
      */
@@ -76,12 +77,12 @@ public class RunInfoService {
             clusterInfo.setClusterName(taskApp.getClusterName());
             clusterInfo.setExecuteUser(taskApp.getExecuteUser());
             clusterInfo.setExecuteQueue(taskApp.getQueue());
-            clusterInfo.setSparkUi(taskApp.getSparkUI());
+//            clusterInfo.setSparkUi(taskApp.getSparkUI());
             taskInfo.setExecutionTime(DateUtil.format(taskApp.getExecutionDate()));
             taskInfo.setTaskName(taskApp.getTaskName());
             taskInfo.setFlowName(taskApp.getFlowName());
             taskInfo.setProjectName(taskApp.getProjectName());
-            taskInfo.setMemorySeconds(String.format("%.2f GB·s", taskApp.getMemorySeconds() / 1024 ));
+            taskInfo.setMemorySeconds(String.format("%.2f GB·s", taskApp.getMemorySeconds() / 1024));
             taskInfo.setVcoreSeconds(String.format("%.2f vcore·s", taskApp.getVcoreSeconds()));
             taskInfo.setAppTime(
                     DateUtil.timeSimplify(((taskApp.getFinishTime() == null ? 0 : taskApp.getFinishTime().getTime())
@@ -92,7 +93,7 @@ public class RunInfoService {
             } else {
                 taskInfo.setCategories(AppCategoryEnum.getAppCategoryCh(taskApp.getCategories()));
             }
-            AppInfo appInfo = generateAppInfo(detectorStorage.getEnv());
+            AppInfo appInfo = generateAppInfo(detectorStorage);
             runInfo.setAppInfo(appInfo);
         } catch (Exception e) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -102,39 +103,74 @@ public class RunInfoService {
         return runInfo;
     }
 
+    private AppInfo generateAppInfo(DetectorStorage detectorStorage) {
+        String appType = StringUtils.isEmpty(detectorStorage.getAppType()) ?
+                ApplicationType.SPARK.getValue() : detectorStorage.getAppType();
+        switch (ApplicationType.get(appType)) {
+            case SPARK:
+                return this.generateSparkAppInfo(detectorStorage.getEnv());
+            case MAPREDUCE:
+                return this.generateMapReduceAppInfo(detectorStorage.getEnv());
+            default:
+                return new AppInfo();
+        }
+    }
+
+    private AppInfo generateMapReduceAppInfo(Map<String, Object> env) {
+        MapReduceAppInfo appInfo = new MapReduceAppInfo();
+        for (String name : env.keySet()) {
+            String value = (String) env.get(name);
+            switch (name) {
+                case "yarn.app.mapreduce.am.resource.mb":
+                    appInfo.setYarn_app_mapreduce_am_resource_mb(value);
+                    break;
+                case "mapreduce.reduce.memory.mb":
+                    appInfo.setMapreduce_reduce_memory_mb(value);
+                    break;
+                case "mapreduce.map.memory.mb":
+                    appInfo.setMapreduce_map_memory_mb(value);
+                    break;
+                default:
+            }
+        }
+        return appInfo;
+    }
+
+
     /**
      * 产生spark配置信息
+     *
      * @param env
      * @return
      */
-    private AppInfo generateAppInfo(Map<String, Object> env) {
-        AppInfo appInfo = new AppInfo();
+    private AppInfo generateSparkAppInfo(Map<String, Object> env) {
+        SparkAppInfo appInfo = new SparkAppInfo();
         for (String name : env.keySet()) {
             String value = (String) env.get(name);
             switch (name) {
                 case "spark.executor.memory":
-                    appInfo.setExecutorMemory(value);
+                    appInfo.setSpark_executor_memory(value);
                     break;
                 case "spark.driver.memory":
-                    appInfo.setDriverMemory(value);
+                    appInfo.setSpark_driver_memory(value);
                     break;
                 case "spark.driver.memoryOverhead":
-                    appInfo.setDriverOverhead(value);
+                    appInfo.setSpark_driver_memoryOverhead(value);
                     break;
                 case "spark.executor.memoryOverhead":
-                    appInfo.setExecutorOverhead(value);
+                    appInfo.setSpark_executor_memoryOverhead(value);
                     break;
                 case "spark.default.parallelism":
-                    appInfo.setParallelism(value);
+                    appInfo.setSpark_default_parallelism(value);
                     break;
                 case "spark.executor.cores":
-                    appInfo.setExecutorCores(value);
+                    appInfo.setSpark_executor_cores(value);
                     break;
                 case "spark.dynamicAllocation.maxExecutors":
-                    appInfo.setMaxExecutors(value);
+                    appInfo.setSpark_dynamicAllocation_maxExecutors(value);
                     break;
                 case "spark.sql.shuffle.partitions":
-                    appInfo.setShufflePartitions(value);
+                    appInfo.setSpark_sql_shuffle_partitions(value);
                     break;
                 default:
             }

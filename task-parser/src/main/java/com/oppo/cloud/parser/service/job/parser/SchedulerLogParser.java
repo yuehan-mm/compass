@@ -43,7 +43,7 @@ public class SchedulerLogParser extends CommonTextParser implements IParser {
 
     public SchedulerLogParser(ParserParam param) {
         this.param = param;
-        this.isOneClick = param.getLogRecord().getIsOneClick();
+        this.isOneClick = param.getTaskParam().getIsOneClick();
     }
 
     @Override
@@ -90,7 +90,7 @@ public class SchedulerLogParser extends CommonTextParser implements IParser {
             return;
         }
         OneClickProgress oneClickProgress = new OneClickProgress();
-        oneClickProgress.setAppId(this.param.getApp().getAppId());
+        oneClickProgress.setAppId(this.param.getTaskParam().getTaskApp().getApplicationId());
         oneClickProgress.setLogType(this.param.getLogType());
         ProgressInfo executorProgress = new ProgressInfo();
         executorProgress.setCount(count);

@@ -36,4 +36,7 @@ public class TaskDurationConfig {
      */
     private Long duration;
 
+
+    private Long taskDurationThreshold;
+
 }

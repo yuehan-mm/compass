@@ -124,7 +124,7 @@ public class ElasticWriter {
             if (docs.size() > 0) {
                 BulkResponse response;
                 try {
-                    String index = logSummaryPrefix + DateUtil.formatToDay(param.getLogRecord().getJobAnalysis().getExecutionDate());
+                    String index = logSummaryPrefix + DateUtil.formatToDay(param.getTaskParam().getTaskApp().getExecutionDate());
                     response = BulkApi.bulk(client, index, docs);
                 } catch (Exception e) {
                     log.error("writeLogSummaryErr:{},{}", logPath, e);
@@ -148,13 +148,13 @@ public class ElasticWriter {
     public Map<String, Object> getDoc(String logType, ParserResult parserResult, String logPath, ParserParam param,
                                       ParserAction parserAction) throws Exception {
         LogSummary logSummary = new LogSummary();
-        logSummary.setApplicationId(param.getApp().getAppId());
+        logSummary.setApplicationId(param.getTaskParam().getTaskApp().getApplicationId());
         logSummary.setLogType(logType);
-        logSummary.setProjectName(param.getLogRecord().getJobAnalysis().getProjectName());
-        logSummary.setFlowName(param.getLogRecord().getJobAnalysis().getFlowName());
-        logSummary.setTaskName(param.getLogRecord().getJobAnalysis().getTaskName());
-        logSummary.setExecutionDate(param.getLogRecord().getJobAnalysis().getExecutionDate());
-        logSummary.setRetryTimes(param.getApp().getTryNumber());
+        logSummary.setProjectName(param.getTaskParam().getTaskApp().getProjectName());
+        logSummary.setFlowName(param.getTaskParam().getTaskApp().getFlowName());
+        logSummary.setTaskName(param.getTaskParam().getTaskApp().getTaskName());
+        logSummary.setExecutionDate(param.getTaskParam().getTaskApp().getExecutionDate());
+        logSummary.setRetryTimes(param.getTaskParam().getTaskApp().getRetryTimes());
         logSummary.setAction(parserAction.getAction());
         logSummary.setAction(parserAction.getAction());
         logSummary.setStep(parserAction.getStep());
@@ -174,7 +174,7 @@ public class ElasticWriter {
                 }
                 timestamp = DateUtil.dateToTimeStamp(dateStr);
             } catch (Exception e) {
-                log.error("get datetime err:{},{}", param.getApp().getAppId(), parserResult.getGroupData());
+                log.error("get datetime err:{},{}", param.getTaskParam().getTaskApp().getApplicationId(), parserResult.getGroupData());
                 timestamp = System.currentTimeMillis() / 1000;
             }
             logSummary.setLogTimestamp((int) timestamp);
@@ -368,8 +368,11 @@ public class ElasticWriter {
 
     public void saveTaskResults(LogRecord logRecord, List<TaskResult> taskResults) throws Exception {
 
+        // 作业 级别异常汇总
         Map<String, Boolean> jobCategoryMap = new HashMap<>();
+        // app 级别异常汇总
         Map<String, List<String>> appCategoryMap = new HashMap<>();
+
         for (TaskResult result : taskResults) {
             if (result.getCategories() != null) {
                 for (String category : result.getCategories()) {
@@ -385,14 +388,15 @@ public class ElasticWriter {
                 }
             }
         }
-        // update job categories
+        // 更新作业异常信息
         if (jobCategoryMap.size() > 0) {
             log.info("updateJob:{},{}", logRecord.getId(), jobCategoryMap);
             ElasticWriter.getInstance().updateJob(logRecord.getJobAnalysis(), jobCategoryMap);
         }
 
+        // 更新 app 异常信息
         for (Map.Entry<String, List<String>> map : appCategoryMap.entrySet()) {
-            TaskApp taskApp = logRecord.getTaskAppList().get(map.getKey());
+            TaskApp taskApp = logRecord.getApplications().get(map.getKey());
             if (taskApp == null) {
                 log.error("get {} taskApp null", map.getKey());
                 continue;
@@ -405,9 +409,7 @@ public class ElasticWriter {
             if (appCategories.size() > 0) {
                 ElasticWriter.getInstance().updateTaskApp(taskApp, appCategories);
             }
-
         }
-
     }
 
     private enum Elastic {

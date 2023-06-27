@@ -66,6 +66,9 @@ public enum AppCategoryEnum {
     // 全局排序异常
     GLOBAL_SORT("globalSortAbnormal", "全局排序异常", "runPerformance"),
 
+    // MAPREDUCE 异常（）
+    SPECULATIVE_MAP_REDUCE("speculativeMapReduce", "Map/Reduce数量过多", "runPerformance"),
+
     // 其他异常
     OTHER_EXCEPTION("otherException", "其他异常", "runError");
 

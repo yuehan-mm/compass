@@ -74,56 +74,13 @@ public class DetectedTask {
                         @Header(KafkaHeaders.RECEIVED_TOPIC) String topic, Consumer consumer,
                         Acknowledgment ack) throws Exception {
         try {
-            // 过滤非最终状态任务数据
-//            if (preFilter(message)) {
-                log.info("message:{}", message);
-                TaskInstance taskInstance = JSON.parseObject(message, TaskInstance.class);
-//                TaskInstance taskInstance = JSON.parseObject(tableMessage.getBody(), TaskInstance.class);
-                if (judgeTaskFinished(taskInstance)) {
-                    detectExecutorPool.execute(() -> detectTask(taskInstance));
-                }
-//            }
+            log.info("message:{}", message);
+            TaskInstance taskInstance = JSON.parseObject(message, TaskInstance.class);
+            detectExecutorPool.execute(() -> detectTask(taskInstance));
         } catch (Exception e) {
             log.error(e.getMessage());
         }
         ack.acknowledge();
-    }
-
-    /**
-     * 判断是否最终状态
-     */
-    public boolean preFilter(String message) {
-        // 只检测task_instance表的非删除操作
-        if (message.contains("\"table\":\"task_instance\"") && !message.contains("\"eventType\":\"DELETE\"")) {
-            if (message.contains("\\\"taskState\\\":\\\"success\\\"")
-                    || message.contains("\\\"taskState\\\":\\\"fail\\\"")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * 判断任务是否已将结束
-     */
-
-    public boolean judgeTaskFinished(TaskInstance taskInstance) {
-        // 成功任务直接检测
-        if (TaskStateEnum.success.name().equals(taskInstance.getTaskState())) {
-            return true;
-        }
-        if (TaskStateEnum.fail.name().equals(taskInstance.getTaskState())) {
-            // 手动执行的重试当成单次执行周期
-            if ("manual".equals(taskInstance.getTriggerType())) {
-                return true;
-            } else {
-                // 非手动执行的判断是否重试完成
-                Integer tryNumber = TryNumberUtil.updateTryNumber(taskInstance.getRetryTimes(), schedulerType);
-                log.info("schedulerType:{},{},{}, {}", schedulerType, taskInstance.getRetryTimes(), tryNumber, taskInstance.getMaxRetryTimes());
-                return tryNumber.equals(taskInstance.getMaxRetryTimes());
-            }
-        }
-        return false;
     }
 
 
@@ -131,18 +88,24 @@ public class DetectedTask {
      * 对每个任务进行诊断
      */
     public void detectTask(TaskInstance taskInstance) {
+
         if (taskInstance.getProjectName() == null || taskInstance.getFlowName() == null) {
             log.warn("instance projectName or flowName is null:{}", taskInstance);
             return;
         }
+
         // 过滤白名单任务
-        if (blocklistService.isBlocklistTask(taskInstance.getProjectName(), taskInstance.getFlowName(),
-                taskInstance.getTaskName())) {
+        if (blocklistService.isBlocklistTask(taskInstance.getProjectName(),
+                taskInstance.getFlowName(),
+                taskInstance.getTaskName())
+        ) {
             log.info("find blocklist task, taskInstance:{}", taskInstance);
             return;
         }
+
         JobAnalysis jobAnalysis = new JobAnalysis();
         TaskInstance taskInstanceSum;
+
         if ("manual".equals(taskInstance.getTriggerType())) {
             // 手动执行的重试当成单次执行周期
             taskInstance.setRetryTimes(0);
@@ -151,8 +114,12 @@ public class DetectedTask {
         } else {
             // 更新任务的开始/结束时间
             taskInstanceSum = taskInstanceService.searchTaskSum(taskInstance.getProjectName(),
-                    taskInstance.getFlowName(), taskInstance.getTaskName(), taskInstance.getExecutionTime());
+                    taskInstance.getFlowName(),
+                    taskInstance.getTaskName(),
+                    taskInstance.getExecutionTime()
+            );
         }
+
         try {
             BeanUtils.copyProperties(taskInstanceSum, jobAnalysis);
         } catch (Exception e) {
@@ -166,7 +133,7 @@ public class DetectedTask {
 
         jobAnalysis.setRetryTimes(TryNumberUtil.updateTryNumber(jobAnalysis.getRetryTimes(),schedulerType));
 
-        // 异常任务检测
+        // 调度作业级别任务异常检测
         for (DetectService detectService : abnormalDetects) {
             try {
                 detectService.detect(jobAnalysis);

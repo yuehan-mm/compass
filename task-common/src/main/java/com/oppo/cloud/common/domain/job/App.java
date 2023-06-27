@@ -22,9 +22,7 @@ import lombok.Data;
 
 import java.util.*;
 
-/**
- * yarn app元数据
- */
+
 @Data
 public class App {
 
@@ -33,7 +31,7 @@ public class App {
      */
     private String appId;
     /**
-     * 重试次数
+     * Application 重试次数
      */
     private Integer tryNumber;
 
@@ -47,20 +45,20 @@ public class App {
      */
     private List<LogInfo> logInfoList;
 
-    public void formatAppLog(TaskApp taskApp) {
-        this.setAppId(taskApp.getApplicationId());
-        this.setTryNumber(taskApp.getRetryTimes());
-        LogInfo logInfo = new LogInfo();
-        logInfo.setLogGroup("spark");
-        Map<String, List<LogPath>> logPathMap = new HashMap<>();
-        logPathMap.put("event", Collections.singletonList(new LogPath("hdfs", "event", LogPathType.FILE,
-                taskApp.getEventLogPath())));
-        logPathMap.put("executor", Collections.singletonList(new LogPath("hdfs", "executor", LogPathType.DIRECTORY,
-                taskApp.getYarnLogPath())));
-        logInfo.setLogPathMap(logPathMap);
-        this.setAmHost(taskApp.getAmHost());
-        this.setLogInfoList(Collections.singletonList(logInfo));
-    }
+//    public void formatAppLog(TaskApp taskApp) {
+//        this.setAppId(taskApp.getApplicationId());
+//        this.setTryNumber(taskApp.getRetryTimes());
+//        LogInfo logInfo = new LogInfo();
+//
+//        Map<String, List<LogPath>> logPathMap = new HashMap<>();
+//        logPathMap.put("event", Collections.singletonList(new LogPath("hdfs", "event", LogPathType.FILE,
+//                taskApp.getEventLogPath())));
+//        logPathMap.put("executor", Collections.singletonList(new LogPath("hdfs", "executor", LogPathType.DIRECTORY,
+//                taskApp.getYarnLogPath())));
+//        logInfo.setLogPathMap(logPathMap);
+//        this.setAmHost(taskApp.getAmHost());
+//        this.setLogInfoList(Collections.singletonList(logInfo));
+//    }
 
     public void formatSchedulerLog(List<String> schedulerLogPathList, Integer tryNumber) {
         this.setTryNumber(tryNumber);
@@ -69,7 +67,7 @@ public class App {
         Map<String, List<LogPath>> logPathMap = new HashMap<>();
         List<LogPath> logPathList = new ArrayList<>();
         for (String schedulerLogPath : schedulerLogPathList) {
-            logPathList.add(new LogPath("oss", "scheduler", LogPathType.FILE, schedulerLogPath));
+            logPathList.add(new LogPath("oss", LogPathType.FILE, schedulerLogPath));
         }
         logPathMap.put("scheduler", logPathList);
         logInfo.setLogPathMap(logPathMap);

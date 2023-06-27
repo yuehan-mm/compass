@@ -40,7 +40,7 @@ public class StageDurationDetector implements IDetector {
 
     private final StageDurationConfig config;
 
-    StageDurationDetector(DetectorParam param) {
+    public StageDurationDetector(DetectorParam param) {
         this.param = param;
         this.config = param.getConfig().getStageDurationConfig();
     }

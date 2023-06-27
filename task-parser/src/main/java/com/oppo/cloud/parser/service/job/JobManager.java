@@ -16,13 +16,11 @@
 
 package com.oppo.cloud.parser.service.job;
 
-import com.oppo.cloud.common.constant.LogType;
-import com.oppo.cloud.common.domain.job.App;
-import com.oppo.cloud.common.domain.job.LogInfo;
+import com.alibaba.fastjson2.JSONObject;
 import com.oppo.cloud.common.domain.job.LogRecord;
 import com.oppo.cloud.common.service.RedisService;
-import com.oppo.cloud.parser.config.ThreadPoolConfig;
 import com.oppo.cloud.parser.config.CustomConfig;
+import com.oppo.cloud.parser.config.ThreadPoolConfig;
 import com.oppo.cloud.parser.domain.job.TaskParam;
 import com.oppo.cloud.parser.domain.job.TaskResult;
 import com.oppo.cloud.parser.service.job.task.Task;
@@ -60,19 +58,14 @@ public class JobManager {
 
     private List<Task> createTasks(LogRecord logRecord) {
         List<Task> tasks = new ArrayList<>();
-        if (logRecord.getApps() != null) {
-            for (App app : logRecord.getApps()) {
-                for (LogInfo logInfo : app.getLogInfoList()) {
-                    Task task = TaskFactory.create(new TaskParam(logInfo.getLogGroup(), logRecord, app, logInfo));
-                    if (task == null) {
-                        log.warn("unsupported log group:{}", logInfo.getLogGroup());
-                        continue;
-                    }
-                    tasks.add(task);
-                }
-                tasks.add(TaskFactory.create(new TaskParam(LogType.YARN.getName(), logRecord, app, null)));
+        logRecord.getApplications().forEach((appid, taskApp) -> {
+            Task task = TaskFactory.create(new TaskParam(taskApp, logRecord.getIsOneClick()));
+            if (task == null) {
+                log.warn("unsupported log group:{},{}", appid, taskApp);
+                return;
             }
-        }
+            tasks.add(task);
+        });
         return tasks;
     }
 
@@ -96,10 +89,13 @@ public class JobManager {
         return futures;
     }
 
-
+    /***
+     *
+     * @param logRecord
+     * @throws Exception
+     */
     public void run(LogRecord logRecord) throws Exception {
-        log.info("start job logRecord:{}", logRecord.getId());
-
+        log.info("start job logRecord : {}", JSONObject.toJSONString(logRecord));
         List<Task> tasks = createTasks(logRecord);
 
         if (tasks.size() == 0) {
@@ -109,7 +105,6 @@ public class JobManager {
         long start = System.currentTimeMillis();
 
         List<CompletableFuture<TaskResult>> futures = createFutures(tasks, jobExecutorPool);
-
         List<TaskResult> taskResults = new ArrayList<>();
 
         for (Future<TaskResult> result : futures) {

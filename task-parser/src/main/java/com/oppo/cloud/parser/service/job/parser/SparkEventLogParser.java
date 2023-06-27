@@ -28,12 +28,13 @@ import com.oppo.cloud.parser.domain.job.*;
 import com.oppo.cloud.parser.domain.reader.ReaderObject;
 import com.oppo.cloud.parser.domain.spark.eventlog.SparkApplication;
 import com.oppo.cloud.parser.domain.spark.eventlog.SparkExecutor;
-import com.oppo.cloud.parser.service.job.detector.DetectorManager;
+import com.oppo.cloud.parser.service.job.detector.manager.DetectorManager;
+import com.oppo.cloud.parser.service.job.detector.manager.SparkDetectorManager;
 import com.oppo.cloud.parser.service.job.oneclick.OneClickSubject;
 import com.oppo.cloud.parser.service.reader.IReader;
 import com.oppo.cloud.parser.service.reader.LogReaderFactory;
 import com.oppo.cloud.parser.service.rules.JobRulesConfigService;
-import com.oppo.cloud.parser.utils.ReplayEventLogs;
+import com.oppo.cloud.parser.utils.ReplaySparkEventLogs;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.FileNotFoundException;
@@ -52,7 +53,7 @@ public class SparkEventLogParser extends OneClickSubject implements IParser {
         this.param = param;
         JobRulesConfigService jobRulesConfigService = (JobRulesConfigService) SpringBeanUtil.getBean(JobRulesConfigService.class);
         this.config = jobRulesConfigService.detectorConfig;
-        this.isOneClick = param.getLogRecord().getIsOneClick();
+        this.isOneClick = param.getTaskParam().getIsOneClick();
     }
 
     @Override
@@ -85,7 +86,8 @@ public class SparkEventLogParser extends OneClickSubject implements IParser {
     }
 
     private CommonResult<SparkEventLogParserResult> parse(ReaderObject readerObject) {
-        ReplayEventLogs replayEventLogs = new ReplayEventLogs();
+        ReplaySparkEventLogs replayEventLogs = new ReplaySparkEventLogs(
+                this.param.getTaskParam().getTaskApp().getApplicationType(), readerObject.getLogPath());
         try {
             replayEventLogs.replay(readerObject);
         } catch (Exception e) {
@@ -96,23 +98,20 @@ public class SparkEventLogParser extends OneClickSubject implements IParser {
         return detect(replayEventLogs, readerObject.getLogPath());
     }
 
-    private CommonResult<SparkEventLogParserResult> detect(ReplayEventLogs replayEventLogs, String logPath) {
+    private CommonResult<SparkEventLogParserResult> detect(ReplaySparkEventLogs replayEventLogs, String logPath) {
         Map<String, Object> env = getSparkEnvironmentConfig(replayEventLogs);
 
-        Long appDuration = replayEventLogs.getApplication().getAppDuration();
-        if (appDuration == null || appDuration < 0) {
-            appDuration = 0L;
-        }
+        DetectorParam detectorParam = new DetectorParam(this.param.getTaskParam().getTaskApp().getFlowName(),
+                this.param.getTaskParam().getTaskApp().getProjectName(),
+                this.param.getTaskParam().getTaskApp().getTaskName(),
+                this.param.getTaskParam().getTaskApp().getExecutionDate(),
+                this.param.getTaskParam().getTaskApp().getRetryTimes(),
+                this.param.getTaskParam().getTaskApp().getApplicationId(),
+                this.param.getTaskParam().getTaskApp().getApplicationType(),
+                replayEventLogs.getApplication().getAppDuration(),
+                logPath, config, replayEventLogs, isOneClick);
 
-        DetectorParam detectorParam = new DetectorParam(this.param.getLogRecord().getJobAnalysis().getFlowName(),
-                this.param.getLogRecord().getJobAnalysis().getProjectName(),
-                this.param.getLogRecord().getJobAnalysis().getTaskName(),
-                this.param.getLogRecord().getJobAnalysis().getExecutionDate(),
-                this.param.getLogRecord().getJobAnalysis().getRetryTimes(),
-                this.param.getApp().getAppId(), appDuration, logPath, config, replayEventLogs,
-                this.param.getLogRecord().getIsOneClick());
-
-        DetectorManager detectorManager = new DetectorManager(detectorParam);
+        DetectorManager detectorManager = new SparkDetectorManager(detectorParam);
         // run all detector
         DetectorStorage detectorStorage = detectorManager.run();
 
@@ -129,7 +128,7 @@ public class SparkEventLogParser extends OneClickSubject implements IParser {
         return result;
     }
 
-    private Map<String, Object> getSparkEnvironmentConfig(ReplayEventLogs replayEventLogs) {
+    private Map<String, Object> getSparkEnvironmentConfig(ReplaySparkEventLogs replayEventLogs) {
         Map<String, Object> env = new HashMap<>();
         SparkEnvironmentConfig envConfig = config.getSparkEnvironmentConfig();
         if (envConfig != null) {
@@ -153,7 +152,7 @@ public class SparkEventLogParser extends OneClickSubject implements IParser {
     }
 
 
-    public MemoryCalculateParam getMemoryCalculateParam(ReplayEventLogs replayEventLogs) {
+    public MemoryCalculateParam getMemoryCalculateParam(ReplaySparkEventLogs replayEventLogs) {
         SparkApplication application = replayEventLogs.getApplication();
         long appTotalTime = application.getAppEndTimestamp() - application.getAppStartTimestamp();
         MemoryCalculateParam memoryCalculateParam = new MemoryCalculateParam();
@@ -183,7 +182,7 @@ public class SparkEventLogParser extends OneClickSubject implements IParser {
             return;
         }
         OneClickProgress oneClickProgress = new OneClickProgress();
-        oneClickProgress.setAppId(this.param.getApp().getAppId());
+        oneClickProgress.setAppId(this.param.getTaskParam().getTaskApp().getApplicationId());
         oneClickProgress.setLogType(this.param.getLogType());
         ProgressInfo executorProgress = new ProgressInfo();
         executorProgress.setCount(count);

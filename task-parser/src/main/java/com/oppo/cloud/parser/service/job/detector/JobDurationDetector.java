@@ -40,7 +40,7 @@ public class JobDurationDetector implements IDetector {
 
     private final JobDurationConfig config;
 
-    JobDurationDetector(DetectorParam param) {
+    public JobDurationDetector(DetectorParam param) {
         this.param = param;
         this.config = param.getConfig().getJobDurationConfig();
     }

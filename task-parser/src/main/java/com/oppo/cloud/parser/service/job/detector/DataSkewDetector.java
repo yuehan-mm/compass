@@ -42,7 +42,7 @@ public class DataSkewDetector implements IDetector {
 
     private final DataSkewConfig config;
 
-    DataSkewDetector(DetectorParam param) {
+    public DataSkewDetector(DetectorParam param) {
         this.param = param;
         this.config = param.getConfig().getDataSkewConfig();
     }

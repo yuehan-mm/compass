@@ -16,24 +16,32 @@
 
 package com.oppo.cloud.application.domain;
 
+import com.oppo.cloud.common.constant.ApplicationType;
 import lombok.Data;
 
-/**
- * 文本解析规则
+import java.util.regex.Pattern;
+
+/****
+ * AirFlow 日志解析规则
+ * 从脚本执行日志中解析作业的类型与作业执行信息
  */
 @Data
 public class Rule {
+    private String type;    // 作业类型
+    private String regex;   // 作业匹配正则表达式
+    private String name;    // 提取关键字
 
-    /**
-     * 依赖查询路径
-     */
-    private LogPathDep logPathDep;
-    /**
-     * 日志路径字段组成
-     */
-    private LogPathJoin logPathJoins;
-    /**
-     * 提取规则
-     */
-    private ExtractLog extractLog;
+    private Pattern pattern = null;
+
+
+    synchronized public Pattern getPattern(){
+        if(pattern == null){
+            pattern = Pattern.compile(regex);
+        }
+        return pattern;
+    }
+
+    public ApplicationType getType(){
+        return ApplicationType.getInstance(type);
+    }
 }

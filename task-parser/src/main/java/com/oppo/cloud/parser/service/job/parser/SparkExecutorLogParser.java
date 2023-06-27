@@ -61,7 +61,7 @@ public class SparkExecutorLogParser extends CommonTextParser implements IParser 
 
     public SparkExecutorLogParser(ParserParam param) {
         this.param = param;
-        this.isOneClick = param.getLogRecord().getIsOneClick();
+        this.isOneClick = param.getTaskParam().getIsOneClick();
         parserThreadPool = (ThreadPoolTaskExecutor) SpringBeanUtil.getBean(ThreadPoolConfig.PARSER_THREAD_POOL);
         jvmTypeList = (List<String>) SpringBeanUtil.getBean(CustomConfig.GC_CONFIG);
 
@@ -198,9 +198,9 @@ public class SparkExecutorLogParser extends CommonTextParser implements IParser 
             }
 
         }
-        if (readerObject.getFs() != null) {
-            readerObject.getFs().close();
-        }
+
+        readerObject.close();
+
 
         SparkExecutorLogParserResult result = new SparkExecutorLogParserResult();
         result.setActionMap(headTextParser.getResults());
@@ -214,7 +214,7 @@ public class SparkExecutorLogParser extends CommonTextParser implements IParser 
 
 
     private String getLogType(String logPath) {
-        if (logPath.contains(this.param.getApp().getAmHost())) {
+        if (logPath.contains(this.param.getTaskParam().getTaskApp().getAmHost())) {
             return LogType.SPARK_DRIVER.getName();
         }
         return LogType.SPARK_EXECUTOR.getName();
@@ -226,7 +226,7 @@ public class SparkExecutorLogParser extends CommonTextParser implements IParser 
             return;
         }
         OneClickProgress oneClickProgress = new OneClickProgress();
-        oneClickProgress.setAppId(this.param.getApp().getAppId());
+        oneClickProgress.setAppId(this.param.getTaskParam().getTaskApp().getApplicationId());
         oneClickProgress.setLogType(LogType.SPARK_EXECUTOR);
         ProgressInfo executorProgress = new ProgressInfo();
         executorProgress.setCount(count);

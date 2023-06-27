@@ -16,6 +16,7 @@
 
 package com.oppo.cloud.parser.service.job.task;
 
+import com.oppo.cloud.common.constant.LogType;
 import com.oppo.cloud.common.domain.job.LogPath;
 import com.oppo.cloud.parser.domain.job.CommonResult;
 import com.oppo.cloud.parser.domain.job.ParserParam;
@@ -43,11 +44,14 @@ public abstract class Task {
 
     public List<IParser> createTasks() {
         List<IParser> parsers = new ArrayList<>();
-        Map<String, List<LogPath>> logPathMap = this.taskParam.getLogInfo().getLogPathMap();
+        // 获取日志路径<日志类型，日志路径列表>
+        Map<LogType, List<LogPath>> logPathMap = this.taskParam.getTaskApp().getLogPaths();
         if (logPathMap != null && logPathMap.size() > 0) {
-            for (Map.Entry<String, List<LogPath>> map : logPathMap.entrySet()) {
-                IParser parser = ParserFactory.create(new ParserParam(map.getKey(), this.taskParam.getLogRecord(),
-                        this.taskParam.getApp(), map.getValue()), new ProgressListener());
+            for (Map.Entry<LogType, List<LogPath>> map : logPathMap.entrySet()) {
+                IParser parser = ParserFactory.create(
+                        new ParserParam(map.getKey(), map.getValue(), taskParam),
+                        new ProgressListener()
+                );
                 if (parser != null) {
                     parsers.add(parser);
                 }

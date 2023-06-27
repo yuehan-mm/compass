@@ -30,45 +30,23 @@ import java.util.Map;
 @Data
 public class LogRecord {
 
-    /**
-     * 唯一标志
-     */
     private String id;
-    /**
-     * 作业信息
-     */
+
+    //作业信息
     private JobAnalysis jobAnalysis;
 
-    /**
-     * taskApp信息: Map<applicationId,taskApp>
-     */
-    private Map<String, TaskApp> taskAppList;
+    // taskApp信息: Map<applicationId,taskApp>
+    private Map<String, TaskApp> applications = new HashMap<>();
 
-    /**
-     * app日志
-     */
-    private List<App> apps;
-
-    /**
-     * 一键诊断
-     */
     private Boolean isOneClick = false;
-    /**
-     * 第一次消费时间
-     */
+
     private Long firstConsumeTime = System.currentTimeMillis();
 
-    /**
-     * 消费次数
-     */
     private Integer consumeCount = 0;
 
     public void formatTaskAppList(List<TaskApp> taskAppList) {
-        Map<String, TaskApp> temp = new HashMap<>();
-        for (TaskApp taskApp : taskAppList) {
-            temp.put(taskApp.getApplicationId(), taskApp);
-        }
-        this.taskAppList = temp;
+        taskAppList.stream()
+                .forEach(taskApp -> applications.put(taskApp.getApplicationId(), taskApp));
     }
 
 }

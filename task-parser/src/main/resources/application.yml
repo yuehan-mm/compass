@@ -30,6 +30,14 @@ spring:
     job-prefix: "compass-job-analysis-"
     task-app-prefix: "compass-task-app-"
 
+  kafka:
+    consumer:
+      auto-offset-reset: "latest"
+      max-poll-interval-ms: 300000
+      security-protocol: ""
+      sasl-mechanism: ""
+      sasl-jaas-config: ""
+
 custom:
   redisConsumer:
     enable: true
@@ -58,6 +66,15 @@ custom:
         - spark.dynamicAllocation.maxExecutors
         - spark.default.parallelism
         - spark.sql.shuffle.partitions
+      systemProperties:
+        - sun.java.command
+    mapReduceEnvironmentConfig:
+      jvmInformation:
+        - Java Version
+      mapReduceProperties:
+        - yarn.app.mapreduce.am.resource.mb
+        - mapreduce.reduce.memory.mb
+        - mapreduce.map.memory.mb
       systemProperties:
         - sun.java.command
     # 推测任务执行过多（app执行时间超过5分钟，且stage数量超过20）
@@ -97,6 +114,7 @@ custom:
       threshold: 10
       # app duration(ms)
       duration: 300000
+      taskDurationThreshold: 300000
     # hdfs卡顿（task执行时间超过5分钟，且hdfs文件读取速率小于10M/s）
     hdfsStuckConfig:
       disable: false
@@ -172,3 +190,9 @@ custom:
         - start: 50000000
           end: 0
           threshold: 2
+    speculativeMapReduceConfig:
+      disable: false
+      # app duration(ms)
+      duration: 1200000
+      mapThreshold: 5
+      reduceThreshold: 5

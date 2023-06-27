@@ -36,7 +36,7 @@ let resizeObserver: any = null
 const update = () => {
   const series = [
     {
-      name: props.data.dataCategory.efficient.name,
+      name: props.data?.dataCategory?.efficient?.name,
       color: props.data.dataCategory.efficient.color,
       type: 'bar',
       stack: '总量',

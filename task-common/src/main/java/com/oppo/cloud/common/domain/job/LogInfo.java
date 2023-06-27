@@ -31,7 +31,12 @@ public class LogInfo {
 
     /**
      * 日志信息 <eventLog: List<LogPath>>
-     *  value是个List 兼容 scheduler
+     * spark :
+     *  event -> ${event.log.path}
+     *  executor -> ${executor.log.path}
+     *
+     * scheduler :
+     *   scheduler -> ${scheduler.log.path}
      */
     private Map<String, List<LogPath>> logPathMap;
 }

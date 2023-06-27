@@ -64,7 +64,7 @@ public class SparkTask extends Task {
         List<CompletableFuture<CommonResult>> futures = super.createFutures(parsers, taskThreadPool);
 
         TaskResult taskResult = new TaskResult();
-        taskResult.setAppId(this.taskParam.getApp().getAppId());
+        taskResult.setAppId(this.taskParam.getTaskApp().getApplicationId());
 
         List<GCReport> gcReports = new ArrayList<>();
         List<SparkExecutorLogParserResult> sparkExecutorLogParserResults = null;
@@ -94,7 +94,7 @@ public class SparkTask extends Task {
         }
 
         if (sparkEventLogParserResult == null) {
-            log.error("sparkEventLogParserResultNull:{}", taskParam.getApp());
+            log.error("sparkEventLogParserResultNull:{}", taskParam);
             return null;
         }
         // get driver/executor categories
@@ -113,7 +113,7 @@ public class SparkTask extends Task {
 
         DetectorStorage detectorStorage = sparkEventLogParserResult.getDetectorStorage();
         if (detectorStorage == null) {
-            log.error("detectorStorageNull:{}", taskParam.getApp());
+            log.error("detectorStorageNull:{}", taskParam);
             return taskResult;
         }
         // calculate memory metrics
@@ -129,7 +129,7 @@ public class SparkTask extends Task {
         }
         // get event log categories
         List<String> eventLogCategories = new ArrayList<>();
-        if (this.taskParam.getLogRecord().getIsOneClick() || detectorStorage.getAbnormal()) {
+        if (this.taskParam.getIsOneClick() || detectorStorage.getAbnormal()) {
             for (DetectorResult detectorResult : detectorStorage.getDataList()) {
                 if (detectorResult.getAbnormal()) {
                     eventLogCategories.add(detectorResult.getAppCategory());
@@ -147,7 +147,7 @@ public class SparkTask extends Task {
         taskResult.setCategories(eventLogCategories);
 
         // save gc reports
-        if ((this.taskParam.getLogRecord().getIsOneClick() || eventLogCategories.size() > 0) && gcReports.size() > 0) {
+        if ((this.taskParam.getIsOneClick() || eventLogCategories.size() > 0) && gcReports.size() > 0) {
             gcReports.sort(Comparator.comparing(GCReport::getMaxHeapUsedSize));
             if (gcReports.size() > 11) {
                 List<GCReport> results = new ArrayList<>();

@@ -84,4 +84,8 @@ public class HDFSReader implements IReader {
         return list;
     }
 
+    @Override
+    public void setMapReduceEventLogPath() throws Exception {
+        this.logPath.setLogPath(HDFSUtil.getMapReduceEventLogPath(nameNode, logPath.getLogPath(), FILE_SYSTEM_TYPE));
+    }
 }

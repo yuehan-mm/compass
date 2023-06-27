@@ -20,6 +20,7 @@ import lombok.Data;
 import org.apache.hadoop.fs.FileSystem;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 
 @Data
 public class ReaderObject {
@@ -29,4 +30,9 @@ public class ReaderObject {
     private BufferedReader bufferedReader;
 
     private FileSystem fs;
+
+    public void close() throws IOException {
+        if (this.bufferedReader != null) bufferedReader.close();
+        if (this.fs != null) fs.close();
+    }
 }

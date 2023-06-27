@@ -20,13 +20,17 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+
 public enum LogType {
 
     SCHEDULER("scheduler"),
     SPARK_EVENT("event"),
     SPARK_DRIVER("driver"),
     SPARK_EXECUTOR("executor"),
-
+    CONTAINER("container"),
+    JOB_MANAGER("jobManger"),
+    TASK_MANAGER("taskManager"),
+    MAPREDUCE_EVENT("mapReduceEvent"),
     YARN("yarn"),
 
     SPARK_GC("gc");
@@ -54,4 +58,8 @@ public enum LogType {
         return MAP.get(name);
     }
 
+    @Override
+    public String toString() {
+      return this.name;
+    }
 }

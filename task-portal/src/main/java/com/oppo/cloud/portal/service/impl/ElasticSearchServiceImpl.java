@@ -18,6 +18,9 @@ package com.oppo.cloud.portal.service.impl;
 
 import com.alibaba.fastjson2.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.oppo.cloud.common.constant.YarnAppFinalStatus;
+import com.oppo.cloud.common.domain.cluster.spark.SparkApp;
+import com.oppo.cloud.common.domain.cluster.yarn.YarnApp;
 import com.oppo.cloud.common.domain.elasticsearch.EsInfo;
 import com.oppo.cloud.common.util.DateUtil;
 import com.oppo.cloud.portal.domain.task.IndicatorData;
@@ -51,17 +54,21 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.elasticsearch.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
+import java.util.*;
 
 @Service
 @Slf4j
 public class ElasticSearchServiceImpl implements ElasticSearchService {
+
+    @Value("${custom.elasticsearch.yarnIndex.name}")
+    private String yarnAppIndex;
+
+    @Value("${custom.elasticsearch.yarnIndex.name}}")
+    private String sparkAppIndex;
 
     @Autowired
     private RestHighLevelClient restHighLevelClient;
@@ -282,6 +289,55 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
         update.setQuery(boolQueryBuilder);
         update.setScript(script);
         restHighLevelClient.updateByQueryAsync(update, RequestOptions.DEFAULT, null);
+    }
+
+    /**
+     * 查询YarnApp数据
+     */
+    @Override
+    public YarnApp searchYarnApp(String applicationId) throws Exception {
+        YarnApp yarnApp = null;
+        HashMap<String, Object> termQuery = new HashMap<>();
+        termQuery.put("id.keyword", applicationId);
+        SearchSourceBuilder searchSourceBuilder = this.genSearchBuilder(termQuery, null, null, null);
+        SearchHits searchHits = this.find(searchSourceBuilder, yarnAppIndex + "-*");
+        if (searchHits.getHits().length == 0) {
+            throw new Exception(String.format("can not find this appId from yarnApp, appId:%s", applicationId));
+        }
+        for (SearchHit hit : searchHits) {
+            yarnApp = JSON.parseObject(hit.getSourceAsString(), YarnApp.class);
+        }
+        if (yarnApp == null) {
+            throw new Exception(String.format("yarnApp is null, appId:%s", applicationId));
+        }
+        if (yarnApp.getFinalStatus().equals(YarnAppFinalStatus.SUCCEEDED.toString()) ||
+                yarnApp.getFinalStatus().equals(YarnAppFinalStatus.FAILED.toString()) ||
+                yarnApp.getFinalStatus().equals(YarnAppFinalStatus.KILLED.toString())) {
+            return yarnApp;
+        }
+        throw new Exception(String.format("yarnApp state:%s, finalStatus:%s, appId:%s", yarnApp.getState(),
+                yarnApp.getFinalStatus(), applicationId));
+    }
+
+
+    /**
+     * 查询SparkApp数据
+     */
+    @Override
+    public SparkApp searchSparkApp(String applicationId) throws Exception {
+        SparkApp sparkApp = null;
+        HashMap<String, Object> termQuery = new HashMap<>();
+        termQuery.put("appId.keyword", applicationId);
+        SearchSourceBuilder searchSourceBuilder = this.genSearchBuilder(termQuery, null, null, null);
+        SearchHits searchHits = this.find(searchSourceBuilder, sparkAppIndex + "-*");
+        if (searchHits.getHits().length == 0) {
+            throw new Exception(String.format("can not find this appId from sparkAppIndex, appId:%s", applicationId));
+        }
+        for (SearchHit hit : searchHits) {
+            sparkApp = JSON.parseObject(hit.getSourceAsString(), SparkApp.class);
+            break;
+        }
+        return sparkApp;
     }
 
     /**

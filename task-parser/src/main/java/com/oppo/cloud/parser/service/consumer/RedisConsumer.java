@@ -41,8 +41,8 @@ import java.util.concurrent.Semaphore;
  * consume redis list data
  */
 @Slf4j
-@Configuration
-@ConditionalOnProperty(prefix = "custom.redisConsumer", name = "enable", havingValue = "true")
+//@Configuration
+//@ConditionalOnProperty(prefix = "custom.redisConsumer", name = "enable", havingValue = "true")
 public class RedisConsumer implements CommandLineRunner {
 
     @Resource
@@ -60,7 +60,7 @@ public class RedisConsumer implements CommandLineRunner {
     @Resource
     private ObjectMapper objectMapper;
 
-    @Resource(name = ThreadPoolConfig.REDIS_CONSUMER_THREAD_POOL)
+    @Resource(name = ThreadPoolConfig.CONSUMER_THREAD_POOL)
     private Executor redisConsumerExecutorPool;
 
     @PostConstruct
@@ -88,8 +88,12 @@ public class RedisConsumer implements CommandLineRunner {
         Semaphore semaphore = new Semaphore(config.getMaxThreadPoolSize());
         while (true) {
             try {
-                String msg = (String) redisService.executeScript(logRecordConsumerScript,
-                        Arrays.asList(config.getLogRecordList(), config.getProcessingHash()));
+
+                String msg = (String) redisService.executeScript(
+                        logRecordConsumerScript,
+                        Arrays.asList(config.getLogRecordList(), config.getProcessingHash())
+                );
+
                 if (msg == null) {
                     Thread.sleep(5000);
                     continue;
@@ -116,7 +120,5 @@ public class RedisConsumer implements CommandLineRunner {
                 log.error("delete redis cache err:{}", logRecord);
             }
         }
-
     }
-
 }

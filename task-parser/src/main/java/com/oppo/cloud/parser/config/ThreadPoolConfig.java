@@ -38,7 +38,7 @@ public class ThreadPoolConfig {
 
     public static final String PARSER_THREAD_POOL = "parserThreadPool";
 
-    public static final String REDIS_CONSUMER_THREAD_POOL = "redisConsumerThreadPool";
+    public static final String CONSUMER_THREAD_POOL = "consumerThreadPool";
 
     @Resource
     private CustomConfig config;
@@ -104,14 +104,14 @@ public class ThreadPoolConfig {
     }
 
 
-    @Bean(name = REDIS_CONSUMER_THREAD_POOL)
+    @Bean(name = CONSUMER_THREAD_POOL)
     public Executor redisConsumerThreadPool() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(config.getMaxThreadPoolSize());
         executor.setMaxPoolSize(config.getMaxThreadPoolSize());
         executor.setKeepAliveSeconds(120);
         executor.setQueueCapacity(10000);
-        executor.setThreadNamePrefix("redis-thread-");
+        executor.setThreadNamePrefix("consumer-thread-");
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
         executor.setWaitForTasksToCompleteOnShutdown(true);
         executor.setAwaitTerminationSeconds(60);

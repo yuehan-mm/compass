@@ -74,7 +74,7 @@ public class MessageConsumer {
             //  airflow.dag,airflow.task_instance,airflow.ab_user 三张表
             //  目前只采集了airflow5的scheduler log，因此再此处暂将非airflow5集群的binlog过滤
             // TODO 目前compass暂不支持多airflow、多集群作业交叉提交，待后续完善
-            if (!rawTable.getDatabase().equals("airflow5")) {
+            if (!(rawTable.getDatabase().equals("airflow5") || rawTable.getDatabase().equals("airflow"))) {
                 log.debug("not currently supported msg: " + message);
                 consumer.commitAsync();
                 return;

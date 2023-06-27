@@ -16,6 +16,8 @@
 
 package com.oppo.cloud.portal.service;
 
+import com.oppo.cloud.common.domain.cluster.spark.SparkApp;
+import com.oppo.cloud.common.domain.cluster.yarn.YarnApp;
 import com.oppo.cloud.portal.domain.task.IndicatorData;
 import com.oppo.cloud.portal.domain.task.JobsRequest;
 import org.elasticsearch.action.bulk.BulkItemResponse;
@@ -51,6 +53,17 @@ public interface ElasticSearchService {
      * 按天分桶查询
      */
     List<IndicatorData> findValueByDayBuckets(SearchSourceBuilder builder, String... indexes) throws Exception;
+
+
+    /**
+     * 查询YarnApp数据
+     */
+    YarnApp searchYarnApp(String applicationId) throws Exception;
+
+    /**
+     * 查询SparkApp数据
+     */
+    SparkApp searchSparkApp(String applicationId) throws Exception;
 
     <T> List<T> find(Class<T> itemType, SearchSourceBuilder builder, String... indexes) throws Exception;
 

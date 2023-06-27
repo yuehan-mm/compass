@@ -66,7 +66,7 @@ public class TaskAppInfo {
     private String users;
 
     @ApiModelProperty(value = "sparkUI")
-    private String sparkUI;
+    private String sparkUI = "None";
 
     /**
      * 转换格式
@@ -83,7 +83,7 @@ public class TaskAppInfo {
         taskAppInfo.setUsers(taskApp.getUsers() == null ? ""
                 : taskApp.getUsers().stream().map(SimpleUser::getUsername).collect(Collectors.joining(",")));
         taskAppInfo.setResource(TaskUtil.resourceSimplify(taskApp.getVcoreSeconds(), taskApp.getMemorySeconds()));
-        taskAppInfo.setSparkUI(taskApp.getSparkUI());
+
         taskAppInfo.setTryNumber(taskApp.getRetryTimes() == null ? 0 : taskApp.getRetryTimes());
         return taskAppInfo;
     }

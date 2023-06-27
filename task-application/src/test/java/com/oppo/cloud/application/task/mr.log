@@ -1,0 +1,2049 @@
+********************************************************************************
+show_log:
+
+[2023-06-14 15:00:23,192] {{executor_loader.py:108}} INFO - Loaded executor: haier.executor.CMLB_executor_container.CMLBExecutorContainer
+[2023-06-14 15:00:23,246] {{taskinstance.py:1641}} INFO - params={}
+[2023-06-14 15:00:23,246] {{taskinstance.py:1643}} INFO - ===========start===========
+[2023-06-14 15:00:23,246] {{taskinstance.py:1655}} INFO - 本次执行由自身触发
+[2023-06-14 15:00:23,247] {{taskinstance.py:1661}} INFO - 当前作业调度类型调度，current_backfill_date使用当前批次调度计划时间:2023-06-14T15:00:00+08:00
+[2023-06-14 15:00:23,247] {{taskinstance.py:1664}} INFO - current_backfill_date值为:2023-06-14T15:00:00+08:00
+[2023-06-14 15:00:23,247] {{taskinstance.py:1665}} INFO - ===========end===========
+[2023-06-14 15:00:23,298] {{logging_mixin.py:104}} WARNING - /bigdata/bdp_jt/python38/lib/python3.8/site-packages/sqlalchemy/dialects/mysql/mysqldb.py:131 Warning: (3719, "'utf8' is currently an alias for the character set UTF8MB3, but will be an alias for UTF8MB4 in a future release. Please consider using UTF8MB4 in order to be unambiguous.")
+[2023-06-14 15:00:23,319] {{taskinstance.py:880}} INFO - Dependencies all met for <TaskInstance: F_CEI_DI_ECOS.DI_CEI_ECOS_BL_MID 2023-06-13T07:00:00+00:00 [queued]>
+[2023-06-14 15:00:23,365] {{taskinstance.py:880}} INFO - Dependencies all met for <TaskInstance: F_CEI_DI_ECOS.DI_CEI_ECOS_BL_MID 2023-06-13T07:00:00+00:00 [queued]>
+[2023-06-14 15:00:23,366] {{taskinstance.py:1071}} INFO -
+--------------------------------------------------------------------------------
+[2023-06-14 15:00:23,366] {{taskinstance.py:1072}} INFO - Starting attempt 1 of 1
+[2023-06-14 15:00:23,366] {{taskinstance.py:1073}} INFO -
+--------------------------------------------------------------------------------
+[2023-06-14 15:00:23,383] {{taskinstance.py:1092}} INFO - Executing <Task(BashOperator): DI_CEI_ECOS_BL_MID> on 2023-06-13T07:00:00+00:00
+[2023-06-14 15:00:23,383] {{base_task_runner.py:138}} INFO - Running on host: aliyun-airflow07
+[2023-06-14 15:00:23,383] {{base_task_runner.py:139}} INFO - Running: ['sudo', '-E', '-H', '-u', 'pub_zl', 'PYTHONPATH=/bigdata/bdp_jt/python38/lib/python3.8/site-packages:', 'airflow', 'tasks', 'run', 'F_CEI_DI_ECOS', 'DI_CEI_ECOS_BL_MID', '2023-06-13T07:00:00+00:00', '--job-id', '22109428', '--pool', 'default_pool', '--raw', '--subdir', 'DAGS_FOLDER/F_CEI_DI_ECOS.py', '--cfg-path', '/tmp/tmpa0j6vxed', '--error-file', '/tmp/tmpcf4b0nbe']
+[2023-06-14 15:00:24,019] {{base_task_runner.py:119}} INFO - Job 22109428: Subtask DI_CEI_ECOS_BL_MID WARNING:root:OSError while change ownership of the log file
+[2023-06-14 15:00:24,019] {{base_task_runner.py:119}} INFO - Job 22109428: Subtask DI_CEI_ECOS_BL_MID WARNING:root:/bigdata/bdp_jt/airflow/logs/scheduler/latest already exists as a dir/file. Skip creating symlink.
+[2023-06-14 15:00:24,522] {{base_task_runner.py:119}} INFO - Job 22109428: Subtask DI_CEI_ECOS_BL_MID /bigdata/bdp_jt/python38/lib/python3.8/site-packages/sqlalchemy/dialects/mysql/mysqldb.py:131 Warning: (3719, "'utf8' is currently an alias for the character set UTF8MB3, but will be an alias for UTF8MB4 in a future release. Please consider using UTF8MB4 in order to be unambiguous.")
+[2023-06-14 15:00:24,587] {{base_task_runner.py:119}} INFO - Job 22109428: Subtask DI_CEI_ECOS_BL_MID [2023-06-14 15:00:24,586] {{dagbag.py:451}} INFO - Filling up the DagBag from /bigdata/bdp_jt/airflow/dags/F_CEI_DI_ECOS.py
+[2023-06-14 15:00:25,092] {{base_task_runner.py:119}} INFO - Job 22109428: Subtask DI_CEI_ECOS_BL_MID /bigdata/bdp_jt/python38/lib/python3.8/site-packages/sqlalchemy/dialects/mysql/mysqldb.py:131 Warning: (3719, "'utf8' is currently an alias for the character set UTF8MB3, but will be an alias for UTF8MB4 in a future release. Please consider using UTF8MB4 in order to be unambiguous.")
+[2023-06-14 15:00:25,143] {{taskinstance.py:1641}} INFO - params={}
+[2023-06-14 15:00:25,144] {{taskinstance.py:1643}} INFO - ===========start===========
+[2023-06-14 15:00:25,144] {{taskinstance.py:1655}} INFO - 本次执行由自身触发
+[2023-06-14 15:00:25,144] {{taskinstance.py:1661}} INFO - 当前作业调度类型调度，current_backfill_date使用当前批次调度计划时间:2023-06-14T15:00:00+08:00
+[2023-06-14 15:00:25,144] {{taskinstance.py:1664}} INFO - current_backfill_date值为:2023-06-14T15:00:00+08:00
+[2023-06-14 15:00:25,144] {{taskinstance.py:1665}} INFO - ===========end===========
+[2023-06-14 15:00:25,230] {{taskinstance.py:1284}} INFO - Exporting the following env vars:
+AIRFLOW_CTX_DAG_OWNER=airflow
+AIRFLOW_CTX_DAG_ID=F_CEI_DI_ECOS
+AIRFLOW_CTX_TASK_ID=DI_CEI_ECOS_BL_MID
+AIRFLOW_CTX_EXECUTION_DATE=2023-06-13T07:00:00+00:00
+AIRFLOW_CTX_DAG_RUN_ID=scheduled__2023-06-13T07:00:00+00:00
+[2023-06-14 15:00:25,231] {{bash.py:144}} INFO - Tmp dir root location:
+ /tmp
+[2023-06-14 15:00:25,231] {{bash.py:167}} INFO - Running command:
+export LC_CTYPE=zh_CN.UTF-8
+#!/bin/sh
+source /etc/profile
+
+klist
+export HADOOP_OPTS=-Djava.security.egd=file:/dev/../dev/urandom
+beeline_sql='beeline --hiveconf mapreduce.job.name=F_CEI_DI_ECOS@DI_CEI_ECOS_BL_MID  -u "jdbc:hive2://10.138.225.37:30010/default;principal=hive/qdcdh00@HAIER.COM" -e '
+
+
+#list="201910 201911 201912 202001 201801 201802 201803 201804 201805 201806 201807 201808 201809 201810 201811 201812"
+#list="202001 202002 202003 202004 202005 202006 202007 202008 202009 202010 202011 202012"
+
+list=`date -d last-day +%Y%m`
+#list="202101 202102 202103 202104 202105 202106 202107 202108 202109 202110"
+#list="202302"
+#list="202201 202202 202203 202204 202205 202206"
+
+for current_month  in $list;
+
+do
+
+v_first_day="${current_month}01"
+v_rq=`date -d "${v_first_day} 1 month last day" +"%Y%m%d"`
+v_rq2=`date -d last-day +%Y%m%d`
+current_year_d=`date -d "${v_rq}" +%Y0101`
+
+v_3=`date -d "${v_first_day} -4 month" +"%Y%m"`
+v_6=`date -d "${v_first_day} -7 month" +"%Y%m"`
+v_12=`date -d "${v_first_day} -13 month" +"%Y%m"`
+
+
+current_month_querySQL="
+set hive.exec.parallel=true;
+
+
+with
+date_table as (
+select period_id,
+	   period_month,
+       period_year
+from dh_qu.tm_cei_dim_period
+where PERIOD_LEVEL='D'
+and period_month = '${current_month}'
+and period_id <= '${v_rq}'
+and period_id <= '${v_rq2}'
+)
+insert overwrite table di_qu.tf_cei_ecosphere_bl_mid
+partition(pt = '${current_month}',type='bl_3')
+select
+t2.period_id,
+from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd') as kpi_dt,
+null as hsicrm_regionname,
+hsicrm_brandname,
+pl_platform_name,
+hsicrm_productcategoryname,
+pl_factory_code,
+pl_factory_name,
+pl_line_code,
+pl_line_name,
+product_code,
+product_name,
+mark_time,
+prod_life_state,
+design_xw_code,
+design_xw_name,
+user_xw_code,
+user_xw_name,
+chain_group,
+hsicrm_actualservicetypename,
+ecosphere_name,
+ecosphere_code,
+ecosphere_leader,
+ecosphere_dept,
+sub_ecosphere_name,
+sub_ecosphere_code,
+sub_ecosphere_leader,
+sub_ecosphere_dept,
+'三个月不良' as bl_type,
+count(1),
+from_unixtime(unix_timestamp()) AS dh_etl_date
+from dh_qu.tt_cei_workorder_ecos t1,
+date_table t2
+where t1.is_bl = '1'
+and (t1.is_sczr is null or t1.is_sczr <> '1')
+and t1.pt<=${current_month}
+and t1.pt>=${v_6}
+and cast(t1.period_id as string) <= t2.period_id
+and (CASE WHEN pl_platform_name='商用空调'
+and nvl(responsibilitycategoryname,'')<>'商场'
+	   THEN cast(t1.period_id as string) BETWEEN substr(regexp_replace(cast(date_add(add_months(from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd'),-6),1) as string),'-',''),1,8) AND t2.period_id
+	   ELSE cast(t1.period_id as string) BETWEEN substr(regexp_replace(cast(date_add(add_months(from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd'),-3),1) as string),'-',''),1,8) AND t2.period_id
+	 END)
+AND (CASE WHEN t1.pl_platform_name='商用空调'
+        THEN t1.hsicrm_manufacturedate BETWEEN date_add(add_months(from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd'),-6),1) AND from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd')
+       ELSE t1.hsicrm_manufacturedate BETWEEN date_add(add_months(from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd'),-3),1) AND from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd')
+    END)
+group by t2.period_id,
+hsicrm_brandname,
+pl_platform_name,
+hsicrm_productcategoryname,
+pl_factory_code,
+pl_factory_name,
+pl_line_code,
+pl_line_name,
+product_code,
+product_name,
+mark_time,
+prod_life_state,
+design_xw_code,
+design_xw_name,
+user_xw_code,
+user_xw_name,
+chain_group,
+hsicrm_actualservicetypename,
+ecosphere_name,
+ecosphere_code,
+ecosphere_leader,
+ecosphere_dept,
+sub_ecosphere_name,
+sub_ecosphere_code,
+sub_ecosphere_leader,
+sub_ecosphere_dept
+"
+$beeline_sql "set mapreduce.job.queuename=root.quality;SET hive.exec.compress.output=true; SET io.seqfile.compression.type=BLOCK; ${current_month_querySQL}"
+
+
+current_month_querySQL="
+with
+date_table as (
+select period_id,
+	   period_month,
+       period_year
+from dh_qu.tm_cei_dim_period
+where PERIOD_LEVEL='D'
+and period_month = '${current_month}'
+and period_id <= '${v_rq}'
+and period_id <= '${v_rq2}'
+)
+insert overwrite table di_qu.tf_cei_ecosphere_bl_mid
+partition(pt = '${current_month}',type='bl_6')
+select
+t2.period_id,
+from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd') as kpi_dt,
+null as hsicrm_regionname,
+hsicrm_brandname,
+pl_platform_name,
+hsicrm_productcategoryname,
+pl_factory_code,
+pl_factory_name,
+pl_line_code,
+pl_line_name,
+product_code,
+product_name,
+mark_time,
+prod_life_state,
+design_xw_code,
+design_xw_name,
+user_xw_code,
+user_xw_name,
+chain_group,
+hsicrm_actualservicetypename,
+ecosphere_name,
+ecosphere_code,
+ecosphere_leader,
+ecosphere_dept,
+sub_ecosphere_name,
+sub_ecosphere_code,
+sub_ecosphere_leader,
+sub_ecosphere_dept,
+'半年不良' as bl_type,
+count(1),
+from_unixtime(unix_timestamp()) AS dh_etl_date
+from dh_qu.tt_cei_workorder_ecos t1,
+date_table t2
+where t1.is_bl = '1'
+and (t1.is_sczr is null or t1.is_sczr <> '1')
+and t1.pt<=${current_month}
+and nvl(responsibilitycategoryname,'')<>'商场'
+and t1.pt>=${v_6}
+and cast(t1.period_id as string) <= t2.period_id
+and cast(t1.period_id as string) BETWEEN substr(regexp_replace(cast(date_add(add_months(from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd'),-6),1) as string),'-',''),1,8) AND t2.period_id
+and t1.hsicrm_manufacturedate BETWEEN date_add(add_months(from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd'),-6),1) AND from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd')
+group by t2.period_id,
+hsicrm_brandname,
+pl_platform_name,
+hsicrm_productcategoryname,
+pl_factory_code,
+pl_factory_name,
+pl_line_code,
+pl_line_name,
+product_code,
+product_name,
+mark_time,
+prod_life_state,
+design_xw_code,
+design_xw_name,
+user_xw_code,
+user_xw_name,
+chain_group,
+hsicrm_actualservicetypename,
+ecosphere_name,
+ecosphere_code,
+ecosphere_leader,
+ecosphere_dept,
+sub_ecosphere_name,
+sub_ecosphere_code,
+sub_ecosphere_leader,
+sub_ecosphere_dept
+"
+$beeline_sql "set mapreduce.job.queuename=root.quality;SET hive.exec.compress.output=true; SET io.seqfile.compression.type=BLOCK; ${current_month_querySQL}"
+
+current_month_querySQL="
+with
+date_table as (
+select period_id,
+	   period_month,
+       period_year
+from dh_qu.tm_cei_dim_period
+where PERIOD_LEVEL='D'
+and period_month = '${current_month}'
+and period_id <= '${v_rq}'
+and period_id <= '${v_rq2}'
+)
+insert overwrite table di_qu.tf_cei_ecosphere_bl_mid
+partition(pt = '${current_month}',type='bl_12')
+select
+t2.period_id,
+from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd') as kpi_dt,
+null as hsicrm_regionname,
+hsicrm_brandname,
+pl_platform_name,
+hsicrm_productcategoryname,
+pl_factory_code,
+pl_factory_name,
+pl_line_code,
+pl_line_name,
+product_code,
+product_name,
+mark_time,
+prod_life_state,
+design_xw_code,
+design_xw_name,
+user_xw_code,
+user_xw_name,
+chain_group,
+hsicrm_actualservicetypename,
+ecosphere_name,
+ecosphere_code,
+ecosphere_leader,
+ecosphere_dept,
+sub_ecosphere_name,
+sub_ecosphere_code,
+sub_ecosphere_leader,
+sub_ecosphere_dept,
+'当年不良' as bl_type,
+count(1),
+from_unixtime(unix_timestamp()) AS dh_etl_date
+from dh_qu.tt_cei_workorder_ecos t1,
+date_table t2
+where t1.is_bl = '1'
+  and (t1.is_sczr is null or t1.is_sczr <> '1')
+  and nvl(responsibilitycategoryname,'')<>'商场'
+  and t1.pt<=${current_month}
+  and t1.pt>=${v_12}
+  and cast(t1.period_id as string) <= t2.period_id
+  and cast(t1.period_id as string) BETWEEN substr(regexp_replace(cast(date_add(add_months(from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd'),-12),1) as string),'-',''),1,8) AND t2.period_id
+  and t1.hsicrm_manufacturedate BETWEEN date_add(add_months(from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd'),-12),1) AND from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd')
+group by t2.period_id,
+hsicrm_brandname,
+pl_platform_name,
+hsicrm_productcategoryname,
+pl_factory_code,
+pl_factory_name,
+pl_line_code,
+pl_line_name,
+product_code,
+product_name,
+mark_time,
+prod_life_state,
+design_xw_code,
+design_xw_name,
+user_xw_code,
+user_xw_name,
+chain_group,
+hsicrm_actualservicetypename,
+ecosphere_name,
+ecosphere_code,
+ecosphere_leader,
+ecosphere_dept,
+sub_ecosphere_name,
+sub_ecosphere_code,
+sub_ecosphere_leader,
+sub_ecosphere_dept
+"
+$beeline_sql "set mapreduce.job.queuename=root.quality;SET hive.exec.compress.output=true; SET io.seqfile.compression.type=BLOCK; ${current_month_querySQL}"
+
+current_month_querySQL="
+with
+date_table as (
+select period_id,
+	   period_month,
+       period_year
+from dh_qu.tm_cei_dim_period
+where PERIOD_LEVEL='D'
+and period_month = '${current_month}'
+and period_id <= '${v_rq}'
+and period_id <= '${v_rq2}'
+)
+insert overwrite table di_qu.tf_cei_ecosphere_bl_mid
+partition(pt = '${current_month}',type='bl_ben')
+select
+t2.period_id,
+from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd') as kpi_dt,
+null as hsicrm_regionname,
+hsicrm_brandname,
+pl_platform_name,
+hsicrm_productcategoryname,
+pl_factory_code,
+pl_factory_name,
+pl_line_code,
+pl_line_name,
+product_code,
+product_name,
+mark_time,
+prod_life_state,
+design_xw_code,
+design_xw_name,
+user_xw_code,
+user_xw_name,
+chain_group,
+hsicrm_actualservicetypename,
+ecosphere_name,
+ecosphere_code,
+ecosphere_leader,
+ecosphere_dept,
+sub_ecosphere_name,
+sub_ecosphere_code,
+sub_ecosphere_leader,
+sub_ecosphere_dept,
+'本年不良' as bl_type,
+count(1),
+from_unixtime(unix_timestamp()) AS dh_etl_date
+from dh_qu.tt_cei_workorder_ecos t1,
+date_table t2
+where t1.is_bl = '1'
+  and (t1.is_sczr is null or t1.is_sczr <> '1')
+  and nvl(responsibilitycategoryname,'')<>'商场'
+  and t1.pt<=${current_month}
+  and t1.pt>=${v_12}
+  and cast(t1.period_id as string) <= t2.period_id
+  and cast(t1.period_id as string) between concat(period_year,'0101') and t2.period_id
+  AND t1.hsicrm_manufacturedate between from_unixtime(unix_timestamp(concat(period_year,'0101'),'yyyyMMdd'),'yyyy-MM-dd') and from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd')
+group by t2.period_id,
+hsicrm_brandname,
+pl_platform_name,
+hsicrm_productcategoryname,
+pl_factory_code,
+pl_factory_name,
+pl_line_code,
+pl_line_name,
+product_code,
+product_name,
+mark_time,
+prod_life_state,
+design_xw_code,
+design_xw_name,
+user_xw_code,
+user_xw_name,
+chain_group,
+hsicrm_actualservicetypename,
+ecosphere_name,
+ecosphere_code,
+ecosphere_leader,
+ecosphere_dept,
+sub_ecosphere_name,
+sub_ecosphere_code,
+sub_ecosphere_leader,
+sub_ecosphere_dept
+"
+$beeline_sql "set mapreduce.job.queuename=root.quality;SET hive.exec.compress.output=true; SET io.seqfile.compression.type=BLOCK; ${current_month_querySQL}"
+
+current_month_querySQL="
+with
+date_table as (
+select period_id,
+	   period_month,
+       period_year
+from dh_qu.tm_cei_dim_period
+where PERIOD_LEVEL='D'
+and period_month = '${current_month}'
+and period_id <= '${v_rq}'
+and period_id <= '${v_rq2}'
+)
+insert overwrite table di_qu.tf_cei_ecosphere_bl_mid
+partition(pt = '${current_month}',type='bl_kai')
+select
+t2.period_id,
+from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd') as kpi_dt,
+null as hsicrm_regionname,
+hsicrm_brandname,
+pl_platform_name,
+hsicrm_productcategoryname,
+pl_factory_code,
+pl_factory_name,
+pl_line_code,
+pl_line_name,
+product_code,
+product_name,
+mark_time,
+prod_life_state,
+design_xw_code,
+design_xw_name,
+user_xw_code,
+user_xw_name,
+chain_group,
+hsicrm_actualservicetypename,
+ecosphere_name,
+ecosphere_code,
+ecosphere_leader,
+ecosphere_dept,
+sub_ecosphere_name,
+sub_ecosphere_code,
+sub_ecosphere_leader,
+sub_ecosphere_dept,
+'开箱不良' as bl_type,
+count(1),
+from_unixtime(unix_timestamp()) AS dh_etl_date
+from dh_qu.tt_cei_workorder_ecos t1,
+date_table t2
+where t1.is_bl = '1'
+and (t1.is_sczr is null or t1.is_sczr <> '1')
+and nvl(responsibilitycategoryname,'')<>'商场'
+  and t1.pt=${current_month}
+  and cast(t1.period_id as string) = t2.period_id
+  and datediff(t1.hsicrm_registrationtime,t1.hsicrm_salesdate) <= 15
+group by t2.period_id,
+hsicrm_brandname,
+pl_platform_name,
+hsicrm_productcategoryname,
+pl_factory_code,
+pl_factory_name,
+pl_line_code,
+pl_line_name,
+product_code,
+product_name,
+mark_time,
+prod_life_state,
+design_xw_code,
+design_xw_name,
+user_xw_code,
+user_xw_name,
+chain_group,
+hsicrm_actualservicetypename,
+ecosphere_name,
+ecosphere_code,
+ecosphere_leader,
+ecosphere_dept,
+sub_ecosphere_name,
+sub_ecosphere_code,
+sub_ecosphere_leader,
+sub_ecosphere_dept
+"
+$beeline_sql "set mapreduce.job.queuename=root.quality;SET hive.exec.compress.output=true; SET io.seqfile.compression.type=BLOCK; ${current_month_querySQL}"
+
+current_month_querySQL="
+with
+date_table as (
+select period_id,
+	   period_month,
+       period_year
+from dh_qu.tm_cei_dim_period
+where PERIOD_LEVEL='D'
+and period_month = '${current_month}'
+and period_id <= '${v_rq}'
+and period_id <= '${v_rq2}'
+)
+insert overwrite table di_qu.tf_cei_ecosphere_bl_mid
+partition(pt = '${current_month}',type='bl_xin')
+select
+t2.period_id,
+from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd') as kpi_dt,
+null as hsicrm_regionname,
+hsicrm_brandname,
+pl_platform_name,
+hsicrm_productcategoryname,
+pl_factory_code,
+pl_factory_name,
+pl_line_code,
+pl_line_name,
+product_code,
+product_name,
+mark_time,
+prod_life_state,
+design_xw_code,
+design_xw_name,
+user_xw_code,
+user_xw_name,
+chain_group,
+hsicrm_actualservicetypename,
+ecosphere_name,
+ecosphere_code,
+ecosphere_leader,
+ecosphere_dept,
+sub_ecosphere_name,
+sub_ecosphere_code,
+sub_ecosphere_leader,
+sub_ecosphere_dept,
+'新品六个月不良' as bl_type,
+count(1),
+from_unixtime(unix_timestamp()) AS dh_etl_date
+from dh_qu.tt_cei_workorder_ecos t1,
+date_table t2
+where t1.is_bl = '1'
+and (t1.is_sczr is null or t1.is_sczr <> '1')
+  and nvl(responsibilitycategoryname,'')<>'商场'
+  and t1.pt<=${current_month}
+  and t1.pt>=${v_6}
+  and cast(t1.period_id as string) <= t2.period_id
+  and cast(t1.period_id as string) BETWEEN substr(regexp_replace(cast(date_add(add_months(from_unixtime(unix_timestamp(cast(t2.period_id as string),'yyyyMMdd'),'yyyy-MM-dd'),-6),1) as string),'-',''),1,8) AND cast(t2.period_id as string)
+  and t1.hsicrm_manufacturedate BETWEEN date_add(add_months(from_unixtime(unix_timestamp(cast(t2.period_id as string),'yyyyMMdd'),'yyyy-MM-dd'),-6),1) AND from_unixtime(unix_timestamp(cast(t2.period_id as string),'yyyyMMdd'),'yyyy-MM-dd')
+  AND regexp_replace(t1.mark_time,'/','-') BETWEEN date_add(add_months(from_unixtime(unix_timestamp(cast(t2.period_id as string),'yyyyMMdd'),'yyyy-MM-dd'),-12),1) AND from_unixtime(unix_timestamp(cast(t2.period_id as string),'yyyyMMdd'),'yyyy-MM-dd')
+group by t2.period_id,
+hsicrm_brandname,
+pl_platform_name,
+hsicrm_productcategoryname,
+pl_factory_code,
+pl_factory_name,
+pl_line_code,
+pl_line_name,
+product_code,
+product_name,
+mark_time,
+prod_life_state,
+design_xw_code,
+design_xw_name,
+user_xw_code,
+user_xw_name,
+chain_group,
+hsicrm_actualservicetypename,
+ecosphere_name,
+ecosphere_code,
+ecosphere_leader,
+ecosphere_dept,
+sub_ecosphere_name,
+sub_ecosphere_code,
+sub_ecosphere_leader,
+sub_ecosphere_dept
+"
+$beeline_sql "set mapreduce.job.queuename=root.quality;SET hive.exec.compress.output=true; SET io.seqfile.compression.type=BLOCK; ${current_month_querySQL}"
+
+if [ "$?" == 0 ]
+    then
+       echo "------运行成功！"
+       #exit 0  #参数正确，退出状态为0
+    else
+      echo "------程序出错！"
+      exit 1  #参数错误，退出状态1
+  fi
+
+done
+
+beeline_sql='beeline -u "jdbc:hive2://10.138.225.37:30050/default;principal=impala/qdcdh00.haier.com@HAIER.COM" -e '
+$beeline_sql "refresh di_qu.tf_cei_ecosphere_bl_mid"
+
+
+[2023-06-14 15:00:25,303] {{bash.py:178}} INFO - Output:
+[2023-06-14 15:00:25,357] {{bash.py:185}} INFO - Ticket cache: FILE:/tmp/krb5cc_20145
+[2023-06-14 15:00:25,357] {{bash.py:185}} INFO - Default principal: pub_zl@HAIER.COM
+[2023-06-14 15:00:25,357] {{bash.py:185}} INFO -
+[2023-06-14 15:00:25,358] {{bash.py:185}} INFO - Valid starting       Expires              Service principal
+[2023-06-14 15:00:25,358] {{bash.py:185}} INFO - 06/14/2023 12:02:25  06/15/2023 12:02:25  krbtgt/HAIER.COM@HAIER.COM
+[2023-06-14 15:00:25,358] {{bash.py:185}} INFO - 	renew until 06/21/2023 12:02:25
+[2023-06-14 15:00:29,300] {{bash.py:185}} INFO - WARNING: Use "yarn jar" to launch YARN applications.
+[2023-06-14 15:00:30,002] {{bash.py:185}} INFO - SLF4J: Class path contains multiple SLF4J bindings.
+[2023-06-14 15:00:30,002] {{bash.py:185}} INFO - SLF4J: Found binding in [jar:file:/opt/cloudera/parcels/CDH-6.3.2-1.cdh6.3.2.p0.1605554/jars/log4j-slf4j-impl-2.8.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+[2023-06-14 15:00:30,002] {{bash.py:185}} INFO - SLF4J: Found binding in [jar:file:/opt/cloudera/parcels/CDH-6.3.2-1.cdh6.3.2.p0.1605554/jars/slf4j-log4j12-1.7.25.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+[2023-06-14 15:00:30,003] {{bash.py:185}} INFO - SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+[2023-06-14 15:00:30,009] {{bash.py:185}} INFO - SLF4J: Actual binding is of type [org.apache.logging.slf4j.Log4jLoggerFactory]
+[2023-06-14 15:00:32,846] {{bash.py:185}} INFO - Connecting to jdbc:hive2://10.138.225.37:30010/default;principal=hive/qdcdh00@HAIER.COM
+[2023-06-14 15:00:34,318] {{bash.py:185}} INFO - Connected to: Apache Hive (version 2.1.1-cdh6.3.2)
+[2023-06-14 15:00:34,318] {{bash.py:185}} INFO - Driver: Hive JDBC (version 2.1.1-cdh6.3.2)
+[2023-06-14 15:00:34,319] {{bash.py:185}} INFO - Transaction isolation: TRANSACTION_REPEATABLE_READ
+[2023-06-14 15:00:34,413] {{bash.py:185}} INFO - No rows affected (0.078 seconds)
+[2023-06-14 15:00:34,467] {{bash.py:185}} INFO - No rows affected (0.029 seconds)
+[2023-06-14 15:00:34,509] {{bash.py:185}} INFO - No rows affected (0.028 seconds)
+[2023-06-14 15:00:34,549] {{bash.py:185}} INFO - No rows affected (0.026 seconds)
+[2023-06-14 15:00:43,455] {{logging_mixin.py:104}} WARNING - /bigdata/bdp_jt/python38/lib/python3.8/site-packages/sqlalchemy/dialects/mysql/mysqldb.py:131 Warning: (3719, "'utf8' is currently an alias for the character set UTF8MB3, but will be an alias for UTF8MB4 in a future release. Please consider using UTF8MB4 in order to be unambiguous.")
+[2023-06-14 15:00:56,903] {{bash.py:185}} INFO - INFO  : Compiling command(queryId=hive_20230614150034_465dad77-7fdb-48ad-a362-05e96322735a): with
+[2023-06-14 15:00:56,903] {{bash.py:185}} INFO - date_table as (
+[2023-06-14 15:00:56,903] {{bash.py:185}} INFO - select period_id,
+[2023-06-14 15:00:56,903] {{bash.py:185}} INFO - 	   period_month,
+[2023-06-14 15:00:56,903] {{bash.py:185}} INFO -        period_year
+[2023-06-14 15:00:56,903] {{bash.py:185}} INFO - from dh_qu.tm_cei_dim_period
+[2023-06-14 15:00:56,903] {{bash.py:185}} INFO - where PERIOD_LEVEL='D'
+[2023-06-14 15:00:56,903] {{bash.py:185}} INFO - and period_month = '202306'
+[2023-06-14 15:00:56,904] {{bash.py:185}} INFO - and period_id <= '20230630'
+[2023-06-14 15:00:56,904] {{bash.py:185}} INFO - and period_id <= '20230613'
+[2023-06-14 15:00:56,904] {{bash.py:185}} INFO - )
+[2023-06-14 15:00:56,904] {{bash.py:185}} INFO - insert overwrite table di_qu.tf_cei_ecosphere_bl_mid
+[2023-06-14 15:00:56,904] {{bash.py:185}} INFO - partition(pt = '202306',type='bl_3')
+[2023-06-14 15:00:56,904] {{bash.py:185}} INFO - select
+[2023-06-14 15:00:56,904] {{bash.py:185}} INFO - t2.period_id,
+[2023-06-14 15:00:56,904] {{bash.py:185}} INFO - from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd') as kpi_dt,
+[2023-06-14 15:00:56,904] {{bash.py:185}} INFO - null as hsicrm_regionname,
+[2023-06-14 15:00:56,904] {{bash.py:185}} INFO - hsicrm_brandname,
+[2023-06-14 15:00:56,904] {{bash.py:185}} INFO - pl_platform_name,
+[2023-06-14 15:00:56,904] {{bash.py:185}} INFO - hsicrm_productcategoryname,
+[2023-06-14 15:00:56,904] {{bash.py:185}} INFO - pl_factory_code,
+[2023-06-14 15:00:56,904] {{bash.py:185}} INFO - pl_factory_name,
+[2023-06-14 15:00:56,904] {{bash.py:185}} INFO - pl_line_code,
+[2023-06-14 15:00:56,904] {{bash.py:185}} INFO - pl_line_name,
+[2023-06-14 15:00:56,904] {{bash.py:185}} INFO - product_code,
+[2023-06-14 15:00:56,904] {{bash.py:185}} INFO - product_name,
+[2023-06-14 15:00:56,904] {{bash.py:185}} INFO - mark_time,
+[2023-06-14 15:00:56,904] {{bash.py:185}} INFO - prod_life_state,
+[2023-06-14 15:00:56,904] {{bash.py:185}} INFO - design_xw_code,
+[2023-06-14 15:00:56,904] {{bash.py:185}} INFO - design_xw_name,
+[2023-06-14 15:00:56,904] {{bash.py:185}} INFO - user_xw_code,
+[2023-06-14 15:00:56,905] {{bash.py:185}} INFO - user_xw_name,
+[2023-06-14 15:00:56,905] {{bash.py:185}} INFO - chain_group,
+[2023-06-14 15:00:56,905] {{bash.py:185}} INFO - hsicrm_actualservicetypename,
+[2023-06-14 15:00:56,905] {{bash.py:185}} INFO - ecosphere_name,
+[2023-06-14 15:00:56,905] {{bash.py:185}} INFO - ecosphere_code,
+[2023-06-14 15:00:56,905] {{bash.py:185}} INFO - ecosphere_leader,
+[2023-06-14 15:00:56,905] {{bash.py:185}} INFO - ecosphere_dept,
+[2023-06-14 15:00:56,905] {{bash.py:185}} INFO - sub_ecosphere_name,
+[2023-06-14 15:00:56,905] {{bash.py:185}} INFO - sub_ecosphere_code,
+[2023-06-14 15:00:56,905] {{bash.py:185}} INFO - sub_ecosphere_leader,
+[2023-06-14 15:00:56,905] {{bash.py:185}} INFO - sub_ecosphere_dept,
+[2023-06-14 15:00:56,905] {{bash.py:185}} INFO - '三个月不良' as bl_type,
+[2023-06-14 15:00:56,905] {{bash.py:185}} INFO - count(1),
+[2023-06-14 15:00:56,905] {{bash.py:185}} INFO - from_unixtime(unix_timestamp()) AS dh_etl_date
+[2023-06-14 15:00:56,905] {{bash.py:185}} INFO - from dh_qu.tt_cei_workorder_ecos t1,
+[2023-06-14 15:00:56,906] {{bash.py:185}} INFO - date_table t2
+[2023-06-14 15:00:56,906] {{bash.py:185}} INFO - where t1.is_bl = '1'
+[2023-06-14 15:00:56,906] {{bash.py:185}} INFO - and (t1.is_sczr is null or t1.is_sczr <> '1')
+[2023-06-14 15:00:56,906] {{bash.py:185}} INFO - and t1.pt<=202306
+[2023-06-14 15:00:56,906] {{bash.py:185}} INFO - and t1.pt>=202211
+[2023-06-14 15:00:56,906] {{bash.py:185}} INFO - and cast(t1.period_id as string) <= t2.period_id
+[2023-06-14 15:00:56,906] {{bash.py:185}} INFO - and (CASE WHEN pl_platform_name='商用空调'
+[2023-06-14 15:00:56,906] {{bash.py:185}} INFO - and nvl(responsibilitycategoryname,'')<>'商场'
+[2023-06-14 15:00:56,906] {{bash.py:185}} INFO - 	   THEN cast(t1.period_id as string) BETWEEN substr(regexp_replace(cast(date_add(add_months(from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd'),-6),1) as string),'-',''),1,8) AND t2.period_id
+[2023-06-14 15:00:56,906] {{bash.py:185}} INFO - 	   ELSE cast(t1.period_id as string) BETWEEN substr(regexp_replace(cast(date_add(add_months(from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd'),-3),1) as string),'-',''),1,8) AND t2.period_id
+[2023-06-14 15:00:56,906] {{bash.py:185}} INFO - 	 END)
+[2023-06-14 15:00:56,906] {{bash.py:185}} INFO - AND (CASE WHEN t1.pl_platform_name='商用空调'
+[2023-06-14 15:00:56,906] {{bash.py:185}} INFO -         THEN t1.hsicrm_manufacturedate BETWEEN date_add(add_months(from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd'),-6),1) AND from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd')
+[2023-06-14 15:00:56,906] {{bash.py:185}} INFO -        ELSE t1.hsicrm_manufacturedate BETWEEN date_add(add_months(from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd'),-3),1) AND from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd')
+[2023-06-14 15:00:56,906] {{bash.py:185}} INFO -     END)
+[2023-06-14 15:00:56,906] {{bash.py:185}} INFO - group by t2.period_id,
+[2023-06-14 15:00:56,906] {{bash.py:185}} INFO - hsicrm_brandname,
+[2023-06-14 15:00:56,906] {{bash.py:185}} INFO - pl_platform_name,
+[2023-06-14 15:00:56,906] {{bash.py:185}} INFO - hsicrm_productcategoryname,
+[2023-06-14 15:00:56,906] {{bash.py:185}} INFO - pl_factory_code,
+[2023-06-14 15:00:56,906] {{bash.py:185}} INFO - pl_factory_name,
+[2023-06-14 15:00:56,906] {{bash.py:185}} INFO - pl_line_code,
+[2023-06-14 15:00:56,906] {{bash.py:185}} INFO - pl_line_name,
+[2023-06-14 15:00:56,906] {{bash.py:185}} INFO - product_code,
+[2023-06-14 15:00:56,906] {{bash.py:185}} INFO - product_name,
+[2023-06-14 15:00:56,906] {{bash.py:185}} INFO - mark_time,
+[2023-06-14 15:00:56,906] {{bash.py:185}} INFO - prod_life_state,
+[2023-06-14 15:00:56,907] {{bash.py:185}} INFO - design_xw_code,
+[2023-06-14 15:00:56,907] {{bash.py:185}} INFO - design_xw_name,
+[2023-06-14 15:00:56,907] {{bash.py:185}} INFO - user_xw_code,
+[2023-06-14 15:00:56,907] {{bash.py:185}} INFO - user_xw_name,
+[2023-06-14 15:00:56,907] {{bash.py:185}} INFO - chain_group,
+[2023-06-14 15:00:56,907] {{bash.py:185}} INFO - hsicrm_actualservicetypename,
+[2023-06-14 15:00:56,907] {{bash.py:185}} INFO - ecosphere_name,
+[2023-06-14 15:00:56,907] {{bash.py:185}} INFO - ecosphere_code,
+[2023-06-14 15:00:56,907] {{bash.py:185}} INFO - ecosphere_leader,
+[2023-06-14 15:00:56,907] {{bash.py:185}} INFO - ecosphere_dept,
+[2023-06-14 15:00:56,908] {{bash.py:185}} INFO - sub_ecosphere_name,
+[2023-06-14 15:00:56,908] {{bash.py:185}} INFO - sub_ecosphere_code,
+[2023-06-14 15:00:56,908] {{bash.py:185}} INFO - sub_ecosphere_leader,
+[2023-06-14 15:00:56,908] {{bash.py:185}} INFO - sub_ecosphere_dept
+[2023-06-14 15:00:56,908] {{bash.py:185}} INFO - INFO  : unix_timestamp(void) is deprecated. Use current_timestamp instead.
+[2023-06-14 15:00:56,908] {{bash.py:185}} INFO - INFO  : Warning: Map Join MAPJOIN[22][bigTable=?] in task 'Stage-2:MAPRED' is a cross product
+[2023-06-14 15:00:56,908] {{bash.py:185}} INFO - INFO  : Semantic Analysis Completed
+[2023-06-14 15:00:56,908] {{bash.py:185}} INFO - INFO  : Returning Hive schema: Schema(fieldSchemas:[FieldSchema(name:_col0, type:int, comment:null), FieldSchema(name:_col1, type:timestamp, comment:null), FieldSchema(name:_col2, type:void, comment:null), FieldSchema(name:_col3, type:string, comment:null), FieldSchema(name:_col4, type:string, comment:null), FieldSchema(name:_col5, type:string, comment:null), FieldSchema(name:_col6, type:string, comment:null), FieldSchema(name:_col7, type:string, comment:null), FieldSchema(name:_col8, type:string, comment:null), FieldSchema(name:_col9, type:string, comment:null), FieldSchema(name:_col10, type:string, comment:null), FieldSchema(name:_col11, type:string, comment:null), FieldSchema(name:_col12, type:string, comment:null), FieldSchema(name:_col13, type:string, comment:null), FieldSchema(name:_col14, type:string, comment:null), FieldSchema(name:_col15, type:string, comment:null), FieldSchema(name:_col16, type:string, comment:null), FieldSchema(name:_col17, type:string, comment:null), FieldSchema(name:_col18, type:string, comment:null), FieldSchema(name:_col19, type:string, comment:null), FieldSchema(name:_col20, type:string, comment:null), FieldSchema(name:_col21, type:string, comment:null), FieldSchema(name:_col22, type:string, comment:null), FieldSchema(name:_col23, type:string, comment:null), FieldSchema(name:_col24, type:string, comment:null), FieldSchema(name:_col25, type:string, comment:null), FieldSchema(name:_col26, type:string, comment:null), FieldSchema(name:_col27, type:string, comment:null), FieldSchema(name:_col28, type:string, comment:null), FieldSchema(name:_col29, type:int, comment:null), FieldSchema(name:_col30, type:timestamp, comment:null)], properties:null)
+[2023-06-14 15:00:56,908] {{bash.py:185}} INFO - INFO  : Completed compiling command(queryId=hive_20230614150034_465dad77-7fdb-48ad-a362-05e96322735a); Time taken: 17.289 seconds
+[2023-06-14 15:00:56,908] {{bash.py:185}} INFO - INFO  : Executing command(queryId=hive_20230614150034_465dad77-7fdb-48ad-a362-05e96322735a): with
+[2023-06-14 15:00:56,908] {{bash.py:185}} INFO - date_table as (
+[2023-06-14 15:00:56,908] {{bash.py:185}} INFO - select period_id,
+[2023-06-14 15:00:56,908] {{bash.py:185}} INFO - 	   period_month,
+[2023-06-14 15:00:56,908] {{bash.py:185}} INFO -        period_year
+[2023-06-14 15:00:56,908] {{bash.py:185}} INFO - from dh_qu.tm_cei_dim_period
+[2023-06-14 15:00:56,908] {{bash.py:185}} INFO - where PERIOD_LEVEL='D'
+[2023-06-14 15:00:56,908] {{bash.py:185}} INFO - and period_month = '202306'
+[2023-06-14 15:00:56,908] {{bash.py:185}} INFO - and period_id <= '20230630'
+[2023-06-14 15:00:56,908] {{bash.py:185}} INFO - and period_id <= '20230613'
+[2023-06-14 15:00:56,908] {{bash.py:185}} INFO - )
+[2023-06-14 15:00:56,908] {{bash.py:185}} INFO - insert overwrite table di_qu.tf_cei_ecosphere_bl_mid
+[2023-06-14 15:00:56,908] {{bash.py:185}} INFO - partition(pt = '202306',type='bl_3')
+[2023-06-14 15:00:56,908] {{bash.py:185}} INFO - select
+[2023-06-14 15:00:56,908] {{bash.py:185}} INFO - t2.period_id,
+[2023-06-14 15:00:56,909] {{bash.py:185}} INFO - from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd') as kpi_dt,
+[2023-06-14 15:00:56,909] {{bash.py:185}} INFO - null as hsicrm_regionname,
+[2023-06-14 15:00:56,909] {{bash.py:185}} INFO - hsicrm_brandname,
+[2023-06-14 15:00:56,909] {{bash.py:185}} INFO - pl_platform_name,
+[2023-06-14 15:00:56,909] {{bash.py:185}} INFO - hsicrm_productcategoryname,
+[2023-06-14 15:00:56,909] {{bash.py:185}} INFO - pl_factory_code,
+[2023-06-14 15:00:56,909] {{bash.py:185}} INFO - pl_factory_name,
+[2023-06-14 15:00:56,911] {{bash.py:185}} INFO - pl_line_code,
+[2023-06-14 15:00:56,911] {{bash.py:185}} INFO - pl_line_name,
+[2023-06-14 15:00:56,911] {{bash.py:185}} INFO - product_code,
+[2023-06-14 15:00:56,911] {{bash.py:185}} INFO - product_name,
+[2023-06-14 15:00:56,911] {{bash.py:185}} INFO - mark_time,
+[2023-06-14 15:00:56,911] {{bash.py:185}} INFO - prod_life_state,
+[2023-06-14 15:00:56,911] {{bash.py:185}} INFO - design_xw_code,
+[2023-06-14 15:00:56,911] {{bash.py:185}} INFO - design_xw_name,
+[2023-06-14 15:00:56,911] {{bash.py:185}} INFO - user_xw_code,
+[2023-06-14 15:00:56,911] {{bash.py:185}} INFO - user_xw_name,
+[2023-06-14 15:00:56,911] {{bash.py:185}} INFO - chain_group,
+[2023-06-14 15:00:56,911] {{bash.py:185}} INFO - hsicrm_actualservicetypename,
+[2023-06-14 15:00:56,911] {{bash.py:185}} INFO - ecosphere_name,
+[2023-06-14 15:00:56,911] {{bash.py:185}} INFO - ecosphere_code,
+[2023-06-14 15:00:56,912] {{bash.py:185}} INFO - ecosphere_leader,
+[2023-06-14 15:00:56,912] {{bash.py:185}} INFO - ecosphere_dept,
+[2023-06-14 15:00:56,912] {{bash.py:185}} INFO - sub_ecosphere_name,
+[2023-06-14 15:00:56,912] {{bash.py:185}} INFO - sub_ecosphere_code,
+[2023-06-14 15:00:56,912] {{bash.py:185}} INFO - sub_ecosphere_leader,
+[2023-06-14 15:00:56,912] {{bash.py:185}} INFO - sub_ecosphere_dept,
+[2023-06-14 15:00:56,912] {{bash.py:185}} INFO - '三个月不良' as bl_type,
+[2023-06-14 15:00:56,912] {{bash.py:185}} INFO - count(1),
+[2023-06-14 15:00:56,912] {{bash.py:185}} INFO - from_unixtime(unix_timestamp()) AS dh_etl_date
+[2023-06-14 15:00:56,912] {{bash.py:185}} INFO - from dh_qu.tt_cei_workorder_ecos t1,
+[2023-06-14 15:00:56,912] {{bash.py:185}} INFO - date_table t2
+[2023-06-14 15:00:56,912] {{bash.py:185}} INFO - where t1.is_bl = '1'
+[2023-06-14 15:00:56,912] {{bash.py:185}} INFO - and (t1.is_sczr is null or t1.is_sczr <> '1')
+[2023-06-14 15:00:56,912] {{bash.py:185}} INFO - and t1.pt<=202306
+[2023-06-14 15:00:56,912] {{bash.py:185}} INFO - and t1.pt>=202211
+[2023-06-14 15:00:56,912] {{bash.py:185}} INFO - and cast(t1.period_id as string) <= t2.period_id
+[2023-06-14 15:00:56,912] {{bash.py:185}} INFO - and (CASE WHEN pl_platform_name='商用空调'
+[2023-06-14 15:00:56,912] {{bash.py:185}} INFO - and nvl(responsibilitycategoryname,'')<>'商场'
+[2023-06-14 15:00:56,912] {{bash.py:185}} INFO - 	   THEN cast(t1.period_id as string) BETWEEN substr(regexp_replace(cast(date_add(add_months(from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd'),-6),1) as string),'-',''),1,8) AND t2.period_id
+[2023-06-14 15:00:56,912] {{bash.py:185}} INFO - 	   ELSE cast(t1.period_id as string) BETWEEN substr(regexp_replace(cast(date_add(add_months(from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd'),-3),1) as string),'-',''),1,8) AND t2.period_id
+[2023-06-14 15:00:56,912] {{bash.py:185}} INFO - 	 END)
+[2023-06-14 15:00:56,912] {{bash.py:185}} INFO - AND (CASE WHEN t1.pl_platform_name='商用空调'
+[2023-06-14 15:00:56,913] {{bash.py:185}} INFO -         THEN t1.hsicrm_manufacturedate BETWEEN date_add(add_months(from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd'),-6),1) AND from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd')
+[2023-06-14 15:00:56,913] {{bash.py:185}} INFO -        ELSE t1.hsicrm_manufacturedate BETWEEN date_add(add_months(from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd'),-3),1) AND from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd')
+[2023-06-14 15:00:56,913] {{bash.py:185}} INFO -     END)
+[2023-06-14 15:00:56,913] {{bash.py:185}} INFO - group by t2.period_id,
+[2023-06-14 15:00:56,913] {{bash.py:185}} INFO - hsicrm_brandname,
+[2023-06-14 15:00:56,913] {{bash.py:185}} INFO - pl_platform_name,
+[2023-06-14 15:00:56,913] {{bash.py:185}} INFO - hsicrm_productcategoryname,
+[2023-06-14 15:00:56,913] {{bash.py:185}} INFO - pl_factory_code,
+[2023-06-14 15:00:56,913] {{bash.py:185}} INFO - pl_factory_name,
+[2023-06-14 15:00:56,913] {{bash.py:185}} INFO - pl_line_code,
+[2023-06-14 15:00:56,913] {{bash.py:185}} INFO - pl_line_name,
+[2023-06-14 15:00:56,913] {{bash.py:185}} INFO - product_code,
+[2023-06-14 15:00:56,913] {{bash.py:185}} INFO - product_name,
+[2023-06-14 15:00:56,913] {{bash.py:185}} INFO - mark_time,
+[2023-06-14 15:00:56,913] {{bash.py:185}} INFO - prod_life_state,
+[2023-06-14 15:00:56,913] {{bash.py:185}} INFO - design_xw_code,
+[2023-06-14 15:00:56,913] {{bash.py:185}} INFO - design_xw_name,
+[2023-06-14 15:00:56,913] {{bash.py:185}} INFO - user_xw_code,
+[2023-06-14 15:00:56,914] {{bash.py:185}} INFO - user_xw_name,
+[2023-06-14 15:00:56,914] {{bash.py:185}} INFO - chain_group,
+[2023-06-14 15:00:56,914] {{bash.py:185}} INFO - hsicrm_actualservicetypename,
+[2023-06-14 15:00:56,914] {{bash.py:185}} INFO - ecosphere_name,
+[2023-06-14 15:00:56,914] {{bash.py:185}} INFO - ecosphere_code,
+[2023-06-14 15:00:56,914] {{bash.py:185}} INFO - ecosphere_leader,
+[2023-06-14 15:00:56,914] {{bash.py:185}} INFO - ecosphere_dept,
+[2023-06-14 15:00:56,914] {{bash.py:185}} INFO - sub_ecosphere_name,
+[2023-06-14 15:00:56,914] {{bash.py:185}} INFO - sub_ecosphere_code,
+[2023-06-14 15:00:56,914] {{bash.py:185}} INFO - sub_ecosphere_leader,
+[2023-06-14 15:00:56,914] {{bash.py:185}} INFO - sub_ecosphere_dept
+[2023-06-14 15:00:56,914] {{bash.py:185}} INFO - WARN  :
+[2023-06-14 15:00:56,914] {{bash.py:185}} INFO - INFO  : Query ID = hive_20230614150034_465dad77-7fdb-48ad-a362-05e96322735a
+[2023-06-14 15:00:56,914] {{bash.py:185}} INFO - INFO  : Total jobs = 3
+[2023-06-14 15:00:56,914] {{bash.py:185}} INFO - INFO  : Starting task [Stage-11:MAPREDLOCAL] in serial mode
+[2023-06-14 15:01:11,978] {{bash.py:185}} INFO - INFO  : Execution completed successfully
+[2023-06-14 15:01:11,979] {{bash.py:185}} INFO - INFO  : MapredLocal task succeeded
+[2023-06-14 15:01:11,979] {{bash.py:185}} INFO - INFO  : Launching Job 1 out of 3
+[2023-06-14 15:01:11,979] {{bash.py:185}} INFO - INFO  : Starting task [Stage-2:MAPRED] in parallel
+[2023-06-14 15:06:49,170] {{bash.py:185}} INFO - INFO  : Starting task [Stage-8:CONDITIONAL] in parallel
+[2023-06-14 15:06:54,194] {{bash.py:185}} INFO - INFO  : Starting task [Stage-5:MOVE] in serial mode
+[2023-06-14 15:06:54,195] {{bash.py:185}} INFO - INFO  : Moving data to directory hdfs://nameservice1/user/hive/warehouse/di_qu.db/tf_cei_ecosphere_bl_mid/pt=202306/type=bl_3/.hive-staging_hive_2023-06-14_15-00-34_594_3221103198970201469-520557/-ext-10000 from hdfs://nameservice1/user/hive/warehouse/di_qu.db/tf_cei_ecosphere_bl_mid/pt=202306/type=bl_3/.hive-staging_hive_2023-06-14_15-00-34_594_3221103198970201469-520557/-ext-10003
+[2023-06-14 15:06:54,195] {{bash.py:185}} INFO - INFO  : Starting task [Stage-0:MOVE] in serial mode
+[2023-06-14 15:06:54,195] {{bash.py:185}} INFO - INFO  : Loading data to table di_qu.tf_cei_ecosphere_bl_mid partition (pt=202306, type=bl_3) from hdfs://nameservice1/user/hive/warehouse/di_qu.db/tf_cei_ecosphere_bl_mid/pt=202306/type=bl_3/.hive-staging_hive_2023-06-14_15-00-34_594_3221103198970201469-520557/-ext-10000
+[2023-06-14 15:07:02,613] {{bash.py:185}} INFO - INFO  : Starting task [Stage-3:STATS] in serial mode
+[2023-06-14 15:07:02,613] {{bash.py:185}} INFO - INFO  : MapReduce Jobs Launched:
+[2023-06-14 15:07:02,613] {{bash.py:185}} INFO - INFO  : Stage-Stage-2: Map: 6  Reduce: 1   Cumulative CPU: 1476.33 sec   HDFS Read: 399013945 HDFS Write: 5682301 HDFS EC Read: 0 SUCCESS
+[2023-06-14 15:07:02,613] {{bash.py:185}} INFO - INFO  : Total MapReduce CPU Time Spent: 24 minutes 36 seconds 330 msec
+[2023-06-14 15:07:02,613] {{bash.py:185}} INFO - INFO  : Completed executing command(queryId=hive_20230614150034_465dad77-7fdb-48ad-a362-05e96322735a); Time taken: 370.232 seconds
+[2023-06-14 15:07:02,613] {{bash.py:185}} INFO - INFO  : OK
+[2023-06-14 15:07:02,637] {{bash.py:185}} INFO - 426,214 rows affected (388.069 seconds)
+[2023-06-14 15:07:03,547] {{bash.py:185}} INFO - Beeline version 2.1.1-cdh6.3.2 by Apache Hive
+[2023-06-14 15:07:06,067] {{bash.py:185}} INFO - WARNING: Use "yarn jar" to launch YARN applications.
+[2023-06-14 15:07:06,671] {{bash.py:185}} INFO - SLF4J: Class path contains multiple SLF4J bindings.
+[2023-06-14 15:07:06,671] {{bash.py:185}} INFO - SLF4J: Found binding in [jar:file:/opt/cloudera/parcels/CDH-6.3.2-1.cdh6.3.2.p0.1605554/jars/log4j-slf4j-impl-2.8.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+[2023-06-14 15:07:06,671] {{bash.py:185}} INFO - SLF4J: Found binding in [jar:file:/opt/cloudera/parcels/CDH-6.3.2-1.cdh6.3.2.p0.1605554/jars/slf4j-log4j12-1.7.25.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+[2023-06-14 15:07:06,672] {{bash.py:185}} INFO - SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+[2023-06-14 15:07:06,677] {{bash.py:185}} INFO - SLF4J: Actual binding is of type [org.apache.logging.slf4j.Log4jLoggerFactory]
+[2023-06-14 15:07:09,091] {{bash.py:185}} INFO - Connecting to jdbc:hive2://10.138.225.37:30010/default;principal=hive/qdcdh00@HAIER.COM
+[2023-06-14 15:07:12,027] {{bash.py:185}} INFO - Connected to: Apache Hive (version 2.1.1-cdh6.3.2)
+[2023-06-14 15:07:12,027] {{bash.py:185}} INFO - Driver: Hive JDBC (version 2.1.1-cdh6.3.2)
+[2023-06-14 15:07:12,027] {{bash.py:185}} INFO - Transaction isolation: TRANSACTION_REPEATABLE_READ
+[2023-06-14 15:07:12,147] {{bash.py:185}} INFO - No rows affected (0.105 seconds)
+[2023-06-14 15:07:12,238] {{bash.py:185}} INFO - No rows affected (0.057 seconds)
+[2023-06-14 15:07:12,333] {{bash.py:185}} INFO - No rows affected (0.065 seconds)
+[2023-06-14 15:07:42,483] {{bash.py:185}} INFO - INFO  : Compiling command(queryId=hive_20230614150712_507b268a-8510-41a1-b8b5-ab809f9e8ba9): with
+[2023-06-14 15:07:42,483] {{bash.py:185}} INFO - date_table as (
+[2023-06-14 15:07:42,483] {{bash.py:185}} INFO - select period_id,
+[2023-06-14 15:07:42,483] {{bash.py:185}} INFO - 	   period_month,
+[2023-06-14 15:07:42,484] {{bash.py:185}} INFO -        period_year
+[2023-06-14 15:07:42,484] {{bash.py:185}} INFO - from dh_qu.tm_cei_dim_period
+[2023-06-14 15:07:42,484] {{bash.py:185}} INFO - where PERIOD_LEVEL='D'
+[2023-06-14 15:07:42,484] {{bash.py:185}} INFO - and period_month = '202306'
+[2023-06-14 15:07:42,484] {{bash.py:185}} INFO - and period_id <= '20230630'
+[2023-06-14 15:07:42,484] {{bash.py:185}} INFO - and period_id <= '20230613'
+[2023-06-14 15:07:42,484] {{bash.py:185}} INFO - )
+[2023-06-14 15:07:42,484] {{bash.py:185}} INFO - insert overwrite table di_qu.tf_cei_ecosphere_bl_mid
+[2023-06-14 15:07:42,484] {{bash.py:185}} INFO - partition(pt = '202306',type='bl_6')
+[2023-06-14 15:07:42,484] {{bash.py:185}} INFO - select
+[2023-06-14 15:07:42,484] {{bash.py:185}} INFO - t2.period_id,
+[2023-06-14 15:07:42,484] {{bash.py:185}} INFO - from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd') as kpi_dt,
+[2023-06-14 15:07:42,484] {{bash.py:185}} INFO - null as hsicrm_regionname,
+[2023-06-14 15:07:42,484] {{bash.py:185}} INFO - hsicrm_brandname,
+[2023-06-14 15:07:42,484] {{bash.py:185}} INFO - pl_platform_name,
+[2023-06-14 15:07:42,484] {{bash.py:185}} INFO - hsicrm_productcategoryname,
+[2023-06-14 15:07:42,484] {{bash.py:185}} INFO - pl_factory_code,
+[2023-06-14 15:07:42,484] {{bash.py:185}} INFO - pl_factory_name,
+[2023-06-14 15:07:42,484] {{bash.py:185}} INFO - pl_line_code,
+[2023-06-14 15:07:42,484] {{bash.py:185}} INFO - pl_line_name,
+[2023-06-14 15:07:42,484] {{bash.py:185}} INFO - product_code,
+[2023-06-14 15:07:42,484] {{bash.py:185}} INFO - product_name,
+[2023-06-14 15:07:42,484] {{bash.py:185}} INFO - mark_time,
+[2023-06-14 15:07:42,484] {{bash.py:185}} INFO - prod_life_state,
+[2023-06-14 15:07:42,484] {{bash.py:185}} INFO - design_xw_code,
+[2023-06-14 15:07:42,485] {{bash.py:185}} INFO - design_xw_name,
+[2023-06-14 15:07:42,485] {{bash.py:185}} INFO - user_xw_code,
+[2023-06-14 15:07:42,485] {{bash.py:185}} INFO - user_xw_name,
+[2023-06-14 15:07:42,485] {{bash.py:185}} INFO - chain_group,
+[2023-06-14 15:07:42,485] {{bash.py:185}} INFO - hsicrm_actualservicetypename,
+[2023-06-14 15:07:42,485] {{bash.py:185}} INFO - ecosphere_name,
+[2023-06-14 15:07:42,485] {{bash.py:185}} INFO - ecosphere_code,
+[2023-06-14 15:07:42,485] {{bash.py:185}} INFO - ecosphere_leader,
+[2023-06-14 15:07:42,485] {{bash.py:185}} INFO - ecosphere_dept,
+[2023-06-14 15:07:42,485] {{bash.py:185}} INFO - sub_ecosphere_name,
+[2023-06-14 15:07:42,485] {{bash.py:185}} INFO - sub_ecosphere_code,
+[2023-06-14 15:07:42,485] {{bash.py:185}} INFO - sub_ecosphere_leader,
+[2023-06-14 15:07:42,485] {{bash.py:185}} INFO - sub_ecosphere_dept,
+[2023-06-14 15:07:42,485] {{bash.py:185}} INFO - '半年不良' as bl_type,
+[2023-06-14 15:07:42,485] {{bash.py:185}} INFO - count(1),
+[2023-06-14 15:07:42,485] {{bash.py:185}} INFO - from_unixtime(unix_timestamp()) AS dh_etl_date
+[2023-06-14 15:07:42,485] {{bash.py:185}} INFO - from dh_qu.tt_cei_workorder_ecos t1,
+[2023-06-14 15:07:42,485] {{bash.py:185}} INFO - date_table t2
+[2023-06-14 15:07:42,485] {{bash.py:185}} INFO - where t1.is_bl = '1'
+[2023-06-14 15:07:42,485] {{bash.py:185}} INFO - and (t1.is_sczr is null or t1.is_sczr <> '1')
+[2023-06-14 15:07:42,485] {{bash.py:185}} INFO - and t1.pt<=202306
+[2023-06-14 15:07:42,485] {{bash.py:185}} INFO - and nvl(responsibilitycategoryname,'')<>'商场'
+[2023-06-14 15:07:42,485] {{bash.py:185}} INFO - and t1.pt>=202211
+[2023-06-14 15:07:42,485] {{bash.py:185}} INFO - and cast(t1.period_id as string) <= t2.period_id
+[2023-06-14 15:07:42,485] {{bash.py:185}} INFO - and cast(t1.period_id as string) BETWEEN substr(regexp_replace(cast(date_add(add_months(from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd'),-6),1) as string),'-',''),1,8) AND t2.period_id
+[2023-06-14 15:07:42,486] {{bash.py:185}} INFO - and t1.hsicrm_manufacturedate BETWEEN date_add(add_months(from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd'),-6),1) AND from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd')
+[2023-06-14 15:07:42,486] {{bash.py:185}} INFO - group by t2.period_id,
+[2023-06-14 15:07:42,486] {{bash.py:185}} INFO - hsicrm_brandname,
+[2023-06-14 15:07:42,486] {{bash.py:185}} INFO - pl_platform_name,
+[2023-06-14 15:07:42,486] {{bash.py:185}} INFO - hsicrm_productcategoryname,
+[2023-06-14 15:07:42,486] {{bash.py:185}} INFO - pl_factory_code,
+[2023-06-14 15:07:42,486] {{bash.py:185}} INFO - pl_factory_name,
+[2023-06-14 15:07:42,486] {{bash.py:185}} INFO - pl_line_code,
+[2023-06-14 15:07:42,486] {{bash.py:185}} INFO - pl_line_name,
+[2023-06-14 15:07:42,486] {{bash.py:185}} INFO - product_code,
+[2023-06-14 15:07:42,486] {{bash.py:185}} INFO - product_name,
+[2023-06-14 15:07:42,486] {{bash.py:185}} INFO - mark_time,
+[2023-06-14 15:07:42,486] {{bash.py:185}} INFO - prod_life_state,
+[2023-06-14 15:07:42,486] {{bash.py:185}} INFO - design_xw_code,
+[2023-06-14 15:07:42,486] {{bash.py:185}} INFO - design_xw_name,
+[2023-06-14 15:07:42,486] {{bash.py:185}} INFO - user_xw_code,
+[2023-06-14 15:07:42,486] {{bash.py:185}} INFO - user_xw_name,
+[2023-06-14 15:07:42,486] {{bash.py:185}} INFO - chain_group,
+[2023-06-14 15:07:42,486] {{bash.py:185}} INFO - hsicrm_actualservicetypename,
+[2023-06-14 15:07:42,486] {{bash.py:185}} INFO - ecosphere_name,
+[2023-06-14 15:07:42,486] {{bash.py:185}} INFO - ecosphere_code,
+[2023-06-14 15:07:42,486] {{bash.py:185}} INFO - ecosphere_leader,
+[2023-06-14 15:07:42,486] {{bash.py:185}} INFO - ecosphere_dept,
+[2023-06-14 15:07:42,486] {{bash.py:185}} INFO - sub_ecosphere_name,
+[2023-06-14 15:07:42,486] {{bash.py:185}} INFO - sub_ecosphere_code,
+[2023-06-14 15:07:42,487] {{bash.py:185}} INFO - sub_ecosphere_leader,
+[2023-06-14 15:07:42,487] {{bash.py:185}} INFO - sub_ecosphere_dept
+[2023-06-14 15:07:42,487] {{bash.py:185}} INFO - INFO  : unix_timestamp(void) is deprecated. Use current_timestamp instead.
+[2023-06-14 15:07:42,487] {{bash.py:185}} INFO - INFO  : Warning: Map Join MAPJOIN[22][bigTable=?] in task 'Stage-2:MAPRED' is a cross product
+[2023-06-14 15:07:42,487] {{bash.py:185}} INFO - INFO  : Semantic Analysis Completed
+[2023-06-14 15:07:42,487] {{bash.py:185}} INFO - INFO  : Returning Hive schema: Schema(fieldSchemas:[FieldSchema(name:_col0, type:int, comment:null), FieldSchema(name:_col1, type:timestamp, comment:null), FieldSchema(name:_col2, type:void, comment:null), FieldSchema(name:_col3, type:string, comment:null), FieldSchema(name:_col4, type:string, comment:null), FieldSchema(name:_col5, type:string, comment:null), FieldSchema(name:_col6, type:string, comment:null), FieldSchema(name:_col7, type:string, comment:null), FieldSchema(name:_col8, type:string, comment:null), FieldSchema(name:_col9, type:string, comment:null), FieldSchema(name:_col10, type:string, comment:null), FieldSchema(name:_col11, type:string, comment:null), FieldSchema(name:_col12, type:string, comment:null), FieldSchema(name:_col13, type:string, comment:null), FieldSchema(name:_col14, type:string, comment:null), FieldSchema(name:_col15, type:string, comment:null), FieldSchema(name:_col16, type:string, comment:null), FieldSchema(name:_col17, type:string, comment:null), FieldSchema(name:_col18, type:string, comment:null), FieldSchema(name:_col19, type:string, comment:null), FieldSchema(name:_col20, type:string, comment:null), FieldSchema(name:_col21, type:string, comment:null), FieldSchema(name:_col22, type:string, comment:null), FieldSchema(name:_col23, type:string, comment:null), FieldSchema(name:_col24, type:string, comment:null), FieldSchema(name:_col25, type:string, comment:null), FieldSchema(name:_col26, type:string, comment:null), FieldSchema(name:_col27, type:string, comment:null), FieldSchema(name:_col28, type:string, comment:null), FieldSchema(name:_col29, type:int, comment:null), FieldSchema(name:_col30, type:timestamp, comment:null)], properties:null)
+[2023-06-14 15:07:42,487] {{bash.py:185}} INFO - INFO  : Completed compiling command(queryId=hive_20230614150712_507b268a-8510-41a1-b8b5-ab809f9e8ba9); Time taken: 25.059 seconds
+[2023-06-14 15:07:42,487] {{bash.py:185}} INFO - INFO  : Executing command(queryId=hive_20230614150712_507b268a-8510-41a1-b8b5-ab809f9e8ba9): with
+[2023-06-14 15:07:42,487] {{bash.py:185}} INFO - date_table as (
+[2023-06-14 15:07:42,487] {{bash.py:185}} INFO - select period_id,
+[2023-06-14 15:07:42,487] {{bash.py:185}} INFO - 	   period_month,
+[2023-06-14 15:07:42,487] {{bash.py:185}} INFO -        period_year
+[2023-06-14 15:07:42,487] {{bash.py:185}} INFO - from dh_qu.tm_cei_dim_period
+[2023-06-14 15:07:42,487] {{bash.py:185}} INFO - where PERIOD_LEVEL='D'
+[2023-06-14 15:07:42,487] {{bash.py:185}} INFO - and period_month = '202306'
+[2023-06-14 15:07:42,487] {{bash.py:185}} INFO - and period_id <= '20230630'
+[2023-06-14 15:07:42,487] {{bash.py:185}} INFO - and period_id <= '20230613'
+[2023-06-14 15:07:42,487] {{bash.py:185}} INFO - )
+[2023-06-14 15:07:42,487] {{bash.py:185}} INFO - insert overwrite table di_qu.tf_cei_ecosphere_bl_mid
+[2023-06-14 15:07:42,487] {{bash.py:185}} INFO - partition(pt = '202306',type='bl_6')
+[2023-06-14 15:07:42,487] {{bash.py:185}} INFO - select
+[2023-06-14 15:07:42,487] {{bash.py:185}} INFO - t2.period_id,
+[2023-06-14 15:07:42,487] {{bash.py:185}} INFO - from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd') as kpi_dt,
+[2023-06-14 15:07:42,487] {{bash.py:185}} INFO - null as hsicrm_regionname,
+[2023-06-14 15:07:42,487] {{bash.py:185}} INFO - hsicrm_brandname,
+[2023-06-14 15:07:42,488] {{bash.py:185}} INFO - pl_platform_name,
+[2023-06-14 15:07:42,488] {{bash.py:185}} INFO - hsicrm_productcategoryname,
+[2023-06-14 15:07:42,488] {{bash.py:185}} INFO - pl_factory_code,
+[2023-06-14 15:07:42,488] {{bash.py:185}} INFO - pl_factory_name,
+[2023-06-14 15:07:42,488] {{bash.py:185}} INFO - pl_line_code,
+[2023-06-14 15:07:42,488] {{bash.py:185}} INFO - pl_line_name,
+[2023-06-14 15:07:42,488] {{bash.py:185}} INFO - product_code,
+[2023-06-14 15:07:42,488] {{bash.py:185}} INFO - product_name,
+[2023-06-14 15:07:42,488] {{bash.py:185}} INFO - mark_time,
+[2023-06-14 15:07:42,488] {{bash.py:185}} INFO - prod_life_state,
+[2023-06-14 15:07:42,488] {{bash.py:185}} INFO - design_xw_code,
+[2023-06-14 15:07:42,488] {{bash.py:185}} INFO - design_xw_name,
+[2023-06-14 15:07:42,488] {{bash.py:185}} INFO - user_xw_code,
+[2023-06-14 15:07:42,488] {{bash.py:185}} INFO - user_xw_name,
+[2023-06-14 15:07:42,488] {{bash.py:185}} INFO - chain_group,
+[2023-06-14 15:07:42,488] {{bash.py:185}} INFO - hsicrm_actualservicetypename,
+[2023-06-14 15:07:42,488] {{bash.py:185}} INFO - ecosphere_name,
+[2023-06-14 15:07:42,488] {{bash.py:185}} INFO - ecosphere_code,
+[2023-06-14 15:07:42,488] {{bash.py:185}} INFO - ecosphere_leader,
+[2023-06-14 15:07:42,488] {{bash.py:185}} INFO - ecosphere_dept,
+[2023-06-14 15:07:42,488] {{bash.py:185}} INFO - sub_ecosphere_name,
+[2023-06-14 15:07:42,488] {{bash.py:185}} INFO - sub_ecosphere_code,
+[2023-06-14 15:07:42,488] {{bash.py:185}} INFO - sub_ecosphere_leader,
+[2023-06-14 15:07:42,488] {{bash.py:185}} INFO - sub_ecosphere_dept,
+[2023-06-14 15:07:42,488] {{bash.py:185}} INFO - '半年不良' as bl_type,
+[2023-06-14 15:07:42,489] {{bash.py:185}} INFO - count(1),
+[2023-06-14 15:07:42,489] {{bash.py:185}} INFO - from_unixtime(unix_timestamp()) AS dh_etl_date
+[2023-06-14 15:07:42,489] {{bash.py:185}} INFO - from dh_qu.tt_cei_workorder_ecos t1,
+[2023-06-14 15:07:42,489] {{bash.py:185}} INFO - date_table t2
+[2023-06-14 15:07:42,489] {{bash.py:185}} INFO - where t1.is_bl = '1'
+[2023-06-14 15:07:42,489] {{bash.py:185}} INFO - and (t1.is_sczr is null or t1.is_sczr <> '1')
+[2023-06-14 15:07:42,489] {{bash.py:185}} INFO - and t1.pt<=202306
+[2023-06-14 15:07:42,489] {{bash.py:185}} INFO - and nvl(responsibilitycategoryname,'')<>'商场'
+[2023-06-14 15:07:42,489] {{bash.py:185}} INFO - and t1.pt>=202211
+[2023-06-14 15:07:42,489] {{bash.py:185}} INFO - and cast(t1.period_id as string) <= t2.period_id
+[2023-06-14 15:07:42,489] {{bash.py:185}} INFO - and cast(t1.period_id as string) BETWEEN substr(regexp_replace(cast(date_add(add_months(from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd'),-6),1) as string),'-',''),1,8) AND t2.period_id
+[2023-06-14 15:07:42,489] {{bash.py:185}} INFO - and t1.hsicrm_manufacturedate BETWEEN date_add(add_months(from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd'),-6),1) AND from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd')
+[2023-06-14 15:07:42,489] {{bash.py:185}} INFO - group by t2.period_id,
+[2023-06-14 15:07:42,489] {{bash.py:185}} INFO - hsicrm_brandname,
+[2023-06-14 15:07:42,489] {{bash.py:185}} INFO - pl_platform_name,
+[2023-06-14 15:07:42,489] {{bash.py:185}} INFO - hsicrm_productcategoryname,
+[2023-06-14 15:07:42,489] {{bash.py:185}} INFO - pl_factory_code,
+[2023-06-14 15:07:42,489] {{bash.py:185}} INFO - pl_factory_name,
+[2023-06-14 15:07:42,489] {{bash.py:185}} INFO - pl_line_code,
+[2023-06-14 15:07:42,489] {{bash.py:185}} INFO - pl_line_name,
+[2023-06-14 15:07:42,489] {{bash.py:185}} INFO - product_code,
+[2023-06-14 15:07:42,489] {{bash.py:185}} INFO - product_name,
+[2023-06-14 15:07:42,489] {{bash.py:185}} INFO - mark_time,
+[2023-06-14 15:07:42,489] {{bash.py:185}} INFO - prod_life_state,
+[2023-06-14 15:07:42,489] {{bash.py:185}} INFO - design_xw_code,
+[2023-06-14 15:07:42,489] {{bash.py:185}} INFO - design_xw_name,
+[2023-06-14 15:07:42,490] {{bash.py:185}} INFO - user_xw_code,
+[2023-06-14 15:07:42,490] {{bash.py:185}} INFO - user_xw_name,
+[2023-06-14 15:07:42,490] {{bash.py:185}} INFO - chain_group,
+[2023-06-14 15:07:42,490] {{bash.py:185}} INFO - hsicrm_actualservicetypename,
+[2023-06-14 15:07:42,490] {{bash.py:185}} INFO - ecosphere_name,
+[2023-06-14 15:07:42,490] {{bash.py:185}} INFO - ecosphere_code,
+[2023-06-14 15:07:42,490] {{bash.py:185}} INFO - ecosphere_leader,
+[2023-06-14 15:07:42,490] {{bash.py:185}} INFO - ecosphere_dept,
+[2023-06-14 15:07:42,490] {{bash.py:185}} INFO - sub_ecosphere_name,
+[2023-06-14 15:07:42,490] {{bash.py:185}} INFO - sub_ecosphere_code,
+[2023-06-14 15:07:42,490] {{bash.py:185}} INFO - sub_ecosphere_leader,
+[2023-06-14 15:07:42,490] {{bash.py:185}} INFO - sub_ecosphere_dept
+[2023-06-14 15:07:42,490] {{bash.py:185}} INFO - WARN  :
+[2023-06-14 15:07:42,490] {{bash.py:185}} INFO - INFO  : Query ID = hive_20230614150712_507b268a-8510-41a1-b8b5-ab809f9e8ba9
+[2023-06-14 15:07:42,490] {{bash.py:185}} INFO - INFO  : Total jobs = 3
+[2023-06-14 15:07:42,490] {{bash.py:185}} INFO - INFO  : Starting task [Stage-11:MAPREDLOCAL] in serial mode
+[2023-06-14 15:08:07,620] {{bash.py:185}} INFO - INFO  : Execution completed successfully
+[2023-06-14 15:08:07,620] {{bash.py:185}} INFO - INFO  : MapredLocal task succeeded
+[2023-06-14 15:08:07,620] {{bash.py:185}} INFO - INFO  : Launching Job 1 out of 3
+[2023-06-14 15:08:07,621] {{bash.py:185}} INFO - INFO  : Starting task [Stage-2:MAPRED] in serial mode
+[2023-06-14 15:08:07,621] {{bash.py:185}} INFO - INFO  : Number of reduce tasks not specified. Estimated from input data size: 1
+[2023-06-14 15:08:07,621] {{bash.py:185}} INFO - INFO  : In order to change the average load for a reducer (in bytes):
+[2023-06-14 15:08:07,621] {{bash.py:185}} INFO - INFO  :   set hive.exec.reducers.bytes.per.reducer=<number>
+[2023-06-14 15:08:07,621] {{bash.py:185}} INFO - INFO  : In order to limit the maximum number of reducers:
+[2023-06-14 15:08:07,621] {{bash.py:185}} INFO - INFO  :   set hive.exec.reducers.max=<number>
+[2023-06-14 15:08:07,621] {{bash.py:185}} INFO - INFO  : In order to set a constant number of reducers:
+[2023-06-14 15:08:07,621] {{bash.py:185}} INFO - INFO  :   set mapreduce.job.reduces=<number>
+[2023-06-14 15:08:37,777] {{bash.py:185}} INFO - INFO  : number of splits:6
+[2023-06-14 15:08:42,806] {{bash.py:185}} INFO - INFO  : Submitting tokens for job: job_1680066099795_5726577
+[2023-06-14 15:08:42,806] {{bash.py:185}} INFO - INFO  : Executing with tokens: [Kind: HDFS_DELEGATION_TOKEN, Service: ha-hdfs:nameservice1, Ident: (token for hive: HDFS_DELEGATION_TOKEN owner=hive/qdcdh00.haier.com@HAIER.COM, renewer=yarn, realUser=, issueDate=1686726491611, maxDate=1687331291611, sequenceNumber=171329568, masterKeyId=2287)]
+[2023-06-14 15:08:47,834] {{bash.py:185}} INFO - INFO  : The url to track the job: http://qdcdh04.haier.com:8088/proxy/application_1680066099795_5726577/
+[2023-06-14 15:08:47,834] {{bash.py:185}} INFO - INFO  : Starting Job = job_1680066099795_5726577, Tracking URL = http://qdcdh04.haier.com:8088/proxy/application_1680066099795_5726577/
+[2023-06-14 15:08:47,834] {{bash.py:185}} INFO - INFO  : Kill Command = /opt/cloudera/parcels/CDH-6.3.2-1.cdh6.3.2.p0.1605554/lib/hadoop/bin/hadoop job  -kill job_1680066099795_5726577
+[2023-06-14 15:09:18,006] {{bash.py:185}} INFO - INFO  : Hadoop job information for Stage-2: number of mappers: 6; number of reducers: 1
+[2023-06-14 15:09:18,006] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:09:16,513 Stage-2 map = 0%,  reduce = 0%
+[2023-06-14 15:10:18,318] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:10:17,247 Stage-2 map = 0%,  reduce = 0%, Cumulative CPU 509.94 sec
+[2023-06-14 15:11:13,577] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:11:08,970 Stage-2 map = 11%,  reduce = 0%, Cumulative CPU 998.31 sec
+[2023-06-14 15:11:13,577] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:11:12,107 Stage-2 map = 17%,  reduce = 0%, Cumulative CPU 1019.38 sec
+[2023-06-14 15:11:18,598] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:11:15,227 Stage-2 map = 33%,  reduce = 0%, Cumulative CPU 1053.73 sec
+[2023-06-14 15:11:23,619] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:11:20,441 Stage-2 map = 42%,  reduce = 0%, Cumulative CPU 1069.32 sec
+[2023-06-14 15:11:23,619] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:11:21,480 Stage-2 map = 47%,  reduce = 0%, Cumulative CPU 1091.22 sec
+[2023-06-14 15:11:33,656] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:11:33,057 Stage-2 map = 64%,  reduce = 0%, Cumulative CPU 1167.63 sec
+[2023-06-14 15:11:58,767] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:11:55,114 Stage-2 map = 72%,  reduce = 0%, Cumulative CPU 1254.8 sec
+[2023-06-14 15:12:13,838] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:12:10,762 Stage-2 map = 89%,  reduce = 0%, Cumulative CPU 1295.63 sec
+[2023-06-14 15:12:33,927] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:12:31,624 Stage-2 map = 89%,  reduce = 28%, Cumulative CPU 1352.86 sec
+[2023-06-14 15:13:34,203] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:13:32,150 Stage-2 map = 89%,  reduce = 28%, Cumulative CPU 1447.83 sec
+[2023-06-14 15:13:34,203] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:13:33,186 Stage-2 map = 100%,  reduce = 28%, Cumulative CPU 1456.71 sec
+[2023-06-14 15:13:44,249] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:13:41,535 Stage-2 map = 100%,  reduce = 67%, Cumulative CPU 1481.85 sec
+[2023-06-14 15:13:49,265] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:13:47,767 Stage-2 map = 100%,  reduce = 70%, Cumulative CPU 1498.66 sec
+[2023-06-14 15:13:54,284] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:13:54,043 Stage-2 map = 100%,  reduce = 76%, Cumulative CPU 1507.6 sec
+[2023-06-14 15:14:04,329] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:14:00,334 Stage-2 map = 100%,  reduce = 82%, Cumulative CPU 1516.1 sec
+[2023-06-14 15:14:09,352] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:14:06,574 Stage-2 map = 100%,  reduce = 87%, Cumulative CPU 1524.03 sec
+[2023-06-14 15:14:14,373] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:14:12,802 Stage-2 map = 100%,  reduce = 92%, Cumulative CPU 1533.08 sec
+[2023-06-14 15:14:19,395] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:14:19,063 Stage-2 map = 100%,  reduce = 98%, Cumulative CPU 1540.51 sec
+[2023-06-14 15:14:24,416] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:14:24,292 Stage-2 map = 100%,  reduce = 100%, Cumulative CPU 1547.46 sec
+[2023-06-14 15:14:29,436] {{bash.py:185}} INFO - INFO  : MapReduce Total cumulative CPU time: 25 minutes 47 seconds 460 msec
+[2023-06-14 15:14:29,436] {{bash.py:185}} INFO - INFO  : Ended Job = job_1680066099795_5726577
+[2023-06-14 15:14:29,436] {{bash.py:185}} INFO - INFO  : Starting task [Stage-8:CONDITIONAL] in serial mode
+[2023-06-14 15:14:29,436] {{bash.py:185}} INFO - INFO  : Stage-5 is selected by condition resolver.
+[2023-06-14 15:14:29,436] {{bash.py:185}} INFO - INFO  : Stage-4 is filtered out by condition resolver.
+[2023-06-14 15:14:29,437] {{bash.py:185}} INFO - INFO  : Stage-6 is filtered out by condition resolver.
+[2023-06-14 15:14:29,437] {{bash.py:185}} INFO - INFO  : Starting task [Stage-5:MOVE] in serial mode
+[2023-06-14 15:14:29,437] {{bash.py:185}} INFO - INFO  : Moving data to directory hdfs://nameservice1/user/hive/warehouse/di_qu.db/tf_cei_ecosphere_bl_mid/pt=202306/type=bl_6/.hive-staging_hive_2023-06-14_15-07-12_420_4279331870940833142-530988/-ext-10000 from hdfs://nameservice1/user/hive/warehouse/di_qu.db/tf_cei_ecosphere_bl_mid/pt=202306/type=bl_6/.hive-staging_hive_2023-06-14_15-07-12_420_4279331870940833142-530988/-ext-10003
+[2023-06-14 15:14:32,372] {{bash.py:185}} INFO - INFO  : Starting task [Stage-0:MOVE] in serial mode
+[2023-06-14 15:14:32,373] {{bash.py:185}} INFO - INFO  : Loading data to table di_qu.tf_cei_ecosphere_bl_mid partition (pt=202306, type=bl_6) from hdfs://nameservice1/user/hive/warehouse/di_qu.db/tf_cei_ecosphere_bl_mid/pt=202306/type=bl_6/.hive-staging_hive_2023-06-14_15-07-12_420_4279331870940833142-530988/-ext-10000
+[2023-06-14 15:14:32,373] {{bash.py:185}} INFO - INFO  : Starting task [Stage-3:STATS] in serial mode
+[2023-06-14 15:14:32,373] {{bash.py:185}} INFO - INFO  : MapReduce Jobs Launched:
+[2023-06-14 15:14:32,373] {{bash.py:185}} INFO - INFO  : Stage-Stage-2: Map: 6  Reduce: 1   Cumulative CPU: 1547.46 sec   HDFS Read: 399006250 HDFS Write: 14570320 HDFS EC Read: 0 SUCCESS
+[2023-06-14 15:14:32,373] {{bash.py:185}} INFO - INFO  : Total MapReduce CPU Time Spent: 25 minutes 47 seconds 460 msec
+[2023-06-14 15:14:32,373] {{bash.py:185}} INFO - INFO  : Completed executing command(queryId=hive_20230614150712_507b268a-8510-41a1-b8b5-ab809f9e8ba9); Time taken: 414.552 seconds
+[2023-06-14 15:14:32,373] {{bash.py:185}} INFO - INFO  : OK
+[2023-06-14 15:14:32,392] {{bash.py:185}} INFO - 1,206,805 rows affected (440.031 seconds)
+[2023-06-14 15:14:32,615] {{bash.py:185}} INFO - Beeline version 2.1.1-cdh6.3.2 by Apache Hive
+[2023-06-14 15:14:35,211] {{bash.py:185}} INFO - WARNING: Use "yarn jar" to launch YARN applications.
+[2023-06-14 15:14:35,819] {{bash.py:185}} INFO - SLF4J: Class path contains multiple SLF4J bindings.
+[2023-06-14 15:14:35,819] {{bash.py:185}} INFO - SLF4J: Found binding in [jar:file:/opt/cloudera/parcels/CDH-6.3.2-1.cdh6.3.2.p0.1605554/jars/log4j-slf4j-impl-2.8.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+[2023-06-14 15:14:35,819] {{bash.py:185}} INFO - SLF4J: Found binding in [jar:file:/opt/cloudera/parcels/CDH-6.3.2-1.cdh6.3.2.p0.1605554/jars/slf4j-log4j12-1.7.25.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+[2023-06-14 15:14:35,819] {{bash.py:185}} INFO - SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+[2023-06-14 15:14:35,824] {{bash.py:185}} INFO - SLF4J: Actual binding is of type [org.apache.logging.slf4j.Log4jLoggerFactory]
+[2023-06-14 15:14:38,303] {{bash.py:185}} INFO - Connecting to jdbc:hive2://10.138.225.37:30010/default;principal=hive/qdcdh00@HAIER.COM
+[2023-06-14 15:14:39,568] {{bash.py:185}} INFO - Connected to: Apache Hive (version 2.1.1-cdh6.3.2)
+[2023-06-14 15:14:39,569] {{bash.py:185}} INFO - Driver: Hive JDBC (version 2.1.1-cdh6.3.2)
+[2023-06-14 15:14:39,569] {{bash.py:185}} INFO - Transaction isolation: TRANSACTION_REPEATABLE_READ
+[2023-06-14 15:14:39,667] {{bash.py:185}} INFO - No rows affected (0.082 seconds)
+[2023-06-14 15:14:39,731] {{bash.py:185}} INFO - No rows affected (0.04 seconds)
+[2023-06-14 15:14:39,790] {{bash.py:185}} INFO - No rows affected (0.04 seconds)
+[2023-06-14 15:14:58,562] {{bash.py:185}} INFO - INFO  : Compiling command(queryId=hive_20230614151439_313cfcd8-cdf0-4033-b972-d0a06851235a): with
+[2023-06-14 15:14:58,562] {{bash.py:185}} INFO - date_table as (
+[2023-06-14 15:14:58,562] {{bash.py:185}} INFO - select period_id,
+[2023-06-14 15:14:58,562] {{bash.py:185}} INFO - 	   period_month,
+[2023-06-14 15:14:58,562] {{bash.py:185}} INFO -        period_year
+[2023-06-14 15:14:58,562] {{bash.py:185}} INFO - from dh_qu.tm_cei_dim_period
+[2023-06-14 15:14:58,562] {{bash.py:185}} INFO - where PERIOD_LEVEL='D'
+[2023-06-14 15:14:58,562] {{bash.py:185}} INFO - and period_month = '202306'
+[2023-06-14 15:14:58,562] {{bash.py:185}} INFO - and period_id <= '20230630'
+[2023-06-14 15:14:58,562] {{bash.py:185}} INFO - and period_id <= '20230613'
+[2023-06-14 15:14:58,562] {{bash.py:185}} INFO - )
+[2023-06-14 15:14:58,563] {{bash.py:185}} INFO - insert overwrite table di_qu.tf_cei_ecosphere_bl_mid
+[2023-06-14 15:14:58,563] {{bash.py:185}} INFO - partition(pt = '202306',type='bl_12')
+[2023-06-14 15:14:58,563] {{bash.py:185}} INFO - select
+[2023-06-14 15:14:58,563] {{bash.py:185}} INFO - t2.period_id,
+[2023-06-14 15:14:58,563] {{bash.py:185}} INFO - from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd') as kpi_dt,
+[2023-06-14 15:14:58,563] {{bash.py:185}} INFO - null as hsicrm_regionname,
+[2023-06-14 15:14:58,563] {{bash.py:185}} INFO - hsicrm_brandname,
+[2023-06-14 15:14:58,563] {{bash.py:185}} INFO - pl_platform_name,
+[2023-06-14 15:14:58,563] {{bash.py:185}} INFO - hsicrm_productcategoryname,
+[2023-06-14 15:14:58,563] {{bash.py:185}} INFO - pl_factory_code,
+[2023-06-14 15:14:58,563] {{bash.py:185}} INFO - pl_factory_name,
+[2023-06-14 15:14:58,563] {{bash.py:185}} INFO - pl_line_code,
+[2023-06-14 15:14:58,563] {{bash.py:185}} INFO - pl_line_name,
+[2023-06-14 15:14:58,563] {{bash.py:185}} INFO - product_code,
+[2023-06-14 15:14:58,563] {{bash.py:185}} INFO - product_name,
+[2023-06-14 15:14:58,563] {{bash.py:185}} INFO - mark_time,
+[2023-06-14 15:14:58,563] {{bash.py:185}} INFO - prod_life_state,
+[2023-06-14 15:14:58,563] {{bash.py:185}} INFO - design_xw_code,
+[2023-06-14 15:14:58,563] {{bash.py:185}} INFO - design_xw_name,
+[2023-06-14 15:14:58,563] {{bash.py:185}} INFO - user_xw_code,
+[2023-06-14 15:14:58,563] {{bash.py:185}} INFO - user_xw_name,
+[2023-06-14 15:14:58,563] {{bash.py:185}} INFO - chain_group,
+[2023-06-14 15:14:58,563] {{bash.py:185}} INFO - hsicrm_actualservicetypename,
+[2023-06-14 15:14:58,563] {{bash.py:185}} INFO - ecosphere_name,
+[2023-06-14 15:14:58,564] {{bash.py:185}} INFO - ecosphere_code,
+[2023-06-14 15:14:58,564] {{bash.py:185}} INFO - ecosphere_leader,
+[2023-06-14 15:14:58,564] {{bash.py:185}} INFO - ecosphere_dept,
+[2023-06-14 15:14:58,564] {{bash.py:185}} INFO - sub_ecosphere_name,
+[2023-06-14 15:14:58,564] {{bash.py:185}} INFO - sub_ecosphere_code,
+[2023-06-14 15:14:58,564] {{bash.py:185}} INFO - sub_ecosphere_leader,
+[2023-06-14 15:14:58,564] {{bash.py:185}} INFO - sub_ecosphere_dept,
+[2023-06-14 15:14:58,564] {{bash.py:185}} INFO - '当年不良' as bl_type,
+[2023-06-14 15:14:58,564] {{bash.py:185}} INFO - count(1),
+[2023-06-14 15:14:58,564] {{bash.py:185}} INFO - from_unixtime(unix_timestamp()) AS dh_etl_date
+[2023-06-14 15:14:58,564] {{bash.py:185}} INFO - from dh_qu.tt_cei_workorder_ecos t1,
+[2023-06-14 15:14:58,564] {{bash.py:185}} INFO - date_table t2
+[2023-06-14 15:14:58,564] {{bash.py:185}} INFO - where t1.is_bl = '1'
+[2023-06-14 15:14:58,564] {{bash.py:185}} INFO -   and (t1.is_sczr is null or t1.is_sczr <> '1')
+[2023-06-14 15:14:58,564] {{bash.py:185}} INFO -   and nvl(responsibilitycategoryname,'')<>'商场'
+[2023-06-14 15:14:58,564] {{bash.py:185}} INFO -   and t1.pt<=202306
+[2023-06-14 15:14:58,564] {{bash.py:185}} INFO -   and t1.pt>=202205
+[2023-06-14 15:14:58,564] {{bash.py:185}} INFO -   and cast(t1.period_id as string) <= t2.period_id
+[2023-06-14 15:14:58,564] {{bash.py:185}} INFO -   and cast(t1.period_id as string) BETWEEN substr(regexp_replace(cast(date_add(add_months(from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd'),-12),1) as string),'-',''),1,8) AND t2.period_id
+[2023-06-14 15:14:58,564] {{bash.py:185}} INFO -   and t1.hsicrm_manufacturedate BETWEEN date_add(add_months(from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd'),-12),1) AND from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd')
+[2023-06-14 15:14:58,564] {{bash.py:185}} INFO - group by t2.period_id,
+[2023-06-14 15:14:58,564] {{bash.py:185}} INFO - hsicrm_brandname,
+[2023-06-14 15:14:58,564] {{bash.py:185}} INFO - pl_platform_name,
+[2023-06-14 15:14:58,564] {{bash.py:185}} INFO - hsicrm_productcategoryname,
+[2023-06-14 15:14:58,564] {{bash.py:185}} INFO - pl_factory_code,
+[2023-06-14 15:14:58,565] {{bash.py:185}} INFO - pl_factory_name,
+[2023-06-14 15:14:58,565] {{bash.py:185}} INFO - pl_line_code,
+[2023-06-14 15:14:58,565] {{bash.py:185}} INFO - pl_line_name,
+[2023-06-14 15:14:58,565] {{bash.py:185}} INFO - product_code,
+[2023-06-14 15:14:58,565] {{bash.py:185}} INFO - product_name,
+[2023-06-14 15:14:58,565] {{bash.py:185}} INFO - mark_time,
+[2023-06-14 15:14:58,565] {{bash.py:185}} INFO - prod_life_state,
+[2023-06-14 15:14:58,565] {{bash.py:185}} INFO - design_xw_code,
+[2023-06-14 15:14:58,565] {{bash.py:185}} INFO - design_xw_name,
+[2023-06-14 15:14:58,565] {{bash.py:185}} INFO - user_xw_code,
+[2023-06-14 15:14:58,565] {{bash.py:185}} INFO - user_xw_name,
+[2023-06-14 15:14:58,565] {{bash.py:185}} INFO - chain_group,
+[2023-06-14 15:14:58,565] {{bash.py:185}} INFO - hsicrm_actualservicetypename,
+[2023-06-14 15:14:58,565] {{bash.py:185}} INFO - ecosphere_name,
+[2023-06-14 15:14:58,565] {{bash.py:185}} INFO - ecosphere_code,
+[2023-06-14 15:14:58,565] {{bash.py:185}} INFO - ecosphere_leader,
+[2023-06-14 15:14:58,565] {{bash.py:185}} INFO - ecosphere_dept,
+[2023-06-14 15:14:58,565] {{bash.py:185}} INFO - sub_ecosphere_name,
+[2023-06-14 15:14:58,565] {{bash.py:185}} INFO - sub_ecosphere_code,
+[2023-06-14 15:14:58,565] {{bash.py:185}} INFO - sub_ecosphere_leader,
+[2023-06-14 15:14:58,565] {{bash.py:185}} INFO - sub_ecosphere_dept
+[2023-06-14 15:14:58,565] {{bash.py:185}} INFO - INFO  : unix_timestamp(void) is deprecated. Use current_timestamp instead.
+[2023-06-14 15:14:58,565] {{bash.py:185}} INFO - INFO  : Warning: Map Join MAPJOIN[22][bigTable=?] in task 'Stage-2:MAPRED' is a cross product
+[2023-06-14 15:14:58,565] {{bash.py:185}} INFO - INFO  : Semantic Analysis Completed
+[2023-06-14 15:14:58,566] {{bash.py:185}} INFO - INFO  : Returning Hive schema: Schema(fieldSchemas:[FieldSchema(name:_col0, type:int, comment:null), FieldSchema(name:_col1, type:timestamp, comment:null), FieldSchema(name:_col2, type:void, comment:null), FieldSchema(name:_col3, type:string, comment:null), FieldSchema(name:_col4, type:string, comment:null), FieldSchema(name:_col5, type:string, comment:null), FieldSchema(name:_col6, type:string, comment:null), FieldSchema(name:_col7, type:string, comment:null), FieldSchema(name:_col8, type:string, comment:null), FieldSchema(name:_col9, type:string, comment:null), FieldSchema(name:_col10, type:string, comment:null), FieldSchema(name:_col11, type:string, comment:null), FieldSchema(name:_col12, type:string, comment:null), FieldSchema(name:_col13, type:string, comment:null), FieldSchema(name:_col14, type:string, comment:null), FieldSchema(name:_col15, type:string, comment:null), FieldSchema(name:_col16, type:string, comment:null), FieldSchema(name:_col17, type:string, comment:null), FieldSchema(name:_col18, type:string, comment:null), FieldSchema(name:_col19, type:string, comment:null), FieldSchema(name:_col20, type:string, comment:null), FieldSchema(name:_col21, type:string, comment:null), FieldSchema(name:_col22, type:string, comment:null), FieldSchema(name:_col23, type:string, comment:null), FieldSchema(name:_col24, type:string, comment:null), FieldSchema(name:_col25, type:string, comment:null), FieldSchema(name:_col26, type:string, comment:null), FieldSchema(name:_col27, type:string, comment:null), FieldSchema(name:_col28, type:string, comment:null), FieldSchema(name:_col29, type:int, comment:null), FieldSchema(name:_col30, type:timestamp, comment:null)], properties:null)
+[2023-06-14 15:14:58,566] {{bash.py:185}} INFO - INFO  : Completed compiling command(queryId=hive_20230614151439_313cfcd8-cdf0-4033-b972-d0a06851235a); Time taken: 13.71 seconds
+[2023-06-14 15:14:58,566] {{bash.py:185}} INFO - INFO  : Executing command(queryId=hive_20230614151439_313cfcd8-cdf0-4033-b972-d0a06851235a): with
+[2023-06-14 15:14:58,566] {{bash.py:185}} INFO - date_table as (
+[2023-06-14 15:14:58,566] {{bash.py:185}} INFO - select period_id,
+[2023-06-14 15:14:58,566] {{bash.py:185}} INFO - 	   period_month,
+[2023-06-14 15:14:58,566] {{bash.py:185}} INFO -        period_year
+[2023-06-14 15:14:58,566] {{bash.py:185}} INFO - from dh_qu.tm_cei_dim_period
+[2023-06-14 15:14:58,566] {{bash.py:185}} INFO - where PERIOD_LEVEL='D'
+[2023-06-14 15:14:58,566] {{bash.py:185}} INFO - and period_month = '202306'
+[2023-06-14 15:14:58,566] {{bash.py:185}} INFO - and period_id <= '20230630'
+[2023-06-14 15:14:58,566] {{bash.py:185}} INFO - and period_id <= '20230613'
+[2023-06-14 15:14:58,566] {{bash.py:185}} INFO - )
+[2023-06-14 15:14:58,566] {{bash.py:185}} INFO - insert overwrite table di_qu.tf_cei_ecosphere_bl_mid
+[2023-06-14 15:14:58,566] {{bash.py:185}} INFO - partition(pt = '202306',type='bl_12')
+[2023-06-14 15:14:58,566] {{bash.py:185}} INFO - select
+[2023-06-14 15:14:58,566] {{bash.py:185}} INFO - t2.period_id,
+[2023-06-14 15:14:58,566] {{bash.py:185}} INFO - from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd') as kpi_dt,
+[2023-06-14 15:14:58,566] {{bash.py:185}} INFO - null as hsicrm_regionname,
+[2023-06-14 15:14:58,566] {{bash.py:185}} INFO - hsicrm_brandname,
+[2023-06-14 15:14:58,566] {{bash.py:185}} INFO - pl_platform_name,
+[2023-06-14 15:14:58,566] {{bash.py:185}} INFO - hsicrm_productcategoryname,
+[2023-06-14 15:14:58,566] {{bash.py:185}} INFO - pl_factory_code,
+[2023-06-14 15:14:58,566] {{bash.py:185}} INFO - pl_factory_name,
+[2023-06-14 15:14:58,566] {{bash.py:185}} INFO - pl_line_code,
+[2023-06-14 15:14:58,567] {{bash.py:185}} INFO - pl_line_name,
+[2023-06-14 15:14:58,567] {{bash.py:185}} INFO - product_code,
+[2023-06-14 15:14:58,567] {{bash.py:185}} INFO - product_name,
+[2023-06-14 15:14:58,567] {{bash.py:185}} INFO - mark_time,
+[2023-06-14 15:14:58,567] {{bash.py:185}} INFO - prod_life_state,
+[2023-06-14 15:14:58,567] {{bash.py:185}} INFO - design_xw_code,
+[2023-06-14 15:14:58,567] {{bash.py:185}} INFO - design_xw_name,
+[2023-06-14 15:14:58,567] {{bash.py:185}} INFO - user_xw_code,
+[2023-06-14 15:14:58,567] {{bash.py:185}} INFO - user_xw_name,
+[2023-06-14 15:14:58,567] {{bash.py:185}} INFO - chain_group,
+[2023-06-14 15:14:58,567] {{bash.py:185}} INFO - hsicrm_actualservicetypename,
+[2023-06-14 15:14:58,567] {{bash.py:185}} INFO - ecosphere_name,
+[2023-06-14 15:14:58,567] {{bash.py:185}} INFO - ecosphere_code,
+[2023-06-14 15:14:58,567] {{bash.py:185}} INFO - ecosphere_leader,
+[2023-06-14 15:14:58,567] {{bash.py:185}} INFO - ecosphere_dept,
+[2023-06-14 15:14:58,567] {{bash.py:185}} INFO - sub_ecosphere_name,
+[2023-06-14 15:14:58,567] {{bash.py:185}} INFO - sub_ecosphere_code,
+[2023-06-14 15:14:58,567] {{bash.py:185}} INFO - sub_ecosphere_leader,
+[2023-06-14 15:14:58,567] {{bash.py:185}} INFO - sub_ecosphere_dept,
+[2023-06-14 15:14:58,567] {{bash.py:185}} INFO - '当年不良' as bl_type,
+[2023-06-14 15:14:58,567] {{bash.py:185}} INFO - count(1),
+[2023-06-14 15:14:58,567] {{bash.py:185}} INFO - from_unixtime(unix_timestamp()) AS dh_etl_date
+[2023-06-14 15:14:58,567] {{bash.py:185}} INFO - from dh_qu.tt_cei_workorder_ecos t1,
+[2023-06-14 15:14:58,567] {{bash.py:185}} INFO - date_table t2
+[2023-06-14 15:14:58,567] {{bash.py:185}} INFO - where t1.is_bl = '1'
+[2023-06-14 15:14:58,567] {{bash.py:185}} INFO -   and (t1.is_sczr is null or t1.is_sczr <> '1')
+[2023-06-14 15:14:58,568] {{bash.py:185}} INFO -   and nvl(responsibilitycategoryname,'')<>'商场'
+[2023-06-14 15:14:58,568] {{bash.py:185}} INFO -   and t1.pt<=202306
+[2023-06-14 15:14:58,568] {{bash.py:185}} INFO -   and t1.pt>=202205
+[2023-06-14 15:14:58,568] {{bash.py:185}} INFO -   and cast(t1.period_id as string) <= t2.period_id
+[2023-06-14 15:14:58,568] {{bash.py:185}} INFO -   and cast(t1.period_id as string) BETWEEN substr(regexp_replace(cast(date_add(add_months(from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd'),-12),1) as string),'-',''),1,8) AND t2.period_id
+[2023-06-14 15:14:58,568] {{bash.py:185}} INFO -   and t1.hsicrm_manufacturedate BETWEEN date_add(add_months(from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd'),-12),1) AND from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd')
+[2023-06-14 15:14:58,568] {{bash.py:185}} INFO - group by t2.period_id,
+[2023-06-14 15:14:58,568] {{bash.py:185}} INFO - hsicrm_brandname,
+[2023-06-14 15:14:58,568] {{bash.py:185}} INFO - pl_platform_name,
+[2023-06-14 15:14:58,568] {{bash.py:185}} INFO - hsicrm_productcategoryname,
+[2023-06-14 15:14:58,568] {{bash.py:185}} INFO - pl_factory_code,
+[2023-06-14 15:14:58,568] {{bash.py:185}} INFO - pl_factory_name,
+[2023-06-14 15:14:58,568] {{bash.py:185}} INFO - pl_line_code,
+[2023-06-14 15:14:58,568] {{bash.py:185}} INFO - pl_line_name,
+[2023-06-14 15:14:58,568] {{bash.py:185}} INFO - product_code,
+[2023-06-14 15:14:58,568] {{bash.py:185}} INFO - product_name,
+[2023-06-14 15:14:58,568] {{bash.py:185}} INFO - mark_time,
+[2023-06-14 15:14:58,568] {{bash.py:185}} INFO - prod_life_state,
+[2023-06-14 15:14:58,568] {{bash.py:185}} INFO - design_xw_code,
+[2023-06-14 15:14:58,568] {{bash.py:185}} INFO - design_xw_name,
+[2023-06-14 15:14:58,568] {{bash.py:185}} INFO - user_xw_code,
+[2023-06-14 15:14:58,568] {{bash.py:185}} INFO - user_xw_name,
+[2023-06-14 15:14:58,568] {{bash.py:185}} INFO - chain_group,
+[2023-06-14 15:14:58,568] {{bash.py:185}} INFO - hsicrm_actualservicetypename,
+[2023-06-14 15:14:58,569] {{bash.py:185}} INFO - ecosphere_name,
+[2023-06-14 15:14:58,569] {{bash.py:185}} INFO - ecosphere_code,
+[2023-06-14 15:14:58,569] {{bash.py:185}} INFO - ecosphere_leader,
+[2023-06-14 15:14:58,569] {{bash.py:185}} INFO - ecosphere_dept,
+[2023-06-14 15:14:58,569] {{bash.py:185}} INFO - sub_ecosphere_name,
+[2023-06-14 15:14:58,569] {{bash.py:185}} INFO - sub_ecosphere_code,
+[2023-06-14 15:14:58,569] {{bash.py:185}} INFO - sub_ecosphere_leader,
+[2023-06-14 15:14:58,569] {{bash.py:185}} INFO - sub_ecosphere_dept
+[2023-06-14 15:14:58,569] {{bash.py:185}} INFO - WARN  :
+[2023-06-14 15:14:58,569] {{bash.py:185}} INFO - INFO  : Query ID = hive_20230614151439_313cfcd8-cdf0-4033-b972-d0a06851235a
+[2023-06-14 15:14:58,569] {{bash.py:185}} INFO - INFO  : Total jobs = 3
+[2023-06-14 15:14:58,569] {{bash.py:185}} INFO - INFO  : Starting task [Stage-11:MAPREDLOCAL] in serial mode
+[2023-06-14 15:15:18,637] {{bash.py:185}} INFO - INFO  : Execution completed successfully
+[2023-06-14 15:15:18,638] {{bash.py:185}} INFO - INFO  : MapredLocal task succeeded
+[2023-06-14 15:15:18,638] {{bash.py:185}} INFO - INFO  : Launching Job 1 out of 3
+[2023-06-14 15:15:18,638] {{bash.py:185}} INFO - INFO  : Starting task [Stage-2:MAPRED] in serial mode
+[2023-06-14 15:15:18,638] {{bash.py:185}} INFO - INFO  : Number of reduce tasks not specified. Estimated from input data size: 1
+[2023-06-14 15:15:18,638] {{bash.py:185}} INFO - INFO  : In order to change the average load for a reducer (in bytes):
+[2023-06-14 15:15:18,638] {{bash.py:185}} INFO - INFO  :   set hive.exec.reducers.bytes.per.reducer=<number>
+[2023-06-14 15:15:18,638] {{bash.py:185}} INFO - INFO  : In order to limit the maximum number of reducers:
+[2023-06-14 15:15:18,638] {{bash.py:185}} INFO - INFO  :   set hive.exec.reducers.max=<number>
+[2023-06-14 15:15:18,638] {{bash.py:185}} INFO - INFO  : In order to set a constant number of reducers:
+[2023-06-14 15:15:18,638] {{bash.py:185}} INFO - INFO  :   set mapreduce.job.reduces=<number>
+[2023-06-14 15:15:38,707] {{bash.py:185}} INFO - INFO  : number of splits:13
+[2023-06-14 15:15:38,708] {{bash.py:185}} INFO - INFO  : Submitting tokens for job: job_1680066099795_5726857
+[2023-06-14 15:15:38,708] {{bash.py:185}} INFO - INFO  : Executing with tokens: [Kind: HDFS_DELEGATION_TOKEN, Service: ha-hdfs:nameservice1, Ident: (token for hive: HDFS_DELEGATION_TOKEN owner=hive/qdcdh00.haier.com@HAIER.COM, renewer=yarn, realUser=, issueDate=1686726922465, maxDate=1687331722465, sequenceNumber=171331376, masterKeyId=2287)]
+[2023-06-14 15:15:38,708] {{bash.py:185}} INFO - INFO  : The url to track the job: http://qdcdh04.haier.com:8088/proxy/application_1680066099795_5726857/
+[2023-06-14 15:15:38,708] {{bash.py:185}} INFO - INFO  : Starting Job = job_1680066099795_5726857, Tracking URL = http://qdcdh04.haier.com:8088/proxy/application_1680066099795_5726857/
+[2023-06-14 15:15:38,708] {{bash.py:185}} INFO - INFO  : Kill Command = /opt/cloudera/parcels/CDH-6.3.2-1.cdh6.3.2.p0.1605554/lib/hadoop/bin/hadoop job  -kill job_1680066099795_5726857
+[2023-06-14 15:15:58,777] {{bash.py:185}} INFO - INFO  : Hadoop job information for Stage-2: number of mappers: 13; number of reducers: 1
+[2023-06-14 15:15:58,778] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:15:57,840 Stage-2 map = 0%,  reduce = 0%
+[2023-06-14 15:16:53,964] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:16:53,235 Stage-2 map = 8%,  reduce = 0%, Cumulative CPU 1075.62 sec
+[2023-06-14 15:17:49,132] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:17:45,792 Stage-2 map = 15%,  reduce = 0%, Cumulative CPU 1926.36 sec
+[2023-06-14 15:17:59,172] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:17:57,365 Stage-2 map = 23%,  reduce = 0%, Cumulative CPU 2111.44 sec
+[2023-06-14 15:18:04,188] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:18:02,565 Stage-2 map = 33%,  reduce = 0%, Cumulative CPU 2125.93 sec
+[2023-06-14 15:18:04,188] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:18:03,610 Stage-2 map = 41%,  reduce = 0%, Cumulative CPU 2189.02 sec
+[2023-06-14 15:18:09,205] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:18:08,792 Stage-2 map = 49%,  reduce = 0%, Cumulative CPU 2209.24 sec
+[2023-06-14 15:18:19,240] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:18:16,054 Stage-2 map = 64%,  reduce = 0%, Cumulative CPU 2313.0 sec
+[2023-06-14 15:18:19,240] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:18:18,135 Stage-2 map = 72%,  reduce = 0%, Cumulative CPU 2326.85 sec
+[2023-06-14 15:18:39,307] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:18:34,759 Stage-2 map = 80%,  reduce = 0%, Cumulative CPU 2407.54 sec
+[2023-06-14 15:18:39,308] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:18:36,841 Stage-2 map = 87%,  reduce = 0%, Cumulative CPU 2419.99 sec
+[2023-06-14 15:19:04,395] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:18:59,866 Stage-2 map = 92%,  reduce = 0%, Cumulative CPU 2497.38 sec
+[2023-06-14 15:19:04,395] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:19:00,931 Stage-2 map = 95%,  reduce = 0%, Cumulative CPU 2500.17 sec
+[2023-06-14 15:19:14,432] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:19:12,457 Stage-2 map = 95%,  reduce = 31%, Cumulative CPU 2561.78 sec
+[2023-06-14 15:20:04,675] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:20:01,567 Stage-2 map = 99%,  reduce = 31%, Cumulative CPU 2633.78 sec
+[2023-06-14 15:20:09,694] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:20:05,743 Stage-2 map = 100%,  reduce = 31%, Cumulative CPU 2646.78 sec
+[2023-06-14 15:20:14,719] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:20:09,920 Stage-2 map = 100%,  reduce = 63%, Cumulative CPU 2650.98 sec
+[2023-06-14 15:20:19,742] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:20:16,191 Stage-2 map = 100%,  reduce = 67%, Cumulative CPU 2670.86 sec
+[2023-06-14 15:20:24,762] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:20:22,409 Stage-2 map = 100%,  reduce = 68%, Cumulative CPU 2678.84 sec
+[2023-06-14 15:20:29,782] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:20:28,648 Stage-2 map = 100%,  reduce = 69%, Cumulative CPU 2686.98 sec
+[2023-06-14 15:20:39,821] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:20:34,899 Stage-2 map = 100%,  reduce = 71%, Cumulative CPU 2694.4 sec
+[2023-06-14 15:20:44,842] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:20:41,205 Stage-2 map = 100%,  reduce = 72%, Cumulative CPU 2703.49 sec
+[2023-06-14 15:20:49,870] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:20:47,485 Stage-2 map = 100%,  reduce = 73%, Cumulative CPU 2710.52 sec
+[2023-06-14 15:20:54,888] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:20:53,787 Stage-2 map = 100%,  reduce = 74%, Cumulative CPU 2718.23 sec
+[2023-06-14 15:21:04,925] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:21:00,060 Stage-2 map = 100%,  reduce = 75%, Cumulative CPU 2725.42 sec
+[2023-06-14 15:21:09,943] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:21:06,340 Stage-2 map = 100%,  reduce = 76%, Cumulative CPU 2732.39 sec
+[2023-06-14 15:21:14,962] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:21:12,609 Stage-2 map = 100%,  reduce = 77%, Cumulative CPU 2740.51 sec
+[2023-06-14 15:21:19,990] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:21:18,875 Stage-2 map = 100%,  reduce = 78%, Cumulative CPU 2747.58 sec
+[2023-06-14 15:21:30,034] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:21:26,195 Stage-2 map = 100%,  reduce = 79%, Cumulative CPU 2753.88 sec
+[2023-06-14 15:21:35,053] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:21:32,445 Stage-2 map = 100%,  reduce = 80%, Cumulative CPU 2762.0 sec
+[2023-06-14 15:21:40,073] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:21:38,703 Stage-2 map = 100%,  reduce = 82%, Cumulative CPU 2769.99 sec
+[2023-06-14 15:21:45,089] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:21:44,924 Stage-2 map = 100%,  reduce = 83%, Cumulative CPU 2780.16 sec
+[2023-06-14 15:21:55,135] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:21:51,416 Stage-2 map = 100%,  reduce = 85%, Cumulative CPU 2786.98 sec
+[2023-06-14 15:22:00,153] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:21:56,648 Stage-2 map = 100%,  reduce = 86%, Cumulative CPU 2794.52 sec
+[2023-06-14 15:22:05,176] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:22:02,921 Stage-2 map = 100%,  reduce = 88%, Cumulative CPU 2801.75 sec
+[2023-06-14 15:22:10,196] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:22:09,190 Stage-2 map = 100%,  reduce = 89%, Cumulative CPU 2810.71 sec
+[2023-06-14 15:22:20,229] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:22:15,448 Stage-2 map = 100%,  reduce = 90%, Cumulative CPU 2821.12 sec
+[2023-06-14 15:22:25,249] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:22:21,780 Stage-2 map = 100%,  reduce = 92%, Cumulative CPU 2828.38 sec
+[2023-06-14 15:22:30,266] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:22:28,045 Stage-2 map = 100%,  reduce = 93%, Cumulative CPU 2835.76 sec
+[2023-06-14 15:22:35,284] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:22:34,309 Stage-2 map = 100%,  reduce = 94%, Cumulative CPU 2843.44 sec
+[2023-06-14 15:22:45,322] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:22:40,561 Stage-2 map = 100%,  reduce = 95%, Cumulative CPU 2851.1 sec
+[2023-06-14 15:22:50,340] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:22:46,789 Stage-2 map = 100%,  reduce = 97%, Cumulative CPU 2858.02 sec
+[2023-06-14 15:22:55,364] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:22:52,983 Stage-2 map = 100%,  reduce = 98%, Cumulative CPU 2865.94 sec
+[2023-06-14 15:23:00,382] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:22:59,233 Stage-2 map = 100%,  reduce = 99%, Cumulative CPU 2873.0 sec
+[2023-06-14 15:23:05,398] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:23:03,415 Stage-2 map = 100%,  reduce = 100%, Cumulative CPU 2877.2 sec
+[2023-06-14 15:23:15,428] {{bash.py:185}} INFO - INFO  : MapReduce Total cumulative CPU time: 47 minutes 57 seconds 200 msec
+[2023-06-14 15:23:15,429] {{bash.py:185}} INFO - INFO  : Ended Job = job_1680066099795_5726857
+[2023-06-14 15:23:15,429] {{bash.py:185}} INFO - INFO  : Starting task [Stage-8:CONDITIONAL] in serial mode
+[2023-06-14 15:23:15,429] {{bash.py:185}} INFO - INFO  : Stage-5 is selected by condition resolver.
+[2023-06-14 15:23:15,429] {{bash.py:185}} INFO - INFO  : Stage-4 is filtered out by condition resolver.
+[2023-06-14 15:23:15,429] {{bash.py:185}} INFO - INFO  : Stage-6 is filtered out by condition resolver.
+[2023-06-14 15:23:15,429] {{bash.py:185}} INFO - INFO  : Starting task [Stage-5:MOVE] in serial mode
+[2023-06-14 15:23:15,429] {{bash.py:185}} INFO - INFO  : Moving data to directory hdfs://nameservice1/user/hive/warehouse/di_qu.db/tf_cei_ecosphere_bl_mid/pt=202306/type=bl_12/.hive-staging_hive_2023-06-14_15-14-39_857_2757983526583368954-527784/-ext-10000 from hdfs://nameservice1/user/hive/warehouse/di_qu.db/tf_cei_ecosphere_bl_mid/pt=202306/type=bl_12/.hive-staging_hive_2023-06-14_15-14-39_857_2757983526583368954-527784/-ext-10003
+[2023-06-14 15:23:20,445] {{bash.py:185}} INFO - INFO  : Starting task [Stage-0:MOVE] in serial mode
+[2023-06-14 15:23:20,445] {{bash.py:185}} INFO - INFO  : Loading data to table di_qu.tf_cei_ecosphere_bl_mid partition (pt=202306, type=bl_12) from hdfs://nameservice1/user/hive/warehouse/di_qu.db/tf_cei_ecosphere_bl_mid/pt=202306/type=bl_12/.hive-staging_hive_2023-06-14_15-14-39_857_2757983526583368954-527784/-ext-10000
+[2023-06-14 15:23:30,323] {{bash.py:185}} INFO - INFO  : Starting task [Stage-3:STATS] in serial mode
+[2023-06-14 15:23:30,323] {{bash.py:185}} INFO - INFO  : MapReduce Jobs Launched:
+[2023-06-14 15:23:30,323] {{bash.py:185}} INFO - INFO  : Stage-Stage-2: Map: 13  Reduce: 1   Cumulative CPU: 2877.2 sec   HDFS Read: 743388079 HDFS Write: 47081877 HDFS EC Read: 0 SUCCESS
+[2023-06-14 15:23:30,323] {{bash.py:185}} INFO - INFO  : Total MapReduce CPU Time Spent: 47 minutes 57 seconds 200 msec
+[2023-06-14 15:23:30,323] {{bash.py:185}} INFO - INFO  : Completed executing command(queryId=hive_20230614151439_313cfcd8-cdf0-4033-b972-d0a06851235a); Time taken: 516.293 seconds
+[2023-06-14 15:23:30,323] {{bash.py:185}} INFO - INFO  : OK
+[2023-06-14 15:23:30,341] {{bash.py:185}} INFO - 4,179,352 rows affected (530.532 seconds)
+[2023-06-14 15:23:31,456] {{bash.py:185}} INFO - Beeline version 2.1.1-cdh6.3.2 by Apache Hive
+[2023-06-14 15:23:33,907] {{bash.py:185}} INFO - WARNING: Use "yarn jar" to launch YARN applications.
+[2023-06-14 15:23:34,500] {{bash.py:185}} INFO - SLF4J: Class path contains multiple SLF4J bindings.
+[2023-06-14 15:23:34,500] {{bash.py:185}} INFO - SLF4J: Found binding in [jar:file:/opt/cloudera/parcels/CDH-6.3.2-1.cdh6.3.2.p0.1605554/jars/log4j-slf4j-impl-2.8.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+[2023-06-14 15:23:34,500] {{bash.py:185}} INFO - SLF4J: Found binding in [jar:file:/opt/cloudera/parcels/CDH-6.3.2-1.cdh6.3.2.p0.1605554/jars/slf4j-log4j12-1.7.25.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+[2023-06-14 15:23:34,500] {{bash.py:185}} INFO - SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+[2023-06-14 15:23:34,506] {{bash.py:185}} INFO - SLF4J: Actual binding is of type [org.apache.logging.slf4j.Log4jLoggerFactory]
+[2023-06-14 15:23:36,865] {{bash.py:185}} INFO - Connecting to jdbc:hive2://10.138.225.37:30010/default;principal=hive/qdcdh00@HAIER.COM
+[2023-06-14 15:23:38,892] {{bash.py:185}} INFO - Connected to: Apache Hive (version 2.1.1-cdh6.3.2)
+[2023-06-14 15:23:38,892] {{bash.py:185}} INFO - Driver: Hive JDBC (version 2.1.1-cdh6.3.2)
+[2023-06-14 15:23:38,892] {{bash.py:185}} INFO - Transaction isolation: TRANSACTION_REPEATABLE_READ
+[2023-06-14 15:23:38,981] {{bash.py:185}} INFO - No rows affected (0.075 seconds)
+[2023-06-14 15:23:39,041] {{bash.py:185}} INFO - No rows affected (0.037 seconds)
+[2023-06-14 15:23:39,091] {{bash.py:185}} INFO - No rows affected (0.033 seconds)
+[2023-06-14 15:24:01,197] {{bash.py:185}} INFO - INFO  : Compiling command(queryId=hive_20230614152339_a383d299-a6c6-48e6-bef9-c81ab2397a8c): with
+[2023-06-14 15:24:01,198] {{bash.py:185}} INFO - date_table as (
+[2023-06-14 15:24:01,198] {{bash.py:185}} INFO - select period_id,
+[2023-06-14 15:24:01,198] {{bash.py:185}} INFO - 	   period_month,
+[2023-06-14 15:24:01,198] {{bash.py:185}} INFO -        period_year
+[2023-06-14 15:24:01,198] {{bash.py:185}} INFO - from dh_qu.tm_cei_dim_period
+[2023-06-14 15:24:01,198] {{bash.py:185}} INFO - where PERIOD_LEVEL='D'
+[2023-06-14 15:24:01,198] {{bash.py:185}} INFO - and period_month = '202306'
+[2023-06-14 15:24:01,198] {{bash.py:185}} INFO - and period_id <= '20230630'
+[2023-06-14 15:24:01,198] {{bash.py:185}} INFO - and period_id <= '20230613'
+[2023-06-14 15:24:01,198] {{bash.py:185}} INFO - )
+[2023-06-14 15:24:01,198] {{bash.py:185}} INFO - insert overwrite table di_qu.tf_cei_ecosphere_bl_mid
+[2023-06-14 15:24:01,198] {{bash.py:185}} INFO - partition(pt = '202306',type='bl_ben')
+[2023-06-14 15:24:01,198] {{bash.py:185}} INFO - select
+[2023-06-14 15:24:01,198] {{bash.py:185}} INFO - t2.period_id,
+[2023-06-14 15:24:01,198] {{bash.py:185}} INFO - from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd') as kpi_dt,
+[2023-06-14 15:24:01,198] {{bash.py:185}} INFO - null as hsicrm_regionname,
+[2023-06-14 15:24:01,198] {{bash.py:185}} INFO - hsicrm_brandname,
+[2023-06-14 15:24:01,198] {{bash.py:185}} INFO - pl_platform_name,
+[2023-06-14 15:24:01,198] {{bash.py:185}} INFO - hsicrm_productcategoryname,
+[2023-06-14 15:24:01,198] {{bash.py:185}} INFO - pl_factory_code,
+[2023-06-14 15:24:01,198] {{bash.py:185}} INFO - pl_factory_name,
+[2023-06-14 15:24:01,198] {{bash.py:185}} INFO - pl_line_code,
+[2023-06-14 15:24:01,198] {{bash.py:185}} INFO - pl_line_name,
+[2023-06-14 15:24:01,198] {{bash.py:185}} INFO - product_code,
+[2023-06-14 15:24:01,198] {{bash.py:185}} INFO - product_name,
+[2023-06-14 15:24:01,198] {{bash.py:185}} INFO - mark_time,
+[2023-06-14 15:24:01,199] {{bash.py:185}} INFO - prod_life_state,
+[2023-06-14 15:24:01,199] {{bash.py:185}} INFO - design_xw_code,
+[2023-06-14 15:24:01,199] {{bash.py:185}} INFO - design_xw_name,
+[2023-06-14 15:24:01,199] {{bash.py:185}} INFO - user_xw_code,
+[2023-06-14 15:24:01,199] {{bash.py:185}} INFO - user_xw_name,
+[2023-06-14 15:24:01,199] {{bash.py:185}} INFO - chain_group,
+[2023-06-14 15:24:01,199] {{bash.py:185}} INFO - hsicrm_actualservicetypename,
+[2023-06-14 15:24:01,199] {{bash.py:185}} INFO - ecosphere_name,
+[2023-06-14 15:24:01,199] {{bash.py:185}} INFO - ecosphere_code,
+[2023-06-14 15:24:01,199] {{bash.py:185}} INFO - ecosphere_leader,
+[2023-06-14 15:24:01,199] {{bash.py:185}} INFO - ecosphere_dept,
+[2023-06-14 15:24:01,199] {{bash.py:185}} INFO - sub_ecosphere_name,
+[2023-06-14 15:24:01,199] {{bash.py:185}} INFO - sub_ecosphere_code,
+[2023-06-14 15:24:01,199] {{bash.py:185}} INFO - sub_ecosphere_leader,
+[2023-06-14 15:24:01,199] {{bash.py:185}} INFO - sub_ecosphere_dept,
+[2023-06-14 15:24:01,199] {{bash.py:185}} INFO - '本年不良' as bl_type,
+[2023-06-14 15:24:01,199] {{bash.py:185}} INFO - count(1),
+[2023-06-14 15:24:01,199] {{bash.py:185}} INFO - from_unixtime(unix_timestamp()) AS dh_etl_date
+[2023-06-14 15:24:01,199] {{bash.py:185}} INFO - from dh_qu.tt_cei_workorder_ecos t1,
+[2023-06-14 15:24:01,199] {{bash.py:185}} INFO - date_table t2
+[2023-06-14 15:24:01,199] {{bash.py:185}} INFO - where t1.is_bl = '1'
+[2023-06-14 15:24:01,199] {{bash.py:185}} INFO -   and (t1.is_sczr is null or t1.is_sczr <> '1')
+[2023-06-14 15:24:01,199] {{bash.py:185}} INFO -   and nvl(responsibilitycategoryname,'')<>'商场'
+[2023-06-14 15:24:01,199] {{bash.py:185}} INFO -   and t1.pt<=202306
+[2023-06-14 15:24:01,199] {{bash.py:185}} INFO -   and t1.pt>=202205
+[2023-06-14 15:24:01,199] {{bash.py:185}} INFO -   and cast(t1.period_id as string) <= t2.period_id
+[2023-06-14 15:24:01,199] {{bash.py:185}} INFO -   and cast(t1.period_id as string) between concat(period_year,'0101') and t2.period_id
+[2023-06-14 15:24:01,200] {{bash.py:185}} INFO -   AND t1.hsicrm_manufacturedate between from_unixtime(unix_timestamp(concat(period_year,'0101'),'yyyyMMdd'),'yyyy-MM-dd') and from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd')
+[2023-06-14 15:24:01,200] {{bash.py:185}} INFO - group by t2.period_id,
+[2023-06-14 15:24:01,200] {{bash.py:185}} INFO - hsicrm_brandname,
+[2023-06-14 15:24:01,200] {{bash.py:185}} INFO - pl_platform_name,
+[2023-06-14 15:24:01,200] {{bash.py:185}} INFO - hsicrm_productcategoryname,
+[2023-06-14 15:24:01,200] {{bash.py:185}} INFO - pl_factory_code,
+[2023-06-14 15:24:01,200] {{bash.py:185}} INFO - pl_factory_name,
+[2023-06-14 15:24:01,200] {{bash.py:185}} INFO - pl_line_code,
+[2023-06-14 15:24:01,200] {{bash.py:185}} INFO - pl_line_name,
+[2023-06-14 15:24:01,200] {{bash.py:185}} INFO - product_code,
+[2023-06-14 15:24:01,200] {{bash.py:185}} INFO - product_name,
+[2023-06-14 15:24:01,200] {{bash.py:185}} INFO - mark_time,
+[2023-06-14 15:24:01,200] {{bash.py:185}} INFO - prod_life_state,
+[2023-06-14 15:24:01,200] {{bash.py:185}} INFO - design_xw_code,
+[2023-06-14 15:24:01,200] {{bash.py:185}} INFO - design_xw_name,
+[2023-06-14 15:24:01,200] {{bash.py:185}} INFO - user_xw_code,
+[2023-06-14 15:24:01,200] {{bash.py:185}} INFO - user_xw_name,
+[2023-06-14 15:24:01,200] {{bash.py:185}} INFO - chain_group,
+[2023-06-14 15:24:01,200] {{bash.py:185}} INFO - hsicrm_actualservicetypename,
+[2023-06-14 15:24:01,200] {{bash.py:185}} INFO - ecosphere_name,
+[2023-06-14 15:24:01,200] {{bash.py:185}} INFO - ecosphere_code,
+[2023-06-14 15:24:01,200] {{bash.py:185}} INFO - ecosphere_leader,
+[2023-06-14 15:24:01,200] {{bash.py:185}} INFO - ecosphere_dept,
+[2023-06-14 15:24:01,200] {{bash.py:185}} INFO - sub_ecosphere_name,
+[2023-06-14 15:24:01,200] {{bash.py:185}} INFO - sub_ecosphere_code,
+[2023-06-14 15:24:01,200] {{bash.py:185}} INFO - sub_ecosphere_leader,
+[2023-06-14 15:24:01,201] {{bash.py:185}} INFO - sub_ecosphere_dept
+[2023-06-14 15:24:01,201] {{bash.py:185}} INFO - INFO  : unix_timestamp(void) is deprecated. Use current_timestamp instead.
+[2023-06-14 15:24:01,201] {{bash.py:185}} INFO - INFO  : Warning: Map Join MAPJOIN[22][bigTable=?] in task 'Stage-2:MAPRED' is a cross product
+[2023-06-14 15:24:01,201] {{bash.py:185}} INFO - INFO  : Semantic Analysis Completed
+[2023-06-14 15:24:01,201] {{bash.py:185}} INFO - INFO  : Returning Hive schema: Schema(fieldSchemas:[FieldSchema(name:_col0, type:int, comment:null), FieldSchema(name:_col1, type:timestamp, comment:null), FieldSchema(name:_col2, type:void, comment:null), FieldSchema(name:_col3, type:string, comment:null), FieldSchema(name:_col4, type:string, comment:null), FieldSchema(name:_col5, type:string, comment:null), FieldSchema(name:_col6, type:string, comment:null), FieldSchema(name:_col7, type:string, comment:null), FieldSchema(name:_col8, type:string, comment:null), FieldSchema(name:_col9, type:string, comment:null), FieldSchema(name:_col10, type:string, comment:null), FieldSchema(name:_col11, type:string, comment:null), FieldSchema(name:_col12, type:string, comment:null), FieldSchema(name:_col13, type:string, comment:null), FieldSchema(name:_col14, type:string, comment:null), FieldSchema(name:_col15, type:string, comment:null), FieldSchema(name:_col16, type:string, comment:null), FieldSchema(name:_col17, type:string, comment:null), FieldSchema(name:_col18, type:string, comment:null), FieldSchema(name:_col19, type:string, comment:null), FieldSchema(name:_col20, type:string, comment:null), FieldSchema(name:_col21, type:string, comment:null), FieldSchema(name:_col22, type:string, comment:null), FieldSchema(name:_col23, type:string, comment:null), FieldSchema(name:_col24, type:string, comment:null), FieldSchema(name:_col25, type:string, comment:null), FieldSchema(name:_col26, type:string, comment:null), FieldSchema(name:_col27, type:string, comment:null), FieldSchema(name:_col28, type:string, comment:null), FieldSchema(name:_col29, type:int, comment:null), FieldSchema(name:_col30, type:timestamp, comment:null)], properties:null)
+[2023-06-14 15:24:01,201] {{bash.py:185}} INFO - INFO  : Completed compiling command(queryId=hive_20230614152339_a383d299-a6c6-48e6-bef9-c81ab2397a8c); Time taken: 17.045 seconds
+[2023-06-14 15:24:01,201] {{bash.py:185}} INFO - INFO  : Executing command(queryId=hive_20230614152339_a383d299-a6c6-48e6-bef9-c81ab2397a8c): with
+[2023-06-14 15:24:01,201] {{bash.py:185}} INFO - date_table as (
+[2023-06-14 15:24:01,201] {{bash.py:185}} INFO - select period_id,
+[2023-06-14 15:24:01,201] {{bash.py:185}} INFO - 	   period_month,
+[2023-06-14 15:24:01,201] {{bash.py:185}} INFO -        period_year
+[2023-06-14 15:24:01,201] {{bash.py:185}} INFO - from dh_qu.tm_cei_dim_period
+[2023-06-14 15:24:01,201] {{bash.py:185}} INFO - where PERIOD_LEVEL='D'
+[2023-06-14 15:24:01,201] {{bash.py:185}} INFO - and period_month = '202306'
+[2023-06-14 15:24:01,201] {{bash.py:185}} INFO - and period_id <= '20230630'
+[2023-06-14 15:24:01,201] {{bash.py:185}} INFO - and period_id <= '20230613'
+[2023-06-14 15:24:01,201] {{bash.py:185}} INFO - )
+[2023-06-14 15:24:01,201] {{bash.py:185}} INFO - insert overwrite table di_qu.tf_cei_ecosphere_bl_mid
+[2023-06-14 15:24:01,201] {{bash.py:185}} INFO - partition(pt = '202306',type='bl_ben')
+[2023-06-14 15:24:01,201] {{bash.py:185}} INFO - select
+[2023-06-14 15:24:01,201] {{bash.py:185}} INFO - t2.period_id,
+[2023-06-14 15:24:01,201] {{bash.py:185}} INFO - from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd') as kpi_dt,
+[2023-06-14 15:24:01,201] {{bash.py:185}} INFO - null as hsicrm_regionname,
+[2023-06-14 15:24:01,201] {{bash.py:185}} INFO - hsicrm_brandname,
+[2023-06-14 15:24:01,201] {{bash.py:185}} INFO - pl_platform_name,
+[2023-06-14 15:24:01,201] {{bash.py:185}} INFO - hsicrm_productcategoryname,
+[2023-06-14 15:24:01,201] {{bash.py:185}} INFO - pl_factory_code,
+[2023-06-14 15:24:01,202] {{bash.py:185}} INFO - pl_factory_name,
+[2023-06-14 15:24:01,202] {{bash.py:185}} INFO - pl_line_code,
+[2023-06-14 15:24:01,202] {{bash.py:185}} INFO - pl_line_name,
+[2023-06-14 15:24:01,202] {{bash.py:185}} INFO - product_code,
+[2023-06-14 15:24:01,202] {{bash.py:185}} INFO - product_name,
+[2023-06-14 15:24:01,202] {{bash.py:185}} INFO - mark_time,
+[2023-06-14 15:24:01,202] {{bash.py:185}} INFO - prod_life_state,
+[2023-06-14 15:24:01,202] {{bash.py:185}} INFO - design_xw_code,
+[2023-06-14 15:24:01,202] {{bash.py:185}} INFO - design_xw_name,
+[2023-06-14 15:24:01,202] {{bash.py:185}} INFO - user_xw_code,
+[2023-06-14 15:24:01,202] {{bash.py:185}} INFO - user_xw_name,
+[2023-06-14 15:24:01,202] {{bash.py:185}} INFO - chain_group,
+[2023-06-14 15:24:01,202] {{bash.py:185}} INFO - hsicrm_actualservicetypename,
+[2023-06-14 15:24:01,202] {{bash.py:185}} INFO - ecosphere_name,
+[2023-06-14 15:24:01,202] {{bash.py:185}} INFO - ecosphere_code,
+[2023-06-14 15:24:01,202] {{bash.py:185}} INFO - ecosphere_leader,
+[2023-06-14 15:24:01,202] {{bash.py:185}} INFO - ecosphere_dept,
+[2023-06-14 15:24:01,202] {{bash.py:185}} INFO - sub_ecosphere_name,
+[2023-06-14 15:24:01,202] {{bash.py:185}} INFO - sub_ecosphere_code,
+[2023-06-14 15:24:01,202] {{bash.py:185}} INFO - sub_ecosphere_leader,
+[2023-06-14 15:24:01,202] {{bash.py:185}} INFO - sub_ecosphere_dept,
+[2023-06-14 15:24:01,202] {{bash.py:185}} INFO - '本年不良' as bl_type,
+[2023-06-14 15:24:01,202] {{bash.py:185}} INFO - count(1),
+[2023-06-14 15:24:01,202] {{bash.py:185}} INFO - from_unixtime(unix_timestamp()) AS dh_etl_date
+[2023-06-14 15:24:01,202] {{bash.py:185}} INFO - from dh_qu.tt_cei_workorder_ecos t1,
+[2023-06-14 15:24:01,202] {{bash.py:185}} INFO - date_table t2
+[2023-06-14 15:24:01,202] {{bash.py:185}} INFO - where t1.is_bl = '1'
+[2023-06-14 15:24:01,202] {{bash.py:185}} INFO -   and (t1.is_sczr is null or t1.is_sczr <> '1')
+[2023-06-14 15:24:01,203] {{bash.py:185}} INFO -   and nvl(responsibilitycategoryname,'')<>'商场'
+[2023-06-14 15:24:01,203] {{bash.py:185}} INFO -   and t1.pt<=202306
+[2023-06-14 15:24:01,203] {{bash.py:185}} INFO -   and t1.pt>=202205
+[2023-06-14 15:24:01,203] {{bash.py:185}} INFO -   and cast(t1.period_id as string) <= t2.period_id
+[2023-06-14 15:24:01,203] {{bash.py:185}} INFO -   and cast(t1.period_id as string) between concat(period_year,'0101') and t2.period_id
+[2023-06-14 15:24:01,203] {{bash.py:185}} INFO -   AND t1.hsicrm_manufacturedate between from_unixtime(unix_timestamp(concat(period_year,'0101'),'yyyyMMdd'),'yyyy-MM-dd') and from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd')
+[2023-06-14 15:24:01,203] {{bash.py:185}} INFO - group by t2.period_id,
+[2023-06-14 15:24:01,203] {{bash.py:185}} INFO - hsicrm_brandname,
+[2023-06-14 15:24:01,203] {{bash.py:185}} INFO - pl_platform_name,
+[2023-06-14 15:24:01,203] {{bash.py:185}} INFO - hsicrm_productcategoryname,
+[2023-06-14 15:24:01,203] {{bash.py:185}} INFO - pl_factory_code,
+[2023-06-14 15:24:01,203] {{bash.py:185}} INFO - pl_factory_name,
+[2023-06-14 15:24:01,203] {{bash.py:185}} INFO - pl_line_code,
+[2023-06-14 15:24:01,203] {{bash.py:185}} INFO - pl_line_name,
+[2023-06-14 15:24:01,203] {{bash.py:185}} INFO - product_code,
+[2023-06-14 15:24:01,203] {{bash.py:185}} INFO - product_name,
+[2023-06-14 15:24:01,203] {{bash.py:185}} INFO - mark_time,
+[2023-06-14 15:24:01,203] {{bash.py:185}} INFO - prod_life_state,
+[2023-06-14 15:24:01,203] {{bash.py:185}} INFO - design_xw_code,
+[2023-06-14 15:24:01,203] {{bash.py:185}} INFO - design_xw_name,
+[2023-06-14 15:24:01,203] {{bash.py:185}} INFO - user_xw_code,
+[2023-06-14 15:24:01,203] {{bash.py:185}} INFO - user_xw_name,
+[2023-06-14 15:24:01,203] {{bash.py:185}} INFO - chain_group,
+[2023-06-14 15:24:01,203] {{bash.py:185}} INFO - hsicrm_actualservicetypename,
+[2023-06-14 15:24:01,203] {{bash.py:185}} INFO - ecosphere_name,
+[2023-06-14 15:24:01,203] {{bash.py:185}} INFO - ecosphere_code,
+[2023-06-14 15:24:01,203] {{bash.py:185}} INFO - ecosphere_leader,
+[2023-06-14 15:24:01,203] {{bash.py:185}} INFO - ecosphere_dept,
+[2023-06-14 15:24:01,204] {{bash.py:185}} INFO - sub_ecosphere_name,
+[2023-06-14 15:24:01,204] {{bash.py:185}} INFO - sub_ecosphere_code,
+[2023-06-14 15:24:01,204] {{bash.py:185}} INFO - sub_ecosphere_leader,
+[2023-06-14 15:24:01,204] {{bash.py:185}} INFO - sub_ecosphere_dept
+[2023-06-14 15:24:01,204] {{bash.py:185}} INFO - WARN  :
+[2023-06-14 15:24:01,204] {{bash.py:185}} INFO - INFO  : Query ID = hive_20230614152339_a383d299-a6c6-48e6-bef9-c81ab2397a8c
+[2023-06-14 15:24:01,204] {{bash.py:185}} INFO - INFO  : Total jobs = 3
+[2023-06-14 15:24:01,204] {{bash.py:185}} INFO - INFO  : Starting task [Stage-11:MAPREDLOCAL] in serial mode
+[2023-06-14 15:24:26,272] {{bash.py:185}} INFO - INFO  : Execution completed successfully
+[2023-06-14 15:24:26,272] {{bash.py:185}} INFO - INFO  : MapredLocal task succeeded
+[2023-06-14 15:24:26,272] {{bash.py:185}} INFO - INFO  : Launching Job 1 out of 3
+[2023-06-14 15:24:26,272] {{bash.py:185}} INFO - INFO  : Starting task [Stage-2:MAPRED] in serial mode
+[2023-06-14 15:24:26,272] {{bash.py:185}} INFO - INFO  : Number of reduce tasks not specified. Estimated from input data size: 1
+[2023-06-14 15:24:26,272] {{bash.py:185}} INFO - INFO  : In order to change the average load for a reducer (in bytes):
+[2023-06-14 15:24:26,272] {{bash.py:185}} INFO - INFO  :   set hive.exec.reducers.bytes.per.reducer=<number>
+[2023-06-14 15:24:26,272] {{bash.py:185}} INFO - INFO  : In order to limit the maximum number of reducers:
+[2023-06-14 15:24:26,272] {{bash.py:185}} INFO - INFO  :   set hive.exec.reducers.max=<number>
+[2023-06-14 15:24:26,273] {{bash.py:185}} INFO - INFO  : In order to set a constant number of reducers:
+[2023-06-14 15:24:26,273] {{bash.py:185}} INFO - INFO  :   set mapreduce.job.reduces=<number>
+[2023-06-14 15:24:51,344] {{bash.py:185}} INFO - INFO  : number of splits:13
+[2023-06-14 15:24:51,344] {{bash.py:185}} INFO - INFO  : Submitting tokens for job: job_1680066099795_5727160
+[2023-06-14 15:24:51,344] {{bash.py:185}} INFO - INFO  : Executing with tokens: [Kind: HDFS_DELEGATION_TOKEN, Service: ha-hdfs:nameservice1, Ident: (token for hive: HDFS_DELEGATION_TOKEN owner=hive/qdcdh00.haier.com@HAIER.COM, renewer=yarn, realUser=, issueDate=1686727468423, maxDate=1687332268423, sequenceNumber=171333009, masterKeyId=2287)]
+[2023-06-14 15:24:56,357] {{bash.py:185}} INFO - INFO  : The url to track the job: http://qdcdh04.haier.com:8088/proxy/application_1680066099795_5727160/
+[2023-06-14 15:24:56,357] {{bash.py:185}} INFO - INFO  : Starting Job = job_1680066099795_5727160, Tracking URL = http://qdcdh04.haier.com:8088/proxy/application_1680066099795_5727160/
+[2023-06-14 15:24:56,358] {{bash.py:185}} INFO - INFO  : Kill Command = /opt/cloudera/parcels/CDH-6.3.2-1.cdh6.3.2.p0.1605554/lib/hadoop/bin/hadoop job  -kill job_1680066099795_5727160
+[2023-06-14 15:25:21,442] {{bash.py:185}} INFO - INFO  : Hadoop job information for Stage-2: number of mappers: 13; number of reducers: 1
+[2023-06-14 15:25:21,443] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:25:16,903 Stage-2 map = 0%,  reduce = 0%
+[2023-06-14 15:25:56,565] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:25:54,370 Stage-2 map = 5%,  reduce = 0%, Cumulative CPU 561.06 sec
+[2023-06-14 15:25:56,565] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:25:55,506 Stage-2 map = 15%,  reduce = 0%, Cumulative CPU 647.16 sec
+[2023-06-14 15:26:06,593] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:26:01,959 Stage-2 map = 23%,  reduce = 0%, Cumulative CPU 786.91 sec
+[2023-06-14 15:26:11,608] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:26:07,753 Stage-2 map = 33%,  reduce = 0%, Cumulative CPU 889.69 sec
+[2023-06-14 15:26:11,608] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:26:09,821 Stage-2 map = 41%,  reduce = 0%, Cumulative CPU 940.8 sec
+[2023-06-14 15:26:16,622] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:26:11,911 Stage-2 map = 49%,  reduce = 0%, Cumulative CPU 958.96 sec
+[2023-06-14 15:26:16,622] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:26:14,678 Stage-2 map = 57%,  reduce = 0%, Cumulative CPU 989.18 sec
+[2023-06-14 15:26:16,622] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:26:16,396 Stage-2 map = 64%,  reduce = 0%, Cumulative CPU 1015.6 sec
+[2023-06-14 15:26:26,652] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:26:24,930 Stage-2 map = 72%,  reduce = 0%, Cumulative CPU 1083.91 sec
+[2023-06-14 15:26:36,680] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:26:34,842 Stage-2 map = 80%,  reduce = 0%, Cumulative CPU 1138.16 sec
+[2023-06-14 15:26:41,691] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:26:38,053 Stage-2 map = 87%,  reduce = 0%, Cumulative CPU 1159.64 sec
+[2023-06-14 15:26:46,704] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:26:44,714 Stage-2 map = 95%,  reduce = 0%, Cumulative CPU 1198.48 sec
+[2023-06-14 15:26:56,731] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:26:55,726 Stage-2 map = 100%,  reduce = 0%, Cumulative CPU 1214.98 sec
+[2023-06-14 15:27:11,778] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:27:07,454 Stage-2 map = 100%,  reduce = 71%, Cumulative CPU 1265.11 sec
+[2023-06-14 15:27:16,793] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:27:14,937 Stage-2 map = 100%,  reduce = 79%, Cumulative CPU 1273.56 sec
+[2023-06-14 15:27:21,808] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:27:19,999 Stage-2 map = 100%,  reduce = 87%, Cumulative CPU 1281.52 sec
+[2023-06-14 15:27:26,823] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:27:26,225 Stage-2 map = 100%,  reduce = 95%, Cumulative CPU 1289.6 sec
+[2023-06-14 15:27:31,837] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:27:30,439 Stage-2 map = 100%,  reduce = 100%, Cumulative CPU 1295.5 sec
+[2023-06-14 15:27:41,866] {{bash.py:185}} INFO - INFO  : MapReduce Total cumulative CPU time: 21 minutes 35 seconds 500 msec
+[2023-06-14 15:27:41,866] {{bash.py:185}} INFO - INFO  : Ended Job = job_1680066099795_5727160
+[2023-06-14 15:27:41,867] {{bash.py:185}} INFO - INFO  : Starting task [Stage-8:CONDITIONAL] in serial mode
+[2023-06-14 15:27:41,867] {{bash.py:185}} INFO - INFO  : Stage-5 is selected by condition resolver.
+[2023-06-14 15:27:41,867] {{bash.py:185}} INFO - INFO  : Stage-4 is filtered out by condition resolver.
+[2023-06-14 15:27:41,867] {{bash.py:185}} INFO - INFO  : Stage-6 is filtered out by condition resolver.
+[2023-06-14 15:27:41,867] {{bash.py:185}} INFO - INFO  : Starting task [Stage-5:MOVE] in serial mode
+[2023-06-14 15:27:41,867] {{bash.py:185}} INFO - INFO  : Moving data to directory hdfs://nameservice1/user/hive/warehouse/di_qu.db/tf_cei_ecosphere_bl_mid/pt=202306/type=bl_ben/.hive-staging_hive_2023-06-14_15-23-39_154_6869550377532667101-527784/-ext-10000 from hdfs://nameservice1/user/hive/warehouse/di_qu.db/tf_cei_ecosphere_bl_mid/pt=202306/type=bl_ben/.hive-staging_hive_2023-06-14_15-23-39_154_6869550377532667101-527784/-ext-10003
+[2023-06-14 15:27:41,867] {{bash.py:185}} INFO - INFO  : Starting task [Stage-0:MOVE] in serial mode
+[2023-06-14 15:27:41,867] {{bash.py:185}} INFO - INFO  : Loading data to table di_qu.tf_cei_ecosphere_bl_mid partition (pt=202306, type=bl_ben) from hdfs://nameservice1/user/hive/warehouse/di_qu.db/tf_cei_ecosphere_bl_mid/pt=202306/type=bl_ben/.hive-staging_hive_2023-06-14_15-23-39_154_6869550377532667101-527784/-ext-10000
+[2023-06-14 15:27:44,242] {{bash.py:185}} INFO - INFO  : Starting task [Stage-3:STATS] in serial mode
+[2023-06-14 15:27:44,242] {{bash.py:185}} INFO - INFO  : MapReduce Jobs Launched:
+[2023-06-14 15:27:44,242] {{bash.py:185}} INFO - INFO  : Stage-Stage-2: Map: 13  Reduce: 1   Cumulative CPU: 1295.5 sec   HDFS Read: 743381354 HDFS Write: 11194227 HDFS EC Read: 0 SUCCESS
+[2023-06-14 15:27:44,242] {{bash.py:185}} INFO - INFO  : Total MapReduce CPU Time Spent: 21 minutes 35 seconds 500 msec
+[2023-06-14 15:27:44,242] {{bash.py:185}} INFO - INFO  : Completed executing command(queryId=hive_20230614152339_a383d299-a6c6-48e6-bef9-c81ab2397a8c); Time taken: 227.769 seconds
+[2023-06-14 15:27:44,242] {{bash.py:185}} INFO - INFO  : OK
+[2023-06-14 15:27:44,257] {{bash.py:185}} INFO - 907,257 rows affected (245.148 seconds)
+[2023-06-14 15:27:44,747] {{bash.py:185}} INFO - Beeline version 2.1.1-cdh6.3.2 by Apache Hive
+[2023-06-14 15:27:47,290] {{bash.py:185}} INFO - WARNING: Use "yarn jar" to launch YARN applications.
+[2023-06-14 15:27:47,902] {{bash.py:185}} INFO - SLF4J: Class path contains multiple SLF4J bindings.
+[2023-06-14 15:27:47,902] {{bash.py:185}} INFO - SLF4J: Found binding in [jar:file:/opt/cloudera/parcels/CDH-6.3.2-1.cdh6.3.2.p0.1605554/jars/log4j-slf4j-impl-2.8.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+[2023-06-14 15:27:47,902] {{bash.py:185}} INFO - SLF4J: Found binding in [jar:file:/opt/cloudera/parcels/CDH-6.3.2-1.cdh6.3.2.p0.1605554/jars/slf4j-log4j12-1.7.25.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+[2023-06-14 15:27:47,902] {{bash.py:185}} INFO - SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+[2023-06-14 15:27:47,908] {{bash.py:185}} INFO - SLF4J: Actual binding is of type [org.apache.logging.slf4j.Log4jLoggerFactory]
+[2023-06-14 15:27:50,332] {{bash.py:185}} INFO - Connecting to jdbc:hive2://10.138.225.37:30010/default;principal=hive/qdcdh00@HAIER.COM
+[2023-06-14 15:27:51,684] {{bash.py:185}} INFO - Connected to: Apache Hive (version 2.1.1-cdh6.3.2)
+[2023-06-14 15:27:51,684] {{bash.py:185}} INFO - Driver: Hive JDBC (version 2.1.1-cdh6.3.2)
+[2023-06-14 15:27:51,684] {{bash.py:185}} INFO - Transaction isolation: TRANSACTION_REPEATABLE_READ
+[2023-06-14 15:27:51,776] {{bash.py:185}} INFO - No rows affected (0.076 seconds)
+[2023-06-14 15:27:51,822] {{bash.py:185}} INFO - No rows affected (0.026 seconds)
+[2023-06-14 15:27:51,863] {{bash.py:185}} INFO - No rows affected (0.028 seconds)
+[2023-06-14 15:28:11,711] {{bash.py:185}} INFO - INFO  : Compiling command(queryId=hive_20230614152751_e10de670-1245-449c-9c0e-fadc2df0d765): with
+[2023-06-14 15:28:11,711] {{bash.py:185}} INFO - date_table as (
+[2023-06-14 15:28:11,711] {{bash.py:185}} INFO - select period_id,
+[2023-06-14 15:28:11,711] {{bash.py:185}} INFO - 	   period_month,
+[2023-06-14 15:28:11,712] {{bash.py:185}} INFO -        period_year
+[2023-06-14 15:28:11,712] {{bash.py:185}} INFO - from dh_qu.tm_cei_dim_period
+[2023-06-14 15:28:11,712] {{bash.py:185}} INFO - where PERIOD_LEVEL='D'
+[2023-06-14 15:28:11,712] {{bash.py:185}} INFO - and period_month = '202306'
+[2023-06-14 15:28:11,712] {{bash.py:185}} INFO - and period_id <= '20230630'
+[2023-06-14 15:28:11,712] {{bash.py:185}} INFO - and period_id <= '20230613'
+[2023-06-14 15:28:11,712] {{bash.py:185}} INFO - )
+[2023-06-14 15:28:11,712] {{bash.py:185}} INFO - insert overwrite table di_qu.tf_cei_ecosphere_bl_mid
+[2023-06-14 15:28:11,712] {{bash.py:185}} INFO - partition(pt = '202306',type='bl_kai')
+[2023-06-14 15:28:11,712] {{bash.py:185}} INFO - select
+[2023-06-14 15:28:11,712] {{bash.py:185}} INFO - t2.period_id,
+[2023-06-14 15:28:11,712] {{bash.py:185}} INFO - from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd') as kpi_dt,
+[2023-06-14 15:28:11,712] {{bash.py:185}} INFO - null as hsicrm_regionname,
+[2023-06-14 15:28:11,712] {{bash.py:185}} INFO - hsicrm_brandname,
+[2023-06-14 15:28:11,712] {{bash.py:185}} INFO - pl_platform_name,
+[2023-06-14 15:28:11,712] {{bash.py:185}} INFO - hsicrm_productcategoryname,
+[2023-06-14 15:28:11,712] {{bash.py:185}} INFO - pl_factory_code,
+[2023-06-14 15:28:11,712] {{bash.py:185}} INFO - pl_factory_name,
+[2023-06-14 15:28:11,712] {{bash.py:185}} INFO - pl_line_code,
+[2023-06-14 15:28:11,712] {{bash.py:185}} INFO - pl_line_name,
+[2023-06-14 15:28:11,712] {{bash.py:185}} INFO - product_code,
+[2023-06-14 15:28:11,712] {{bash.py:185}} INFO - product_name,
+[2023-06-14 15:28:11,712] {{bash.py:185}} INFO - mark_time,
+[2023-06-14 15:28:11,712] {{bash.py:185}} INFO - prod_life_state,
+[2023-06-14 15:28:11,712] {{bash.py:185}} INFO - design_xw_code,
+[2023-06-14 15:28:11,712] {{bash.py:185}} INFO - design_xw_name,
+[2023-06-14 15:28:11,713] {{bash.py:185}} INFO - user_xw_code,
+[2023-06-14 15:28:11,713] {{bash.py:185}} INFO - user_xw_name,
+[2023-06-14 15:28:11,713] {{bash.py:185}} INFO - chain_group,
+[2023-06-14 15:28:11,713] {{bash.py:185}} INFO - hsicrm_actualservicetypename,
+[2023-06-14 15:28:11,713] {{bash.py:185}} INFO - ecosphere_name,
+[2023-06-14 15:28:11,713] {{bash.py:185}} INFO - ecosphere_code,
+[2023-06-14 15:28:11,713] {{bash.py:185}} INFO - ecosphere_leader,
+[2023-06-14 15:28:11,713] {{bash.py:185}} INFO - ecosphere_dept,
+[2023-06-14 15:28:11,713] {{bash.py:185}} INFO - sub_ecosphere_name,
+[2023-06-14 15:28:11,713] {{bash.py:185}} INFO - sub_ecosphere_code,
+[2023-06-14 15:28:11,713] {{bash.py:185}} INFO - sub_ecosphere_leader,
+[2023-06-14 15:28:11,713] {{bash.py:185}} INFO - sub_ecosphere_dept,
+[2023-06-14 15:28:11,713] {{bash.py:185}} INFO - '开箱不良' as bl_type,
+[2023-06-14 15:28:11,713] {{bash.py:185}} INFO - count(1),
+[2023-06-14 15:28:11,713] {{bash.py:185}} INFO - from_unixtime(unix_timestamp()) AS dh_etl_date
+[2023-06-14 15:28:11,713] {{bash.py:185}} INFO - from dh_qu.tt_cei_workorder_ecos t1,
+[2023-06-14 15:28:11,713] {{bash.py:185}} INFO - date_table t2
+[2023-06-14 15:28:11,713] {{bash.py:185}} INFO - where t1.is_bl = '1'
+[2023-06-14 15:28:11,713] {{bash.py:185}} INFO - and (t1.is_sczr is null or t1.is_sczr <> '1')
+[2023-06-14 15:28:11,713] {{bash.py:185}} INFO - and nvl(responsibilitycategoryname,'')<>'商场'
+[2023-06-14 15:28:11,713] {{bash.py:185}} INFO -   and t1.pt=202306
+[2023-06-14 15:28:11,713] {{bash.py:185}} INFO -   and cast(t1.period_id as string) = t2.period_id
+[2023-06-14 15:28:11,713] {{bash.py:185}} INFO -   and datediff(t1.hsicrm_registrationtime,t1.hsicrm_salesdate) <= 15
+[2023-06-14 15:28:11,713] {{bash.py:185}} INFO - group by t2.period_id,
+[2023-06-14 15:28:11,713] {{bash.py:185}} INFO - hsicrm_brandname,
+[2023-06-14 15:28:11,713] {{bash.py:185}} INFO - pl_platform_name,
+[2023-06-14 15:28:11,714] {{bash.py:185}} INFO - hsicrm_productcategoryname,
+[2023-06-14 15:28:11,714] {{bash.py:185}} INFO - pl_factory_code,
+[2023-06-14 15:28:11,714] {{bash.py:185}} INFO - pl_factory_name,
+[2023-06-14 15:28:11,714] {{bash.py:185}} INFO - pl_line_code,
+[2023-06-14 15:28:11,714] {{bash.py:185}} INFO - pl_line_name,
+[2023-06-14 15:28:11,714] {{bash.py:185}} INFO - product_code,
+[2023-06-14 15:28:11,714] {{bash.py:185}} INFO - product_name,
+[2023-06-14 15:28:11,714] {{bash.py:185}} INFO - mark_time,
+[2023-06-14 15:28:11,714] {{bash.py:185}} INFO - prod_life_state,
+[2023-06-14 15:28:11,714] {{bash.py:185}} INFO - design_xw_code,
+[2023-06-14 15:28:11,714] {{bash.py:185}} INFO - design_xw_name,
+[2023-06-14 15:28:11,714] {{bash.py:185}} INFO - user_xw_code,
+[2023-06-14 15:28:11,714] {{bash.py:185}} INFO - user_xw_name,
+[2023-06-14 15:28:11,714] {{bash.py:185}} INFO - chain_group,
+[2023-06-14 15:28:11,714] {{bash.py:185}} INFO - hsicrm_actualservicetypename,
+[2023-06-14 15:28:11,714] {{bash.py:185}} INFO - ecosphere_name,
+[2023-06-14 15:28:11,714] {{bash.py:185}} INFO - ecosphere_code,
+[2023-06-14 15:28:11,714] {{bash.py:185}} INFO - ecosphere_leader,
+[2023-06-14 15:28:11,714] {{bash.py:185}} INFO - ecosphere_dept,
+[2023-06-14 15:28:11,714] {{bash.py:185}} INFO - sub_ecosphere_name,
+[2023-06-14 15:28:11,714] {{bash.py:185}} INFO - sub_ecosphere_code,
+[2023-06-14 15:28:11,714] {{bash.py:185}} INFO - sub_ecosphere_leader,
+[2023-06-14 15:28:11,714] {{bash.py:185}} INFO - sub_ecosphere_dept
+[2023-06-14 15:28:11,714] {{bash.py:185}} INFO - INFO  : unix_timestamp(void) is deprecated. Use current_timestamp instead.
+[2023-06-14 15:28:11,714] {{bash.py:185}} INFO - INFO  : Semantic Analysis Completed
+[2023-06-14 15:28:11,714] {{bash.py:185}} INFO - INFO  : Returning Hive schema: Schema(fieldSchemas:[FieldSchema(name:_col0, type:int, comment:null), FieldSchema(name:_col1, type:timestamp, comment:null), FieldSchema(name:_col2, type:void, comment:null), FieldSchema(name:_col3, type:string, comment:null), FieldSchema(name:_col4, type:string, comment:null), FieldSchema(name:_col5, type:string, comment:null), FieldSchema(name:_col6, type:string, comment:null), FieldSchema(name:_col7, type:string, comment:null), FieldSchema(name:_col8, type:string, comment:null), FieldSchema(name:_col9, type:string, comment:null), FieldSchema(name:_col10, type:string, comment:null), FieldSchema(name:_col11, type:string, comment:null), FieldSchema(name:_col12, type:string, comment:null), FieldSchema(name:_col13, type:string, comment:null), FieldSchema(name:_col14, type:string, comment:null), FieldSchema(name:_col15, type:string, comment:null), FieldSchema(name:_col16, type:string, comment:null), FieldSchema(name:_col17, type:string, comment:null), FieldSchema(name:_col18, type:string, comment:null), FieldSchema(name:_col19, type:string, comment:null), FieldSchema(name:_col20, type:string, comment:null), FieldSchema(name:_col21, type:string, comment:null), FieldSchema(name:_col22, type:string, comment:null), FieldSchema(name:_col23, type:string, comment:null), FieldSchema(name:_col24, type:string, comment:null), FieldSchema(name:_col25, type:string, comment:null), FieldSchema(name:_col26, type:string, comment:null), FieldSchema(name:_col27, type:string, comment:null), FieldSchema(name:_col28, type:string, comment:null), FieldSchema(name:_col29, type:int, comment:null), FieldSchema(name:_col30, type:timestamp, comment:null)], properties:null)
+[2023-06-14 15:28:11,715] {{bash.py:185}} INFO - INFO  : Completed compiling command(queryId=hive_20230614152751_e10de670-1245-449c-9c0e-fadc2df0d765); Time taken: 14.807 seconds
+[2023-06-14 15:28:11,715] {{bash.py:185}} INFO - INFO  : Executing command(queryId=hive_20230614152751_e10de670-1245-449c-9c0e-fadc2df0d765): with
+[2023-06-14 15:28:11,715] {{bash.py:185}} INFO - date_table as (
+[2023-06-14 15:28:11,715] {{bash.py:185}} INFO - select period_id,
+[2023-06-14 15:28:11,715] {{bash.py:185}} INFO - 	   period_month,
+[2023-06-14 15:28:11,715] {{bash.py:185}} INFO -        period_year
+[2023-06-14 15:28:11,715] {{bash.py:185}} INFO - from dh_qu.tm_cei_dim_period
+[2023-06-14 15:28:11,715] {{bash.py:185}} INFO - where PERIOD_LEVEL='D'
+[2023-06-14 15:28:11,715] {{bash.py:185}} INFO - and period_month = '202306'
+[2023-06-14 15:28:11,715] {{bash.py:185}} INFO - and period_id <= '20230630'
+[2023-06-14 15:28:11,715] {{bash.py:185}} INFO - and period_id <= '20230613'
+[2023-06-14 15:28:11,715] {{bash.py:185}} INFO - )
+[2023-06-14 15:28:11,715] {{bash.py:185}} INFO - insert overwrite table di_qu.tf_cei_ecosphere_bl_mid
+[2023-06-14 15:28:11,715] {{bash.py:185}} INFO - partition(pt = '202306',type='bl_kai')
+[2023-06-14 15:28:11,715] {{bash.py:185}} INFO - select
+[2023-06-14 15:28:11,715] {{bash.py:185}} INFO - t2.period_id,
+[2023-06-14 15:28:11,715] {{bash.py:185}} INFO - from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd') as kpi_dt,
+[2023-06-14 15:28:11,715] {{bash.py:185}} INFO - null as hsicrm_regionname,
+[2023-06-14 15:28:11,715] {{bash.py:185}} INFO - hsicrm_brandname,
+[2023-06-14 15:28:11,715] {{bash.py:185}} INFO - pl_platform_name,
+[2023-06-14 15:28:11,715] {{bash.py:185}} INFO - hsicrm_productcategoryname,
+[2023-06-14 15:28:11,715] {{bash.py:185}} INFO - pl_factory_code,
+[2023-06-14 15:28:11,715] {{bash.py:185}} INFO - pl_factory_name,
+[2023-06-14 15:28:11,715] {{bash.py:185}} INFO - pl_line_code,
+[2023-06-14 15:28:11,715] {{bash.py:185}} INFO - pl_line_name,
+[2023-06-14 15:28:11,715] {{bash.py:185}} INFO - product_code,
+[2023-06-14 15:28:11,715] {{bash.py:185}} INFO - product_name,
+[2023-06-14 15:28:11,715] {{bash.py:185}} INFO - mark_time,
+[2023-06-14 15:28:11,716] {{bash.py:185}} INFO - prod_life_state,
+[2023-06-14 15:28:11,716] {{bash.py:185}} INFO - design_xw_code,
+[2023-06-14 15:28:11,716] {{bash.py:185}} INFO - design_xw_name,
+[2023-06-14 15:28:11,716] {{bash.py:185}} INFO - user_xw_code,
+[2023-06-14 15:28:11,716] {{bash.py:185}} INFO - user_xw_name,
+[2023-06-14 15:28:11,716] {{bash.py:185}} INFO - chain_group,
+[2023-06-14 15:28:11,716] {{bash.py:185}} INFO - hsicrm_actualservicetypename,
+[2023-06-14 15:28:11,716] {{bash.py:185}} INFO - ecosphere_name,
+[2023-06-14 15:28:11,716] {{bash.py:185}} INFO - ecosphere_code,
+[2023-06-14 15:28:11,716] {{bash.py:185}} INFO - ecosphere_leader,
+[2023-06-14 15:28:11,716] {{bash.py:185}} INFO - ecosphere_dept,
+[2023-06-14 15:28:11,716] {{bash.py:185}} INFO - sub_ecosphere_name,
+[2023-06-14 15:28:11,716] {{bash.py:185}} INFO - sub_ecosphere_code,
+[2023-06-14 15:28:11,716] {{bash.py:185}} INFO - sub_ecosphere_leader,
+[2023-06-14 15:28:11,716] {{bash.py:185}} INFO - sub_ecosphere_dept,
+[2023-06-14 15:28:11,716] {{bash.py:185}} INFO - '开箱不良' as bl_type,
+[2023-06-14 15:28:11,716] {{bash.py:185}} INFO - count(1),
+[2023-06-14 15:28:11,716] {{bash.py:185}} INFO - from_unixtime(unix_timestamp()) AS dh_etl_date
+[2023-06-14 15:28:11,716] {{bash.py:185}} INFO - from dh_qu.tt_cei_workorder_ecos t1,
+[2023-06-14 15:28:11,716] {{bash.py:185}} INFO - date_table t2
+[2023-06-14 15:28:11,716] {{bash.py:185}} INFO - where t1.is_bl = '1'
+[2023-06-14 15:28:11,716] {{bash.py:185}} INFO - and (t1.is_sczr is null or t1.is_sczr <> '1')
+[2023-06-14 15:28:11,716] {{bash.py:185}} INFO - and nvl(responsibilitycategoryname,'')<>'商场'
+[2023-06-14 15:28:11,716] {{bash.py:185}} INFO -   and t1.pt=202306
+[2023-06-14 15:28:11,716] {{bash.py:185}} INFO -   and cast(t1.period_id as string) = t2.period_id
+[2023-06-14 15:28:11,716] {{bash.py:185}} INFO -   and datediff(t1.hsicrm_registrationtime,t1.hsicrm_salesdate) <= 15
+[2023-06-14 15:28:11,716] {{bash.py:185}} INFO - group by t2.period_id,
+[2023-06-14 15:28:11,716] {{bash.py:185}} INFO - hsicrm_brandname,
+[2023-06-14 15:28:11,716] {{bash.py:185}} INFO - pl_platform_name,
+[2023-06-14 15:28:11,717] {{bash.py:185}} INFO - hsicrm_productcategoryname,
+[2023-06-14 15:28:11,717] {{bash.py:185}} INFO - pl_factory_code,
+[2023-06-14 15:28:11,717] {{bash.py:185}} INFO - pl_factory_name,
+[2023-06-14 15:28:11,717] {{bash.py:185}} INFO - pl_line_code,
+[2023-06-14 15:28:11,717] {{bash.py:185}} INFO - pl_line_name,
+[2023-06-14 15:28:11,717] {{bash.py:185}} INFO - product_code,
+[2023-06-14 15:28:11,717] {{bash.py:185}} INFO - product_name,
+[2023-06-14 15:28:11,717] {{bash.py:185}} INFO - mark_time,
+[2023-06-14 15:28:11,717] {{bash.py:185}} INFO - prod_life_state,
+[2023-06-14 15:28:11,717] {{bash.py:185}} INFO - design_xw_code,
+[2023-06-14 15:28:11,717] {{bash.py:185}} INFO - design_xw_name,
+[2023-06-14 15:28:11,717] {{bash.py:185}} INFO - user_xw_code,
+[2023-06-14 15:28:11,717] {{bash.py:185}} INFO - user_xw_name,
+[2023-06-14 15:28:11,717] {{bash.py:185}} INFO - chain_group,
+[2023-06-14 15:28:11,717] {{bash.py:185}} INFO - hsicrm_actualservicetypename,
+[2023-06-14 15:28:11,717] {{bash.py:185}} INFO - ecosphere_name,
+[2023-06-14 15:28:11,717] {{bash.py:185}} INFO - ecosphere_code,
+[2023-06-14 15:28:11,717] {{bash.py:185}} INFO - ecosphere_leader,
+[2023-06-14 15:28:11,717] {{bash.py:185}} INFO - ecosphere_dept,
+[2023-06-14 15:28:11,717] {{bash.py:185}} INFO - sub_ecosphere_name,
+[2023-06-14 15:28:11,717] {{bash.py:185}} INFO - sub_ecosphere_code,
+[2023-06-14 15:28:11,717] {{bash.py:185}} INFO - sub_ecosphere_leader,
+[2023-06-14 15:28:11,717] {{bash.py:185}} INFO - sub_ecosphere_dept
+[2023-06-14 15:28:11,717] {{bash.py:185}} INFO - WARN  :
+[2023-06-14 15:28:11,717] {{bash.py:185}} INFO - INFO  : Query ID = hive_20230614152751_e10de670-1245-449c-9c0e-fadc2df0d765
+[2023-06-14 15:28:11,717] {{bash.py:185}} INFO - INFO  : Total jobs = 3
+[2023-06-14 15:28:11,717] {{bash.py:185}} INFO - INFO  : Starting task [Stage-11:MAPREDLOCAL] in serial mode
+[2023-06-14 15:28:26,749] {{bash.py:185}} INFO - INFO  : Execution completed successfully
+[2023-06-14 15:28:26,749] {{bash.py:185}} INFO - INFO  : MapredLocal task succeeded
+[2023-06-14 15:28:26,749] {{bash.py:185}} INFO - INFO  : Launching Job 1 out of 3
+[2023-06-14 15:28:26,749] {{bash.py:185}} INFO - INFO  : Starting task [Stage-2:MAPRED] in serial mode
+[2023-06-14 15:28:26,749] {{bash.py:185}} INFO - INFO  : Number of reduce tasks not specified. Estimated from input data size: 1
+[2023-06-14 15:28:26,749] {{bash.py:185}} INFO - INFO  : In order to change the average load for a reducer (in bytes):
+[2023-06-14 15:28:26,749] {{bash.py:185}} INFO - INFO  :   set hive.exec.reducers.bytes.per.reducer=<number>
+[2023-06-14 15:28:26,749] {{bash.py:185}} INFO - INFO  : In order to limit the maximum number of reducers:
+[2023-06-14 15:28:26,749] {{bash.py:185}} INFO - INFO  :   set hive.exec.reducers.max=<number>
+[2023-06-14 15:28:26,749] {{bash.py:185}} INFO - INFO  : In order to set a constant number of reducers:
+[2023-06-14 15:28:26,749] {{bash.py:185}} INFO - INFO  :   set mapreduce.job.reduces=<number>
+[2023-06-14 15:28:41,788] {{bash.py:185}} INFO - INFO  : number of splits:1
+[2023-06-14 15:28:51,814] {{bash.py:185}} INFO - INFO  : Submitting tokens for job: job_1680066099795_5727364
+[2023-06-14 15:28:51,814] {{bash.py:185}} INFO - INFO  : Executing with tokens: [Kind: HDFS_DELEGATION_TOKEN, Service: ha-hdfs:nameservice1, Ident: (token for hive: HDFS_DELEGATION_TOKEN owner=hive/qdcdh00.haier.com@HAIER.COM, renewer=yarn, realUser=, issueDate=1686727707209, maxDate=1687332507209, sequenceNumber=171334178, masterKeyId=2287)]
+[2023-06-14 15:28:56,831] {{bash.py:185}} INFO - INFO  : The url to track the job: http://qdcdh04.haier.com:8088/proxy/application_1680066099795_5727364/
+[2023-06-14 15:28:56,832] {{bash.py:185}} INFO - INFO  : Starting Job = job_1680066099795_5727364, Tracking URL = http://qdcdh04.haier.com:8088/proxy/application_1680066099795_5727364/
+[2023-06-14 15:28:56,832] {{bash.py:185}} INFO - INFO  : Kill Command = /opt/cloudera/parcels/CDH-6.3.2-1.cdh6.3.2.p0.1605554/lib/hadoop/bin/hadoop job  -kill job_1680066099795_5727364
+[2023-06-14 15:29:11,873] {{bash.py:185}} INFO - INFO  : Hadoop job information for Stage-2: number of mappers: 1; number of reducers: 1
+[2023-06-14 15:29:11,874] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:29:11,008 Stage-2 map = 0%,  reduce = 0%
+[2023-06-14 15:29:56,998] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:29:55,736 Stage-2 map = 100%,  reduce = 0%, Cumulative CPU 49.77 sec
+[2023-06-14 15:30:22,054] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:30:21,685 Stage-2 map = 100%,  reduce = 100%, Cumulative CPU 69.57 sec
+[2023-06-14 15:30:32,081] {{bash.py:185}} INFO - INFO  : MapReduce Total cumulative CPU time: 1 minutes 9 seconds 570 msec
+[2023-06-14 15:30:32,081] {{bash.py:185}} INFO - INFO  : Ended Job = job_1680066099795_5727364
+[2023-06-14 15:30:32,081] {{bash.py:185}} INFO - INFO  : Starting task [Stage-8:CONDITIONAL] in serial mode
+[2023-06-14 15:30:32,081] {{bash.py:185}} INFO - INFO  : Stage-5 is selected by condition resolver.
+[2023-06-14 15:30:32,081] {{bash.py:185}} INFO - INFO  : Stage-4 is filtered out by condition resolver.
+[2023-06-14 15:30:32,081] {{bash.py:185}} INFO - INFO  : Stage-6 is filtered out by condition resolver.
+[2023-06-14 15:30:32,081] {{bash.py:185}} INFO - INFO  : Starting task [Stage-5:MOVE] in serial mode
+[2023-06-14 15:30:32,081] {{bash.py:185}} INFO - INFO  : Moving data to directory hdfs://nameservice1/user/hive/warehouse/di_qu.db/tf_cei_ecosphere_bl_mid/pt=202306/type=bl_kai/.hive-staging_hive_2023-06-14_15-27-51_902_3646834491625615654-520745/-ext-10000 from hdfs://nameservice1/user/hive/warehouse/di_qu.db/tf_cei_ecosphere_bl_mid/pt=202306/type=bl_kai/.hive-staging_hive_2023-06-14_15-27-51_902_3646834491625615654-520745/-ext-10003
+[2023-06-14 15:30:32,081] {{bash.py:185}} INFO - INFO  : Starting task [Stage-0:MOVE] in serial mode
+[2023-06-14 15:30:32,081] {{bash.py:185}} INFO - INFO  : Loading data to table di_qu.tf_cei_ecosphere_bl_mid partition (pt=202306, type=bl_kai) from hdfs://nameservice1/user/hive/warehouse/di_qu.db/tf_cei_ecosphere_bl_mid/pt=202306/type=bl_kai/.hive-staging_hive_2023-06-14_15-27-51_902_3646834491625615654-520745/-ext-10000
+[2023-06-14 15:30:33,574] {{bash.py:185}} INFO - INFO  : Starting task [Stage-3:STATS] in serial mode
+[2023-06-14 15:30:33,574] {{bash.py:185}} INFO - INFO  : MapReduce Jobs Launched:
+[2023-06-14 15:30:33,574] {{bash.py:185}} INFO - INFO  : Stage-Stage-2: Map: 1  Reduce: 1   Cumulative CPU: 69.57 sec   HDFS Read: 19134578 HDFS Write: 506912 HDFS EC Read: 0 SUCCESS
+[2023-06-14 15:30:33,574] {{bash.py:185}} INFO - INFO  : Total MapReduce CPU Time Spent: 1 minutes 9 seconds 570 msec
+[2023-06-14 15:30:33,575] {{bash.py:185}} INFO - INFO  : Completed executing command(queryId=hive_20230614152751_e10de670-1245-449c-9c0e-fadc2df0d765); Time taken: 146.777 seconds
+[2023-06-14 15:30:33,575] {{bash.py:185}} INFO - INFO  : OK
+[2023-06-14 15:30:33,585] {{bash.py:185}} INFO - 17,357 rows affected (161.707 seconds)
+[2023-06-14 15:30:33,876] {{bash.py:185}} INFO - Beeline version 2.1.1-cdh6.3.2 by Apache Hive
+[2023-06-14 15:30:36,681] {{bash.py:185}} INFO - WARNING: Use "yarn jar" to launch YARN applications.
+[2023-06-14 15:30:37,299] {{bash.py:185}} INFO - SLF4J: Class path contains multiple SLF4J bindings.
+[2023-06-14 15:30:37,299] {{bash.py:185}} INFO - SLF4J: Found binding in [jar:file:/opt/cloudera/parcels/CDH-6.3.2-1.cdh6.3.2.p0.1605554/jars/log4j-slf4j-impl-2.8.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+[2023-06-14 15:30:37,299] {{bash.py:185}} INFO - SLF4J: Found binding in [jar:file:/opt/cloudera/parcels/CDH-6.3.2-1.cdh6.3.2.p0.1605554/jars/slf4j-log4j12-1.7.25.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+[2023-06-14 15:30:37,299] {{bash.py:185}} INFO - SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+[2023-06-14 15:30:37,305] {{bash.py:185}} INFO - SLF4J: Actual binding is of type [org.apache.logging.slf4j.Log4jLoggerFactory]
+[2023-06-14 15:30:39,805] {{bash.py:185}} INFO - Connecting to jdbc:hive2://10.138.225.37:30010/default;principal=hive/qdcdh00@HAIER.COM
+[2023-06-14 15:30:40,924] {{bash.py:185}} INFO - Connected to: Apache Hive (version 2.1.1-cdh6.3.2)
+[2023-06-14 15:30:40,925] {{bash.py:185}} INFO - Driver: Hive JDBC (version 2.1.1-cdh6.3.2)
+[2023-06-14 15:30:40,925] {{bash.py:185}} INFO - Transaction isolation: TRANSACTION_REPEATABLE_READ
+[2023-06-14 15:30:41,022] {{bash.py:185}} INFO - No rows affected (0.079 seconds)
+[2023-06-14 15:30:41,062] {{bash.py:185}} INFO - No rows affected (0.023 seconds)
+[2023-06-14 15:30:41,097] {{bash.py:185}} INFO - No rows affected (0.023 seconds)
+[2023-06-14 15:30:59,756] {{bash.py:185}} INFO - INFO  : Compiling command(queryId=hive_20230614153041_f1c5fa7a-8c5b-4dcd-99bc-e5b0846d9513): with
+[2023-06-14 15:30:59,756] {{bash.py:185}} INFO - date_table as (
+[2023-06-14 15:30:59,756] {{bash.py:185}} INFO - select period_id,
+[2023-06-14 15:30:59,756] {{bash.py:185}} INFO - 	   period_month,
+[2023-06-14 15:30:59,756] {{bash.py:185}} INFO -        period_year
+[2023-06-14 15:30:59,756] {{bash.py:185}} INFO - from dh_qu.tm_cei_dim_period
+[2023-06-14 15:30:59,756] {{bash.py:185}} INFO - where PERIOD_LEVEL='D'
+[2023-06-14 15:30:59,756] {{bash.py:185}} INFO - and period_month = '202306'
+[2023-06-14 15:30:59,756] {{bash.py:185}} INFO - and period_id <= '20230630'
+[2023-06-14 15:30:59,756] {{bash.py:185}} INFO - and period_id <= '20230613'
+[2023-06-14 15:30:59,756] {{bash.py:185}} INFO - )
+[2023-06-14 15:30:59,756] {{bash.py:185}} INFO - insert overwrite table di_qu.tf_cei_ecosphere_bl_mid
+[2023-06-14 15:30:59,756] {{bash.py:185}} INFO - partition(pt = '202306',type='bl_xin')
+[2023-06-14 15:30:59,756] {{bash.py:185}} INFO - select
+[2023-06-14 15:30:59,756] {{bash.py:185}} INFO - t2.period_id,
+[2023-06-14 15:30:59,756] {{bash.py:185}} INFO - from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd') as kpi_dt,
+[2023-06-14 15:30:59,756] {{bash.py:185}} INFO - null as hsicrm_regionname,
+[2023-06-14 15:30:59,756] {{bash.py:185}} INFO - hsicrm_brandname,
+[2023-06-14 15:30:59,756] {{bash.py:185}} INFO - pl_platform_name,
+[2023-06-14 15:30:59,756] {{bash.py:185}} INFO - hsicrm_productcategoryname,
+[2023-06-14 15:30:59,757] {{bash.py:185}} INFO - pl_factory_code,
+[2023-06-14 15:30:59,757] {{bash.py:185}} INFO - pl_factory_name,
+[2023-06-14 15:30:59,757] {{bash.py:185}} INFO - pl_line_code,
+[2023-06-14 15:30:59,757] {{bash.py:185}} INFO - pl_line_name,
+[2023-06-14 15:30:59,757] {{bash.py:185}} INFO - product_code,
+[2023-06-14 15:30:59,757] {{bash.py:185}} INFO - product_name,
+[2023-06-14 15:30:59,757] {{bash.py:185}} INFO - mark_time,
+[2023-06-14 15:30:59,757] {{bash.py:185}} INFO - prod_life_state,
+[2023-06-14 15:30:59,757] {{bash.py:185}} INFO - design_xw_code,
+[2023-06-14 15:30:59,757] {{bash.py:185}} INFO - design_xw_name,
+[2023-06-14 15:30:59,757] {{bash.py:185}} INFO - user_xw_code,
+[2023-06-14 15:30:59,757] {{bash.py:185}} INFO - user_xw_name,
+[2023-06-14 15:30:59,757] {{bash.py:185}} INFO - chain_group,
+[2023-06-14 15:30:59,757] {{bash.py:185}} INFO - hsicrm_actualservicetypename,
+[2023-06-14 15:30:59,757] {{bash.py:185}} INFO - ecosphere_name,
+[2023-06-14 15:30:59,757] {{bash.py:185}} INFO - ecosphere_code,
+[2023-06-14 15:30:59,757] {{bash.py:185}} INFO - ecosphere_leader,
+[2023-06-14 15:30:59,757] {{bash.py:185}} INFO - ecosphere_dept,
+[2023-06-14 15:30:59,757] {{bash.py:185}} INFO - sub_ecosphere_name,
+[2023-06-14 15:30:59,757] {{bash.py:185}} INFO - sub_ecosphere_code,
+[2023-06-14 15:30:59,757] {{bash.py:185}} INFO - sub_ecosphere_leader,
+[2023-06-14 15:30:59,757] {{bash.py:185}} INFO - sub_ecosphere_dept,
+[2023-06-14 15:30:59,757] {{bash.py:185}} INFO - '新品六个月不良' as bl_type,
+[2023-06-14 15:30:59,757] {{bash.py:185}} INFO - count(1),
+[2023-06-14 15:30:59,757] {{bash.py:185}} INFO - from_unixtime(unix_timestamp()) AS dh_etl_date
+[2023-06-14 15:30:59,758] {{bash.py:185}} INFO - from dh_qu.tt_cei_workorder_ecos t1,
+[2023-06-14 15:30:59,758] {{bash.py:185}} INFO - date_table t2
+[2023-06-14 15:30:59,758] {{bash.py:185}} INFO - where t1.is_bl = '1'
+[2023-06-14 15:30:59,758] {{bash.py:185}} INFO - and (t1.is_sczr is null or t1.is_sczr <> '1')
+[2023-06-14 15:30:59,758] {{bash.py:185}} INFO -   and nvl(responsibilitycategoryname,'')<>'商场'
+[2023-06-14 15:30:59,758] {{bash.py:185}} INFO -   and t1.pt<=202306
+[2023-06-14 15:30:59,758] {{bash.py:185}} INFO -   and t1.pt>=202211
+[2023-06-14 15:30:59,758] {{bash.py:185}} INFO -   and cast(t1.period_id as string) <= t2.period_id
+[2023-06-14 15:30:59,758] {{bash.py:185}} INFO -   and cast(t1.period_id as string) BETWEEN substr(regexp_replace(cast(date_add(add_months(from_unixtime(unix_timestamp(cast(t2.period_id as string),'yyyyMMdd'),'yyyy-MM-dd'),-6),1) as string),'-',''),1,8) AND cast(t2.period_id as string)
+[2023-06-14 15:30:59,758] {{bash.py:185}} INFO -   and t1.hsicrm_manufacturedate BETWEEN date_add(add_months(from_unixtime(unix_timestamp(cast(t2.period_id as string),'yyyyMMdd'),'yyyy-MM-dd'),-6),1) AND from_unixtime(unix_timestamp(cast(t2.period_id as string),'yyyyMMdd'),'yyyy-MM-dd')
+[2023-06-14 15:30:59,758] {{bash.py:185}} INFO -   AND regexp_replace(t1.mark_time,'/','-') BETWEEN date_add(add_months(from_unixtime(unix_timestamp(cast(t2.period_id as string),'yyyyMMdd'),'yyyy-MM-dd'),-12),1) AND from_unixtime(unix_timestamp(cast(t2.period_id as string),'yyyyMMdd'),'yyyy-MM-dd')
+[2023-06-14 15:30:59,758] {{bash.py:185}} INFO - group by t2.period_id,
+[2023-06-14 15:30:59,758] {{bash.py:185}} INFO - hsicrm_brandname,
+[2023-06-14 15:30:59,758] {{bash.py:185}} INFO - pl_platform_name,
+[2023-06-14 15:30:59,758] {{bash.py:185}} INFO - hsicrm_productcategoryname,
+[2023-06-14 15:30:59,758] {{bash.py:185}} INFO - pl_factory_code,
+[2023-06-14 15:30:59,758] {{bash.py:185}} INFO - pl_factory_name,
+[2023-06-14 15:30:59,758] {{bash.py:185}} INFO - pl_line_code,
+[2023-06-14 15:30:59,758] {{bash.py:185}} INFO - pl_line_name,
+[2023-06-14 15:30:59,758] {{bash.py:185}} INFO - product_code,
+[2023-06-14 15:30:59,758] {{bash.py:185}} INFO - product_name,
+[2023-06-14 15:30:59,758] {{bash.py:185}} INFO - mark_time,
+[2023-06-14 15:30:59,758] {{bash.py:185}} INFO - prod_life_state,
+[2023-06-14 15:30:59,758] {{bash.py:185}} INFO - design_xw_code,
+[2023-06-14 15:30:59,758] {{bash.py:185}} INFO - design_xw_name,
+[2023-06-14 15:30:59,759] {{bash.py:185}} INFO - user_xw_code,
+[2023-06-14 15:30:59,759] {{bash.py:185}} INFO - user_xw_name,
+[2023-06-14 15:30:59,759] {{bash.py:185}} INFO - chain_group,
+[2023-06-14 15:30:59,759] {{bash.py:185}} INFO - hsicrm_actualservicetypename,
+[2023-06-14 15:30:59,759] {{bash.py:185}} INFO - ecosphere_name,
+[2023-06-14 15:30:59,759] {{bash.py:185}} INFO - ecosphere_code,
+[2023-06-14 15:30:59,759] {{bash.py:185}} INFO - ecosphere_leader,
+[2023-06-14 15:30:59,759] {{bash.py:185}} INFO - ecosphere_dept,
+[2023-06-14 15:30:59,759] {{bash.py:185}} INFO - sub_ecosphere_name,
+[2023-06-14 15:30:59,759] {{bash.py:185}} INFO - sub_ecosphere_code,
+[2023-06-14 15:30:59,759] {{bash.py:185}} INFO - sub_ecosphere_leader,
+[2023-06-14 15:30:59,759] {{bash.py:185}} INFO - sub_ecosphere_dept
+[2023-06-14 15:30:59,759] {{bash.py:185}} INFO - INFO  : unix_timestamp(void) is deprecated. Use current_timestamp instead.
+[2023-06-14 15:30:59,759] {{bash.py:185}} INFO - INFO  : Warning: Map Join MAPJOIN[22][bigTable=?] in task 'Stage-2:MAPRED' is a cross product
+[2023-06-14 15:30:59,759] {{bash.py:185}} INFO - INFO  : Semantic Analysis Completed
+[2023-06-14 15:30:59,759] {{bash.py:185}} INFO - INFO  : Returning Hive schema: Schema(fieldSchemas:[FieldSchema(name:_col0, type:int, comment:null), FieldSchema(name:_col1, type:timestamp, comment:null), FieldSchema(name:_col2, type:void, comment:null), FieldSchema(name:_col3, type:string, comment:null), FieldSchema(name:_col4, type:string, comment:null), FieldSchema(name:_col5, type:string, comment:null), FieldSchema(name:_col6, type:string, comment:null), FieldSchema(name:_col7, type:string, comment:null), FieldSchema(name:_col8, type:string, comment:null), FieldSchema(name:_col9, type:string, comment:null), FieldSchema(name:_col10, type:string, comment:null), FieldSchema(name:_col11, type:string, comment:null), FieldSchema(name:_col12, type:string, comment:null), FieldSchema(name:_col13, type:string, comment:null), FieldSchema(name:_col14, type:string, comment:null), FieldSchema(name:_col15, type:string, comment:null), FieldSchema(name:_col16, type:string, comment:null), FieldSchema(name:_col17, type:string, comment:null), FieldSchema(name:_col18, type:string, comment:null), FieldSchema(name:_col19, type:string, comment:null), FieldSchema(name:_col20, type:string, comment:null), FieldSchema(name:_col21, type:string, comment:null), FieldSchema(name:_col22, type:string, comment:null), FieldSchema(name:_col23, type:string, comment:null), FieldSchema(name:_col24, type:string, comment:null), FieldSchema(name:_col25, type:string, comment:null), FieldSchema(name:_col26, type:string, comment:null), FieldSchema(name:_col27, type:string, comment:null), FieldSchema(name:_col28, type:string, comment:null), FieldSchema(name:_col29, type:int, comment:null), FieldSchema(name:_col30, type:timestamp, comment:null)], properties:null)
+[2023-06-14 15:30:59,759] {{bash.py:185}} INFO - INFO  : Completed compiling command(queryId=hive_20230614153041_f1c5fa7a-8c5b-4dcd-99bc-e5b0846d9513); Time taken: 13.609 seconds
+[2023-06-14 15:30:59,759] {{bash.py:185}} INFO - INFO  : Executing command(queryId=hive_20230614153041_f1c5fa7a-8c5b-4dcd-99bc-e5b0846d9513): with
+[2023-06-14 15:30:59,759] {{bash.py:185}} INFO - date_table as (
+[2023-06-14 15:30:59,759] {{bash.py:185}} INFO - select period_id,
+[2023-06-14 15:30:59,759] {{bash.py:185}} INFO - 	   period_month,
+[2023-06-14 15:30:59,759] {{bash.py:185}} INFO -        period_year
+[2023-06-14 15:30:59,759] {{bash.py:185}} INFO - from dh_qu.tm_cei_dim_period
+[2023-06-14 15:30:59,759] {{bash.py:185}} INFO - where PERIOD_LEVEL='D'
+[2023-06-14 15:30:59,759] {{bash.py:185}} INFO - and period_month = '202306'
+[2023-06-14 15:30:59,759] {{bash.py:185}} INFO - and period_id <= '20230630'
+[2023-06-14 15:30:59,760] {{bash.py:185}} INFO - and period_id <= '20230613'
+[2023-06-14 15:30:59,760] {{bash.py:185}} INFO - )
+[2023-06-14 15:30:59,760] {{bash.py:185}} INFO - insert overwrite table di_qu.tf_cei_ecosphere_bl_mid
+[2023-06-14 15:30:59,760] {{bash.py:185}} INFO - partition(pt = '202306',type='bl_xin')
+[2023-06-14 15:30:59,760] {{bash.py:185}} INFO - select
+[2023-06-14 15:30:59,760] {{bash.py:185}} INFO - t2.period_id,
+[2023-06-14 15:30:59,760] {{bash.py:185}} INFO - from_unixtime(unix_timestamp(t2.period_id,'yyyyMMdd'),'yyyy-MM-dd') as kpi_dt,
+[2023-06-14 15:30:59,760] {{bash.py:185}} INFO - null as hsicrm_regionname,
+[2023-06-14 15:30:59,760] {{bash.py:185}} INFO - hsicrm_brandname,
+[2023-06-14 15:30:59,760] {{bash.py:185}} INFO - pl_platform_name,
+[2023-06-14 15:30:59,760] {{bash.py:185}} INFO - hsicrm_productcategoryname,
+[2023-06-14 15:30:59,760] {{bash.py:185}} INFO - pl_factory_code,
+[2023-06-14 15:30:59,760] {{bash.py:185}} INFO - pl_factory_name,
+[2023-06-14 15:30:59,760] {{bash.py:185}} INFO - pl_line_code,
+[2023-06-14 15:30:59,760] {{bash.py:185}} INFO - pl_line_name,
+[2023-06-14 15:30:59,760] {{bash.py:185}} INFO - product_code,
+[2023-06-14 15:30:59,760] {{bash.py:185}} INFO - product_name,
+[2023-06-14 15:30:59,760] {{bash.py:185}} INFO - mark_time,
+[2023-06-14 15:30:59,760] {{bash.py:185}} INFO - prod_life_state,
+[2023-06-14 15:30:59,760] {{bash.py:185}} INFO - design_xw_code,
+[2023-06-14 15:30:59,760] {{bash.py:185}} INFO - design_xw_name,
+[2023-06-14 15:30:59,760] {{bash.py:185}} INFO - user_xw_code,
+[2023-06-14 15:30:59,760] {{bash.py:185}} INFO - user_xw_name,
+[2023-06-14 15:30:59,760] {{bash.py:185}} INFO - chain_group,
+[2023-06-14 15:30:59,760] {{bash.py:185}} INFO - hsicrm_actualservicetypename,
+[2023-06-14 15:30:59,760] {{bash.py:185}} INFO - ecosphere_name,
+[2023-06-14 15:30:59,761] {{bash.py:185}} INFO - ecosphere_code,
+[2023-06-14 15:30:59,761] {{bash.py:185}} INFO - ecosphere_leader,
+[2023-06-14 15:30:59,761] {{bash.py:185}} INFO - ecosphere_dept,
+[2023-06-14 15:30:59,761] {{bash.py:185}} INFO - sub_ecosphere_name,
+[2023-06-14 15:30:59,761] {{bash.py:185}} INFO - sub_ecosphere_code,
+[2023-06-14 15:30:59,761] {{bash.py:185}} INFO - sub_ecosphere_leader,
+[2023-06-14 15:30:59,761] {{bash.py:185}} INFO - sub_ecosphere_dept,
+[2023-06-14 15:30:59,761] {{bash.py:185}} INFO - '新品六个月不良' as bl_type,
+[2023-06-14 15:30:59,761] {{bash.py:185}} INFO - count(1),
+[2023-06-14 15:30:59,761] {{bash.py:185}} INFO - from_unixtime(unix_timestamp()) AS dh_etl_date
+[2023-06-14 15:30:59,761] {{bash.py:185}} INFO - from dh_qu.tt_cei_workorder_ecos t1,
+[2023-06-14 15:30:59,761] {{bash.py:185}} INFO - date_table t2
+[2023-06-14 15:30:59,761] {{bash.py:185}} INFO - where t1.is_bl = '1'
+[2023-06-14 15:30:59,761] {{bash.py:185}} INFO - and (t1.is_sczr is null or t1.is_sczr <> '1')
+[2023-06-14 15:30:59,761] {{bash.py:185}} INFO -   and nvl(responsibilitycategoryname,'')<>'商场'
+[2023-06-14 15:30:59,761] {{bash.py:185}} INFO -   and t1.pt<=202306
+[2023-06-14 15:30:59,761] {{bash.py:185}} INFO -   and t1.pt>=202211
+[2023-06-14 15:30:59,761] {{bash.py:185}} INFO -   and cast(t1.period_id as string) <= t2.period_id
+[2023-06-14 15:30:59,761] {{bash.py:185}} INFO -   and cast(t1.period_id as string) BETWEEN substr(regexp_replace(cast(date_add(add_months(from_unixtime(unix_timestamp(cast(t2.period_id as string),'yyyyMMdd'),'yyyy-MM-dd'),-6),1) as string),'-',''),1,8) AND cast(t2.period_id as string)
+[2023-06-14 15:30:59,761] {{bash.py:185}} INFO -   and t1.hsicrm_manufacturedate BETWEEN date_add(add_months(from_unixtime(unix_timestamp(cast(t2.period_id as string),'yyyyMMdd'),'yyyy-MM-dd'),-6),1) AND from_unixtime(unix_timestamp(cast(t2.period_id as string),'yyyyMMdd'),'yyyy-MM-dd')
+[2023-06-14 15:30:59,761] {{bash.py:185}} INFO -   AND regexp_replace(t1.mark_time,'/','-') BETWEEN date_add(add_months(from_unixtime(unix_timestamp(cast(t2.period_id as string),'yyyyMMdd'),'yyyy-MM-dd'),-12),1) AND from_unixtime(unix_timestamp(cast(t2.period_id as string),'yyyyMMdd'),'yyyy-MM-dd')
+[2023-06-14 15:30:59,761] {{bash.py:185}} INFO - group by t2.period_id,
+[2023-06-14 15:30:59,761] {{bash.py:185}} INFO - hsicrm_brandname,
+[2023-06-14 15:30:59,761] {{bash.py:185}} INFO - pl_platform_name,
+[2023-06-14 15:30:59,761] {{bash.py:185}} INFO - hsicrm_productcategoryname,
+[2023-06-14 15:30:59,761] {{bash.py:185}} INFO - pl_factory_code,
+[2023-06-14 15:30:59,762] {{bash.py:185}} INFO - pl_factory_name,
+[2023-06-14 15:30:59,762] {{bash.py:185}} INFO - pl_line_code,
+[2023-06-14 15:30:59,762] {{bash.py:185}} INFO - pl_line_name,
+[2023-06-14 15:30:59,762] {{bash.py:185}} INFO - product_code,
+[2023-06-14 15:30:59,762] {{bash.py:185}} INFO - product_name,
+[2023-06-14 15:30:59,762] {{bash.py:185}} INFO - mark_time,
+[2023-06-14 15:30:59,762] {{bash.py:185}} INFO - prod_life_state,
+[2023-06-14 15:30:59,762] {{bash.py:185}} INFO - design_xw_code,
+[2023-06-14 15:30:59,762] {{bash.py:185}} INFO - design_xw_name,
+[2023-06-14 15:30:59,762] {{bash.py:185}} INFO - user_xw_code,
+[2023-06-14 15:30:59,762] {{bash.py:185}} INFO - user_xw_name,
+[2023-06-14 15:30:59,762] {{bash.py:185}} INFO - chain_group,
+[2023-06-14 15:30:59,762] {{bash.py:185}} INFO - hsicrm_actualservicetypename,
+[2023-06-14 15:30:59,762] {{bash.py:185}} INFO - ecosphere_name,
+[2023-06-14 15:30:59,762] {{bash.py:185}} INFO - ecosphere_code,
+[2023-06-14 15:30:59,762] {{bash.py:185}} INFO - ecosphere_leader,
+[2023-06-14 15:30:59,762] {{bash.py:185}} INFO - ecosphere_dept,
+[2023-06-14 15:30:59,762] {{bash.py:185}} INFO - sub_ecosphere_name,
+[2023-06-14 15:30:59,762] {{bash.py:185}} INFO - sub_ecosphere_code,
+[2023-06-14 15:30:59,762] {{bash.py:185}} INFO - sub_ecosphere_leader,
+[2023-06-14 15:30:59,762] {{bash.py:185}} INFO - sub_ecosphere_dept
+[2023-06-14 15:30:59,762] {{bash.py:185}} INFO - WARN  :
+[2023-06-14 15:30:59,762] {{bash.py:185}} INFO - INFO  : Query ID = hive_20230614153041_f1c5fa7a-8c5b-4dcd-99bc-e5b0846d9513
+[2023-06-14 15:30:59,762] {{bash.py:185}} INFO - INFO  : Total jobs = 3
+[2023-06-14 15:30:59,762] {{bash.py:185}} INFO - INFO  : Starting task [Stage-11:MAPREDLOCAL] in serial mode
+[2023-06-14 15:31:19,803] {{bash.py:185}} INFO - INFO  : Execution completed successfully
+[2023-06-14 15:31:19,803] {{bash.py:185}} INFO - INFO  : MapredLocal task succeeded
+[2023-06-14 15:31:19,803] {{bash.py:185}} INFO - INFO  : Launching Job 1 out of 3
+[2023-06-14 15:31:19,803] {{bash.py:185}} INFO - INFO  : Starting task [Stage-2:MAPRED] in serial mode
+[2023-06-14 15:31:19,803] {{bash.py:185}} INFO - INFO  : Number of reduce tasks not specified. Estimated from input data size: 1
+[2023-06-14 15:31:19,803] {{bash.py:185}} INFO - INFO  : In order to change the average load for a reducer (in bytes):
+[2023-06-14 15:31:19,803] {{bash.py:185}} INFO - INFO  :   set hive.exec.reducers.bytes.per.reducer=<number>
+[2023-06-14 15:31:19,803] {{bash.py:185}} INFO - INFO  : In order to limit the maximum number of reducers:
+[2023-06-14 15:31:19,803] {{bash.py:185}} INFO - INFO  :   set hive.exec.reducers.max=<number>
+[2023-06-14 15:31:19,803] {{bash.py:185}} INFO - INFO  : In order to set a constant number of reducers:
+[2023-06-14 15:31:19,803] {{bash.py:185}} INFO - INFO  :   set mapreduce.job.reduces=<number>
+[2023-06-14 15:31:39,855] {{bash.py:185}} INFO - INFO  : number of splits:6
+[2023-06-14 15:31:39,855] {{bash.py:185}} INFO - INFO  : Submitting tokens for job: job_1680066099795_5727472
+[2023-06-14 15:31:39,855] {{bash.py:185}} INFO - INFO  : Executing with tokens: [Kind: HDFS_DELEGATION_TOKEN, Service: ha-hdfs:nameservice1, Ident: (token for hive: HDFS_DELEGATION_TOKEN owner=hive/qdcdh00.haier.com@HAIER.COM, renewer=yarn, realUser=, issueDate=1686727884509, maxDate=1687332684509, sequenceNumber=171334657, masterKeyId=2287)]
+[2023-06-14 15:31:44,875] {{bash.py:185}} INFO - INFO  : The url to track the job: http://qdcdh04.haier.com:8088/proxy/application_1680066099795_5727472/
+[2023-06-14 15:31:44,875] {{bash.py:185}} INFO - INFO  : Starting Job = job_1680066099795_5727472, Tracking URL = http://qdcdh04.haier.com:8088/proxy/application_1680066099795_5727472/
+[2023-06-14 15:31:44,875] {{bash.py:185}} INFO - INFO  : Kill Command = /opt/cloudera/parcels/CDH-6.3.2-1.cdh6.3.2.p0.1605554/lib/hadoop/bin/hadoop job  -kill job_1680066099795_5727472
+[2023-06-14 15:32:14,973] {{bash.py:185}} INFO - INFO  : Hadoop job information for Stage-2: number of mappers: 6; number of reducers: 1
+[2023-06-14 15:32:14,973] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:32:11,825 Stage-2 map = 0%,  reduce = 0%
+[2023-06-14 15:33:15,189] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:33:12,855 Stage-2 map = 0%,  reduce = 0%, Cumulative CPU 507.82 sec
+[2023-06-14 15:34:00,333] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:33:58,059 Stage-2 map = 22%,  reduce = 0%, Cumulative CPU 942.5 sec
+[2023-06-14 15:34:00,334] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:34:00,179 Stage-2 map = 39%,  reduce = 0%, Cumulative CPU 963.0 sec
+[2023-06-14 15:34:25,411] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:34:21,292 Stage-2 map = 56%,  reduce = 0%, Cumulative CPU 1077.76 sec
+[2023-06-14 15:34:55,506] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:34:54,760 Stage-2 map = 64%,  reduce = 0%, Cumulative CPU 1236.71 sec
+[2023-06-14 15:35:30,622] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:35:28,298 Stage-2 map = 72%,  reduce = 0%, Cumulative CPU 1362.85 sec
+[2023-06-14 15:35:30,622] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:35:30,384 Stage-2 map = 83%,  reduce = 0%, Cumulative CPU 1375.46 sec
+[2023-06-14 15:35:55,711] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:35:54,419 Stage-2 map = 83%,  reduce = 28%, Cumulative CPU 1398.06 sec
+[2023-06-14 15:36:30,835] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:36:28,774 Stage-2 map = 100%,  reduce = 33%, Cumulative CPU 1449.2 sec
+[2023-06-14 15:36:40,873] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:36:36,067 Stage-2 map = 100%,  reduce = 67%, Cumulative CPU 1457.74 sec
+[2023-06-14 15:36:45,887] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:36:42,307 Stage-2 map = 100%,  reduce = 69%, Cumulative CPU 1469.36 sec
+[2023-06-14 15:36:50,909] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:36:48,621 Stage-2 map = 100%,  reduce = 85%, Cumulative CPU 1475.25 sec
+[2023-06-14 15:36:55,923] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:36:54,935 Stage-2 map = 100%,  reduce = 99%, Cumulative CPU 1482.1 sec
+[2023-06-14 15:37:00,939] {{bash.py:185}} INFO - INFO  : 2023-06-14 15:36:57,043 Stage-2 map = 100%,  reduce = 100%, Cumulative CPU 1482.85 sec
+[2023-06-14 15:37:00,940] {{bash.py:185}} INFO - INFO  : MapReduce Total cumulative CPU time: 24 minutes 42 seconds 850 msec
+[2023-06-14 15:37:00,940] {{bash.py:185}} INFO - INFO  : Ended Job = job_1680066099795_5727472
+[2023-06-14 15:37:00,940] {{bash.py:185}} INFO - INFO  : Starting task [Stage-8:CONDITIONAL] in serial mode
+[2023-06-14 15:37:00,940] {{bash.py:185}} INFO - INFO  : Stage-5 is selected by condition resolver.
+[2023-06-14 15:37:00,940] {{bash.py:185}} INFO - INFO  : Stage-4 is filtered out by condition resolver.
+[2023-06-14 15:37:00,940] {{bash.py:185}} INFO - INFO  : Stage-6 is filtered out by condition resolver.
+[2023-06-14 15:37:00,940] {{bash.py:185}} INFO - INFO  : Starting task [Stage-5:MOVE] in serial mode
+[2023-06-14 15:37:00,940] {{bash.py:185}} INFO - INFO  : Moving data to directory hdfs://nameservice1/user/hive/warehouse/di_qu.db/tf_cei_ecosphere_bl_mid/pt=202306/type=bl_xin/.hive-staging_hive_2023-06-14_15-30-41_153_7790313613204966118-231553/-ext-10000 from hdfs://nameservice1/user/hive/warehouse/di_qu.db/tf_cei_ecosphere_bl_mid/pt=202306/type=bl_xin/.hive-staging_hive_2023-06-14_15-30-41_153_7790313613204966118-231553/-ext-10003
+[2023-06-14 15:37:00,940] {{bash.py:185}} INFO - INFO  : Starting task [Stage-0:MOVE] in serial mode
+[2023-06-14 15:37:00,940] {{bash.py:185}} INFO - INFO  : Loading data to table di_qu.tf_cei_ecosphere_bl_mid partition (pt=202306, type=bl_xin) from hdfs://nameservice1/user/hive/warehouse/di_qu.db/tf_cei_ecosphere_bl_mid/pt=202306/type=bl_xin/.hive-staging_hive_2023-06-14_15-30-41_153_7790313613204966118-231553/-ext-10000
+[2023-06-14 15:37:03,197] {{bash.py:185}} INFO - INFO  : Starting task [Stage-3:STATS] in serial mode
+[2023-06-14 15:37:03,197] {{bash.py:185}} INFO - INFO  : MapReduce Jobs Launched:
+[2023-06-14 15:37:03,197] {{bash.py:185}} INFO - INFO  : Stage-Stage-2: Map: 6  Reduce: 1   Cumulative CPU: 1482.85 sec   HDFS Read: 399009706 HDFS Write: 2696907 HDFS EC Read: 0 SUCCESS
+[2023-06-14 15:37:03,198] {{bash.py:185}} INFO - INFO  : Total MapReduce CPU Time Spent: 24 minutes 42 seconds 850 msec
+[2023-06-14 15:37:03,198] {{bash.py:185}} INFO - INFO  : Completed executing command(queryId=hive_20230614153041_f1c5fa7a-8c5b-4dcd-99bc-e5b0846d9513); Time taken: 367.867 seconds
+[2023-06-14 15:37:03,198] {{bash.py:185}} INFO - INFO  : OK
+[2023-06-14 15:37:03,218] {{bash.py:185}} INFO - 194,606 rows affected (382.108 seconds)
+[2023-06-14 15:37:03,501] {{bash.py:185}} INFO - Beeline version 2.1.1-cdh6.3.2 by Apache Hive
+[2023-06-14 15:37:03,637] {{bash.py:185}} INFO - ------运行成功！
+[2023-06-14 15:37:06,096] {{bash.py:185}} INFO - WARNING: Use "yarn jar" to launch YARN applications.
+[2023-06-14 15:37:06,705] {{bash.py:185}} INFO - SLF4J: Class path contains multiple SLF4J bindings.
+[2023-06-14 15:37:06,705] {{bash.py:185}} INFO - SLF4J: Found binding in [jar:file:/opt/cloudera/parcels/CDH-6.3.2-1.cdh6.3.2.p0.1605554/jars/log4j-slf4j-impl-2.8.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+[2023-06-14 15:37:06,705] {{bash.py:185}} INFO - SLF4J: Found binding in [jar:file:/opt/cloudera/parcels/CDH-6.3.2-1.cdh6.3.2.p0.1605554/jars/slf4j-log4j12-1.7.25.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+[2023-06-14 15:37:06,705] {{bash.py:185}} INFO - SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+[2023-06-14 15:37:06,711] {{bash.py:185}} INFO - SLF4J: Actual binding is of type [org.apache.logging.slf4j.Log4jLoggerFactory]
+[2023-06-14 15:37:09,065] {{bash.py:185}} INFO - Connecting to jdbc:hive2://10.138.225.37:30050/default;principal=impala/qdcdh00.haier.com@HAIER.COM
+[2023-06-14 15:37:09,775] {{bash.py:185}} INFO - Connected to: Impala (version 3.2.0-cdh6.3.2)
+[2023-06-14 15:37:09,776] {{bash.py:185}} INFO - Driver: Hive JDBC (version 2.1.1-cdh6.3.2)
+[2023-06-14 15:37:09,776] {{bash.py:185}} INFO - Transaction isolation: TRANSACTION_REPEATABLE_READ
+[2023-06-14 15:37:14,568] {{bash.py:185}} INFO - No rows affected (4.772 seconds)
+[2023-06-14 15:37:14,597] {{bash.py:185}} INFO - Beeline version 2.1.1-cdh6.3.2 by Apache Hive
+[2023-06-14 15:37:14,698] {{bash.py:194}} INFO - Command exited with return code 0
+[2023-06-14 15:37:14,699] {{bash.py:252}} INFO - insert bdmp count
+[2023-06-14 15:37:14,716] {{logging_mixin.py:104}} WARNING - /bigdata/bdp_jt/python38/lib/python3.8/site-packages/sqlalchemy/dialects/mysql/mysqldb.py:131 Warning: (3719, "'utf8' is currently an alias for the character set UTF8MB3, but will be an alias for UTF8MB4 in a future release. Please consider using UTF8MB4 in order to be unambiguous.")
+[2023-06-14 15:37:14,764] {{bash.py:279}} INFO - ['F_CEI_DI_ECOS', 'DI_CEI_ECOS_BL_MID', datetime.datetime(2023, 6, 13, 15, 0, tzinfo=<DstTzInfo 'Asia/Shanghai' CST+8:00:00 STD>), '{"selectedCount": 0, "affectedCount": 6931591}', 6931591, datetime.datetime(2023, 6, 14, 15, 37, 14, 764913)]
+[2023-06-14 15:37:14,811] {{taskinstance.py:1188}} INFO - Marking task as SUCCESS. dag_id=F_CEI_DI_ECOS, task_id=DI_CEI_ECOS_BL_MID, execution_date=20230613T070000, start_date=20230614T070023, end_date=20230614T073714
+[2023-06-14 15:37:16,672] {{taskinstance.py:1249}} INFO - 1 downstream tasks scheduled from follow-on schedule check
+[2023-06-14 15:37:16,673] {{base_task_runner.py:119}} INFO - Job 22109428: Subtask DI_CEI_ECOS_BL_MID Running <TaskInstance: F_CEI_DI_ECOS.DI_CEI_ECOS_BL_MID 2023-06-13T07:00:00+00:00 [running]> on host aliyun-airflow07
+[2023-06-14 15:37:16,976] {{local_task_job.py:149}} INFO - Task exited with return code 0

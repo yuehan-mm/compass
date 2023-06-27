@@ -17,11 +17,16 @@
 package com.oppo.cloud.common.constant;
 
 
+import java.util.Collections;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 public enum ApplicationType {
 
     SPARK("SPARK"),
     MAPREDUCE("MAPREDUCE"),
-    FLINK("Apache Flink");
+    FLINK("Apache Flink"),
+    DATAX("DATAX");
 
     private final String value;
     ApplicationType(String value) {
@@ -30,5 +35,33 @@ public enum ApplicationType {
 
     public String getValue() {
         return this.value;
+    }
+
+    public static ApplicationType getInstance(String strAppType) throws IllegalArgumentException{
+        for (ApplicationType applicationType : ApplicationType.values()){
+            if(applicationType.value.equals(strAppType)){
+                return applicationType;
+            }
+        }
+        throw new IllegalArgumentException("invalid app type : " + strAppType);
+    }
+
+    private static final Map<String, ApplicationType> MAP;
+
+    static {
+        Map<String, ApplicationType> map = new ConcurrentHashMap<>();
+        for (ApplicationType instance : ApplicationType.values()) {
+            map.put(instance.getValue(), instance);
+        }
+        MAP = Collections.unmodifiableMap(map);
+    }
+
+    public static ApplicationType get(String name) {
+        return MAP.get(name);
+    }
+
+    @Override
+    public String toString() {
+        return value;
     }
 }

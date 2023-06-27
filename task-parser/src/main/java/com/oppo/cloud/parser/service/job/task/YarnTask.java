@@ -49,11 +49,11 @@ public class YarnTask extends Task {
     @Override
     public TaskResult run() {
         List<ParserAction> actions = DiagnosisConfig.getInstance().getActions(LogType.YARN.getName());
-        String appId = this.taskParam.getApp().getAppId();
+        String appId = this.taskParam.getTaskApp().getApplicationId();
         if (StringUtils.isBlank(appId)) {
             return null;
         }
-        TaskApp taskApp = this.taskParam.getLogRecord().getTaskAppList().get(appId);
+        TaskApp taskApp = this.taskParam.getTaskApp();
         if (taskApp == null) {
             return null;
         }
@@ -65,15 +65,14 @@ public class YarnTask extends Task {
         Map<String, ParserAction> results = ParserManager.parse(new String[]{diagnostics}, actions);
         if (results == null || results.size() == 0) {
             List<String> list = new ArrayList<>();
-            return new TaskResult(this.taskParam.getApp().getAppId(), list);
+            return new TaskResult(this.taskParam.getTaskApp().getApplicationId(), list);
         }
 
-        ParserParam param = new ParserParam(LogType.YARN.getName(), this.taskParam.getLogRecord(),
-                this.taskParam.getApp(), null);
+        ParserParam param = new ParserParam(LogType.YARN, null, this.taskParam);
 
         List<String> list = ElasticWriter.getInstance()
                 .saveParserActions(LogType.YARN.getName(), "", param, results);
 
-        return new TaskResult(this.taskParam.getApp().getAppId(), list);
+        return new TaskResult(this.taskParam.getTaskApp().getApplicationId(), list);
     }
 }

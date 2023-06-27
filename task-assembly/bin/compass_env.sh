@@ -64,5 +64,9 @@ export SPRING_KAFKA_CONSUMER_TASKAPPGROUPID="compass_test_22047328_d"
 #export SPRING_KAFKA_CONSUMER_DETECTGROUPID="compass_test_22047328"
 export SPRING_KAFKA_CONSUMER_DETECTGROUPID="compass_taskinstance_application_20012523_test"
 
+# task_record
+export SPRING_KAFKA_TASKRECORD_TOPIC="compass_taskrecord_test"
+export SPRING_KAFKA_TASKRECORD_GROUPID="compass_taskrecord_test_20012523_consumer"
+
 # hdfs base path
 export SPRING_HDFS_BASEPATH="/flume/airflow_test/bigdata/bdp_jt/airflow/logs"

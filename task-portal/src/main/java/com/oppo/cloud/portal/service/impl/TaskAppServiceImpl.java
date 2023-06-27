@@ -48,6 +48,8 @@ import com.oppo.cloud.portal.domain.diagnose.Item;
 import com.oppo.cloud.portal.domain.diagnose.oneclick.DiagnoseResult;
 import com.oppo.cloud.portal.domain.diagnose.runerror.RunError;
 import com.oppo.cloud.portal.domain.task.*;
+import com.oppo.cloud.portal.handler.app.TaskAppHandler;
+import com.oppo.cloud.portal.handler.app.TaskAppHandlerFactory;
 import com.oppo.cloud.portal.service.ElasticSearchService;
 import com.oppo.cloud.portal.service.JobService;
 import com.oppo.cloud.portal.service.TaskAppService;
@@ -757,9 +759,9 @@ public class TaskAppServiceImpl implements TaskAppService {
         BeanUtils.copyProperties(jobInstance, jobAnalysis);
         LogRecord logRecord = new LogRecord();
         logRecord.setJobAnalysis(jobAnalysis);
-        App app = new App();
-        app.formatAppLog(taskApp);
-        logRecord.setApps(Collections.singletonList(app));
+//        App app = new App();
+//        app.formatAppLog(taskApp);
+//        logRecord.setApps(Collections.singletonList(app));
         logRecord.formatTaskAppList(Collections.singletonList(taskApp));
         // 先把数据存入到Es
         HashMap<String, Object> termQuery = new HashMap<>();
@@ -831,7 +833,18 @@ public class TaskAppServiceImpl implements TaskAppService {
                     taskApplication.getApplicationId()));
         }
         sparkApp = sparkAppList.get(0);
-        TaskApp taskApp = this.buildAbnormalTaskApp(taskApplication, yarnApp, sparkApp);
+        TaskApp taskApp = new TaskApp();
+        BeanUtils.copyProperties(taskApplication, taskApp);
+        taskApp.setExecutionDate(taskApplication.getExecuteTime());
+        taskApp.setRetryTimes(taskApplication.getRetryTimes());
+
+        final TaskAppHandler taskAppHandler = TaskAppHandlerFactory.getTaskAppHandler(taskApplication);
+
+        try {
+            taskAppHandler.handler(taskApplication, taskApp, elasticSearchService, redisService);
+        } catch (Exception e) {
+            log.error("try complete yarn info failed, msg:", e);
+        }
         updateUserInfo(taskApp);
         return taskApp;
     }
@@ -839,47 +852,47 @@ public class TaskAppServiceImpl implements TaskAppService {
     /**
      * 根据基础的appId信息构建出AbnormalTaskApp,有异常则直接退出抛出异常
      */
-    public TaskApp buildAbnormalTaskApp(TaskApplication taskApplication, YarnApp yarnApp,
-                                        SparkApp sparkApp) throws Exception {
-        TaskApp taskApp = new TaskApp();
-        BeanUtils.copyProperties(taskApplication, taskApp);
-        taskApp.setExecutionDate(taskApplication.getExecuteTime());
-        taskApp.setStartTime(new Date(yarnApp.getStartedTime()));
-        taskApp.setFinishTime(new Date(yarnApp.getFinishedTime()));
-        taskApp.setElapsedTime((double) yarnApp.getElapsedTime());
-        taskApp.setClusterName(yarnApp.getClusterName());
-        taskApp.setApplicationType(yarnApp.getApplicationType());
-        taskApp.setQueue(yarnApp.getQueue());
-        taskApp.setDiagnostics(yarnApp.getDiagnostics());
-        taskApp.setDiagnoseResult(StringUtils.isNotBlank(yarnApp.getDiagnostics()) ? "abnormal" : "");
-        taskApp.setCategories(StringUtils.isNotBlank(yarnApp.getDiagnostics())
-                ? Collections.singletonList(AppCategoryEnum.OTHER_EXCEPTION.getCategory())
-                : new ArrayList<>());
-        taskApp.setExecuteUser(yarnApp.getUser());
-        taskApp.setVcoreSeconds((double) yarnApp.getVcoreSeconds());
-        taskApp.setTaskAppState(yarnApp.getState());
-        taskApp.setRetryTimes(taskApplication.getRetryTimes());
-        // 单位转换保留两位小数
-        taskApp.setMemorySeconds((double) Math.round(yarnApp.getMemorySeconds()));
-        String attemptId = StringUtils.isNotEmpty(sparkApp.getAttemptId()) ? sparkApp.getAttemptId() : "1";
-        taskApp.setEventLogPath(
-                sparkApp.getEventLogDirectory() + "/" + taskApplication.getApplicationId() + "_" + attemptId);
-        taskApp.setSparkUI(
-                String.format(sparkUiProxy, taskApplication.getApplicationId(), sparkApp.getSparkHistoryServer()));
-        String yarnLogPath = getYarnLogPath(yarnApp.getIp());
-        if ("".equals(yarnLogPath)) {
-            throw new Exception(String.format("can not find yarn log path: rm ip : %s", yarnApp.getIp()));
-        }
-        // eg: yarnApp.getAmHostHttpAddress() -> ops-metastore-20211108211244-emc6:8042
-        String[] amHost = yarnApp.getAmHostHttpAddress().split(":");
-        if (amHost.length == 0) {
-            throw new Exception(String.format("parse amHost error, amHost:%s", yarnApp.getAmHostHttpAddress()));
-        }
-        // eg :/tmp/agg_logs_sec/hdfs/logs/application_1642582961937_0437/ops-metastore-20211108211244-emc6_8041
-        taskApp.setAmHost(amHost[0]);
-        taskApp.setYarnLogPath(yarnLogPath + "/" + yarnApp.getUser() + "/logs/" + taskApplication.getApplicationId());
-        return taskApp;
-    }
+//    public TaskApp buildAbnormalTaskApp(TaskApplication taskApplication, YarnApp yarnApp,
+//                                        SparkApp sparkApp) throws Exception {
+//        TaskApp taskApp = new TaskApp();
+//        BeanUtils.copyProperties(taskApplication, taskApp);
+//        taskApp.setExecutionDate(taskApplication.getExecuteTime());
+//        taskApp.setStartTime(new Date(yarnApp.getStartedTime()));
+//        taskApp.setFinishTime(new Date(yarnApp.getFinishedTime()));
+//        taskApp.setElapsedTime((double) yarnApp.getElapsedTime());
+//        taskApp.setClusterName(yarnApp.getClusterName());
+//        taskApp.setApplicationType(yarnApp.getApplicationType());
+//        taskApp.setQueue(yarnApp.getQueue());
+//        taskApp.setDiagnostics(yarnApp.getDiagnostics());
+//        taskApp.setDiagnoseResult(StringUtils.isNotBlank(yarnApp.getDiagnostics()) ? "abnormal" : "");
+//        taskApp.setCategories(StringUtils.isNotBlank(yarnApp.getDiagnostics())
+//                ? Collections.singletonList(AppCategoryEnum.OTHER_EXCEPTION.getCategory())
+//                : new ArrayList<>());
+//        taskApp.setExecuteUser(yarnApp.getUser());
+//        taskApp.setVcoreSeconds((double) yarnApp.getVcoreSeconds());
+//        taskApp.setTaskAppState(yarnApp.getState());
+//        taskApp.setRetryTimes(taskApplication.getRetryTimes());
+//        // 单位转换保留两位小数
+//        taskApp.setMemorySeconds((double) Math.round(yarnApp.getMemorySeconds()));
+//        String attemptId = StringUtils.isNotEmpty(sparkApp.getAttemptId()) ? sparkApp.getAttemptId() : "1";
+//        taskApp.setEventLogPath(
+//                sparkApp.getEventLogDirectory() + "/" + taskApplication.getApplicationId() + "_" + attemptId);
+//        taskApp.setSparkUI(
+//                String.format(sparkUiProxy, taskApplication.getApplicationId(), sparkApp.getSparkHistoryServer()));
+//        String yarnLogPath = getYarnLogPath(yarnApp.getIp());
+//        if ("".equals(yarnLogPath)) {
+//            throw new Exception(String.format("can not find yarn log path: rm ip : %s", yarnApp.getIp()));
+//        }
+//        // eg: yarnApp.getAmHostHttpAddress() -> ops-metastore-20211108211244-emc6:8042
+//        String[] amHost = yarnApp.getAmHostHttpAddress().split(":");
+//        if (amHost.length == 0) {
+//            throw new Exception(String.format("parse amHost error, amHost:%s", yarnApp.getAmHostHttpAddress()));
+//        }
+//        // eg :/tmp/agg_logs_sec/hdfs/logs/application_1642582961937_0437/ops-metastore-20211108211244-emc6_8041
+//        taskApp.setAmHost(amHost[0]);
+//        taskApp.setYarnLogPath(yarnLogPath + "/" + yarnApp.getUser() + "/logs/" + taskApplication.getApplicationId());
+//        return taskApp;
+//    }
 
     /**
      * 补充任务的用户信息

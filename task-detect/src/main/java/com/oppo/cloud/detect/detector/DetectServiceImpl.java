@@ -19,7 +19,6 @@ package com.oppo.cloud.detect.detector;
 import com.alibaba.fastjson2.JSONObject;
 import com.oppo.cloud.common.domain.elasticsearch.JobAnalysis;
 import com.oppo.cloud.common.domain.elasticsearch.SimpleUser;
-import com.oppo.cloud.common.domain.job.App;
 import com.oppo.cloud.common.domain.job.LogRecord;
 import com.oppo.cloud.common.service.RedisService;
 import com.oppo.cloud.common.util.DateUtil;
@@ -32,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -48,14 +48,15 @@ public abstract class DetectServiceImpl implements DetectService {
     @Value("${custom.elasticsearch.job-index}")
     private String jobIndex;
 
+    // SPRING_KAFKA_TASKRECORD_TOPIC
+    @Value("${spring.kafka.taskrecord.topic}")
+    private String recordTopic;
+
     @Autowired
     public TaskService taskService;
 
     @Autowired
     private UserMapper userMapper;
-
-    @Autowired
-    private LogRecordService logRecordService;
 
     @Autowired
     private TaskAppService taskAppService;
@@ -74,6 +75,9 @@ public abstract class DetectServiceImpl implements DetectService {
 
     @Autowired
     private JobInstanceService jobInstanceService;
+
+    @Autowired
+    private KafkaTemplate kafkaTemplate;
 
     /**
      * 解析消息发送redis队列
@@ -94,16 +98,18 @@ public abstract class DetectServiceImpl implements DetectService {
     public void handleNormalJob(JobAnalysis detectJobAnalysis, int tryNumber) throws Exception {
         // 补充用户信息
         updateUserInfo(detectJobAnalysis);
-        // 查询该任务下的appIds
+
+        // 解析task下面的Application信息
         AbnormalTaskAppInfo abnormalTaskAppInfo = taskAppService.getAbnormalTaskAppsInfo(detectJobAnalysis);
+
         if (!"".equals(abnormalTaskAppInfo.getExceptionInfo())) {
             // 完全构造完成再发送
             delayTaskService.pushDelayedQueue(detectJobAnalysis,abnormalTaskAppInfo.getExceptionInfo(), tryNumber);
             return;
         }
+
         // 引擎维度诊断必须要有appId
         if (abnormalTaskAppInfo.getTaskAppList().size() != 0) {
-            // 更新vcoreSeconds 和 memorySeconds
             abnormalJobService.updateResource(detectJobAnalysis, abnormalTaskAppInfo.getTaskAppList());
             // 生成解析日志消息体logRecord
             LogRecord logRecord = this.genLogRecord(abnormalTaskAppInfo, detectJobAnalysis);
@@ -151,17 +157,22 @@ public abstract class DetectServiceImpl implements DetectService {
         logRecord.setIsOneClick(false);
         logRecord.setJobAnalysis(detectJobAnalysis);
         logRecord.formatTaskAppList(abnormalTaskAppInfo.getTaskAppList());
-        List<App> appLogPath = logRecordService.getAppLog(abnormalTaskAppInfo.getTaskAppList());
-        logRecord.setApps(appLogPath);
+//        List<App> appLogPath = logRecordService.getAppLog(abnormalTaskAppInfo.getTaskAppList());    // 转化SparkAppLog信息
+//        List<App> schedulerLogApp = logRecordService.getSchedulerLog(detectJobAnalysis);            // 转化 AirFlow 日志信息
+//        appLogPath.addAll(schedulerLogApp);
+//        logRecord.setApps(appLogPath);     //
+//        if (schedulerLogApp.size() != 0) {
+//            // 更新已处理的事件信息【记录调度日志已成功发送】
+//            abnormalTaskAppInfo.setHandleApps(abnormalTaskAppInfo.getHandleApps() + "scheduler" + ";");
+//        }
         return logRecord;
     }
 
     /**
-     * 发送解析
      */
     public void sendLogRecordMsg(LogRecord logRecord) {
-        Long size = redisService.lLeftPush(logRecordQueue, JSONObject.toJSONString(logRecord));
-        log.info("send logRecord: key:{}, size:{}, data:{}", logRecordQueue, size, JSONObject.toJSONString(logRecord));
+        String recordMessage = JSONObject.toJSONString(logRecord);
+        kafkaTemplate.send(recordTopic, recordMessage);
     }
 
     /**
@@ -169,6 +180,7 @@ public abstract class DetectServiceImpl implements DetectService {
      */
     public void addOrUpdate(JobAnalysis detectJobAnalysis) throws Exception {
         JobAnalysis esJobAnalysis = abnormalJobService.searchJob(detectJobAnalysis);
+
         if (esJobAnalysis != null) {
             // 更新操作
             List<String> oldCategories = esJobAnalysis.getCategories();
@@ -187,8 +199,7 @@ public abstract class DetectServiceImpl implements DetectService {
                 esJobAnalysis.setEndTimeBaseline(detectJobAnalysis.getEndTimeBaseline());
             }
             esJobAnalysis.setUpdateTime(new Date());
-            elasticSearchService.insertOrUpDateEs(esJobAnalysis.getIndex(), esJobAnalysis.getDocId(),
-                    esJobAnalysis.genDoc());
+            elasticSearchService.insertOrUpDateEs(esJobAnalysis.getIndex(), esJobAnalysis.getDocId(), esJobAnalysis.genDoc());
         } else {
             // 新增操作
             detectJobAnalysis.setCreateTime(new Date());
@@ -207,15 +218,20 @@ public abstract class DetectServiceImpl implements DetectService {
      * 补充任务的用户信息
      */
     public void updateUserInfo(JobAnalysis detectJobAnalysis) {
-        Task task = taskService.getTask(detectJobAnalysis.getProjectName(), detectJobAnalysis.getFlowName(),
+
+        Task task = taskService.getTask(detectJobAnalysis.getProjectName(),
+                detectJobAnalysis.getFlowName(),
                 detectJobAnalysis.getTaskName());
+
         if (task == null) {
             log.error("get task null:{}", detectJobAnalysis);
             return;
         }
+
         detectJobAnalysis.setTaskId(task.getId());
         detectJobAnalysis.setProjectId(task.getProjectId());
         detectJobAnalysis.setFlowId(task.getFlowId());
+
         UserExample userExample = new UserExample();
         userExample.createCriteria().andIdEqualTo(task.getUserId());
         List<User> users = userMapper.selectByExample(userExample);

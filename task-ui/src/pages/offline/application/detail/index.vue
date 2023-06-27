@@ -23,9 +23,34 @@ onMounted(async () => {
     get(`/api/v1/app/report/runResource?applicationId=${route.query.applicationId}`),
     get(`/api/v1/app/report/runTime?applicationId=${route.query.applicationId}`),
   ])
+
+
+  // 处理运行参数 （appInfo），
+  const oneArr = res[1]?res[1].appInfo:[]
+  let appInfo = []
+  for(var a in oneArr) {
+    let obj = {
+      key: a.replace(/\_/g,"."),
+      value: oneArr[a]
+    }
+    appInfo.push(obj)
+  }
+
+  let n = appInfo.length
+  let remaindNum = 3-(n%3)
+  if(remaindNum != 3) {
+    var arr = []
+    for(var i = 1; i <= remaindNum ; i++) {
+      arr.push({})
+    }
+    appInfo = appInfo.concat(arr)
+  }
+
+
   detailInfo = {
     runErrorAnalyze: res[0].filter((item: any) => item.item),
     runInfo: res[1],
+    appInfo: appInfo || [],
     resourcesAnalyze: res[2],
     runTimeAnalyze: res[3].filter((item: any) => item.item),
   }
@@ -51,7 +76,7 @@ onMounted(async () => {
           </span>
         </div>
       </ItemWrapper>
-      <BaseInfo :info="detailInfo.runInfo" />
+      <BaseInfo :info="detailInfo.runInfo" :appInfo="detailInfo.appInfo"/>
       <ItemWrapper v-for="(item, index) in detailInfo.runErrorAnalyze" :key="item.name" :title="item.name" :conclusion="item.conclusion">
         <ErrorTable :data="item.item.table" :width-list="[120, 180, 180, '', 270]" />
       </ItemWrapper>

@@ -17,10 +17,7 @@
 package com.oppo.cloud.parser.domain.job;
 
 import com.oppo.cloud.common.constant.LogType;
-import com.oppo.cloud.common.domain.job.App;
 import com.oppo.cloud.common.domain.job.LogPath;
-import com.oppo.cloud.common.domain.job.LogRecord;
-import com.oppo.cloud.common.util.textparser.ParserAction;
 import lombok.Data;
 
 import java.util.List;
@@ -28,19 +25,20 @@ import java.util.List;
 @Data
 public class ParserParam {
 
+    // 日志类型
     private LogType logType;
-    private LogRecord logRecord;
-    private App app;
+    // 日志路径
     private List<LogPath> logPaths;
+    // APP信息
+    private TaskParam taskParam;
 
     public ParserParam() {
 
     }
 
-    public ParserParam(String logType, LogRecord logRecord, App app, List<LogPath> logPaths) {
-        this.logType = LogType.get(logType);
-        this.logRecord = logRecord;
-        this.app = app;
+    public ParserParam(LogType logType, List<LogPath> logPaths, TaskParam taskParam) {
+        this.logType = logType;
         this.logPaths = logPaths;
+        this.taskParam = taskParam;
     }
 }

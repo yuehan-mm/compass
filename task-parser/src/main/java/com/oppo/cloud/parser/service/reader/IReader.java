@@ -30,4 +30,7 @@ public interface IReader {
     ReaderObject getReaderObject() throws Exception;
 
     List<ReaderObject> getReaderObjects() throws Exception;
+
+    void setMapReduceEventLogPath() throws Exception;
+
 }
