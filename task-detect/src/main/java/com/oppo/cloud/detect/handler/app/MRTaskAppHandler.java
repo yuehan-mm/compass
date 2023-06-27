@@ -70,7 +70,7 @@ public class MRTaskAppHandler implements TaskAppHandler {
 
     DateTime dirDate = new DateTime(yarnApp.getFinishedTime());
     String[] appArray = taskApplication.getApplicationId().split("_");
-    String path = String.format("%s/%4d/%02d/%02d/0000%s/job_%s_%s",
+    String path = String.format("%s/%4d/%02d/%02d/%s/job_%s_%s",
             getJobHisotyLogPath(yarnApp.getIp(), redisService),
             dirDate.getYear(),
             dirDate.getMonthOfYear(),
