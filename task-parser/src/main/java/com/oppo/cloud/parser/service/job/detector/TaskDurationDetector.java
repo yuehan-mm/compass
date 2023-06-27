@@ -85,7 +85,8 @@ public class TaskDurationDetector implements IDetector {
                     TaskDurationAbnormal taskDurationAbnormal = new TaskDurationAbnormal(job.getKey(),
                             stage.getStageId(), attemptId, median, max, ratio, null, false);
                     // 阈值判断
-                    if (ratio > threshold && this.param.getAppDuration() > duration) {
+                    if (ratio > threshold && this.param.getAppDuration() > duration
+                            && (max - median) > this.config.getTaskDurationThreshold()) {
                         // 统计值处理
                         Map<Long, TaskDurationGraph> statisticsMap = getStatisticsMap(taskDurationGraphList);
                         List<TaskDurationGraph> graphs;

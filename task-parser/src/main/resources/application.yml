@@ -114,6 +114,7 @@ custom:
       threshold: 10
       # app duration(ms)
       duration: 300000
+      taskDurationThreshold: 300000
     # hdfs卡顿（task执行时间超过5分钟，且hdfs文件读取速率小于10M/s）
     hdfsStuckConfig:
       disable: false
