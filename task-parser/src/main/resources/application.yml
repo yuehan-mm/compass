@@ -37,6 +37,7 @@ spring:
       security-protocol: ""
       sasl-mechanism: ""
       sasl-jaas-config: ""
+      enable-auto-commit: "false"
 
 custom:
   redisConsumer:
