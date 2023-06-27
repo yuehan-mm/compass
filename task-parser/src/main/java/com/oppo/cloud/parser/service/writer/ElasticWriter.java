@@ -93,10 +93,10 @@ public class ElasticWriter {
         List<String> categories = new ArrayList<>();
         results.forEach((k, v) -> {
             List<ParserAction> list = ParserActionUtil.getLeafAction(v, true);
-            if (list.size() == 0) {
-                log.error("getLeafAction:{},{}", k, v);
-                list.add(v);
-            }
+//            if (list.size() == 0) {
+//                log.error("getLeafAction:{},{}", k, v);
+//                list.add(v);
+//            }
             for (ParserAction parserAction : list) {
                 categories.add(parserAction.getCategory());
                 writeToEs(logType, logPath, param, parserAction);
