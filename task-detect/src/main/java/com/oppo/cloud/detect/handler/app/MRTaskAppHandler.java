@@ -75,12 +75,17 @@ public class MRTaskAppHandler implements TaskAppHandler {
             dirDate.getYear(),
             dirDate.getMonthOfYear(),
             dirDate.getDayOfMonth(),
-            appArray[2].substring(0, 2),
+            getPathNo(appArray[2]),
             appArray[1],
             appArray[2]);
 
     taskApp.addLogPath(LogType.MAPREDUCE_EVENT, new LogPath("hdfs", LogPathType.FILE, path));
 
+  }
+
+  private String getPathNo(String appid) {
+    String tmpId = "000000" +  appid.substring(0,  appid.length() - 3);
+    return tmpId.substring(tmpId.length() - 6, tmpId.length());
   }
 
   /**
