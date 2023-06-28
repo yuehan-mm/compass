@@ -195,5 +195,5 @@ custom:
       disable: false
       # app duration(ms)
       duration: 1200000
-      mapThreshold: 5
-      reduceThreshold: 5
+      mapThreshold: 500
+      reduceThreshold: 100
