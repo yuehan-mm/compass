@@ -39,7 +39,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 
 /**
- * Spark task
+ * MapReduce task
  */
 @Slf4j
 public class MapReduceTask extends Task {
