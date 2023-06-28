@@ -94,7 +94,7 @@ public class MapReduceTask extends Task {
         }
 
         if (mapReduceEventLogParserResult == null) {
-            log.error("sparkEventLogParserResultNull:{}", taskParam);
+            log.error("mapReduceEventLogParserResultNull:{}", taskParam);
             return null;
         }
         // get driver/executor categories

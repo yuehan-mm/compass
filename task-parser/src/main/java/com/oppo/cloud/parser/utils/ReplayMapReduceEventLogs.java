@@ -101,7 +101,12 @@ public class ReplayMapReduceEventLogs extends ReplayEventLogs {
             // 遍历迭代器，获取根节点信息
             while (it.hasNext()) {
                 Element book = (Element) it.next();
-                properties.put(book.element("name").getText(), book.element("value").getText());
+                String key = book.element("name").getText();
+                if (key.equals("yarn.app.mapreduce.am.resource.mb")
+                        || key.equals("mapreduce.reduce.memory.mb")
+                        || key.equals("mapreduce.map.memory.mb")) {
+                    properties.put(key, book.element("value").getText());
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
