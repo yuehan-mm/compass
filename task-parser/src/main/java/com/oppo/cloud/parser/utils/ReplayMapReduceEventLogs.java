@@ -54,6 +54,7 @@ public class ReplayMapReduceEventLogs extends ReplayEventLogs {
 
     @Override
     public void parseLine(String line) {
+        if (line.equals("Avro-Binary") ) throw new RuntimeException("event log schema is Avro-Binary");
         if (line.equals("Avro-Json") || StringUtils.isEmpty(line)) return;
         String type = JSONObject.parseObject(line).getString("type");
         switch (type) {
