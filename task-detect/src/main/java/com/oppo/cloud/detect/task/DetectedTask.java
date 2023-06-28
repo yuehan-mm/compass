@@ -134,13 +134,13 @@ public class DetectedTask {
         jobAnalysis.setRetryTimes(TryNumberUtil.updateTryNumber(jobAnalysis.getRetryTimes(),schedulerType));
 
         // 调度作业级别任务异常检测
-        for (DetectService detectService : abnormalDetects) {
-            try {
-                detectService.detect(jobAnalysis);
-            } catch (Exception e) {
-                log.error("detect task failed: ", e);
-            }
-        }
+//        for (DetectService detectService : abnormalDetects) {
+//            try {
+//                detectService.detect(jobAnalysis);
+//            } catch (Exception e) {
+//                log.error("detect task failed: ", e);
+//            }
+//        }
 
         try {
             if (jobAnalysis.getCategories().size() == 0) {
