@@ -194,6 +194,6 @@ custom:
     speculativeMapReduceConfig:
       disable: false
       # app duration(ms)
-      duration: 1200000
+      duration: 0
       mapThreshold: 500
       reduceThreshold: 100
