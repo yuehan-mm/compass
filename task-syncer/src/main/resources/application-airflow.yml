@@ -95,7 +95,7 @@ datasource:
         create_time: ""
         update_time: ""
       columnDep:
-        columns: [ "user_id", "update_time" ]
+        columns: [ "user_id" ]
         queries: [ "select id as user_id from ab_user where username ='admin' limit 1" ]
 
     # task_instance 任务表映射
