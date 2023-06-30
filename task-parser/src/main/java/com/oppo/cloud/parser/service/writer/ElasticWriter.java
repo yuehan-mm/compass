@@ -405,8 +405,8 @@ public class ElasticWriter {
             Map<String, Boolean> appCategories = new HashMap<>();
             categories.forEach(data -> appCategories.put(data, true));
             // update task-app categories
-            log.info("updateTaskApp:{},{}", logRecord.getId(), appCategories);
             if (appCategories.size() > 0) {
+                log.info("updateTaskApp:{},{}", logRecord.getId(), appCategories);
                 ElasticWriter.getInstance().updateTaskApp(taskApp, appCategories);
             }
         }

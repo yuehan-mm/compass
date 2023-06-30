@@ -120,6 +120,7 @@ public class JobManager {
         }
 
         try {
+            log.info("finish job logRecord : {}", JSONObject.toJSONString(taskResults));
             ElasticWriter.getInstance().saveTaskResults(logRecord, taskResults);
         } catch (Exception e) {
             log.error("Exception:", e);
