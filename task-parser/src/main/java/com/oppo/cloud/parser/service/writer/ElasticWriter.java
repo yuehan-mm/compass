@@ -406,7 +406,7 @@ public class ElasticWriter {
             categories.forEach(data -> appCategories.put(data, true));
             // update task-app categories
             if (appCategories.size() > 0) {
-                log.info("updateTaskApp:{},{}", logRecord.getId(), appCategories);
+                log.info("updateTaskApp:{},{}", taskApp.getApplicationId(), appCategories);
                 ElasticWriter.getInstance().updateTaskApp(taskApp, appCategories);
             }
         }
