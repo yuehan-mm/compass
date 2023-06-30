@@ -56,7 +56,7 @@ public abstract class ReplayEventLogs {
             }
             this.correlate();
         } catch (Exception e) {
-            log.error("replay event log error.  msg: " + e.getMessage());
+            log.error("replay event log error.", e);
             throw new RuntimeException("replay event log error");
         } finally {
             readerObject.close();
