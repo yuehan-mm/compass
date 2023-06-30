@@ -68,16 +68,6 @@ public class MapReduceEventLogParser extends OneClickSubject implements IParser 
                 reader.setMapReduceEventLogPath();
                 log.info("update ReduceEventLogPath : " + reader.getReaderObject().getLogPath());
                 readerObjects = reader.getReaderObject();
-            } catch (FileNotFoundException e) {
-                String path = logPath.getLogPath().substring(0, logPath.getLogPath().lastIndexOf("_"));
-                logPath.setLogPath(path);
-                try {
-                    readerObjects = LogReaderFactory.create(logPath).getReaderObject();
-                } catch (Exception ex) {
-                    log.error("MapReduceEventLogParser fail:" + e.getMessage());
-                    updateParserProgress(ProgressState.FAILED, 0, 0);
-                    return null;
-                }
             } catch (Exception e) {
                 log.error("Exception:", e);
                 updateParserProgress(ProgressState.FAILED, 0, 0);

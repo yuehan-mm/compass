@@ -24,11 +24,12 @@ import org.apache.hadoop.fs.*;
 import org.apache.hadoop.security.UserGroupInformation;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.security.PrivilegedExceptionAction;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * HDFSUtil
@@ -38,6 +39,7 @@ public class HDFSUtil {
 
     private static final String HDFS_SCHEME = "hdfs://";
     private static final String FILE_SYSTEM_TYPE_OSS = "OSS";
+
     /**
      * get hdfs NameNode
      */
@@ -108,7 +110,7 @@ public class HDFSUtil {
                 matchPath -> matchPath.toString().contains("jhist"));
         fs.close();
         if (fileStatuses.length == 0) {
-            throw new RuntimeException("can not find getMapReduceEventLogParser. path:" + path);
+            throw new FileNotFoundException("can not find MapReduceEventLog. path:" + path);
         }
         return fileStatuses[0].getPath().toString();
     }

@@ -23,6 +23,7 @@ import com.oppo.cloud.common.constant.LogPathType;
 import com.oppo.cloud.common.domain.job.LogPath;
 import com.oppo.cloud.parser.domain.mapreduce.eventlog.JobFinishedEvent;
 import com.oppo.cloud.parser.domain.mapreduce.eventlog.MapReduceApplication;
+import com.oppo.cloud.parser.domain.reader.ReaderObject;
 import com.oppo.cloud.parser.domain.spark.eventlog.*;
 import com.oppo.cloud.parser.service.reader.IReader;
 import com.oppo.cloud.parser.service.reader.LogReaderFactory;
@@ -34,6 +35,7 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -54,7 +56,7 @@ public class ReplayMapReduceEventLogs extends ReplayEventLogs {
 
     @Override
     public void parseLine(String line) {
-        if (line.equals("Avro-Binary") ) throw new RuntimeException("event log schema is Avro-Binary");
+        if (line.equals("Avro-Binary")) throw new RuntimeException("event log schema is Avro-Binary");
         if (line.equals("Avro-Json") || StringUtils.isEmpty(line)) return;
         String type = JSONObject.parseObject(line).getString("type");
         switch (type) {
@@ -66,6 +68,13 @@ public class ReplayMapReduceEventLogs extends ReplayEventLogs {
                 mapReduceApplication.setAppEndTimestamp(eventJSONObject.getLong("finishTime"));
                 mapReduceApplication.setJobConfiguration(getJobConfiguration(eventJSONObject.getString("jobid")));
                 break;
+            case "JOB_FAILED":
+                JSONObject failEvent = JSONObject.parseObject(line).getJSONObject("event");
+                JSONObject failEventJSONObject = failEvent.getJSONObject("org.apache.hadoop.mapreduce.jobhistory.JobUnsuccessfulCompletion");
+                jobFinishedEvent.setFinishedMaps(failEventJSONObject.getInteger("finishedMaps"));
+                jobFinishedEvent.setFinishedReduces(failEventJSONObject.getInteger("finishedReduces"));
+                mapReduceApplication.setAppEndTimestamp(failEventJSONObject.getLong("finishTime"));
+                mapReduceApplication.setJobConfiguration(getJobConfiguration(failEventJSONObject.getString("jobid")));
             case "JOB_SUBMITTED":
                 JSONObject jobSubmitEvent = JSONObject.parseObject(line).getJSONObject("event");
                 JSONObject jobSubmitEventJSONObject = jobSubmitEvent.getJSONObject("org.apache.hadoop.mapreduce.jobhistory.JobSubmitted");
@@ -83,7 +92,7 @@ public class ReplayMapReduceEventLogs extends ReplayEventLogs {
         log.info("job conf path : " + jobConfPath);
         try {
             IReader reader = LogReaderFactory.create(new LogPath("hdfs", LogPathType.FILE, jobConfPath));
-            copyProperties(reader.getReaderObject().getBufferedReader(), properties);
+            copyProperties(reader.getReaderObject(), properties);
             log.debug("JobConfiguration : " + JSON.toJSONString(properties));
         } catch (Exception e) {
             log.error("getJobConfiguration error : ", e);
@@ -91,8 +100,9 @@ public class ReplayMapReduceEventLogs extends ReplayEventLogs {
         return properties;
     }
 
-    public static void copyProperties(BufferedReader bufferedReader, Properties properties) {
+    public static void copyProperties(ReaderObject readerObject, Properties properties) throws IOException {
         try {
+            BufferedReader bufferedReader = readerObject.getBufferedReader();
             // 创建SAXReader对象
             SAXReader reader = new SAXReader();
             // 加载xml文件
@@ -110,7 +120,9 @@ public class ReplayMapReduceEventLogs extends ReplayEventLogs {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("parse job conf error : ", e);
+        } finally {
+            readerObject.close();
         }
     }
 
