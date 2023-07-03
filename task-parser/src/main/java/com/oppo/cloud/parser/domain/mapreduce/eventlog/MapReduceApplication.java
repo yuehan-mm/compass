@@ -36,6 +36,10 @@ public class MapReduceApplication {
 
 
     public Long getAppDuration() {
-        return this.appEndTimestamp - this.appStartTimestamp;
+        if (this.appEndTimestamp == null || this.appStartTimestamp == null) {
+            return -1l;
+        } else {
+            return this.appEndTimestamp - this.appStartTimestamp;
+        }
     }
 }
