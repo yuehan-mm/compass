@@ -112,6 +112,7 @@ public class HDFSUtil {
         if (fileStatuses.length == 0) {
             throw new FileNotFoundException("can not find MapReduceEventLog. path:" + path);
         }
+        log.info("Set ReduceEventLogPath : " + fileStatuses[0].getPath().toString());
         return fileStatuses[0].getPath().toString();
     }
 }
