@@ -83,7 +83,7 @@ public class MapReduceEventLogParser extends OneClickSubject implements IParser 
         try {
             replayEventLogs.replay(readerObject);
         } catch (Exception e) {
-            log.error("Exception:", e);
+            log.error("replay MapReduce event log error.", e);
             updateParserProgress(ProgressState.FAILED, 0, 0);
             return null;
         }
