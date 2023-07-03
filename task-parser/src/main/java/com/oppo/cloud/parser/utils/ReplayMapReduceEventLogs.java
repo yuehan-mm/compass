@@ -56,32 +56,37 @@ public class ReplayMapReduceEventLogs extends ReplayEventLogs {
 
     @Override
     public void parseLine(String line) {
-        if (line.equals("Avro-Binary")) throw new RuntimeException("event log schema is Avro-Binary");
-        if (line.equals("Avro-Json") || StringUtils.isEmpty(line)) return;
-        String type = JSONObject.parseObject(line).getString("type");
-        switch (type) {
-            case "JOB_FINISHED":
-                JSONObject event = JSONObject.parseObject(line).getJSONObject("event");
-                JSONObject eventJSONObject = event.getJSONObject("org.apache.hadoop.mapreduce.jobhistory.JobFinished");
-                jobFinishedEvent.setFinishedMaps(eventJSONObject.getInteger("finishedMaps"));
-                jobFinishedEvent.setFinishedReduces(eventJSONObject.getInteger("finishedReduces"));
-                mapReduceApplication.setAppEndTimestamp(eventJSONObject.getLong("finishTime"));
-                mapReduceApplication.setJobConfiguration(getJobConfiguration(eventJSONObject.getString("jobid")));
-                break;
-            case "JOB_FAILED":
-                JSONObject failEvent = JSONObject.parseObject(line).getJSONObject("event");
-                JSONObject failEventJSONObject = failEvent.getJSONObject("org.apache.hadoop.mapreduce.jobhistory.JobUnsuccessfulCompletion");
-                jobFinishedEvent.setFinishedMaps(failEventJSONObject.getInteger("finishedMaps"));
-                jobFinishedEvent.setFinishedReduces(failEventJSONObject.getInteger("finishedReduces"));
-                mapReduceApplication.setAppEndTimestamp(failEventJSONObject.getLong("finishTime"));
-                mapReduceApplication.setJobConfiguration(getJobConfiguration(failEventJSONObject.getString("jobid")));
-            case "JOB_SUBMITTED":
-                JSONObject jobSubmitEvent = JSONObject.parseObject(line).getJSONObject("event");
-                JSONObject jobSubmitEventJSONObject = jobSubmitEvent.getJSONObject("org.apache.hadoop.mapreduce.jobhistory.JobSubmitted");
-                mapReduceApplication.setAppStartTimestamp(jobSubmitEventJSONObject.getLong("submitTime"));
-                break;
-            default:
-                break;
+        try {
+            if (line.equals("Avro-Binary")) throw new RuntimeException("event log schema is Avro-Binary");
+            if (line.equals("Avro-Json") || StringUtils.isEmpty(line)) return;
+            String type = JSONObject.parseObject(line).getString("type");
+            switch (type) {
+                case "JOB_FINISHED":
+                    JSONObject event = JSONObject.parseObject(line).getJSONObject("event");
+                    JSONObject eventJSONObject = event.getJSONObject("org.apache.hadoop.mapreduce.jobhistory.JobFinished");
+                    jobFinishedEvent.setFinishedMaps(eventJSONObject.getInteger("finishedMaps"));
+                    jobFinishedEvent.setFinishedReduces(eventJSONObject.getInteger("finishedReduces"));
+                    mapReduceApplication.setAppEndTimestamp(eventJSONObject.getLong("finishTime"));
+                    mapReduceApplication.setJobConfiguration(getJobConfiguration(eventJSONObject.getString("jobid")));
+                    break;
+                case "JOB_FAILED":
+                    JSONObject failEvent = JSONObject.parseObject(line).getJSONObject("event");
+                    JSONObject failEventJSONObject = failEvent.getJSONObject("org.apache.hadoop.mapreduce.jobhistory.JobUnsuccessfulCompletion");
+                    jobFinishedEvent.setFinishedMaps(failEventJSONObject.getInteger("finishedMaps"));
+                    jobFinishedEvent.setFinishedReduces(failEventJSONObject.getInteger("finishedReduces"));
+                    mapReduceApplication.setAppEndTimestamp(failEventJSONObject.getLong("finishTime"));
+                    mapReduceApplication.setJobConfiguration(getJobConfiguration(failEventJSONObject.getString("jobid")));
+                case "JOB_SUBMITTED":
+                    JSONObject jobSubmitEvent = JSONObject.parseObject(line).getJSONObject("event");
+                    JSONObject jobSubmitEventJSONObject = jobSubmitEvent.getJSONObject("org.apache.hadoop.mapreduce.jobhistory.JobSubmitted");
+                    mapReduceApplication.setAppStartTimestamp(jobSubmitEventJSONObject.getLong("submitTime"));
+                    break;
+                default:
+                    break;
+            }
+        } catch (Exception e) {
+            log.info("ReplayMapReduceEventLogs parse fail. " + line);
+            throw e;
         }
     }
 
