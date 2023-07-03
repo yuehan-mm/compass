@@ -66,7 +66,6 @@ public class MapReduceEventLogParser extends OneClickSubject implements IParser 
             try {
                 IReader reader = LogReaderFactory.create(logPath);
                 reader.setMapReduceEventLogPath();
-
                 readerObjects = reader.getReaderObject();
             } catch (Exception e) {
                 log.error("Exception:", e);
