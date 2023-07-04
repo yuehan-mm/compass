@@ -25,16 +25,19 @@ import com.oppo.cloud.common.util.DateUtil;
 import com.oppo.cloud.detect.domain.AbnormalTaskAppInfo;
 import com.oppo.cloud.detect.service.*;
 import com.oppo.cloud.detect.util.DetectorUtil;
-import com.oppo.cloud.mapper.*;
-import com.oppo.cloud.model.*;
+import com.oppo.cloud.mapper.UserMapper;
+import com.oppo.cloud.model.Task;
+import com.oppo.cloud.model.User;
+import com.oppo.cloud.model.UserExample;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * 任务诊断父类
@@ -120,35 +123,6 @@ public abstract class DetectServiceImpl implements DetectService {
     }
 
     /**
-     * 异常作业任务处理
-     */
-    @Override
-    public void handleAbnormalJob(JobAnalysis detectJobAnalysis, int tryNumber) throws Exception {
-        // 补充用户信息
-        updateUserInfo(detectJobAnalysis);
-        // 查询该任务下的appIds
-        AbnormalTaskAppInfo abnormalTaskAppInfo = taskAppService.getAbnormalTaskAppsInfo(detectJobAnalysis);
-        if (!"".equals(abnormalTaskAppInfo.getExceptionInfo())) {
-            delayTaskService.pushDelayedQueue(detectJobAnalysis, abnormalTaskAppInfo.getExceptionInfo(), tryNumber);
-            return;
-        }
-        // 引擎维度诊断必须要有appId
-        if (abnormalTaskAppInfo.getTaskAppList().size() != 0) {
-            taskAppService.insertTaskApps(abnormalTaskAppInfo.getTaskAppList());
-            // 更新vcoreSeconds 和 memorySeconds
-            abnormalJobService.updateResource(detectJobAnalysis, abnormalTaskAppInfo.getTaskAppList());
-            // 生成解析日志消息体logRecord
-            LogRecord logRecord = this.genLogRecord(abnormalTaskAppInfo, detectJobAnalysis);
-            this.sendLogRecordMsg(logRecord);
-        }
-        // 保存jobInstance信息
-        jobInstanceService.insertOrUpdate(detectJobAnalysis);
-        // 保存异常任务
-        this.addOrUpdate(detectJobAnalysis);
-    }
-
-
-    /**
      * 生成发送日志解析的消息体
      */
     public LogRecord genLogRecord(AbnormalTaskAppInfo abnormalTaskAppInfo, JobAnalysis detectJobAnalysis) {
@@ -157,14 +131,6 @@ public abstract class DetectServiceImpl implements DetectService {
         logRecord.setIsOneClick(false);
         logRecord.setJobAnalysis(detectJobAnalysis);
         logRecord.formatTaskAppList(abnormalTaskAppInfo.getTaskAppList());
-//        List<App> appLogPath = logRecordService.getAppLog(abnormalTaskAppInfo.getTaskAppList());    // 转化SparkAppLog信息
-//        List<App> schedulerLogApp = logRecordService.getSchedulerLog(detectJobAnalysis);            // 转化 AirFlow 日志信息
-//        appLogPath.addAll(schedulerLogApp);
-//        logRecord.setApps(appLogPath);     //
-//        if (schedulerLogApp.size() != 0) {
-//            // 更新已处理的事件信息【记录调度日志已成功发送】
-//            abnormalTaskAppInfo.setHandleApps(abnormalTaskAppInfo.getHandleApps() + "scheduler" + ";");
-//        }
         return logRecord;
     }
 
@@ -173,44 +139,6 @@ public abstract class DetectServiceImpl implements DetectService {
     public void sendLogRecordMsg(LogRecord logRecord) {
         String recordMessage = JSONObject.toJSONString(logRecord);
         kafkaTemplate.send(recordTopic, recordMessage);
-    }
-
-    /**
-     * 保存异常任务数据
-     */
-    public void addOrUpdate(JobAnalysis detectJobAnalysis) throws Exception {
-        JobAnalysis esJobAnalysis = abnormalJobService.searchJob(detectJobAnalysis);
-
-        if (esJobAnalysis != null) {
-            // 更新操作
-            List<String> oldCategories = esJobAnalysis.getCategories();
-            oldCategories.addAll(detectJobAnalysis.getCategories());
-            esJobAnalysis.setCategories(oldCategories.stream().distinct().collect(Collectors.toList()));
-            if (Strings.isNotBlank(detectJobAnalysis.getSuccessExecutionDay())) {
-                esJobAnalysis.setSuccessExecutionDay(detectJobAnalysis.getSuccessExecutionDay());
-            }
-            if (Strings.isBlank(detectJobAnalysis.getSuccessDays())) {
-                esJobAnalysis.setSuccessDays(detectJobAnalysis.getSuccessDays());
-            }
-            if (Strings.isBlank(detectJobAnalysis.getDurationBaseline())) {
-                esJobAnalysis.setDurationBaseline(detectJobAnalysis.getDurationBaseline());
-            }
-            if (Strings.isBlank(detectJobAnalysis.getEndTimeBaseline())) {
-                esJobAnalysis.setEndTimeBaseline(detectJobAnalysis.getEndTimeBaseline());
-            }
-            esJobAnalysis.setUpdateTime(new Date());
-            elasticSearchService.insertOrUpDateEs(esJobAnalysis.getIndex(), esJobAnalysis.getDocId(), esJobAnalysis.genDoc());
-        } else {
-            // 新增操作
-            detectJobAnalysis.setCreateTime(new Date());
-            detectJobAnalysis.setUpdateTime(new Date());
-            String index = detectJobAnalysis.genIndex(jobIndex);
-            String docId = detectJobAnalysis.genDocId();
-            elasticSearchService.insertOrUpDateEs(index, docId, detectJobAnalysis.genDoc());
-            // 记录索引信息和Id
-            detectJobAnalysis.setIndex(index);
-            detectJobAnalysis.setDocId(docId);
-        }
     }
 
 

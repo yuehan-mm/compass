@@ -131,28 +131,13 @@ public class DetectedTask {
                 - taskInstanceSum.getStartTime().getTime() / 1000));
         jobAnalysis.setCategories(new ArrayList<>());
 
-        jobAnalysis.setRetryTimes(TryNumberUtil.updateTryNumber(jobAnalysis.getRetryTimes(),schedulerType));
-
-        // 调度作业级别任务异常检测
-//        for (DetectService detectService : abnormalDetects) {
-//            try {
-//                detectService.detect(jobAnalysis);
-//            } catch (Exception e) {
-//                log.error("detect task failed: ", e);
-//            }
-//        }
+        jobAnalysis.setRetryTimes(TryNumberUtil.updateTryNumber(jobAnalysis.getRetryTimes(), schedulerType));
 
         try {
-            if (jobAnalysis.getCategories().size() == 0) {
-                // 正常作业任务处理
-                abnormalDetects.get(0).handleNormalJob(jobAnalysis, 0);
-            } else {
-                // 异常作业任务处理
-                abnormalDetects.get(0).handleAbnormalJob(jobAnalysis, 0);
-            }
+            // 正常作业任务处理
+            abnormalDetects.get(0).handleNormalJob(jobAnalysis, 0);
         } catch (Exception e) {
             log.error("handle job failed: ", e);
         }
-
     }
 }
