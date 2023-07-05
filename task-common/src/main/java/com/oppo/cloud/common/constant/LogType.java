@@ -31,6 +31,7 @@ public enum LogType {
     JOB_MANAGER("jobManger"),
     TASK_MANAGER("taskManager"),
     MAPREDUCE_EVENT("mapReduceEvent"),
+    DATAX_RUNTIME("dataXRuntime"),
     YARN("yarn"),
 
     SPARK_GC("gc");

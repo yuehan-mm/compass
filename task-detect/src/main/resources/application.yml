@@ -26,6 +26,8 @@ spring:
     nodes: localhost:19527
     username:
     password:
+  hdfs:
+    base-path: ""
 
   kafka:
     bootstrap-servers: "localhost:9095"

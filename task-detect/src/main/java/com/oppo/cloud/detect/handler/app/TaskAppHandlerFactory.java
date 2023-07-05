@@ -19,6 +19,8 @@ public class TaskAppHandlerFactory {
         return new SparkTaskAppHanlder();
       case MAPREDUCE:
         return new MRTaskAppHandler();
+      case DATAX:
+        return new DataxTaskAppHandler();
       default:
         throw new IllegalArgumentException("Invalid taskApp type : " + taskApplication.getApplicationType());
     }

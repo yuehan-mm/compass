@@ -297,8 +297,9 @@ public class LogParserServiceImpl implements LogParserService {
                                     String appId = matcher.group(rule.getName());
                                     this.applicationMessage.addApplication(appId, rule.getType());
                                 }else{
-                                    String appId = String.format("v_%s_%s",
-                                            System.currentTimeMillis(),
+                                    String appId = String.format("v_%s_%s_%s_%s",taskInstance.getFlowName(),
+                                            taskInstance.getTaskName(),
+                                            taskInstance.getExecutionTime().getTime(),
                                             (int)(Math.random() * System.currentTimeMillis() % 1000)
                                     );
                                     this.applicationMessage.addApplication(appId, rule.getType());
