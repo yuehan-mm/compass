@@ -47,7 +47,7 @@ public class ReplayDataXRuntimeLogs extends ReplayEventLogs {
                 log.info("---------------" + line);
             }
         } catch (Exception e) {
-            log.info("ReplayMapReduceEventLogs parse fail. " + line);
+            log.info("ReplayDataXRuntimeLogs parse fail. " + line);
             throw e;
         }
     }

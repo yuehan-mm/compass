@@ -103,7 +103,7 @@ public abstract class DetectServiceImpl implements DetectService {
         updateUserInfo(detectJobAnalysis);
 
         // 解析task下面的Application信息
-        AbnormalTaskAppInfo abnormalTaskAppInfo = taskAppService.getAbnormalTaskAppsInfo(detectJobAnalysis);
+        AbnormalTaskAppInfo abnormalTaskAppInfo = taskAppService.getTaskAppsInfo(detectJobAnalysis);
 
         if (!"".equals(abnormalTaskAppInfo.getExceptionInfo())) {
             // 完全构造完成再发送

@@ -21,23 +21,13 @@ import com.oppo.cloud.common.domain.elasticsearch.TaskApp;
 import com.oppo.cloud.detect.domain.AbnormalTaskAppInfo;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 任务taskApp接口
  */
 public interface TaskAppService {
 
-    AbnormalTaskAppInfo getAbnormalTaskAppsInfo(JobAnalysis jobAnalysis);
-    /**
-     * 获取任务下所有的的AbnormalTaskApp数据，包括没有taskApp的数据
-     */
-    Map<Integer, List<TaskApp>> getAbnormalTaskApps(JobAnalysis jobAnalysis);
-
-    /**
-     * 往Es中插入异常任务的app信息
-     */
-    void insertTaskApps(List<TaskApp> taskAppList) throws Exception;
+    AbnormalTaskAppInfo getTaskAppsInfo(JobAnalysis jobAnalysis);
 
     /**
      * 从Es中获取异常任务的app信息
