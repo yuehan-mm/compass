@@ -4,12 +4,8 @@ import com.oppo.cloud.common.constant.LogPathType;
 import com.oppo.cloud.common.constant.LogType;
 import com.oppo.cloud.common.domain.elasticsearch.TaskApp;
 import com.oppo.cloud.common.domain.job.LogPath;
-import com.oppo.cloud.common.service.RedisService;
-import com.oppo.cloud.detect.service.ElasticSearchService;
 import com.oppo.cloud.model.TaskApplication;
-import org.springframework.core.env.Environment;
 
-import javax.annotation.Resource;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -20,21 +16,17 @@ import java.util.TimeZone;
 /**
  * DATAX 作业构建
  */
-public class DataxTaskAppHandler implements TaskAppHandler {
+public class DataxTaskAppHandler {
 
-    @Resource
-    private Environment environment;
 
-    @Override
-    public void handler(TaskApplication taskApplication, TaskApp taskApp,
-                        ElasticSearchService elasticSearchService, RedisService redisService) {
+    public void handler(TaskApplication taskApplication, TaskApp taskApp, String hdfsBasePath) {
         taskApp.addLogPath(LogType.DATAX_RUNTIME,
-                new LogPath("oss", LogPathType.DIRECTORY, getDataXLogPath(taskApplication)));
+                new LogPath("oss", LogPathType.DIRECTORY, getDataXLogPath(taskApplication, hdfsBasePath)));
     }
 
-    public String getDataXLogPath(TaskApplication taskApplication) {
+    public String getDataXLogPath(TaskApplication taskApplication, String hdfsBasePath) {
         List<String> paths = new ArrayList<>();
-        paths.add(environment.getProperty("spring.hdfs.base-path"));
+        paths.add(hdfsBasePath);
         paths.add(taskApplication.getFlowName());
         paths.add(taskApplication.getTaskName());
         paths.add(convertTime(taskApplication.getExecuteTime())

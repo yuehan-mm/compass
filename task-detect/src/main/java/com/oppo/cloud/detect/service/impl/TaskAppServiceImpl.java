@@ -22,8 +22,7 @@ import com.oppo.cloud.common.service.RedisService;
 import com.oppo.cloud.common.util.DateUtil;
 import com.oppo.cloud.common.util.ui.TryNumberUtil;
 import com.oppo.cloud.detect.domain.AbnormalTaskAppInfo;
-import com.oppo.cloud.detect.handler.app.TaskAppHandler;
-import com.oppo.cloud.detect.handler.app.TaskAppHandlerFactory;
+import com.oppo.cloud.detect.handler.app.*;
 import com.oppo.cloud.detect.service.ElasticSearchService;
 import com.oppo.cloud.detect.service.TaskAppService;
 import com.oppo.cloud.mapper.TaskApplicationMapper;
@@ -69,6 +68,8 @@ public class TaskAppServiceImpl implements TaskAppService {
     @Value("${custom.schedulerType}")
     private String schedulerType;
 
+    @Value("${spring.hdfs.base-path}")
+    private String hdfsBasePath;
 
     @Override
     public AbnormalTaskAppInfo getTaskAppsInfo(JobAnalysis jobAnalysis) {
@@ -84,7 +85,7 @@ public class TaskAppServiceImpl implements TaskAppService {
                 taskApplication.setRetryTimes(TryNumberUtil.updateTryNumber(taskApplication.getRetryTimes(), schedulerType));
                 try {
                     // 根据appId构造TaskApp(包括相关的日志路径)
-                    TaskApp taskApp = this.buildAbnormalTaskApp(taskApplication);
+                    TaskApp taskApp = this.buildTaskApp(taskApplication);
                     // 将元数据信息更新到taskApp中
                     taskApp.setTaskId(jobAnalysis.getTaskId());
                     taskApp.setFlowId(jobAnalysis.getFlowId());
@@ -119,35 +120,31 @@ public class TaskAppServiceImpl implements TaskAppService {
     /**
      * 根据基础的appId信息构建出AbnormalTaskApp,有异常则直接退出抛出异常
      */
-    public TaskApp buildAbnormalTaskApp(TaskApplication taskApplication) throws Exception {
+    public TaskApp buildTaskApp(TaskApplication taskApplication) {
         TaskApp taskApp = new TaskApp();
         BeanUtils.copyProperties(taskApplication, taskApp);
         taskApp.setApplicationId(taskApp.getApplicationId());
         taskApp.setExecutionDate(taskApplication.getExecuteTime());
         taskApp.setRetryTimes(taskApplication.getRetryTimes());
-
-        final TaskAppHandler taskAppHandler = TaskAppHandlerFactory.getTaskAppHandler(taskApplication);
-
-        taskAppHandler.handler(taskApplication, taskApp, elasticSearchService, redisService);
-
+        buildTaskApp(taskApplication, taskApp);
         return taskApp;
     }
 
-    public TaskApp tryBuildAbnormalTaskApp(TaskApplication taskApplication) {
-        TaskApp taskApp = new TaskApp();
-        BeanUtils.copyProperties(taskApplication, taskApp);
-        taskApp.setExecutionDate(taskApplication.getExecuteTime());
-        taskApp.setRetryTimes(taskApplication.getRetryTimes());
-
-        final TaskAppHandler taskAppHandler = TaskAppHandlerFactory.getTaskAppHandler(taskApplication);
-
+    public void buildTaskApp(TaskApplication taskApplication, TaskApp taskApp) {
         try {
-            taskAppHandler.handler(taskApplication, taskApp, elasticSearchService, redisService);
+            switch (taskApplication.getApplicationType()) {
+                case SPARK:
+                    new SparkTaskAppHandler().handler(taskApplication, taskApp, elasticSearchService, redisService);
+                case MAPREDUCE:
+                    new MRTaskAppHandler().handler(taskApplication, taskApp, elasticSearchService, redisService);
+                case DATAX:
+                    new DataxTaskAppHandler().handler(taskApplication, taskApp, hdfsBasePath);
+                default:
+                    throw new IllegalArgumentException("Invalid taskApp type : " + taskApplication.getApplicationType());
+            }
         } catch (Exception e) {
             log.error("try complete yarn info failed, msg:", e);
         }
-
-        return taskApp;
     }
 
 
