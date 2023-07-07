@@ -28,6 +28,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -114,5 +115,20 @@ public class HDFSUtil {
         }
         log.info("Set ReduceEventLogPath : " + fileStatuses[0].getPath().toString());
         return fileStatuses[0].getPath().toString();
+    }
+
+    public static List<String> filesPattern(NameNodeConf nameNodeConf, String filePath) throws Exception {
+        List<String> result = new ArrayList<>();
+        FileSystem fs = null;
+        try {
+            fs = HDFSUtil.getFileSystem(nameNodeConf, filePath);
+            FileStatus[] fileStatuses = fs.globStatus(new Path(filePath));
+            if (fileStatuses != null) {
+                Arrays.stream(fileStatuses).forEach(x -> result.add(x.getPath().toString()));
+            }
+        } finally {
+            if (fs != null) fs.close();
+        }
+        return result;
     }
 }
