@@ -22,10 +22,10 @@ public class DataXTaskAppHandler {
         // 兼容测试环境
         String protocol = hdfsBasePath.contains("oss") ? "oss" : "hdfs";
         taskApp.addLogPath(LogType.DATAX_RUNTIME,
-                new LogPath(protocol, LogPathType.DIRECTORY, getDataXLogPath(taskApplication, hdfsBasePath)));
+                new LogPath(protocol, LogPathType.DIRECTORY, getDataXLogFuzzyPath(taskApplication, hdfsBasePath)));
     }
 
-    public String getDataXLogPath(TaskApplication taskApplication, String hdfsBasePath) {
+    public String getDataXLogFuzzyPath(TaskApplication taskApplication, String hdfsBasePath) {
         List<String> paths = new ArrayList<>();
         paths.add(hdfsBasePath);
         paths.add(taskApplication.getFlowName());
@@ -35,6 +35,7 @@ public class DataXTaskAppHandler {
                 .replace("+", "_")
                 + "-"
                 + (taskApplication.getRetryTimes() + 1)
+                + "*"
         );
         return String.join("/", paths);
     }
