@@ -117,7 +117,7 @@ public class LogParserServiceImpl implements LogParserService {
     private final static String LOG_PATH_KEY = "__log_path";
 
     @Value("${spring.hdfs.base-path}")
-    private static String HDFS_BASE_PATH;
+    private String HDFS_BASE_PATH;
 
     /**
      * 获取hadoop集群配置信息

@@ -22,7 +22,7 @@ import java.util.TimeZone;
 public class DataxTaskAppHandler implements TaskAppHandler {
 
     @Value("${spring.hdfs.base-path}")
-    private String HDFS_BASE_PATH;
+    private static String HDFS_BASE_PATH;
 
     @Override
     public void handler(TaskApplication taskApplication, TaskApp taskApp,
