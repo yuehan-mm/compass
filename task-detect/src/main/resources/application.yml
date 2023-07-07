@@ -26,9 +26,6 @@ spring:
     nodes: localhost:19527
     username:
     password:
-  hdfs:
-    base-path: ""
-
   kafka:
     bootstrap-servers: "localhost:9095"
     taskinstancetopics: "task_instance"
@@ -39,6 +36,8 @@ spring:
       security-protocol: ""
       sasl-mechanism: ""
       sasl-jaas-config: ""
+  hdfs:
+    base-path: ""
 
 custom:
   schedulerType: "Airflow"
