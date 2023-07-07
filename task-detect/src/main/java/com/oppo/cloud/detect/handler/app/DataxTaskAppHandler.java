@@ -6,6 +6,7 @@ import com.oppo.cloud.common.domain.elasticsearch.TaskApp;
 import com.oppo.cloud.common.domain.job.LogPath;
 import com.oppo.cloud.common.service.RedisService;
 import com.oppo.cloud.detect.service.ElasticSearchService;
+import com.oppo.cloud.detect.util.ApplicationContextUtils;
 import com.oppo.cloud.model.TaskApplication;
 import org.springframework.core.env.Environment;
 
@@ -21,9 +22,8 @@ import java.util.TimeZone;
  * DATAX 作业构建
  */
 public class DataxTaskAppHandler implements TaskAppHandler {
+    private static Environment environment = ApplicationContextUtils.getBean(Environment.class);
 
-    @Resource
-    private Environment environment;
 
     @Override
     public void handler(TaskApplication taskApplication, TaskApp taskApp,

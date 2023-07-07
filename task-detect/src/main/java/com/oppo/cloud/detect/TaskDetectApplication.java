@@ -16,8 +16,10 @@
 
 package com.oppo.cloud.detect;
 
+import com.oppo.cloud.detect.util.ApplicationContextUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
@@ -30,6 +32,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class TaskDetectApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(TaskDetectApplication.class, args);
+
+//        SpringApplication.run(TaskDetectApplication.class, args);
+        ConfigurableApplicationContext applicationContext = SpringApplication.run(TaskDetectApplication.class, args);
+        ApplicationContextUtils.setApplicationContext(applicationContext);
     }
 }
