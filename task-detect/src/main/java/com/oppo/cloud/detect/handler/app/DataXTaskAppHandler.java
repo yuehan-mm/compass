@@ -18,10 +18,11 @@ import java.util.TimeZone;
  */
 public class DataXTaskAppHandler {
 
-
     public void handler(TaskApplication taskApplication, TaskApp taskApp, String hdfsBasePath) {
+        // 兼容测试环境
+        String protocol = hdfsBasePath.contains("oss") ? "oss" : "hdfs";
         taskApp.addLogPath(LogType.DATAX_RUNTIME,
-                new LogPath("oss", LogPathType.DIRECTORY, getDataXLogPath(taskApplication, hdfsBasePath)));
+                new LogPath(protocol, LogPathType.DIRECTORY, getDataXLogPath(taskApplication, hdfsBasePath)));
     }
 
     public String getDataXLogPath(TaskApplication taskApplication, String hdfsBasePath) {
