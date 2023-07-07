@@ -48,6 +48,10 @@ public abstract class ReplayEventLogs {
         this.logPath = logPath;
     }
 
+    public ReplayEventLogs(ApplicationType applicationType) {
+        this.applicationType = applicationType;
+    }
+
     public void replay(ReaderObject readerObject) throws Exception {
         try {
             String line;

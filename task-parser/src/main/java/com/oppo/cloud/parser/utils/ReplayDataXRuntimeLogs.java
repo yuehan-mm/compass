@@ -35,8 +35,8 @@ public class ReplayDataXRuntimeLogs extends ReplayEventLogs {
 
     private JobFinishedEvent jobFinishedEvent;
 
-    public ReplayDataXRuntimeLogs(ApplicationType applicationType, String logPath) {
-        super(applicationType, logPath);
+    public ReplayDataXRuntimeLogs(ApplicationType applicationType) {
+        super(applicationType);
         jobFinishedEvent = new JobFinishedEvent();
     }
 

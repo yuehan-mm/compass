@@ -39,6 +39,7 @@ import com.oppo.cloud.parser.utils.ReplayEventLogs;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -61,12 +62,11 @@ public class DataXRuntimeLogParser extends OneClickSubject implements IParser {
     public CommonResult run() {
         updateParserProgress(ProgressState.PROCESSING, 0, this.param.getLogPaths().size());
         if (this.param.getLogPaths().size() > 0) {
-            // TODO 应对每个日志解析
             LogPath logPath = this.param.getLogPaths().get(0);
-            ReaderObject readerObjects;
+            List<ReaderObject> readerObjects;
             try {
                 IReader reader = LogReaderFactory.create(logPath);
-                readerObjects = reader.getReaderObject();
+                readerObjects = reader.getReaderObjects();
             } catch (Exception e) {
                 log.error("Exception:", e);
                 updateParserProgress(ProgressState.FAILED, 0, 0);
@@ -77,13 +77,15 @@ public class DataXRuntimeLogParser extends OneClickSubject implements IParser {
         return null;
     }
 
-    private CommonResult<DetectorStorage> parse(ReaderObject readerObject) {
+    private CommonResult<DetectorStorage> parse(List<ReaderObject> readerObjects) {
         ReplayDataXRuntimeLogs replayEventLogs = new ReplayDataXRuntimeLogs(
-                this.param.getTaskParam().getTaskApp().getApplicationType(), readerObject.getLogPath());
+                this.param.getTaskParam().getTaskApp().getApplicationType());
         try {
-            replayEventLogs.replay(readerObject);
+            for (ReaderObject readerObject : readerObjects) {
+                replayEventLogs.replay(readerObject);
+            }
         } catch (Exception e) {
-            log.error("replay datax runtime log error.", e);
+            log.error("replay dataX runtime log error.", e);
             updateParserProgress(ProgressState.FAILED, 0, 0);
             return null;
         }
