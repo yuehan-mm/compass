@@ -66,7 +66,7 @@ public class DataXRuntimeLogParser extends OneClickSubject implements IParser {
             List<ReaderObject> readerObjects;
             try {
                 IReader reader = LogReaderFactory.create(logPath);
-                readerObjects = reader.getReaderObjects();
+                readerObjects = reader.getReaderObjectsByFuzzyPath();
             } catch (Exception e) {
                 log.error("Exception:", e);
                 updateParserProgress(ProgressState.FAILED, 0, 0);
