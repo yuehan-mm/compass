@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 /**
- *  DATAX 作业构建
+ * DATAX 作业构建
  */
 @Service
 @Slf4j
@@ -31,6 +31,7 @@ public class DataxTaskAppHandler implements TaskAppHandler {
     @Override
     public void handler(TaskApplication taskApplication, TaskApp taskApp,
                         ElasticSearchService elasticSearchService, RedisService redisService) {
+        log.info("---------------" + HDFS_BASE_PATH);
         taskApp.addLogPath(LogType.DATAX_RUNTIME,
                 new LogPath("oss", LogPathType.DIRECTORY, getDataXLogPath(taskApplication)));
     }
