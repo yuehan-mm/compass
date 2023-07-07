@@ -7,7 +7,9 @@ import com.oppo.cloud.common.domain.job.LogPath;
 import com.oppo.cloud.common.service.RedisService;
 import com.oppo.cloud.detect.service.ElasticSearchService;
 import com.oppo.cloud.model.TaskApplication;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -19,6 +21,8 @@ import java.util.TimeZone;
 /**
  *  DATAX 作业构建
  */
+@Service
+@Slf4j
 public class DataxTaskAppHandler implements TaskAppHandler {
 
     @Value("${spring.hdfs.base-path}")
