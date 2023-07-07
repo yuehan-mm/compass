@@ -7,9 +7,9 @@ import com.oppo.cloud.common.domain.job.LogPath;
 import com.oppo.cloud.common.service.RedisService;
 import com.oppo.cloud.detect.service.ElasticSearchService;
 import com.oppo.cloud.model.TaskApplication;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.core.env.Environment;
 
+import javax.annotation.Resource;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,13 +18,12 @@ import java.util.List;
 import java.util.TimeZone;
 
 /**
- *  DATAX 作业构建
+ * DATAX 作业构建
  */
-@Component
 public class DataxTaskAppHandler implements TaskAppHandler {
 
-    @Value("${spring.hdfs.base-path}")
-    private String HDFS_BASE_PATH;
+    @Resource
+    private Environment environment;
 
     @Override
     public void handler(TaskApplication taskApplication, TaskApp taskApp,
@@ -35,7 +34,7 @@ public class DataxTaskAppHandler implements TaskAppHandler {
 
     public String getDataXLogPath(TaskApplication taskApplication) {
         List<String> paths = new ArrayList<>();
-        paths.add(HDFS_BASE_PATH);
+        paths.add(environment.getProperty("spring.hdfs.base-path"));
         paths.add(taskApplication.getFlowName());
         paths.add(taskApplication.getTaskName());
         paths.add(convertTime(taskApplication.getExecuteTime())
