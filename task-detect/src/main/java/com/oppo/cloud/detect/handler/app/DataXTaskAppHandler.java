@@ -34,7 +34,7 @@ public class DataXTaskAppHandler {
                 .replace(":", "_")
                 .replace("+", "_")
                 + "-"
-                + taskApplication.getRetryTimes()
+                + (taskApplication.getRetryTimes() + 1)
         );
         return String.join("/", paths);
     }
