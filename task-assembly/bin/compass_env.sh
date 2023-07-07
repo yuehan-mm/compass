@@ -69,4 +69,4 @@ export SPRING_KAFKA_TASKRECORD_TOPIC="compass_taskrecord_test"
 export SPRING_KAFKA_TASKRECORD_GROUPID="compass_taskrecord_test_20012523_consumer"
 
 # hdfs base path
-export SPRING_HDFS_BASEPATH="/flume/airflow_test/bigdata/bdp_jt/airflow/logs"
+export SPRING_HDFS_BASEPATH="hdfs://nameservice1/flume/airflow_test/bigdata/bdp_jt/airflow/logs"
