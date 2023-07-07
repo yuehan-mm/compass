@@ -138,7 +138,7 @@ public class TaskAppServiceImpl implements TaskAppService {
                 case MAPREDUCE:
                     new MRTaskAppHandler().handler(taskApplication, taskApp, elasticSearchService, redisService);
                 case DATAX:
-                    new DataxTaskAppHandler().handler(taskApplication, taskApp, hdfsBasePath);
+                    new DataXTaskAppHandler().handler(taskApplication, taskApp, hdfsBasePath);
                 default:
                     throw new IllegalArgumentException("Invalid taskApp type : " + taskApplication.getApplicationType());
             }

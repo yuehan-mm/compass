@@ -16,7 +16,7 @@ import java.util.TimeZone;
 /**
  * DATAX 作业构建
  */
-public class DataxTaskAppHandler {
+public class DataXTaskAppHandler {
 
 
     public void handler(TaskApplication taskApplication, TaskApp taskApp, String hdfsBasePath) {
