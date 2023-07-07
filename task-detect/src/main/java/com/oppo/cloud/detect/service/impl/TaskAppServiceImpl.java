@@ -92,7 +92,6 @@ public class TaskAppServiceImpl implements TaskAppService {
                     taskApp.setUsers(jobAnalysis.getUsers());
                     taskAppList.add(taskApp);
                 } catch (Exception e) {
-                    log.error("buildAbnormalTaskApp failed, msg:", e);
                     exceptionInfo.append(e.getMessage()).append(";");
                 }
             }
