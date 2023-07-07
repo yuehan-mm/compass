@@ -8,6 +8,7 @@ import com.oppo.cloud.common.service.RedisService;
 import com.oppo.cloud.detect.service.ElasticSearchService;
 import com.oppo.cloud.model.TaskApplication;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -19,10 +20,11 @@ import java.util.TimeZone;
 /**
  *  DATAX 作业构建
  */
+@Component
 public class DataxTaskAppHandler implements TaskAppHandler {
 
     @Value("${spring.hdfs.base-path}")
-    private static String HDFS_BASE_PATH;
+    private String HDFS_BASE_PATH;
 
     @Override
     public void handler(TaskApplication taskApplication, TaskApp taskApp,
