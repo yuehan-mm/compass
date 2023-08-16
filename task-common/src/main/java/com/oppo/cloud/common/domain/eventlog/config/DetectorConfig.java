@@ -93,4 +93,9 @@ public class DetectorConfig {
      * Map/Reduce数量过多配置
      */
     private SpeculativeMapReduceConfig speculativeMapReduceConfig;
+
+    /**
+     * DataX 流量异常
+     */
+    private TrafficAnomalyDetectorConfig  trafficAnomalyDetectorConfig;
 }

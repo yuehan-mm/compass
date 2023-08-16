@@ -17,14 +17,10 @@
 package com.oppo.cloud.parser.utils;
 
 import com.oppo.cloud.common.constant.ApplicationType;
-import com.oppo.cloud.parser.domain.mapreduce.eventlog.JobFinishedEvent;
-import com.oppo.cloud.parser.domain.mapreduce.eventlog.MapReduceApplication;
-import com.oppo.cloud.parser.domain.spark.eventlog.*;
+import com.oppo.cloud.parser.domain.event.datax.DataXJobConfigInfo;
+import com.oppo.cloud.parser.domain.event.datax.DataXJobRunTimeInfo;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * spark event log 解析
@@ -33,11 +29,13 @@ import java.util.Map;
 @Data
 public class ReplayDataXRuntimeLogs extends ReplayEventLogs {
 
-    private JobFinishedEvent jobFinishedEvent;
+    private DataXJobConfigInfo dataXJobConfigInfo;
+    private DataXJobRunTimeInfo dataXJobRunTimeInfo;
 
     public ReplayDataXRuntimeLogs(ApplicationType applicationType) {
         super(applicationType);
-        jobFinishedEvent = new JobFinishedEvent();
+        dataXJobConfigInfo = new DataXJobConfigInfo();
+        dataXJobRunTimeInfo = new DataXJobRunTimeInfo();
     }
 
     @Override
@@ -55,40 +53,5 @@ public class ReplayDataXRuntimeLogs extends ReplayEventLogs {
 
     @Override
     public void correlate() throws Exception {
-    }
-
-    @Override
-    public SparkApplication getApplication() {
-        return null;
-    }
-
-    @Override
-    public Map<Integer, SparkJob> getJobs() {
-        return null;
-    }
-
-    @Override
-    public Map<String, SparkExecutor> getExecutors() {
-        return null;
-    }
-
-    @Override
-    public List<SparkListenerSQLExecutionStart> getSqlExecutionStarts() {
-        return null;
-    }
-
-    @Override
-    public Map<Long, AccumulableInfo> getAccumulableInfoMap() {
-        return null;
-    }
-
-    @Override
-    public Map<Long, Long> getDriverUpdateMap() {
-        return null;
-    }
-
-    @Override
-    public MapReduceApplication getMapReduceApplication() {
-        return null;
     }
 }

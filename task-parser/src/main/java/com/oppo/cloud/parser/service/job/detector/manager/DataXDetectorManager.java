@@ -18,23 +18,23 @@ package com.oppo.cloud.parser.service.job.detector.manager;
 
 import com.oppo.cloud.parser.domain.job.DetectorParam;
 import com.oppo.cloud.parser.service.job.detector.IDetector;
-import com.oppo.cloud.parser.service.job.detector.plugins.mapreduce.SpeculativeMapReduceDetector;
+import com.oppo.cloud.parser.service.job.detector.plugins.datax.TrafficAnomalyDetector;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-public class MapReduceDetectorManager extends DetectorManager {
+public class DataXDetectorManager extends DetectorManager {
 
-    public MapReduceDetectorManager(DetectorParam param) {
+    public DataXDetectorManager(DetectorParam param) {
         super(param);
     }
 
     @Override
     public List<IDetector> createDetectors() {
         List<IDetector> detectors = new ArrayList<>();
-        detectors.add(new SpeculativeMapReduceDetector(param));
+        detectors.add(new TrafficAnomalyDetector(param));
         return detectors;
     }
 }

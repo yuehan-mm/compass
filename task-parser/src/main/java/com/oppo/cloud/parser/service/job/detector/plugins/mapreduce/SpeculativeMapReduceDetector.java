@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.oppo.cloud.parser.service.job.detector;
+package com.oppo.cloud.parser.service.job.detector.plugins.mapreduce;
 
 import com.alibaba.fastjson2.JSON;
 import com.oppo.cloud.common.constant.AppCategoryEnum;
@@ -23,6 +23,8 @@ import com.oppo.cloud.common.domain.eventlog.SpeculativeMapReduceAbnormal;
 import com.oppo.cloud.common.domain.eventlog.config.SpeculativeMapReduceConfig;
 import com.oppo.cloud.parser.domain.job.DetectorParam;
 import com.oppo.cloud.parser.domain.mapreduce.eventlog.JobFinishedEvent;
+import com.oppo.cloud.parser.service.job.detector.IDetector;
+import com.oppo.cloud.parser.utils.ReplayMapReduceEventLogs;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -32,10 +34,12 @@ public class SpeculativeMapReduceDetector implements IDetector {
 
     private final SpeculativeMapReduceConfig config;
 
+    private final ReplayMapReduceEventLogs replayMapReduceEventLogs;
+
     public SpeculativeMapReduceDetector(DetectorParam param) {
         this.param = param;
         this.config = param.getConfig().getSpeculativeMapReduceConfig();
-
+        this.replayMapReduceEventLogs = (ReplayMapReduceEventLogs) this.param.getReplayEventLogs();
     }
 
     @Override
@@ -46,8 +50,8 @@ public class SpeculativeMapReduceDetector implements IDetector {
                 new DetectorResult<>(AppCategoryEnum.SPECULATIVE_MAP_REDUCE.getCategory(), false);
 
         SpeculativeMapReduceAbnormal speculativeMapReduceAbnormal = new SpeculativeMapReduceAbnormal();
-        JobFinishedEvent jobFinishedEvent = this.param.getReplayEventLogs().getJobFinishedEvent();
-        if (this.param.getReplayEventLogs().getMapReduceApplication().getAppDuration() > config.getDuration()
+        JobFinishedEvent jobFinishedEvent = replayMapReduceEventLogs.getJobFinishedEvent();
+        if (replayMapReduceEventLogs.getMapReduceApplication().getAppDuration() > config.getDuration()
                 && (jobFinishedEvent.getFinishedMaps() > config.getMapThreshold()
                 || jobFinishedEvent.getFinishedReduces() > config.getReduceThreshold())) {
             speculativeMapReduceAbnormal.setAbnormal(true);

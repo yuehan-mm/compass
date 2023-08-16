@@ -28,8 +28,8 @@ import com.oppo.cloud.parser.domain.job.CommonResult;
 import com.oppo.cloud.parser.domain.job.DetectorParam;
 import com.oppo.cloud.parser.domain.job.ParserParam;
 import com.oppo.cloud.parser.domain.reader.ReaderObject;
+import com.oppo.cloud.parser.service.job.detector.manager.DataXDetectorManager;
 import com.oppo.cloud.parser.service.job.detector.manager.DetectorManager;
-import com.oppo.cloud.parser.service.job.detector.manager.MapReduceDetectorManager;
 import com.oppo.cloud.parser.service.job.oneclick.OneClickSubject;
 import com.oppo.cloud.parser.service.reader.IReader;
 import com.oppo.cloud.parser.service.reader.LogReaderFactory;
@@ -78,23 +78,22 @@ public class DataXRuntimeLogParser extends OneClickSubject implements IParser {
     }
 
     private CommonResult<DetectorStorage> parse(List<ReaderObject> readerObjects) {
-        ReplayDataXRuntimeLogs replayEventLogs = new ReplayDataXRuntimeLogs(
+        ReplayDataXRuntimeLogs replayDataXRuntimeLogs = new ReplayDataXRuntimeLogs(
                 this.param.getTaskParam().getTaskApp().getApplicationType());
         try {
             for (ReaderObject readerObject : readerObjects) {
-                replayEventLogs.replay(readerObject);
+                replayDataXRuntimeLogs.replay(readerObject);
             }
         } catch (Exception e) {
             log.error("replay dataX runtime log error.", e);
             updateParserProgress(ProgressState.FAILED, 0, 0);
             return null;
         }
-        log.info("replay result: " + JSON.toJSONString(replayEventLogs));
-//        return detect(replayEventLogs, readerObject.getLogPath());
-        return null;
+        log.info("replay result: " + JSON.toJSONString(replayDataXRuntimeLogs));
+        return detect(replayDataXRuntimeLogs, null);
     }
 
-    private CommonResult<DetectorStorage> detect(ReplayEventLogs replayEventLogs, String logPath) {
+    private CommonResult<DetectorStorage> detect(ReplayDataXRuntimeLogs replayEventLogs, String logPath) {
         Map<String, Object> env = getDataXEnvironmentConfig(replayEventLogs);
 
         DetectorParam detectorParam = new DetectorParam(this.param.getTaskParam().getTaskApp().getFlowName(),
@@ -104,10 +103,10 @@ public class DataXRuntimeLogParser extends OneClickSubject implements IParser {
                 this.param.getTaskParam().getTaskApp().getRetryTimes(),
                 this.param.getTaskParam().getTaskApp().getApplicationId(),
                 this.param.getTaskParam().getTaskApp().getApplicationType(),
-                replayEventLogs.getMapReduceApplication().getAppDuration(),
+                replayEventLogs.getDataXJobRunTimeInfo().getAppDuration(),
                 logPath, config, replayEventLogs, isOneClick);
 
-        DetectorManager detectorManager = new MapReduceDetectorManager(detectorParam);
+        DetectorManager detectorManager = new DataXDetectorManager(detectorParam);
         // run all detector
         DetectorStorage detectorStorage = detectorManager.run();
 

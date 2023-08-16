@@ -91,7 +91,7 @@ public class MapReduceEventLogParser extends OneClickSubject implements IParser 
         return detect(replayEventLogs, readerObject.getLogPath());
     }
 
-    private CommonResult<MapReduceEventLogParserResult> detect(ReplayEventLogs replayEventLogs, String logPath) {
+    private CommonResult<MapReduceEventLogParserResult> detect(ReplayMapReduceEventLogs replayEventLogs, String logPath) {
         Map<String, Object> env = getMapReduceEnvironmentConfig(replayEventLogs);
 
         DetectorParam detectorParam = new DetectorParam(this.param.getTaskParam().getTaskApp().getFlowName(),
@@ -121,7 +121,7 @@ public class MapReduceEventLogParser extends OneClickSubject implements IParser 
         return result;
     }
 
-    private Map<String, Object> getMapReduceEnvironmentConfig(ReplayEventLogs replayEventLogs) {
+    private Map<String, Object> getMapReduceEnvironmentConfig(ReplayMapReduceEventLogs replayEventLogs) {
         Map<String, Object> env = new HashMap<>();
         MapReduceEnvironmentConfig envConfig = config.getMapReduceEnvironmentConfig();
         if (envConfig != null) {

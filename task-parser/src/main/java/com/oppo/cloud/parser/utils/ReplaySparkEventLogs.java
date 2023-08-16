@@ -282,14 +282,4 @@ public class ReplaySparkEventLogs extends ReplayEventLogs {
             }
         }
     }
-
-    @Override
-    public JobFinishedEvent getJobFinishedEvent() {
-        return null;
-    }
-
-    @Override
-    public MapReduceApplication getMapReduceApplication() {
-        return null;
-    }
 }
