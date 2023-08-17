@@ -25,6 +25,8 @@ public class DataXTaskAppHandler {
         //  内存消耗:  0.00 GB·s
         //  CPU消耗:  0.00 vcore·s
         taskApp.setElapsedTime(9999.9);
+        taskApp.setStartTime(new Date());
+        taskApp.setFinishTime(new Date(System.currentTimeMillis() + 199999));
         taskApp.setMemorySeconds(9999.9);
         taskApp.setVcoreSeconds(9999.9);
         // 兼容测试环境
