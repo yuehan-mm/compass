@@ -201,5 +201,5 @@ custom:
       disable: false
       # app duration(ms)
       duration: 0
-      mapThreshold: 0
-      reduceThreshold: 0
+      minTraffic: 100
+      maxTraffic: 2000
