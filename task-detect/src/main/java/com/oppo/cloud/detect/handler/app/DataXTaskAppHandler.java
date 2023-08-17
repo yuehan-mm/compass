@@ -19,6 +19,14 @@ import java.util.TimeZone;
 public class DataXTaskAppHandler {
 
     public void handler(TaskApplication taskApplication, TaskApp taskApp, String hdfsBasePath) {
+
+
+        // TODO 运行耗时:  0.00s
+        //  内存消耗:  0.00 GB·s
+        //  CPU消耗:  0.00 vcore·s
+        taskApp.setElapsedTime(9999.9);
+        taskApp.setMemorySeconds(9999.9);
+        taskApp.setVcoreSeconds(9999.9);
         // 兼容测试环境
         String protocol = hdfsBasePath.contains("oss") ? "oss" : "hdfs";
         taskApp.addLogPath(LogType.DATAX_RUNTIME,
