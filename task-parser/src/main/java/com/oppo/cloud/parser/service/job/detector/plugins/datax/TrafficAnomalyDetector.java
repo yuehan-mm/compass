@@ -51,10 +51,10 @@ public class TrafficAnomalyDetector implements IDetector {
 
         TrafficAnomalyAbnormal trafficAnomalyAbnormal = new TrafficAnomalyAbnormal();
         DataXJobRunTimeInfo dataXJobRunTimeInfo = replayDataXRuntimeLogs.getDataXJobRunTimeInfo();
-        if (dataXJobRunTimeInfo.getSpeedBytes() < config.getMinTraffic()
-                || dataXJobRunTimeInfo.getSpeedBytes() > config.getMaxTraffic()) {
+        if (dataXJobRunTimeInfo.getTotalBytes() < config.getMinTraffic()
+                || dataXJobRunTimeInfo.getTotalBytes() > config.getMaxTraffic()) {
             trafficAnomalyAbnormal.setAbnormal(true);
-            trafficAnomalyAbnormal.setTraffic(dataXJobRunTimeInfo.getSpeedBytes());
+            trafficAnomalyAbnormal.setTraffic(dataXJobRunTimeInfo.getTotalBytes());
             detectorResult.setData(trafficAnomalyAbnormal);
             detectorResult.setAbnormal(true);
             return detectorResult;

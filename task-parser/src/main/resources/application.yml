@@ -197,3 +197,9 @@ custom:
       duration: 0
       mapThreshold: 500
       reduceThreshold: 100
+    trafficAnomalyDetectorConfig:
+      disable: false
+      # app duration(ms)
+      duration: 0
+      mapThreshold: 0
+      reduceThreshold: 0
