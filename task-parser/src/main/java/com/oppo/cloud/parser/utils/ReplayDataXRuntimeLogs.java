@@ -16,6 +16,7 @@
 
 package com.oppo.cloud.parser.utils;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.oppo.cloud.common.constant.ApplicationType;
 import com.oppo.cloud.parser.domain.event.datax.DataXJobConfigInfo;
 import com.oppo.cloud.parser.domain.event.datax.DataXJobRunTimeInfo;
@@ -41,8 +42,24 @@ public class ReplayDataXRuntimeLogs extends ReplayEventLogs {
     @Override
     public void parseLine(String line) {
         try {
-            if (line.contains("StandAloneJobContainerCommunicator")) {
-                log.info("---------------" + line);
+            if (line.contains("committedMemSize") && line.contains("dataCapacityBytes")) {
+                JSONObject metrics = JSONObject.parse(line.split("INFO -")[1]);
+                this.dataXJobConfigInfo.setDestTable(metrics.getString("committedMemSize"));
+                this.dataXJobConfigInfo.setSrcTable(metrics.getString("dataCapacityBytes"));
+
+                long startTime = metrics.getLong("startTime");
+                long endTime = metrics.getLong("endTime");
+                long timeUsed = endTime - startTime;
+                double dataCount = metrics.getDouble("dataCount");
+                double dataCapacityBytes = metrics.getDouble("dataCapacityBytes");
+
+                this.dataXJobRunTimeInfo.setTotalRecords(dataCount);
+                this.dataXJobRunTimeInfo.setTotalBytes(dataCapacityBytes);
+                this.dataXJobRunTimeInfo.setSpeedBytes(dataCapacityBytes / timeUsed);
+                this.dataXJobRunTimeInfo.setSpeedRows(dataCount / timeUsed);
+                this.dataXJobRunTimeInfo.setAppStartTimestamp(startTime);
+                this.dataXJobRunTimeInfo.setAppEndTimestamp(endTime);
+                this.dataXJobRunTimeInfo.setAppDuration(timeUsed);
             }
         } catch (Exception e) {
             log.info("ReplayDataXRuntimeLogs parse fail. " + line);

@@ -120,26 +120,12 @@ public class DataXRuntimeLogParser extends OneClickSubject implements IParser {
         return result;
     }
 
-    private Map<String, Object> getDataXEnvironmentConfig(ReplayEventLogs replayEventLogs) {
+    private Map<String, Object> getDataXEnvironmentConfig(ReplayDataXRuntimeLogs replayEventLogs) {
         Map<String, Object> env = new HashMap<>();
-//        MapReduceEnvironmentConfig envConfig = config.getMapReduceEnvironmentConfig();
-//        if (envConfig != null) {
-//            if (envConfig.getJvmInformation() != null) {
-//                for (String key : envConfig.getJvmInformation()) {
-//                    env.put(key, replayEventLogs.getMapReduceApplication().getJobConfiguration().get(key));
-//                }
-//            }
-//            if (envConfig.getMapReduceProperties() != null) {
-//                for (String key : envConfig.getMapReduceProperties()) {
-//                    env.put(key, replayEventLogs.getMapReduceApplication().getJobConfiguration().get(key));
-//                }
-//            }
-//            if (envConfig.getSystemProperties() != null) {
-//                for (String key : envConfig.getSystemProperties()) {
-//                    env.put(key, replayEventLogs.getMapReduceApplication().getJobConfiguration().get(key));
-//                }
-//            }
-//        }
+        env.put("src", replayEventLogs.getDataXJobConfigInfo().getSrcTable());
+        env.put("src_type", replayEventLogs.getDataXJobConfigInfo().getSrcTable());
+        env.put("dest", replayEventLogs.getDataXJobConfigInfo().getDestTable());
+        env.put("dest_type", replayEventLogs.getDataXJobConfigInfo().getDestTable());
         return env;
     }
 

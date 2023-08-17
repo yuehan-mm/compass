@@ -6,5 +6,5 @@ import lombok.Data;
 public class DataXJobConfigInfo {
      // 作业配置信息
     private String srcTable;
-    private String descTable;
+    private String destTable;
 }
