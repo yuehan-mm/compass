@@ -44,8 +44,11 @@ public class ReplayDataXRuntimeLogs extends ReplayEventLogs {
         try {
             if (line.contains("committedMemSize") && line.contains("dataCapacityBytes")) {
                 JSONObject metrics = JSONObject.parse(line.split("INFO -")[1]);
-                this.dataXJobConfigInfo.setDestTable(metrics.getString("committedMemSize"));
-                this.dataXJobConfigInfo.setSrcTable(metrics.getString("dataCapacityBytes"));
+                // TODO 待完善
+                this.dataXJobConfigInfo.setSrc("tableA");
+                this.dataXJobConfigInfo.setSrc_type("mysql");
+                this.dataXJobConfigInfo.setDest("tableA");
+                this.dataXJobConfigInfo.setDest_type("hive");
 
                 long startTime = metrics.getLong("startTime");
                 long endTime = metrics.getLong("endTime");

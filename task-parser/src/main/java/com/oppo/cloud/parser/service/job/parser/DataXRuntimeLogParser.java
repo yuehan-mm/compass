@@ -122,10 +122,10 @@ public class DataXRuntimeLogParser extends OneClickSubject implements IParser {
 
     private Map<String, Object> getDataXEnvironmentConfig(ReplayDataXRuntimeLogs replayEventLogs) {
         Map<String, Object> env = new HashMap<>();
-        env.put("src", replayEventLogs.getDataXJobConfigInfo().getSrcTable());
-        env.put("src_type", replayEventLogs.getDataXJobConfigInfo().getSrcTable());
-        env.put("dest", replayEventLogs.getDataXJobConfigInfo().getDestTable());
-        env.put("dest_type", replayEventLogs.getDataXJobConfigInfo().getDestTable());
+        env.put("src", replayEventLogs.getDataXJobConfigInfo().getSrc());
+        env.put("src_type", replayEventLogs.getDataXJobConfigInfo().getSrc_type());
+        env.put("dest", replayEventLogs.getDataXJobConfigInfo().getDest());
+        env.put("dest_type", replayEventLogs.getDataXJobConfigInfo().getDest_type());
         return env;
     }
 

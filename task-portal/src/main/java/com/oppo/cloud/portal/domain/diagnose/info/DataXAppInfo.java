@@ -22,7 +22,7 @@ import lombok.Data;
 
 @Data
 @ApiModel("dataX运行参数")
-public class DataXAppInfo extends AppInfo{
+public class DataXAppInfo extends AppInfo {
 
     @ApiModelProperty(value = "src")
     private String src;
@@ -33,7 +33,7 @@ public class DataXAppInfo extends AppInfo{
     @ApiModelProperty(value = "dest")
     private String dest;
 
-    @ApiModelProperty(value = "dest")
+    @ApiModelProperty(value = "dest_type")
     private String dest_type;
 
 }
