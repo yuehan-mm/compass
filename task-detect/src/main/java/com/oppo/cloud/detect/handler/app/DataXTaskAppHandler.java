@@ -29,6 +29,9 @@ public class DataXTaskAppHandler {
         taskApp.setFinishTime(new Date(System.currentTimeMillis() + 199999));
         taskApp.setMemorySeconds(9999.9);
         taskApp.setVcoreSeconds(9999.9);
+        taskApp.setClusterName("unknow");
+        taskApp.setQueue("unknow");
+        taskApp.setExecuteUser("unknow");
         // 兼容测试环境
         String protocol = hdfsBasePath.contains("oss") ? "oss" : "hdfs";
         taskApp.addLogPath(LogType.DATAX_RUNTIME,
