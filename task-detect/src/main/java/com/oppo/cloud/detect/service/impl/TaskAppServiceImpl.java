@@ -135,10 +135,13 @@ public class TaskAppServiceImpl implements TaskAppService {
             switch (taskApplication.getApplicationType()) {
                 case SPARK:
                     new SparkTaskAppHandler().handler(taskApplication, taskApp, elasticSearchService, redisService);
+                    break;
                 case MAPREDUCE:
                     new MRTaskAppHandler().handler(taskApplication, taskApp, elasticSearchService, redisService);
+                    break;
                 case DATAX:
                     new DataXTaskAppHandler().handler(taskApplication, taskApp, hdfsBasePath);
+                    break;
                 default:
                     throw new IllegalArgumentException("Invalid taskApp type : " + taskApplication.getApplicationType());
             }
