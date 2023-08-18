@@ -147,6 +147,7 @@ public class TaskAppServiceImpl implements TaskAppService {
             }
         } catch (Exception e) {
             log.error("try complete yarn info failed, msg:", e);
+            throw new RuntimeException(e.getMessage());
         }
     }
 
