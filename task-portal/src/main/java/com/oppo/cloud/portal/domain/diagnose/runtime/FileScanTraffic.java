@@ -34,10 +34,10 @@ public class FileScanTraffic extends IsAbnormal {
 
     public FileScanTraffic() {
         LinkedHashMap<String, String> titleMap = new LinkedHashMap<>();
-        titleMap.put("fileCount", "文件数量");
+        titleMap.put("fileCount", "扫描文件数量");
         titleMap.put("maxFileCount", "文件数量阈值");
-        titleMap.put("avgSize", "平均文件大小");
-        titleMap.put("minAvgSize", "平均文件大小阈值");
+        titleMap.put("avgSize", "平均文件大小（Byte）");
+        titleMap.put("minAvgSize", "平均文件大小阈值（Byte）");
         table.setTitles(titleMap);
     }
 

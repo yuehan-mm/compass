@@ -49,8 +49,8 @@ public class FileScanService extends RunTimeBaseService<FileScanTraffic> {
         FileScanTraffic.TaskInfo taskInfo = new FileScanTraffic.TaskInfo();
         taskInfo.setFileCount(fileScanAbnormal.getFileCount());
         taskInfo.setMaxFileCount(config.getFileScanConfig().getMaxFileCount());
-        taskInfo.setFileCount(fileScanAbnormal.getAvgSize());
-        taskInfo.setAvgSize(config.getFileScanConfig().getMinAvgSize());
+        taskInfo.setAvgSize(fileScanAbnormal.getAvgSize());
+        taskInfo.setMinAvgSize(config.getFileScanConfig().getMinAvgSize());
         data.add(taskInfo);
 
         fileScanTraffic.getVars().put("fileCount", String.valueOf(fileScanAbnormal.getFileCount()));
