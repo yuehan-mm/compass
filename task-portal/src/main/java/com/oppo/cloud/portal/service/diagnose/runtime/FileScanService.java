@@ -50,13 +50,13 @@ public class FileScanService extends RunTimeBaseService<FileScanTraffic> {
         taskInfo.setFileCount(fileScanAbnormal.getFileCount());
         taskInfo.setMaxFileCount(config.getFileScanConfig().getMaxFileCount());
         taskInfo.setFileCount(fileScanAbnormal.getAvgSize());
-        taskInfo.setAvgSize(config.getFileScanConfig().getMaxAvgSize());
+        taskInfo.setAvgSize(config.getFileScanConfig().getMinAvgSize());
         data.add(taskInfo);
 
         fileScanTraffic.getVars().put("fileCount", String.valueOf(fileScanAbnormal.getFileCount()));
         fileScanTraffic.getVars().put("maxFileCount", String.valueOf(config.getFileScanConfig().getMaxFileCount()));
         fileScanTraffic.getVars().put("avgSize", String.valueOf(fileScanAbnormal.getAvgSize()));
-        fileScanTraffic.getVars().put("maxAvgSize", String.valueOf(config.getFileScanConfig().getMaxAvgSize()));
+        fileScanTraffic.getVars().put("minAvgSize", String.valueOf(config.getFileScanConfig().getMinAvgSize()));
 
         return fileScanTraffic;
     }
@@ -65,7 +65,7 @@ public class FileScanService extends RunTimeBaseService<FileScanTraffic> {
     public String generateConclusionDesc(Map<String, String> thresholdMap) {
         return String.format("每次执行扫描的文件数量不要超过%s,平均文件大小不要超过%s",
                 thresholdMap.getOrDefault("maxFileCount", "0"),
-                thresholdMap.getOrDefault("maxAvgSize", "0"));
+                thresholdMap.getOrDefault("minAvgSize", "0"));
     }
 
     @Override

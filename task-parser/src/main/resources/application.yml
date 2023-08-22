@@ -205,5 +205,5 @@ custom:
       maxTraffic: 2000
     fileScanConfig:
       disable: false
-      fileCount: 1
-      avgSize: 2
+      maxFileCount: 1
+      minAvgSize: 2

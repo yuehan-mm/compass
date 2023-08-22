@@ -9,5 +9,5 @@ public class FileScanConfig {
 
     private int maxFileCount;
 
-    private int maxAvgSize;
+    private int minAvgSize;
 }

@@ -28,7 +28,7 @@ public class FileScanDetector {
 
         Collection<ReadFileInfo> readFileInfos = parseFileInfo(results);
         int avgSize = (int) (readFileInfos.stream().map(x -> x.getMaxOffsets()).reduce((x, y) -> x + y).get() / readFileInfos.size());
-        if (readFileInfos.size() > config.getMaxFileCount() || avgSize > config.getMaxAvgSize()) {
+        if (readFileInfos.size() > config.getMaxFileCount() || avgSize < config.getMinAvgSize()) {
             fileScanAbnormal.setAbnormal(true);
             fileScanAbnormal.setFileCount(readFileInfos.size());
             fileScanAbnormal.setAvgSize(avgSize);
