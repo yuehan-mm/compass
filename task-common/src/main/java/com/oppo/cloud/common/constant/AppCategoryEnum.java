@@ -75,7 +75,7 @@ public enum AppCategoryEnum {
     // DATAX 流量异常（）
     FILE_SCAN_ANOMALY("fileScanAnomaly", "文件扫描异常", "runPerformance"),
 
-    SQL_SCORE_ANOMALY("SqlScoreAnomaly", "SQL评分过低", "runPerformance"),
+    SQL_SCORE_ANOMALY("sqlScoreAnomaly", "SQL评分过低", "runPerformance"),
     // 其他异常
     OTHER_EXCEPTION("otherException", "其他异常", "runError");
 
