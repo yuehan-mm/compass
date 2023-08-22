@@ -127,7 +127,7 @@ public class SqlDiagnoseService {
                 }
             }
         } catch (Exception e) {
-            log.error("getRefTableMap fail. scriptName" + scriptName + ",msg" + e.getMessage());
+            log.error("getRefTableMap fail. scriptName：" + scriptName + ",msg：" + e.getMessage());
         }
         return refTableMap;
     }
