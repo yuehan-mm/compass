@@ -130,9 +130,11 @@ public class SparkTask extends Task {
         if (!this.fileScanConfig.getDisable()) {
             FileScanDetector fileScanDetector = new FileScanDetector(this.fileScanConfig);
             DetectorResult detectorResult = fileScanDetector.detect(sparkExecutorLogParserResults);
-            detectorStorage.addDetectorResult(detectorResult);
-            if (detectorResult.getAbnormal()) {
-                detectorStorage.setAbnormal(true);
+            if (detectorResult != null) {
+                detectorStorage.addDetectorResult(detectorResult);
+                if (detectorResult.getAbnormal()) {
+                    detectorStorage.setAbnormal(true);
+                }
             }
         }
 
@@ -142,9 +144,11 @@ public class SparkTask extends Task {
             if (StringUtils.isNotEmpty(sqlCommand)) {
                 SqlScoreDetector sqlScoreDetector = new SqlScoreDetector(sqlScoreConfig, sqlCommand, taskParam.getTaskApp().getTaskName());
                 DetectorResult detectorResult = sqlScoreDetector.detect();
-                detectorStorage.addDetectorResult(detectorResult);
-                if (detectorResult.getAbnormal()) {
-                    detectorStorage.setAbnormal(true);
+                if (detectorResult != null) {
+                    detectorStorage.addDetectorResult(detectorResult);
+                    if (detectorResult.getAbnormal()) {
+                        detectorStorage.setAbnormal(true);
+                    }
                 }
             }
         }
