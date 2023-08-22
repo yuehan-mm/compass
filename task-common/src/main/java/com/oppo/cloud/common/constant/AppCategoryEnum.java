@@ -72,6 +72,9 @@ public enum AppCategoryEnum {
     // DATAX 流量 异常（）
     TRAFFIC_ANOMALY("trafficAnomaly", "DataX流量异常", "runPerformance"),
 
+    // DATAX 流量异常（）
+    FILE_SCAN_ANOMALY("fileScanAnomaly", "文件扫描异常", "runPerformance"),
+
     // 其他异常
     OTHER_EXCEPTION("otherException", "其他异常", "runError");
 

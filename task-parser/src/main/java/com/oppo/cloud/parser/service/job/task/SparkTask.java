@@ -18,11 +18,13 @@ package com.oppo.cloud.parser.service.job.task;
 
 import com.oppo.cloud.common.domain.eventlog.DetectorResult;
 import com.oppo.cloud.common.domain.eventlog.DetectorStorage;
+import com.oppo.cloud.common.domain.eventlog.config.FileScanConfig;
 import com.oppo.cloud.common.domain.eventlog.config.MemWasteConfig;
 import com.oppo.cloud.common.domain.gc.GCReport;
 import com.oppo.cloud.common.util.spring.SpringBeanUtil;
 import com.oppo.cloud.parser.config.ThreadPoolConfig;
 import com.oppo.cloud.parser.domain.job.*;
+import com.oppo.cloud.parser.service.job.detector.plugins.spark.FileScanDetector;
 import com.oppo.cloud.parser.service.rules.JobRulesConfigService;
 import com.oppo.cloud.parser.service.job.detector.plugins.spark.MemWasteDetector;
 import com.oppo.cloud.parser.service.job.parser.IParser;
@@ -45,6 +47,7 @@ public class SparkTask extends Task {
 
     private final TaskParam taskParam;
     private final MemWasteConfig memWasteConfig;
+    private final FileScanConfig fileScanConfig;
     private final Executor taskThreadPool;
 
     public SparkTask(TaskParam taskParam) {
@@ -53,6 +56,7 @@ public class SparkTask extends Task {
         taskThreadPool = (ThreadPoolTaskExecutor) SpringBeanUtil.getBean(ThreadPoolConfig.TASK_THREAD_POOL);
         JobRulesConfigService jobRulesConfigService = (JobRulesConfigService) SpringBeanUtil.getBean(JobRulesConfigService.class);
         this.memWasteConfig = jobRulesConfigService.detectorConfig.getMemWasteConfig();
+        this.fileScanConfig = jobRulesConfigService.detectorConfig.getFileScanConfig();
     }
 
     @Override
@@ -116,6 +120,16 @@ public class SparkTask extends Task {
             log.error("detectorStorageNull:{}", taskParam);
             return taskResult;
         }
+        // calculate file metrics
+        if (!this.fileScanConfig.getDisable()) {
+            FileScanDetector fileScanDetector = new FileScanDetector(this.fileScanConfig);
+            DetectorResult detectorResult = fileScanDetector.detect(sparkExecutorLogParserResults);
+            detectorStorage.addDetectorResult(detectorResult);
+            if (detectorResult.getAbnormal()) {
+                detectorStorage.setAbnormal(true);
+            }
+        }
+
         // calculate memory metrics
         if (!this.memWasteConfig.getDisable() && gcReports.size() > 0
                 && sparkEventLogParserResult.getMemoryCalculateParam() != null) {

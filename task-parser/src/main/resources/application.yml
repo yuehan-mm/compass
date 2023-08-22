@@ -203,3 +203,7 @@ custom:
       duration: 0
       minTraffic: 100
       maxTraffic: 2000
+    fileScanConfig:
+      disable: false
+      fileCount: 1
+      avgSize: 2

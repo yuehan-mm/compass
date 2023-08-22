@@ -43,4 +43,9 @@ public class SparkExecutorLogParserResult {
      *  异常类型
      */
     private List<String> categories;
+
+    /**
+     * 读取的文件信息<文件路径，文件信息>
+     */
+    private  Map<String, ReadFileInfo> readFileInfo;
 }
