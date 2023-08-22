@@ -65,7 +65,7 @@ public class FileScanService extends RunTimeBaseService<FileScanTraffic> {
     public String generateConclusionDesc(Map<String, String> thresholdMap) {
         return String.format("每次执行扫描的文件数量不要超过%s,平均文件大小不要超过%s",
                 thresholdMap.getOrDefault("maxFileCount", "0"),
-                thresholdMap.getOrDefault("maxAvgSize", "999999"));
+                thresholdMap.getOrDefault("maxAvgSize", "0"));
     }
 
     @Override
