@@ -40,7 +40,7 @@ public class SqlDiagnoseService {
             sb.append("[SQL group by] 次数:" + diagnoseResult.getGroupByCount() + "，"
                     + "阈值:" + SQL_GROUP_BY_THRESHOLD + "，"
                     + "扣减分数:" + score + "。（"
-                    + SQL_GROUP_BY_DESC + "）<br/>");
+                    + SQL_GROUP_BY_DESC + "）\n");
         }
 
         if (diagnoseResult.getUnionCount() > SQL_UNION_THRESHOLD) {
@@ -49,7 +49,7 @@ public class SqlDiagnoseService {
             sb.append("[SQL UNION] 次数:" + diagnoseResult.getUnionCount() + "，"
                     + "阈值:" + SQL_UNION_THRESHOLD + "，"
                     + "扣减分数:" + score + "。（"
-                    + SQL_UNION_DESC + "）<br/>");
+                    + SQL_UNION_DESC + "）\n");
         }
 
         if (diagnoseResult.getJoinCount() > SQL_JOIN_THRESHOLD) {
@@ -58,7 +58,7 @@ public class SqlDiagnoseService {
             sb.append("[SQL join] 次数:" + diagnoseResult.getJoinCount() + "，"
                     + "阈值:" + SQL_JOIN_THRESHOLD + "，"
                     + "扣减分数:" + score + "。（"
-                    + SQL_JOIN_DESC + "）<br/>");
+                    + SQL_JOIN_DESC + "）\n");
         }
 
         if (diagnoseResult.getOrderByCount() > SQL_ORDER_BY_THRESHOLD) {
@@ -67,7 +67,7 @@ public class SqlDiagnoseService {
             sb.append("[SQL order by] 次数:" + diagnoseResult.getOrderByCount() + "，"
                     + "阈值:" + SQL_ORDER_BY_THRESHOLD + "，"
                     + "扣减分数:" + score + "。（"
-                    + SQL_ORDER_BY_DESC + "）<br/>");
+                    + SQL_ORDER_BY_DESC + "）\n");
         }
 
         if (diagnoseResult.getSqlLength() > SQL_LENGTH_THRESHOLD) {
@@ -76,7 +76,7 @@ public class SqlDiagnoseService {
             sb.append("[SQL长度] 长度:" + diagnoseResult.getSqlLength() + "，"
                     + "阈值:" + SQL_LENGTH_THRESHOLD + "，"
                     + "扣减分数:" + score + "。（"
-                    + SQL_LENGTH_DESC + "）<br/>");
+                    + SQL_LENGTH_DESC + "）\n");
         }
 
         if (diagnoseResult.getRefTableMap().size() > SQL_READ_TABLE_THRESHOLD) {
@@ -85,7 +85,7 @@ public class SqlDiagnoseService {
             sb.append("[SQL读取表数量] 数量:" + diagnoseResult.getRefTableMap().size() + "，"
                     + "阈值:" + SQL_READ_TABLE_THRESHOLD + "，"
                     + "扣减分数:" + score + "。（"
-                    + SQL_READ_TABLE_DESC + "）<br/>");
+                    + SQL_READ_TABLE_DESC + "）\n");
         }
 
         Map<String, Integer> refTableMap = diagnoseResult.getRefTableMap();
@@ -97,13 +97,13 @@ public class SqlDiagnoseService {
                         + "次数:" + refTableMap.get(tableName) + "，"
                         + "阈值:" + SQL_TABLE_USE_THRESHOLD + "，"
                         + "扣减分数:" + score + "。（"
-                        + SQL_TABLE_USE_DESC + "）<br/>");
+                        + SQL_TABLE_USE_DESC + "）\n");
             }
         }
 
         diagnoseContent.setDiagnoseResult(diagnoseResult);
         diagnoseContent.setScore(100 - deductScore);
-        diagnoseContent.setScoreContent(sb.substring(0, sb.lastIndexOf("<br/>") > 0 ? sb.lastIndexOf("<br/>") : 0));
+        diagnoseContent.setScoreContent(sb.substring(0, sb.lastIndexOf("\n") > 0 ? sb.lastIndexOf("\n") : 0));
         return diagnoseContent;
     }
 
