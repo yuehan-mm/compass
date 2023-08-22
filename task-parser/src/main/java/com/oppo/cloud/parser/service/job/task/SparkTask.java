@@ -20,16 +20,19 @@ import com.oppo.cloud.common.domain.eventlog.DetectorResult;
 import com.oppo.cloud.common.domain.eventlog.DetectorStorage;
 import com.oppo.cloud.common.domain.eventlog.config.FileScanConfig;
 import com.oppo.cloud.common.domain.eventlog.config.MemWasteConfig;
+import com.oppo.cloud.common.domain.eventlog.config.SqlScoreConfig;
 import com.oppo.cloud.common.domain.gc.GCReport;
 import com.oppo.cloud.common.util.spring.SpringBeanUtil;
 import com.oppo.cloud.parser.config.ThreadPoolConfig;
 import com.oppo.cloud.parser.domain.job.*;
 import com.oppo.cloud.parser.service.job.detector.plugins.spark.FileScanDetector;
+import com.oppo.cloud.parser.service.job.detector.plugins.spark.SqlScoreDetector;
 import com.oppo.cloud.parser.service.rules.JobRulesConfigService;
 import com.oppo.cloud.parser.service.job.detector.plugins.spark.MemWasteDetector;
 import com.oppo.cloud.parser.service.job.parser.IParser;
 import com.oppo.cloud.parser.service.writer.ElasticWriter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.ArrayList;
@@ -48,6 +51,7 @@ public class SparkTask extends Task {
     private final TaskParam taskParam;
     private final MemWasteConfig memWasteConfig;
     private final FileScanConfig fileScanConfig;
+    private final SqlScoreConfig sqlScoreConfig;
     private final Executor taskThreadPool;
 
     public SparkTask(TaskParam taskParam) {
@@ -57,6 +61,7 @@ public class SparkTask extends Task {
         JobRulesConfigService jobRulesConfigService = (JobRulesConfigService) SpringBeanUtil.getBean(JobRulesConfigService.class);
         this.memWasteConfig = jobRulesConfigService.detectorConfig.getMemWasteConfig();
         this.fileScanConfig = jobRulesConfigService.detectorConfig.getFileScanConfig();
+        this.sqlScoreConfig = jobRulesConfigService.detectorConfig.getSqlScoreConfig();
     }
 
     @Override
@@ -120,13 +125,27 @@ public class SparkTask extends Task {
             log.error("detectorStorageNull:{}", taskParam);
             return taskResult;
         }
-        // calculate file metrics
+
+        // fileScan abnormal
         if (!this.fileScanConfig.getDisable()) {
             FileScanDetector fileScanDetector = new FileScanDetector(this.fileScanConfig);
             DetectorResult detectorResult = fileScanDetector.detect(sparkExecutorLogParserResults);
             detectorStorage.addDetectorResult(detectorResult);
             if (detectorResult.getAbnormal()) {
                 detectorStorage.setAbnormal(true);
+            }
+        }
+
+        // sql score abnormal
+        if (!this.sqlScoreConfig.getDisable()) {
+            String sqlCommand = sparkExecutorLogParserResults.stream().map(x -> x.getSqlCommand()).reduce((x, y) -> x + "\n" + y).get();
+            if (StringUtils.isNotEmpty(sqlCommand)) {
+                SqlScoreDetector sqlScoreDetector = new SqlScoreDetector(sqlScoreConfig, sqlCommand, taskParam.getTaskApp().getTaskName());
+                DetectorResult detectorResult = sqlScoreDetector.detect();
+                detectorStorage.addDetectorResult(detectorResult);
+                if (detectorResult.getAbnormal()) {
+                    detectorStorage.setAbnormal(true);
+                }
             }
         }
 

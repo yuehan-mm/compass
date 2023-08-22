@@ -97,10 +97,15 @@ public class DetectorConfig {
     /**
      * DataX 流量异常
      */
-    private TrafficAnomalyDetectorConfig  trafficAnomalyDetectorConfig;
+    private TrafficAnomalyDetectorConfig trafficAnomalyDetectorConfig;
 
     /**
      * MR/SPARK 文件扫描异常
      */
-    private FileScanConfig  fileScanConfig;
+    private FileScanConfig fileScanConfig;
+
+    /**
+     * MR/SPARK 文件扫描异常
+     */
+    private SqlScoreConfig sqlScoreConfig;
 }

@@ -41,10 +41,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
@@ -144,6 +141,7 @@ public class SparkExecutorLogParser extends CommonTextParser implements IParser 
     }
 
     private SparkExecutorLogParserResult parseRootAction(String logType, ReaderObject readerObject) throws Exception {
+        String sqlCommand = "";
         Map<String, ReadFileInfo> readFileInfo = new HashMap<>();
         List<ParserAction> actions = DiagnosisConfig.getInstance().getActions(logType);
         Map<Integer, InputStream> gcLogMap = new HashMap<>();
@@ -167,6 +165,9 @@ public class SparkExecutorLogParser extends CommonTextParser implements IParser 
             headTextParser.parse(line);
 
             this.parseFileInfo(line, readFileInfo);
+            if (line.contains("For Compass SQL base64 : ")) {
+                sqlCommand = this.parseSQLInfo(line);
+            }
 
             // get gc log
             if (line.contains("stderr")) {
@@ -213,7 +214,23 @@ public class SparkExecutorLogParser extends CommonTextParser implements IParser 
         }
         result.setLogPath(readerObject.getLogPath());
         result.setReadFileInfo(readFileInfo);
+        result.setSqlCommand(sqlCommand);
         return result;
+    }
+
+    /**
+     * 23/08/22 15:08:40 INFO service.SparkSqlEngine: For Compass SQL base64 : dXNlIGRsX2hkb3BfdHh0OwppbnNlcnQgaW50byB0
+     * dF9oZG9wX2JkbXBqdHNqX3ZhX3RfZ3JvdXBiYiBzZWxlY3QgKiBmcm9tIHR0X2hkb3BfYmRtcGp0c2pfdmFfdF9ncm91cCANCg==
+     *
+     * @param line
+     * @return
+     */
+    private String parseSQLInfo(String line) {
+        String sqlCommandBase64 = line.split("For Compass SQL base64 : ")[1];
+        Base64.Decoder decoder = Base64.getDecoder();
+        String sqlCommand = new String(decoder.decode(sqlCommandBase64));
+        log.info("parseSQLInfo sqlCommandBase64:" + sqlCommandBase64 + "\n" + "sqlCommand:" + sqlCommand);
+        return sqlCommand;
     }
 
     /**

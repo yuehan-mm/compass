@@ -207,3 +207,6 @@ custom:
       disable: false
       maxFileCount: 1
       minAvgSize: 2
+    sqlScoreConfig:
+      disable: false
+      minScore: 1000
