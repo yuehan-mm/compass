@@ -7,7 +7,7 @@ public class FileScanConfig {
 
     private Boolean disable;
 
-    private int fileCount;
+    private int maxFileCount;
 
-    private int avgSize;
+    private int maxAvgSize;
 }
