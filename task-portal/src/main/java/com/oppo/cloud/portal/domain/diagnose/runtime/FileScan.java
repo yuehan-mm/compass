@@ -27,12 +27,12 @@ import java.util.LinkedHashMap;
 
 @Data
 @ApiModel("文件扫描异常")
-public class FileScanTraffic extends IsAbnormal {
+public class FileScan extends IsAbnormal {
 
     @ApiModelProperty(value = "文件扫描异常")
     private Table<TaskInfo> table = new Table<>();
 
-    public FileScanTraffic() {
+    public FileScan() {
         LinkedHashMap<String, String> titleMap = new LinkedHashMap<>();
         titleMap.put("fileCount", "扫描文件数量（个）");
         titleMap.put("maxFileCount", "文件数量阈值（个）");

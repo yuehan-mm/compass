@@ -21,7 +21,7 @@ import com.oppo.cloud.common.constant.AppCategoryEnum;
 import com.oppo.cloud.common.domain.eventlog.DetectorResult;
 import com.oppo.cloud.common.domain.eventlog.FileScanAbnormal;
 import com.oppo.cloud.common.domain.eventlog.config.DetectorConfig;
-import com.oppo.cloud.portal.domain.diagnose.runtime.FileScanTraffic;
+import com.oppo.cloud.portal.domain.diagnose.runtime.FileScan;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,7 +31,7 @@ import java.util.Map;
  * 文件扫描异常
  */
 @Service
-public class FileScanService extends RunTimeBaseService<FileScanTraffic> {
+public class FileScanService extends RunTimeBaseService<FileScan> {
 
     @Override
     public String getCategory() {
@@ -39,14 +39,14 @@ public class FileScanService extends RunTimeBaseService<FileScanTraffic> {
     }
 
     @Override
-    public FileScanTraffic generateData(DetectorResult detectorResult, DetectorConfig config) throws Exception {
+    public FileScan generateData(DetectorResult detectorResult, DetectorConfig config) throws Exception {
         FileScanAbnormal fileScanAbnormal = ((JSONObject) detectorResult.getData()).toJavaObject(FileScanAbnormal.class);
 
-        FileScanTraffic fileScanTraffic = new FileScanTraffic();
+        FileScan fileScanTraffic = new FileScan();
         fileScanTraffic.setAbnormal(fileScanAbnormal.getAbnormal() != null && fileScanAbnormal.getAbnormal());
 
-        List<FileScanTraffic.TaskInfo> data = fileScanTraffic.getTable().getData();
-        FileScanTraffic.TaskInfo taskInfo = new FileScanTraffic.TaskInfo();
+        List<FileScan.TaskInfo> data = fileScanTraffic.getTable().getData();
+        FileScan.TaskInfo taskInfo = new FileScan.TaskInfo();
         taskInfo.setFileCount(fileScanAbnormal.getFileCount());
         taskInfo.setMaxFileCount(config.getFileScanConfig().getMaxFileCount());
         taskInfo.setAvgSize(fileScanAbnormal.getAvgSize());
