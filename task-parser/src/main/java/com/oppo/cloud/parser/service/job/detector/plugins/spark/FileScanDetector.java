@@ -25,7 +25,8 @@ public class FileScanDetector {
         DetectorResult<FileScanAbnormal> detectorResult = new DetectorResult<>(AppCategoryEnum.FILE_SCAN_ANOMALY.getCategory(), false);
         FileScanAbnormal fileScanAbnormal = new FileScanAbnormal();
 
-        int avgSize = (int) (readFileInfos.stream().map(x -> x.getMaxOffsets()).reduce((x, y) -> x + y).get() / readFileInfos.size());
+        int avgSize = readFileInfos.size() == 0 ? 0 :
+                (int) (readFileInfos.stream().map(x -> x.getMaxOffsets()).reduce((x, y) -> x + y).get() / readFileInfos.size());
         if (readFileInfos.size() > config.getMaxFileCount() || avgSize < config.getMinAvgSize()) {
             fileScanAbnormal.setAbnormal(true);
         }
