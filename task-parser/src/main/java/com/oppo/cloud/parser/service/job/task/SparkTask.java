@@ -16,6 +16,7 @@
 
 package com.oppo.cloud.parser.service.job.task;
 
+import com.alibaba.fastjson2.JSON;
 import com.oppo.cloud.common.domain.eventlog.DetectorResult;
 import com.oppo.cloud.common.domain.eventlog.DetectorStorage;
 import com.oppo.cloud.common.domain.eventlog.config.DetectorConfig;
@@ -116,6 +117,7 @@ public class SparkTask extends Task {
         detectorStorage.setAbnormal(detectorStorage.getDataList().stream().map(x -> x.getAbnormal()).reduce((x, y) -> x || y).get());
 
         // save and return all spark categories
+        log.info("000" + JSON.toJSONString(detectorStorage));
         List<String> eventLogCategories = this.saveAndReturnCategories(detectorStorage, executorLogInfo.executorCategories);
         taskResult.setCategories(eventLogCategories);
 
