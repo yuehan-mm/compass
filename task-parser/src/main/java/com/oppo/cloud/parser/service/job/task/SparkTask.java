@@ -31,6 +31,7 @@ import com.oppo.cloud.parser.service.job.parser.IParser;
 import com.oppo.cloud.parser.service.rules.JobRulesConfigService;
 import com.oppo.cloud.parser.service.writer.ElasticWriter;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -102,6 +103,7 @@ public class SparkTask extends Task {
         }
 
         // extract executor info
+        log.error("------"+JSON.toJSONString(sparkExecutorLogParserResults));
         ExecutorLogInfo executorLogInfo = this.extractExecutorLogParserResults(sparkExecutorLogParserResults);
         log.error("000--"+JSON.toJSONString(executorLogInfo));
         DetectorStorage detectorStorage = sparkEventLogParserResult.getDetectorStorage();
@@ -241,7 +243,6 @@ public class SparkTask extends Task {
     }
 
 
-    @AllArgsConstructor
     private class ExecutorLogInfo {
         private List<String> executorCategories;
         private List<GCReport> gcReports;
@@ -253,6 +254,13 @@ public class SparkTask extends Task {
             this.gcReports = new ArrayList<>();
             this.readFileInfos = new ArrayList<>();
             this.sqlCommand = null;
+        }
+
+        public ExecutorLogInfo(List<String> executorCategories, List<GCReport> gcReports, Collection<ReadFileInfo> readFileInfos, String sqlCommand) {
+            this.executorCategories = executorCategories;
+            this.gcReports = gcReports;
+            this.readFileInfos = readFileInfos;
+            this.sqlCommand = sqlCommand;
         }
     }
 }
