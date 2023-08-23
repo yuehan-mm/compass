@@ -290,16 +290,15 @@ public class LogParserServiceImpl implements LogParserService {
                             Pattern pattern = rule.getPattern();
                             Matcher matcher = pattern.matcher(strLine);
                             if (matcher.matches()) {
-                                if ((rule.getName() != null) && (rule.getName().trim().length() != 0)) {
-                                    String appId = matcher.group(rule.getName());
-                                    this.applicationMessage.addApplication(appId, rule.getType());
+                                if (rule.getType().equals(ApplicationType.DATAX.getValue())) {
+//                                    String appId = String.format("V_%s_%s_%s",
+//                                            taskInstance.getExecutionTime().getTime(),
+//                                            taskInstance.getStartTime().getTime(),
+//                                            (int) (Math.random() * System.currentTimeMillis() % 1000));
+//                                    this.applicationMessage.addApplication(appId, rule.getType());
+                                    log.info("DATAX TASK, CONTINUE. " + taskInstance.getTaskName());
                                 } else {
-                                    String appId = String.format("V_%s_%s_%s",
-                                            taskInstance.getExecutionTime().getTime(),
-                                            taskInstance.getStartTime().getTime(),
-                                            (int) (Math.random() * System.currentTimeMillis() % 1000)
-                                    );
-                                    this.applicationMessage.addApplication(appId, rule.getType());
+                                    this.applicationMessage.addApplication(matcher.group(rule.getName()), rule.getType());
                                 }
                             }
                         }
