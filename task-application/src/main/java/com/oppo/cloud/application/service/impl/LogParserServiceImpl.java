@@ -290,7 +290,7 @@ public class LogParserServiceImpl implements LogParserService {
                             Pattern pattern = rule.getPattern();
                             Matcher matcher = pattern.matcher(strLine);
                             if (matcher.matches()) {
-                                if (rule.getType().equals(ApplicationType.DATAX.getValue())) {
+                                if (rule.getType().getValue().equals(ApplicationType.DATAX.getValue())) {
 //                                    String appId = String.format("V_%s_%s_%s",
 //                                            taskInstance.getExecutionTime().getTime(),
 //                                            taskInstance.getStartTime().getTime(),
