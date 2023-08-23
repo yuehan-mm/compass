@@ -16,6 +16,7 @@
 
 package com.oppo.cloud.parser.service.job.task;
 
+import com.alibaba.fastjson2.JSON;
 import com.oppo.cloud.common.domain.eventlog.DetectorResult;
 import com.oppo.cloud.common.domain.eventlog.DetectorStorage;
 import com.oppo.cloud.common.domain.eventlog.config.DetectorConfig;
@@ -112,11 +113,15 @@ public class SparkTask extends Task {
 
         // get executor log abnormal
         List<DetectorResult> detectorResultList = this.getExecutorLogAbnormal(executorLogInfo, sparkEventLogParserResult.getMemoryCalculateParam());
+
+        log.error("1111--"+JSON.toJSONString(detectorResultList));
+        log.error("222--"+JSON.toJSONString(executorLogInfo.executorCategories));
         detectorStorage.addDetectorResult(detectorResultList);
         detectorStorage.setAbnormal(detectorStorage.getDataList().stream().map(x -> x.getAbnormal()).reduce((x, y) -> x && y).get());
 
         // save and return all spark categories
         List<String> eventLogCategories = this.saveAndReturnCategories(detectorStorage, executorLogInfo.executorCategories);
+        log.error("333--"+JSON.toJSONString(eventLogCategories));
         taskResult.setCategories(eventLogCategories);
 
         // save gc reports
