@@ -13,17 +13,13 @@ import lombok.extern.slf4j.Slf4j;
 public class SqlScoreDetector {
 
     private final SqlScoreConfig sqlScoreConfig;
-    private final String sqlCommand;
-    private final String taskName;
 
-    public SqlScoreDetector(SqlScoreConfig sqlScoreConfig, String sqlCommand, String taskName) {
+    public SqlScoreDetector(SqlScoreConfig sqlScoreConfig) {
         this.sqlScoreConfig = sqlScoreConfig;
-        this.sqlCommand = sqlCommand;
-        this.taskName = taskName;
     }
 
 
-    public DetectorResult detect() {
+    public DetectorResult detect(String sqlCommand, String taskName) {
         log.info("start SqlScoreDetector");
         log.info("SqlScoreDetector : " + JSON.toJSONString(sqlScoreConfig));
         DetectorResult<SqlScoreAbnormal> detectorResult = new DetectorResult<>(AppCategoryEnum.SQL_SCORE_ANOMALY.getCategory(), false);
@@ -31,12 +27,11 @@ public class SqlScoreDetector {
         DiagnoseContent scriptInfo = SqlDiagnoseService.parseScript(sqlCommand, taskName);
         if (scriptInfo.getScore() < sqlScoreConfig.getMinScore()) {
             sqlScoreAbnormal.setAbnormal(true);
-            sqlScoreAbnormal.setScoreContent(scriptInfo.getScoreContent());
-            sqlScoreAbnormal.setScore(scriptInfo.getScore());
-            detectorResult.setData(sqlScoreAbnormal);
-            detectorResult.setAbnormal(true);
-            return detectorResult;
         }
-        return null;
+        sqlScoreAbnormal.setScoreContent(scriptInfo.getScoreContent());
+        sqlScoreAbnormal.setScore(scriptInfo.getScore());
+        detectorResult.setData(sqlScoreAbnormal);
+        detectorResult.setAbnormal(sqlScoreAbnormal.getAbnormal());
+        return detectorResult;
     }
 }
