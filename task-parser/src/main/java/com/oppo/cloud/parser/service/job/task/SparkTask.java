@@ -113,7 +113,7 @@ public class SparkTask extends Task {
         // get executor log abnormal
         List<DetectorResult> detectorResultList = this.getExecutorLogAbnormal(executorLogInfo, sparkEventLogParserResult.getMemoryCalculateParam());
         detectorStorage.addDetectorResult(detectorResultList);
-        detectorStorage.setAbnormal(detectorStorage.getDataList().stream().map(x -> x.getAbnormal()).reduce((x, y) -> x && y).get());
+        detectorStorage.setAbnormal(detectorStorage.getDataList().stream().map(x -> x.getAbnormal()).reduce((x, y) -> x || y).get());
 
         // save and return all spark categories
         List<String> eventLogCategories = this.saveAndReturnCategories(detectorStorage, executorLogInfo.executorCategories);
