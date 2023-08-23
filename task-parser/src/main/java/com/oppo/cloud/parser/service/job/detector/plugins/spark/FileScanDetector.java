@@ -27,13 +27,14 @@ public class FileScanDetector {
 
         int avgSize = readFileInfos.size() == 0 ? 0 :
                 (int) (readFileInfos.stream().map(x -> x.getMaxOffsets()).reduce((x, y) -> x + y).get() / readFileInfos.size());
-        if (readFileInfos.size() > config.getMaxFileCount() || avgSize < config.getMinAvgSize()) {
-            fileScanAbnormal.setAbnormal(true);
-        }
+
+        boolean isAbnormal = readFileInfos.size() > config.getMaxFileCount() || avgSize < config.getMinAvgSize();
+
+        fileScanAbnormal.setAbnormal(isAbnormal);
         fileScanAbnormal.setFileCount(readFileInfos.size());
         fileScanAbnormal.setAvgSize(avgSize);
         detectorResult.setData(fileScanAbnormal);
-        detectorResult.setAbnormal(fileScanAbnormal.getAbnormal());
+        detectorResult.setAbnormal(isAbnormal);
         return detectorResult;
     }
 }

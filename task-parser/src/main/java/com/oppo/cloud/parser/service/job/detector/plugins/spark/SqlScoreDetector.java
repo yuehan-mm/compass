@@ -25,13 +25,14 @@ public class SqlScoreDetector {
         DetectorResult<SqlScoreAbnormal> detectorResult = new DetectorResult<>(AppCategoryEnum.SQL_SCORE_ANOMALY.getCategory(), false);
         SqlScoreAbnormal sqlScoreAbnormal = new SqlScoreAbnormal();
         DiagnoseContent scriptInfo = SqlDiagnoseService.parseScript(sqlCommand, taskName);
-        if (scriptInfo.getScore() < sqlScoreConfig.getMinScore()) {
-            sqlScoreAbnormal.setAbnormal(true);
-        }
+
+        boolean isAbnormal = scriptInfo.getScore() < sqlScoreConfig.getMinScore();
+
+        sqlScoreAbnormal.setAbnormal(isAbnormal);
         sqlScoreAbnormal.setScoreContent(scriptInfo.getScoreContent());
         sqlScoreAbnormal.setScore(scriptInfo.getScore());
         detectorResult.setData(sqlScoreAbnormal);
-        detectorResult.setAbnormal(sqlScoreAbnormal.getAbnormal());
+        detectorResult.setAbnormal(isAbnormal);
         return detectorResult;
     }
 }
