@@ -103,6 +103,7 @@ public class SparkTask extends Task {
 
         // extract executor info
         ExecutorLogInfo executorLogInfo = this.extractExecutorLogParserResults(sparkExecutorLogParserResults);
+        log.error("000--"+JSON.toJSONString(executorLogInfo));
         DetectorStorage detectorStorage = sparkEventLogParserResult.getDetectorStorage();
 
         if (detectorStorage == null) {
