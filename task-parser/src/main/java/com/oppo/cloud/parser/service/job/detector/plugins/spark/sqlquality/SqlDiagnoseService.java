@@ -133,6 +133,7 @@ public class SqlDiagnoseService {
             body.put("dbType", "Hive");
             body.put("originSQL", command);
             String jsonStr = HttpRequestUtils.doPost(REQUEST_URL, JSONObject.toJSONString(body));
+            log.info("SQL Parse Result : " + jsonStr);
             JSONObject json = JSONObject.parseObject(jsonStr);
             if (json.getInteger("code") != 0) throw new RuntimeException(jsonStr);
 
