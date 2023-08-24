@@ -82,7 +82,7 @@ public class SqlDiagnoseService {
                     + SQL_SCAN_FILE_DESC + "）\n");
         }
 
-        if (scanFileSizeAvg > SQL_SCAN_FILE_SIZE_AVG_THRESHOLD) {
+        if (scanFileSizeAvg < SQL_SCAN_FILE_SIZE_AVG_THRESHOLD) {
             deductScore += SQL_SCAN_FILE_SIZE_AVG_SCORE;
             sb.append("[SQL 扫描文件] 平均大小:" + scanFileSizeAvg + "Byte，"
                     + "阈值:" + SQL_SCAN_FILE_SIZE_AVG_THRESHOLD + "Byte，"
