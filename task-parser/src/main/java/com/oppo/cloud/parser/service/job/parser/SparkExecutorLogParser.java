@@ -229,7 +229,7 @@ public class SparkExecutorLogParser extends CommonTextParser implements IParser 
         String sqlCommandBase64 = line.split("For Compass SQL base64 : ")[1];
         Base64.Decoder decoder = Base64.getDecoder();
         String sqlCommand = new String(decoder.decode(sqlCommandBase64));
-        log.info("parseSQLInfo sqlCommandBase64:" + sqlCommandBase64 + "\n" + "sqlCommand:" + sqlCommand);
+        log.info("parseSQLInfo sqlCommandBase64:" + sqlCommandBase64);
         return sqlCommand;
     }
 
