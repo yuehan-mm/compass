@@ -18,6 +18,7 @@ package com.oppo.cloud.parser.service.job.task;
 
 import com.oppo.cloud.common.domain.eventlog.DetectorResult;
 import com.oppo.cloud.common.domain.eventlog.DetectorStorage;
+import com.oppo.cloud.common.domain.eventlog.FileScanAbnormal;
 import com.oppo.cloud.common.domain.eventlog.config.DetectorConfig;
 import com.oppo.cloud.common.domain.gc.GCReport;
 import com.oppo.cloud.common.util.spring.SpringBeanUtil;
@@ -175,17 +176,19 @@ public class SparkTask extends Task {
      */
     private List<DetectorResult> getExecutorLogAbnormal(ExecutorLogInfo executorLogInfo, MemoryCalculateParam memoryCalculateParam) {
         List<DetectorResult> detectorResultList = new ArrayList<>();
-
+        DetectorResult fileScanDetectorResult = null;
         // fileScan abnormal
         if (!this.detectorConfig.getFileScanConfig().getDisable()) {
             FileScanDetector fileScanDetector = new FileScanDetector(this.detectorConfig.getFileScanConfig());
-            detectorResultList.add(fileScanDetector.detect(executorLogInfo.readFileInfos));
+            fileScanDetectorResult = fileScanDetector.detect(executorLogInfo.readFileInfos);
+            detectorResultList.add(fileScanDetectorResult);
         }
 
         // sqlScore abnormal
         if (!this.detectorConfig.getSqlScoreConfig().getDisable() && StringUtils.isNotEmpty(executorLogInfo.sqlCommand)) {
             SqlScoreDetector sqlScoreDetector = new SqlScoreDetector(this.detectorConfig.getSqlScoreConfig());
-            detectorResultList.add(sqlScoreDetector.detect(executorLogInfo.sqlCommand, taskParam.getTaskApp().getTaskName()));
+            detectorResultList.add(sqlScoreDetector.detect(executorLogInfo.sqlCommand,
+                    taskParam.getTaskApp().getTaskName(), (FileScanAbnormal) fileScanDetectorResult.getData()));
         }
 
         // mem waste abnormal
