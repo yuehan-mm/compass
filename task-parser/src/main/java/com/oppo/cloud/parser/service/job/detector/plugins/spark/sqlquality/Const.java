@@ -9,7 +9,7 @@ public class Const {
     public static final String UNION_REGEX = "(\\s+|\\n+)union(\\s+|\\n+)";
     public static final String JOIN_REGEX = "(\\s+|\\n+)join(\\s+|\\n+)";
     public static final String ORDER_BY_REGEX = "(\\s+|\\n+)order(\\s+|\\n+)by(\\s+|\\n+)";
-    public static final String TABLE_NAME_REGEX = "(\\s+|\\n+)TABLE_NAME(\\s+|\\n+)";
+    public static final String TABLE_NAME_REGEX = "(\\s+|\\n+|.)TABLE_NAME(\\s+|\\n+|$)";
     public static final String INSERT_REGEX = "insert.+table.+partition\\(.+\\)(\\s+|\\n+)";
     public static final String MEMORY_CONF_REGEX = "mapreduce.(map|reduce).memory.mb";
 

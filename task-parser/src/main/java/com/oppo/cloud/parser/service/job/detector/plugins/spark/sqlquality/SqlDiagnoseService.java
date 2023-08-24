@@ -140,7 +140,7 @@ public class SqlDiagnoseService {
             JSONArray dataArray = json.getJSONArray("data");
             for (int i = 0; i < dataArray.size(); i++) {
                 JSONObject jsonObject = dataArray.getJSONObject(i);
-                String tableName = jsonObject.getString("dbName") + "." + jsonObject.getString("tableName");
+                String tableName = jsonObject.getString("tableName");
                 if (!refTableMap.containsKey(tableName)) {
                     refTableMap.put(tableName, findX(command, TABLE_NAME_REGEX.replace("TABLE_NAME", tableName)));
                 }
