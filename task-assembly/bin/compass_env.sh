@@ -22,7 +22,7 @@ export SPRING_HDOPDB_MYSQL_ADDRESS="10.138.46.222:3306"
 export SPRING_HDOPDB_MYSQL_DB="bdmp_cluster"
 export SPRING_HDOPDB_URL="jdbc:mysql://${SPRING_HDOPDB_MYSQL_ADDRESS}/${SPRING_HDOPDB_MYSQL_DB}?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai"
 export SPRING_HDOPDB_USERNAME="cluster_manager"
-export SPRING_HDOPDB_PASSWORD="cluster_MANAGER@!#$13"
+export SPRING_HDOPDB_PASSWORD="cluster_MANAGER@!#\$13"
 
 # Kafka
 export SPRING_KAFKA_BOOTSTRAPSERVERS="10.163.137.150:9092,10.163.137.151:9092,10.163.137.152:9092"
