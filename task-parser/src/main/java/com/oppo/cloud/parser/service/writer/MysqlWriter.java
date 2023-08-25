@@ -21,10 +21,11 @@ import com.oppo.cloud.parser.config.HdopDBConfig;
 import com.oppo.cloud.parser.domain.job.TaskParam;
 import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.DiagnoseContent;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
  * MysqlWriter
@@ -35,24 +36,16 @@ public class MysqlWriter {
 
     public Connection connection;
 
-    public String url;
-
-    public String username;
-
-    public String password;
-
-
     private MysqlWriter() {
         HdopDBConfig yml = (HdopDBConfig) SpringBeanUtil.getBean(HdopDBConfig.class);
-        url = yml.getUrl();
-        username = yml.getUsername();
-        password = yml.getPassword();
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            connection = DriverManager.getConnection(url, username, password);
-            log.info("get mysql connection success. url:{}, username:{}, password: {} .", url, username, password);
+            connection = DriverManager.getConnection(yml.getUrl(), yml.getUsername(), yml.getPassword());
+            log.info("get mysql connection success. url:{}, username:{}, password: {} .",
+                    yml.getUrl(), yml.getUrl(), yml.getPassword());
         } catch (Exception e) {
-            log.error("get mysql connection fail. msg: {}, url:{}, username:{}, password: {} .", e.getMessage(), url, username, password);
+            log.error("get mysql connection fail. msg: {}, url:{}, username:{}, password: {} .",
+                    e.getMessage(), yml.getUrl(), yml.getUrl(), yml.getPassword());
         }
     }
 
@@ -63,7 +56,35 @@ public class MysqlWriter {
         return mysqlWriter;
     }
 
+
+    /**
+     * 更新离线数据，工单系统目前仍然使用的离线数据
+     *
+     * @param scriptInfo
+     * @param taskParam
+     */
     public void updateOffLineData(DiagnoseContent scriptInfo, TaskParam taskParam) {
-        log.info("updateOffLineData----" + url);
+        PreparedStatement ps = null;
+        try {
+            String sql = "UPDATE bdmp_cluster.t_script_sql_diagnose_result SET score=?,score_content=? where script_name =?";
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, scriptInfo.getScore());
+            ps.setString(2, scriptInfo.getScoreContent());
+            ps.setString(3, taskParam.getTaskApp().getTaskName());
+            int effectiveRow = ps.executeUpdate();
+            if (effectiveRow != 1) {
+                log.info("update updateOffLineData fail. effectiveRow: {} , script_name:{}",
+                        effectiveRow, taskParam.getTaskApp().getTaskName());
+            }
+        } catch (Exception e) {
+            log.error("updateOffLineData fail. msg：{}", e.getMessage());
+        } finally {
+            try {
+                if (ps != null) ps.close();
+            } catch (SQLException e) {
+                log.error("close PreparedStatement fail. msg:{}", e.getMessage());
+            }
+        }
     }
+
 }
