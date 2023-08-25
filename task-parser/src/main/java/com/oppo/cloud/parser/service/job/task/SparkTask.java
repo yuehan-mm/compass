@@ -188,7 +188,7 @@ public class SparkTask extends Task {
         if (!this.detectorConfig.getSqlScoreConfig().getDisable() && StringUtils.isNotEmpty(executorLogInfo.sqlCommand)) {
             SqlScoreDetector sqlScoreDetector = new SqlScoreDetector(this.detectorConfig.getSqlScoreConfig());
             detectorResultList.add(sqlScoreDetector.detect(executorLogInfo.sqlCommand,
-                    taskParam, (FileScanAbnormal) fileScanDetectorResult.getData()));
+                    taskParam.getTaskApp().getTaskName(), (FileScanAbnormal) fileScanDetectorResult.getData()));
         }
 
         // mem waste abnormal
