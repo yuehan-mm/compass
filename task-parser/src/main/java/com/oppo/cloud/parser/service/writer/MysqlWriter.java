@@ -27,14 +27,14 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 /**
- * elasticsearch writer
+ * MysqlWriter
  */
 @Slf4j
 @Service
 public class MysqlWriter {
-    private static final MysqlWriter mysqlWriter = new MysqlWriter();
+    private static MysqlWriter mysqlWriter;
 
-    public Connection client;
+    public Connection connection;
 
     public String url;
 
@@ -50,17 +50,19 @@ public class MysqlWriter {
         password = yml.getPassword();
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            client = DriverManager.getConnection(url, username, password);
+            connection = DriverManager.getConnection(url, username, password);
             log.info("get mysql connection success. url:{}, username:{}, password: {} .", url, username, password);
         } catch (Exception e) {
             log.error("get mysql connection fail. msg: {}, url:{}, username:{}, password: {} .", e.getMessage(), url, username, password);
         }
     }
 
-    public static MysqlWriter getInstance() {
+    public synchronized static MysqlWriter getInstance() {
+        if (mysqlWriter == null) {
+            mysqlWriter = new MysqlWriter();
+        }
         return mysqlWriter;
     }
-
 
     public void updateOffLineData(DiagnoseContent scriptInfo, TaskParam taskParam) {
         log.info("updateOffLineData----" + url);
