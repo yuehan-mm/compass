@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 @Slf4j
 public class SqlScoreDetector {
 
-    @Value("${spring.datasource.url}")
+    @Value("${hdop.datasource.url}")
     private String url;
 
     private final SqlScoreConfig sqlScoreConfig;
