@@ -29,6 +29,10 @@ spring:
     gc-prefix: "compass-gc-log-"
     job-prefix: "compass-job-analysis-"
     task-app-prefix: "compass-task-app-"
+  hdopdb:
+    url: jdbc:mysql://localhost:33066/compass?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
 
   kafka:
     consumer:
