@@ -16,10 +16,11 @@
 
 package com.oppo.cloud.parser.service.writer;
 
+import com.oppo.cloud.common.util.spring.SpringBeanUtil;
+import com.oppo.cloud.parser.config.HdopDBConfig;
 import com.oppo.cloud.parser.domain.job.TaskParam;
 import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.DiagnoseContent;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
@@ -34,17 +35,18 @@ public class MysqlWriter {
 
     public Connection client;
 
-    @Value("${spring.hdopdb.url}")
     public String url;
 
-    @Value("${spring.hdopdb.username}")
     public String username;
 
-    @Value("${spring.hdopdb.password}")
     public String password;
 
 
     private MysqlWriter() {
+        HdopDBConfig yml = (HdopDBConfig) SpringBeanUtil.getBean(HdopDBConfig.class);
+        url = yml.getUrl();
+        username = yml.getUsername();
+        password = yml.getPassword();
         try {
             Class.forName("com.mysql.jdbc.Driver");
             client = DriverManager.getConnection(url, username, password);
