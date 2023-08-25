@@ -30,7 +30,6 @@ import java.sql.DriverManager;
  * MysqlWriter
  */
 @Slf4j
-@Service
 public class MysqlWriter {
     private static MysqlWriter mysqlWriter;
 
