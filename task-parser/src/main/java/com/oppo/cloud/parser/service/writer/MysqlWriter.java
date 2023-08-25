@@ -60,7 +60,7 @@ public class MysqlWriter {
 
 
     public void updateOffLineData(DiagnoseContent scriptInfo, TaskParam taskParam) {
-        log.info("updateOffLineData----" + taskParam.getTaskApp().getTaskName());
+        log.info("updateOffLineData----" + url);
     }
 
     private enum Mysql {
