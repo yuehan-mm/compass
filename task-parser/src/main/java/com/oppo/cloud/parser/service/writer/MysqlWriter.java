@@ -32,6 +32,7 @@ import java.sql.DriverManager;
 @Slf4j
 @Service
 public class MysqlWriter {
+    private static final MysqlWriter mysqlWriter = new MysqlWriter();
 
     public Connection client;
 
@@ -57,26 +58,11 @@ public class MysqlWriter {
     }
 
     public static MysqlWriter getInstance() {
-        return Mysql.INSTANCE.getInstance();
+        return mysqlWriter;
     }
 
 
     public void updateOffLineData(DiagnoseContent scriptInfo, TaskParam taskParam) {
         log.info("updateOffLineData----" + url);
-    }
-
-    private enum Mysql {
-
-        INSTANCE;
-
-        private final MysqlWriter singleton;
-
-        Mysql() {
-            singleton = new MysqlWriter();
-        }
-
-        public MysqlWriter getInstance() {
-            return singleton;
-        }
     }
 }
