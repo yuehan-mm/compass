@@ -8,9 +8,9 @@ spring:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss
   datasource:
-    url: jdbc:mysql://localhost:33066/compass?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
-    username: root
-    password: root
+    url: ${HDOP_DATASOURCE_URL}
+    username: ${HDOP_DATASOURCE_USERNAME}
+    password: ${HDOP_DATASOURCE_PASSWORD}
     druid:
       initial-size: 5
       min-idle: 10

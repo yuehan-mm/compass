@@ -18,6 +18,13 @@ export SPRING_DATASOURCE_URL="jdbc:mysql://${COMPASS_MYSQL_ADDRESS}/${COMPASS_MY
 export SPRING_DATASOURCE_USERNAME="bdp_jt"
 export SPRING_DATASOURCE_PASSWORD="OdKzCYC4s"
 
+# HDOP MySQL
+export HDOP_MYSQL_ADDRESS="10.138.46.222:3306"
+export HDOP_MYSQL_DB="bdmp_cluster"
+export HDOP_DATASOURCE_URL="jdbc:mysql://${COMPASS_MYSQL_ADDRESS}/${COMPASS_MYSQL_DB}?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai"
+export HDOP_DATASOURCE_USERNAME="cluster_manager"
+export HDOP_DATASOURCE_PASSWORD="cluster_MANAGER@!#$13"
+
 # Kafka
 export SPRING_KAFKA_BOOTSTRAPSERVERS="10.163.137.150:9092,10.163.137.151:9092,10.163.137.152:9092"
 # Optional
