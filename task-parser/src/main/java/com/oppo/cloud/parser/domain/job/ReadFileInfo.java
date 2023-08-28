@@ -10,5 +10,7 @@ import lombok.NoArgsConstructor;
 public class ReadFileInfo {
     private String filePath;
     private long maxOffsets;
+    private String tableName;
+    private String partitionName;
     private String readType;
 }

@@ -37,6 +37,8 @@ import com.oppo.cloud.parser.service.reader.IReader;
 import com.oppo.cloud.parser.service.reader.LogReaderFactory;
 import com.oppo.cloud.parser.service.writer.ElasticWriter;
 import com.oppo.cloud.parser.utils.GCReportUtil;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
@@ -48,6 +50,9 @@ import java.util.concurrent.Future;
 
 @Slf4j
 public class SparkExecutorLogParser extends CommonTextParser implements IParser {
+
+    private static final String KEY_EXTERNAL = "/external/";
+    private static final String KEY_WAREHOUSE = "/warehouse/";
 
     private final ParserParam param;
 
@@ -254,15 +259,47 @@ public class SparkExecutorLogParser extends CommonTextParser implements IParser 
             Long offSets = Long.valueOf(infos[1].split("\\+")[1]);
             Long end = start + offSets;
             if (!readFileInfo.containsKey(infos[0]) || end > readFileInfo.get(infos[0]).getMaxOffsets()) {
-                readFileInfo.put(infos[0], new ReadFileInfo(infos[0], end, "rdd.HadoopRDD"));
+                TableInfo tableInfo = this.resolveFilePath(infos[0]);
+                readFileInfo.put(infos[0], new ReadFileInfo(infos[0], end, tableInfo.getTableName(),
+                        tableInfo.getPartitionName(), "rdd.HadoopRDD"));
             }
         } else if (line.contains("datasources.FileScanRDD: Reading File path:")) {
             String[] infos = line.split("hdfs://nameservice1")[1].split(",");
             Long end = Long.valueOf(infos[1].split(":")[1].split("-")[1]);
             if (!readFileInfo.containsKey(infos[0]) || end > readFileInfo.get(infos[0]).getMaxOffsets()) {
-                readFileInfo.put(infos[0], new ReadFileInfo(infos[0], end, "rdd.HadoopRDD"));
+                TableInfo tableInfo = this.resolveFilePath(infos[0]);
+                readFileInfo.put(infos[0], new ReadFileInfo(infos[0], end, tableInfo.getTableName(),
+                        tableInfo.getPartitionName(), "rdd.FileScanRDD"));
             }
         }
+    }
+
+    private TableInfo resolveFilePath(String filePath) {
+        String tableName = null;
+        String partitionName = null;
+        try {
+            String tableAndPartition = "";
+            if (filePath.contains(KEY_EXTERNAL)) {
+                String fileDir = filePath.substring(filePath.indexOf(KEY_EXTERNAL) + KEY_EXTERNAL.length(), filePath.lastIndexOf("/"));
+                String tmpStr = fileDir.substring(fileDir.indexOf("/") + 1);
+                tableAndPartition = tmpStr.substring(tmpStr.indexOf("/") + 1);
+            } else if (filePath.contains(KEY_WAREHOUSE)) {
+                String fileDir = filePath.substring(filePath.indexOf(KEY_WAREHOUSE) + KEY_WAREHOUSE.length(), filePath.lastIndexOf("/"));
+                tableAndPartition = fileDir.substring(fileDir.indexOf("/") + 1);
+            } else {
+                throw new RuntimeException("unknow path");
+            }
+            if (tableAndPartition.contains("/")) {
+                tableName = tableAndPartition.substring(0, tableAndPartition.indexOf("/"));
+                partitionName = tableAndPartition.substring(tableAndPartition.indexOf("/"));
+            } else {
+                tableName = tableAndPartition;
+                partitionName = "";
+            }
+        } catch (Exception e) {
+            log.error("resolveFilePath fail. msg:{}, filePath:{}", e.getMessage(), filePath);
+        }
+        return new TableInfo(tableName, partitionName);
     }
 
 
@@ -287,5 +324,12 @@ public class SparkExecutorLogParser extends CommonTextParser implements IParser 
         executorProgress.setState(state);
         oneClickProgress.setProgressInfo(executorProgress);
         super.update(oneClickProgress);
+    }
+
+    @Data
+    @AllArgsConstructor
+    class TableInfo {
+        private String tableName;
+        private String partitionName;
     }
 }

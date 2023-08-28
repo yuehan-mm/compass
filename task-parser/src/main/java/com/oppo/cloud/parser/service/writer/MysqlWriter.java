@@ -87,4 +87,26 @@ public class MysqlWriter {
         }
     }
 
+    public void updateOffLineData2(String scanFileReport, TaskParam taskParam) {
+        PreparedStatement ps = null;
+        try {
+            String sql = "UPDATE bdmp_cluster.t_script_sql_diagnose_result SET scan_file_report=? where script_name =?";
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, scanFileReport);
+            ps.setString(2, taskParam.getTaskApp().getTaskName());
+            int effectiveRow = ps.executeUpdate();
+            if (effectiveRow != 1) {
+                log.info("update updateOffLineData fail. effectiveRow: {} , script_name:{}",
+                        effectiveRow, taskParam.getTaskApp().getTaskName());
+            }
+        } catch (Exception e) {
+            log.error("updateOffLineData fail. msg：{}", e.getMessage());
+        } finally {
+            try {
+                if (ps != null) ps.close();
+            } catch (SQLException e) {
+                log.error("close PreparedStatement fail. msg:{}", e.getMessage());
+            }
+        }
+    }
 }

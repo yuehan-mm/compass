@@ -180,7 +180,7 @@ public class SparkTask extends Task {
         // fileScan abnormal
         if (!this.detectorConfig.getFileScanConfig().getDisable()) {
             FileScanDetector fileScanDetector = new FileScanDetector(this.detectorConfig.getFileScanConfig());
-            fileScanDetectorResult = fileScanDetector.detect(executorLogInfo.readFileInfos);
+            fileScanDetectorResult = fileScanDetector.detect(executorLogInfo.readFileInfos, taskParam);
             detectorResultList.add(fileScanDetectorResult);
         }
 
