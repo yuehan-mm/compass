@@ -60,7 +60,7 @@ public class FileScanDetector {
 
     private FileScanReport buildFileScanReport(String tableName, Collection<ReadFileInfo> fileList) {
         int totalFileCount = fileList.size();
-        long totalFileSize = fileList.stream().map(x -> x.getMaxOffsets()).reduce((x, y) -> x + y).get();
+        long totalFileSize = fileList.stream().map(x -> x.getMaxOffsets()).reduce((x, y) -> x + y).orElse(0l);
         int fileSizeAvg = fileList.size() == 0 ? 0 :
                 (int) (fileList.stream().map(x -> x.getMaxOffsets()).reduce((x, y) -> x + y).get() / fileList.size());
         int le10MFileCount = (int) fileList.stream().filter(x -> x.getMaxOffsets() < 10 * 1024 * 1024).count();
