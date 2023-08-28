@@ -11,6 +11,7 @@ import com.oppo.cloud.parser.service.writer.MysqlWriter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -64,7 +65,7 @@ public class FileScanDetector {
         int fileSizeAvg = fileList.size() == 0 ? 0 :
                 (int) (fileList.stream().map(x -> x.getMaxOffsets()).reduce((x, y) -> x + y).get() / fileList.size());
         int le10MFileCount = (int) fileList.stream().filter(x -> x.getMaxOffsets() < 10 * 1024 * 1024).count();
-        int partitionCount = (int) fileList.stream().map(x -> x.getPartitionName()).distinct().count();
+        int partitionCount = (int) fileList.stream().map(x -> x.getPartitionName()).filter(x -> StringUtils.isNotEmpty(x)).distinct().count();
         long partitionSizeAvg = partitionCount == 0 ? 0 : totalFileSize / partitionCount;
         return new FileScanReport(tableName, totalFileCount, totalFileSize, fileSizeAvg, le10MFileCount, partitionCount, partitionSizeAvg);
     }
