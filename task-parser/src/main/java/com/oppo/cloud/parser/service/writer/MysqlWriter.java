@@ -41,11 +41,9 @@ public class MysqlWriter {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             connection = DriverManager.getConnection(yml.getUrl(), yml.getUsername(), yml.getPassword());
-            log.info("get mysql connection success. url:{}, username:{}, password: {} .",
-                    yml.getUrl(), yml.getUrl(), yml.getPassword());
+            log.info("get mysql connection success. url:{} .", yml.getUrl());
         } catch (Exception e) {
-            log.error("get mysql connection fail. msg: {}, url:{}, username:{}, password: {} .",
-                    e.getMessage(), yml.getUrl(), yml.getUrl(), yml.getPassword());
+            log.error("get mysql connection fail. msg: {}, url:{} .", e.getMessage(), yml.getUrl());
         }
     }
 
