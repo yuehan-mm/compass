@@ -35,9 +35,9 @@ public class Const {
     public static final int SQL_SCAN_FILE_SCORE = 5;
     public static final String SQL_SCAN_FILE_DESC = "一个SQL内最多扫描10个文件，之后每增加10个，分数-5";
 
-    public static final int SQL_SCAN_FILE_SIZE_AVG_THRESHOLD = 1024 * 1000;
+    public static final int SQL_SCAN_FILE_SIZE_AVG_THRESHOLD = 1024 * 1024;
     public static final int SQL_SCAN_FILE_SIZE_AVG_SCORE = 10;
-    public static final String SQL_SCAN_FILE_SIZE_AVG_DESC = "SQL扫描文件平均大小小于1024000Byte，分数-10";
+    public static final String SQL_SCAN_FILE_SIZE_AVG_DESC = "SQL扫描文件平均大小小于1M，分数-10";
 
     public static final int SQL_LENGTH_THRESHOLD = 1000;
     public static final int SQL_LENGTH_SCORE = 1;

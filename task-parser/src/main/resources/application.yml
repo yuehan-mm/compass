@@ -209,8 +209,9 @@ custom:
       maxTraffic: 2000
     fileScanConfig:
       disable: false
-      maxFileCount: 1
-      minAvgSize: 2
+      maxFileCount: 500
+      # 10M
+      minAvgSize: 1048576
     sqlScoreConfig:
       disable: false
-      minScore: 1000
+      minScore: 60
