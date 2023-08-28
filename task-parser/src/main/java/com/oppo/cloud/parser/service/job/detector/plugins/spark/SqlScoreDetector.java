@@ -31,7 +31,7 @@ public class SqlScoreDetector {
 
         boolean isAbnormal = scriptInfo.getScore() < sqlScoreConfig.getMinScore();
 
-        MysqlWriter.getInstance().updateOffLineData(scriptInfo,taskParam);
+//        MysqlWriter.getInstance().updateOffLineData(scriptInfo,taskParam);
 
         sqlScoreAbnormal.setAbnormal(isAbnormal);
         sqlScoreAbnormal.setScoreContent(scriptInfo.getScoreContent());
