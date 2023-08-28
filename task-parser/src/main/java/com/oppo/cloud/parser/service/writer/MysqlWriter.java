@@ -86,6 +86,8 @@ public class MysqlWriter {
     }
 
     public void updateOffLineData2(String scanFileReport, TaskParam taskParam) {
+        log.error("scanFileReport ：{}, script_name:{}, appid:{} ",
+                scanFileReport, taskParam.getTaskApp().getApplicationId(), taskParam.getTaskApp().getTaskName());
         PreparedStatement ps = null;
         try {
             String sql = "UPDATE bdmp_cluster.t_script_sql_diagnose_result SET scan_file_report=? where script_name =?";
