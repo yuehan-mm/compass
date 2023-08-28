@@ -40,3 +40,5 @@ custom:
     - type: "MAPREDUCE"
       regex: ".*The url to track the job.*?(?<applicationId>application_[0-9]+_[0-9]+).*"     # 匹配规则
       name: "applicationId"      # 匹配文本名，最后必须有applicationId
+    - type: "DATAX"
+      regex: ".*DataX jobContainer starts job.*"     # 匹配规则

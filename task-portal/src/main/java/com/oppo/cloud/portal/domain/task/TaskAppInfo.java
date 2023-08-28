@@ -78,7 +78,7 @@ public class TaskAppInfo {
         taskAppInfo.setFlowName(taskApp.getFlowName());
         taskAppInfo.setTaskName(taskApp.getTaskName());
         taskAppInfo.setExecutionDate(DateUtil.format(taskApp.getExecutionDate()));
-        taskAppInfo.setDuration(UnitUtil.transferSecond(taskApp.getElapsedTime() / 1000));
+        taskAppInfo.setDuration(UnitUtil.transferSecond(taskApp.getElapsedTime() == null ? 0 : taskApp.getElapsedTime() / 1000));
         taskAppInfo.setCategories(AppCategoryEnum.getAppCategoryCh(taskApp.getCategories()));
         taskAppInfo.setUsers(taskApp.getUsers() == null ? ""
                 : taskApp.getUsers().stream().map(SimpleUser::getUsername).collect(Collectors.joining(",")));

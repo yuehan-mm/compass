@@ -47,6 +47,11 @@ public class ParserFactory {
                 mapReduceEventLogParser.addListener(listener);
                 return mapReduceEventLogParser;
 
+            case DATAX_RUNTIME:
+                DataXRuntimeLogParser dataXRuntimeLogParser = new DataXRuntimeLogParser(parserParam);
+                dataXRuntimeLogParser.addListener(listener);
+                return dataXRuntimeLogParser;
+
             default:
                 return null;
         }

@@ -87,4 +87,8 @@ public class DetectorStorage {
     public void addDetectorResult(DetectorResult result) {
         this.dataList.add(result);
     }
+
+    public void addDetectorResult(List<DetectorResult> result) {
+        this.dataList.addAll(result);
+    }
 }

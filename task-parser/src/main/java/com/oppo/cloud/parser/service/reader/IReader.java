@@ -16,21 +16,77 @@
 
 package com.oppo.cloud.parser.service.reader;
 
+import com.oppo.cloud.common.domain.cluster.hadoop.NameNodeConf;
+import com.oppo.cloud.common.domain.job.LogPath;
+import com.oppo.cloud.common.util.spring.SpringBeanUtil;
+import com.oppo.cloud.parser.config.HadoopConfig;
 import com.oppo.cloud.parser.domain.reader.ReaderObject;
+import com.oppo.cloud.parser.utils.HDFSUtil;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 读取日志接口
  */
-public interface IReader {
+public class IReader {
 
-    List<String> listFiles() throws Exception;
+    private final LogPath logPath;
 
-    ReaderObject getReaderObject() throws Exception;
+    private final NameNodeConf nameNode;
 
-    List<ReaderObject> getReaderObjects() throws Exception;
 
-    void setMapReduceEventLogPath() throws Exception;
+    public IReader(LogPath logPath) throws Exception {
+        this.logPath = logPath;
+        Map<String, NameNodeConf> nameNodeMap =
+                (Map<String, NameNodeConf>) SpringBeanUtil.getBean(HadoopConfig.NAME_NODE_MAP);
+        nameNode = HDFSUtil.getNameNode(nameNodeMap, logPath.getLogPath());
+        if (nameNode == null) {
+            throw new Exception("cant get hdfs nameNode" + logPath.getLogPath());
+        }
+    }
 
+    public List<String> listFiles() throws Exception {
+        return HDFSUtil.listFiles(nameNode, logPath.getLogPath(), logPath.getProtocol());
+    }
+
+    public ReaderObject getReaderObject() throws Exception {
+        return HDFSUtil.getReaderObject(nameNode, logPath.getLogPath(), logPath.getProtocol());
+    }
+
+    public List<ReaderObject> getReaderObjects() throws Exception {
+        List<ReaderObject> list = new ArrayList<>();
+        switch (logPath.getLogPathType()) {
+            case FILE:
+                list.add(HDFSUtil.getReaderObject(nameNode, logPath.getLogPath(), logPath.getProtocol()));
+                break;
+            case DIRECTORY:
+                List<String> files = listFiles();
+                if (files.size() > 0) {
+                    for (String path : files) {
+                        list.add(HDFSUtil.getReaderObject(nameNode, path, logPath.getProtocol()));
+                    }
+                }
+                break;
+            default:
+                return null;
+        }
+        return list;
+    }
+
+    public void setMapReduceEventLogPath() throws Exception {
+        this.logPath.setLogPath(HDFSUtil.getMapReduceEventLogPath(nameNode, logPath.getLogPath(), logPath.getProtocol()));
+    }
+
+    public List<ReaderObject> getReaderObjectsByFuzzyPath() throws Exception {
+        List<ReaderObject> list = new ArrayList<>();
+        List<String> files = HDFSUtil.filesPattern(nameNode,logPath.getLogPath());
+        if (files.size() > 0) {
+            for (String path : files) {
+                list.add(HDFSUtil.getReaderObject(nameNode, path, logPath.getProtocol()));
+            }
+        }
+        return list;
+    }
 }

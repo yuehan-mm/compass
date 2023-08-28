@@ -17,22 +17,19 @@
 package com.oppo.cloud.application.util;
 
 import com.oppo.cloud.common.domain.cluster.hadoop.NameNodeConf;
-import com.sun.jna.Callback;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.*;
+import org.apache.hadoop.fs.FSDataInputStream;
+import org.apache.hadoop.fs.FileStatus;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.security.UserGroupInformation;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.security.PrivilegedExceptionAction;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Hdfs工具类
@@ -61,15 +58,15 @@ public class HDFSUtil {
         conf.addResource(new Path(nameNodeConf.getCoresite()));
         conf.addResource(new Path(nameNodeConf.getHdfssite()));
 
-        if(conf.get("hadoop.security.authorization").equals("true") &&
-            conf.get("hadoop.security.authentication").equals("kerberos")){
+        if (conf.get("hadoop.security.authorization").equals("true")
+                && conf.get("hadoop.security.authentication").equals("kerberos")) {
             System.setProperty("java.security.krb5.conf", nameNodeConf.getKrb5Conf());
 //            conf.set("dfs.namenode.kerberos.principal.pattern", nameNodeConf.getPrincipalPattern());
             UserGroupInformation.setConfiguration(conf);
             UserGroupInformation.loginUserFromKeytab(nameNodeConf.getLoginUser(), nameNodeConf.getKeytabPath());
             UserGroupInformation ugi = UserGroupInformation.getLoginUser();
             return ugi.doAs((PrivilegedExceptionAction<FileSystem>) () -> FileSystem.newInstance(URI.create(filePath), conf));
-        }else{
+        } else {
             return FileSystem.newInstance(URI.create(filePath), conf);
         }
     }
@@ -88,7 +85,7 @@ public class HDFSUtil {
 
 //            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-            for(String strLine = reader.readLine(); strLine != null; strLine = reader.readLine()){
+            for (String strLine = reader.readLine(); strLine != null; strLine = reader.readLine()) {
                 callback.call(strLine);
             }
 //            // 64kb
@@ -118,30 +115,17 @@ public class HDFSUtil {
      * 通配符获取文件列表, 带*通配
      */
     public static List<String> filesPattern(NameNodeConf nameNodeConf, String filePath) throws Exception {
-//        filePath = checkLogPath(nameNodeConf, filePath);
-        FileSystem fs = HDFSUtil.getFileSystem(nameNodeConf, filePath);
-        FileStatus[] fileStatuses = fs.globStatus(new Path(filePath));
         List<String> result = new ArrayList<>();
-        if (fileStatuses == null) {
-            return result;
-        }
-
-        for (FileStatus fileStatus : fileStatuses) {
-            if (fs.exists(fileStatus.getPath())) {
-                result.add(fileStatus.getPath().toString());
+        FileSystem fs = null;
+        try {
+            fs = HDFSUtil.getFileSystem(nameNodeConf, filePath);
+            FileStatus[] fileStatuses = fs.globStatus(new Path(filePath));
+            if (fileStatuses != null) {
+                Arrays.stream(fileStatuses).forEach(x -> result.add(x.getPath().toString()));
             }
+        } finally {
+            if (fs != null) fs.close();
         }
-        fs.close();
         return result;
-    }
-
-    private static String checkLogPath(NameNodeConf nameNode, String logPath) {
-
-        return logPath;
-
-//        if (logPath.contains(HDFS_SCHEME) || logPath.contains(OSS_SCHEME)) {
-//            return logPath;
-//        }
-//        return String.format("%s%s%s", HDFS_SCHEME, nameNode.getNameservices(), logPath);
     }
 }

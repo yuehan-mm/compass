@@ -28,8 +28,8 @@ import java.util.Map;
  * @auth : 20012523                                                                                *
  * @date : 2023/6/7                                                                                *
  *================================================================================================*/
-public class SparkTaskAppHanlder implements TaskAppHandler{
-  @Override
+public class SparkTaskAppHandler {
+
   public void handler(TaskApplication taskApplication, TaskApp taskApp, ElasticSearchService elasticSearchService, RedisService redisService) throws Exception {
 
     SparkApp sparkApp = elasticSearchService.searchSparkApp(taskApplication.getApplicationId());

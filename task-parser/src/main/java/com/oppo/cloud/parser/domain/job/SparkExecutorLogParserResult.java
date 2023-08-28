@@ -40,7 +40,17 @@ public class SparkExecutorLogParserResult {
      */
     private List<GCReport> gcReports;
     /**
-     *  异常类型
+     * 异常类型
      */
     private List<String> categories;
+
+    /**
+     * 读取的文件信息<文件路径，文件信息>
+     */
+    private Map<String, ReadFileInfo> readFileInfo;
+
+    /**
+     * 用户执行SQL（仅在sparkSql场景下）
+     */
+    private String sqlCommand;
 }

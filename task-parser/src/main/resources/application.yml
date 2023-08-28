@@ -29,6 +29,10 @@ spring:
     gc-prefix: "compass-gc-log-"
     job-prefix: "compass-job-analysis-"
     task-app-prefix: "compass-task-app-"
+  hdopdb:
+    url: jdbc:mysql://localhost:33066/compass?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
 
   kafka:
     consumer:
@@ -197,3 +201,17 @@ custom:
       duration: 0
       mapThreshold: 500
       reduceThreshold: 100
+    trafficAnomalyDetectorConfig:
+      disable: false
+      # app duration(ms)
+      duration: 0
+      minTraffic: 100
+      maxTraffic: 2000
+    fileScanConfig:
+      disable: false
+      maxFileCount: 500
+      # 10M
+      minAvgSize: 1048576
+    sqlScoreConfig:
+      disable: false
+      minScore: 60

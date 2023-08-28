@@ -18,7 +18,7 @@ package com.oppo.cloud.parser.service.job.detector.manager;
 
 import com.oppo.cloud.parser.domain.job.DetectorParam;
 import com.oppo.cloud.parser.service.job.detector.IDetector;
-import com.oppo.cloud.parser.service.job.detector.SpeculativeMapReduceDetector;
+import com.oppo.cloud.parser.service.job.detector.plugins.mapreduce.SpeculativeMapReduceDetector;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;

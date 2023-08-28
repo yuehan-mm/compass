@@ -134,34 +134,4 @@ public class ReplayMapReduceEventLogs extends ReplayEventLogs {
     @Override
     public void correlate() throws Exception {
     }
-
-    @Override
-    public SparkApplication getApplication() {
-        return null;
-    }
-
-    @Override
-    public Map<Integer, SparkJob> getJobs() {
-        return null;
-    }
-
-    @Override
-    public Map<String, SparkExecutor> getExecutors() {
-        return null;
-    }
-
-    @Override
-    public List<SparkListenerSQLExecutionStart> getSqlExecutionStarts() {
-        return null;
-    }
-
-    @Override
-    public Map<Long, AccumulableInfo> getAccumulableInfoMap() {
-        return null;
-    }
-
-    @Override
-    public Map<Long, Long> getDriverUpdateMap() {
-        return null;
-    }
 }

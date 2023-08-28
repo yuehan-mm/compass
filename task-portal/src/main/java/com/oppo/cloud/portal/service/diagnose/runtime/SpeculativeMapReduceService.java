@@ -72,8 +72,8 @@ public class SpeculativeMapReduceService extends RunTimeBaseService<SpeculativeM
     @Override
     public String generateConclusionDesc(Map<String, String> thresholdMap) {
         return String.format("任务的Map数量建议不要超过%s,任务的Reduce数量建议不要超过%s",
-                thresholdMap.getOrDefault("mapThreshold", thresholdMap.get("mapThreshold")),
-                thresholdMap.getOrDefault("reduceThreshold", thresholdMap.get("reduceThreshold")));
+                thresholdMap.getOrDefault("mapThreshold", "500"),
+                thresholdMap.getOrDefault("reduceThreshold", "100"));
     }
 
     @Override

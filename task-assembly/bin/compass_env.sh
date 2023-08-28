@@ -18,6 +18,12 @@ export SPRING_DATASOURCE_URL="jdbc:mysql://${COMPASS_MYSQL_ADDRESS}/${COMPASS_MY
 export SPRING_DATASOURCE_USERNAME="bdp_jt"
 export SPRING_DATASOURCE_PASSWORD="OdKzCYC4s"
 
+export SPRING_HDOPDB_MYSQL_ADDRESS="10.138.46.222:3306"
+export SPRING_HDOPDB_MYSQL_DB="bdmp_cluster"
+export SPRING_HDOPDB_URL="jdbc:mysql://${SPRING_HDOPDB_MYSQL_ADDRESS}/${SPRING_HDOPDB_MYSQL_DB}?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai"
+export SPRING_HDOPDB_USERNAME="cluster_manager"
+export SPRING_HDOPDB_PASSWORD="cluster_MANAGER@!#\$13"
+
 # Kafka
 export SPRING_KAFKA_BOOTSTRAPSERVERS="10.163.137.150:9092,10.163.137.151:9092,10.163.137.152:9092"
 # Optional
@@ -69,4 +75,4 @@ export SPRING_KAFKA_TASKRECORD_TOPIC="compass_taskrecord_test"
 export SPRING_KAFKA_TASKRECORD_GROUPID="compass_taskrecord_test_20012523_consumer"
 
 # hdfs base path
-export SPRING_HDFS_BASEPATH="/flume/airflow_test/bigdata/bdp_jt/airflow/logs"
+export SPRING_HDFS_BASEPATH="hdfs://nameservice1/flume/airflow_test/bigdata/bdp_jt/airflow/logs"

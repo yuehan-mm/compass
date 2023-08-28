@@ -114,11 +114,7 @@ public class DelayedTask implements CommandLineRunner {
                 log.error("delay task retry failed:{}", delayedTaskInfo);
                 return;
             }
-            if (delayedTaskInfo.getJobAnalysis().getCategories().size() == 0) {
-                abnormalDetects.get(0).handleNormalJob(delayedTaskInfo.getJobAnalysis(), delayedTaskInfo.getProcessRetries());
-            } else {
-                abnormalDetects.get(0).handleAbnormalJob(delayedTaskInfo.getJobAnalysis(), delayedTaskInfo.getProcessRetries());
-            }
+            abnormalDetects.get(0).handleNormalJob(delayedTaskInfo.getJobAnalysis(), delayedTaskInfo.getProcessRetries());
             redisService.hDel(processingKey, delayedTaskInfo.getKey());
         } catch (Exception e) {
             log.error("dealWithDelayTask failed, msg: ", e);

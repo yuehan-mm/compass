@@ -19,6 +19,7 @@ package com.oppo.cloud.parser.service.job.detector.manager;
 import com.oppo.cloud.common.domain.eventlog.config.*;
 import com.oppo.cloud.parser.domain.job.DetectorParam;
 import com.oppo.cloud.parser.service.job.detector.*;
+import com.oppo.cloud.parser.service.job.detector.plugins.spark.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;

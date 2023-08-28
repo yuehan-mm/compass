@@ -29,6 +29,8 @@ public class TaskFactory {
                 return new MapReduceTask(taskParam);
             case SPARK:
                 return new SparkTask(taskParam);
+            case DATAX:
+                return new DataXTask(taskParam);
             default:
                 return null;
         }

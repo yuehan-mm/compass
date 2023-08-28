@@ -93,4 +93,19 @@ public class DetectorConfig {
      * Map/Reduce数量过多配置
      */
     private SpeculativeMapReduceConfig speculativeMapReduceConfig;
+
+    /**
+     * DataX 流量异常
+     */
+    private TrafficAnomalyDetectorConfig trafficAnomalyDetectorConfig;
+
+    /**
+     * MR/SPARK 文件扫描异常
+     */
+    private FileScanConfig fileScanConfig;
+
+    /**
+     * SQL评分异常
+     */
+    private SqlScoreConfig sqlScoreConfig;
 }

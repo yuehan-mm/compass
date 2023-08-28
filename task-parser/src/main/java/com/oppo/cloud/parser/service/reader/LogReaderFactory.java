@@ -32,12 +32,11 @@ public class LogReaderFactory {
     public static IReader create(LogPath logPath) throws Exception {
         switch (logPath.getProtocol()) {
             case HDFS:
-                return new HDFSReader(logPath);
             case OSS:
-                return new OSSReader(logPath);
+                return new IReader(logPath);
             default:
                 break;
         }
-        return new HDFSReader(logPath);
+        return new IReader(logPath);
     }
 }

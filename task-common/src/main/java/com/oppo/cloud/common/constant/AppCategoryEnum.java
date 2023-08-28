@@ -69,6 +69,13 @@ public enum AppCategoryEnum {
     // MAPREDUCE 异常（）
     SPECULATIVE_MAP_REDUCE("speculativeMapReduce", "Map/Reduce数量过多", "runPerformance"),
 
+    // DATAX 流量 异常（）
+    TRAFFIC_ANOMALY("trafficAnomaly", "DataX流量异常", "runPerformance"),
+
+    // DATAX 流量异常（）
+    FILE_SCAN_ANOMALY("fileScanAnomaly", "文件扫描异常", "runPerformance"),
+
+    SQL_SCORE_ANOMALY("sqlScoreAnomaly", "SQL评分过低", "runPerformance"),
     // 其他异常
     OTHER_EXCEPTION("otherException", "其他异常", "runError");
 

@@ -30,26 +30,29 @@ import com.oppo.cloud.parser.config.DiagnosisConfig;
 import com.oppo.cloud.parser.config.ThreadPoolConfig;
 import com.oppo.cloud.parser.domain.job.CommonResult;
 import com.oppo.cloud.parser.domain.job.ParserParam;
+import com.oppo.cloud.parser.domain.job.ReadFileInfo;
 import com.oppo.cloud.parser.domain.job.SparkExecutorLogParserResult;
 import com.oppo.cloud.parser.domain.reader.ReaderObject;
 import com.oppo.cloud.parser.service.reader.IReader;
 import com.oppo.cloud.parser.service.reader.LogReaderFactory;
 import com.oppo.cloud.parser.service.writer.ElasticWriter;
 import com.oppo.cloud.parser.utils.GCReportUtil;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 
 @Slf4j
 public class SparkExecutorLogParser extends CommonTextParser implements IParser {
+
+    private static final String KEY_EXTERNAL = "/external/";
+    private static final String KEY_WAREHOUSE = "/warehouse/";
 
     private final ParserParam param;
 
@@ -143,6 +146,8 @@ public class SparkExecutorLogParser extends CommonTextParser implements IParser 
     }
 
     private SparkExecutorLogParserResult parseRootAction(String logType, ReaderObject readerObject) throws Exception {
+        String sqlCommand = "";
+        Map<String, ReadFileInfo> readFileInfo = new HashMap<>();
         List<ParserAction> actions = DiagnosisConfig.getInstance().getActions(logType);
         Map<Integer, InputStream> gcLogMap = new HashMap<>();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -163,6 +168,11 @@ public class SparkExecutorLogParser extends CommonTextParser implements IParser 
                 break;
             }
             headTextParser.parse(line);
+
+            this.parseFileInfo(line, readFileInfo);
+            if (line.contains("For Compass SQL base64 : ")) {
+                sqlCommand = this.parseSQLInfo(line);
+            }
 
             // get gc log
             if (line.contains("stderr")) {
@@ -208,8 +218,88 @@ public class SparkExecutorLogParser extends CommonTextParser implements IParser 
             result.setGcReports(GCReportUtil.generateGCReports(gcLogMap, readerObject.getLogPath()));
         }
         result.setLogPath(readerObject.getLogPath());
-
+        result.setReadFileInfo(readFileInfo);
+        result.setSqlCommand(sqlCommand);
         return result;
+    }
+
+    /**
+     * 23/08/22 15:08:40 INFO service.SparkSqlEngine: For Compass SQL base64 : dXNlIGRsX2hkb3BfdHh0OwppbnNlcnQgaW50byB0
+     * dF9oZG9wX2JkbXBqdHNqX3ZhX3RfZ3JvdXBiYiBzZWxlY3QgKiBmcm9tIHR0X2hkb3BfYmRtcGp0c2pfdmFfdF9ncm91cCANCg==
+     *
+     * @param line
+     * @return
+     */
+    private String parseSQLInfo(String line) {
+        String sqlCommandBase64 = line.split("For Compass SQL base64 : ")[1];
+        Base64.Decoder decoder = Base64.getDecoder();
+        String sqlCommand = new String(decoder.decode(sqlCommandBase64));
+        log.info("parseSQLInfo sqlCommandBase64:" + sqlCommandBase64);
+        return sqlCommand;
+    }
+
+    /**
+     * spark的这个地方，有两种读方式，所以做了区别
+     * spark 把 parquet/orc 看作一种，其他看作一种
+     * parquet/orc 这种表是
+     * datasources.FileScanRDD: Reading File path:
+     * hdfs://nameservice1/user/hive/warehouse/dh_hic.db/dim_center/
+     * part-00001-16d3e056-c270-4824-8907-4438ab0d415c-c000.snappy.parquet, range: 0-10849, partition values: [empty row]
+     * 其他 这种表是Input split
+     * rdd.HadoopRDD: Input split:
+     * hdfs://nameservice1/user/hive/warehouse/dl_hdop_txt.db/tt_hdop_bdmpjtsj_va_t_group/datax__7255aeb7_236f_472e_99f1_d42f1e60ee26:0+4916
+     *
+     * @param line
+     * @param readFileInfo
+     */
+    private void parseFileInfo(String line, Map<String, ReadFileInfo> readFileInfo) {
+        if (line.contains("HadoopRDD: Input split:")) {
+            String[] infos = line.split("hdfs://nameservice1")[1].split(":");
+            Long start = Long.valueOf(infos[1].split("\\+")[0]);
+            Long offSets = Long.valueOf(infos[1].split("\\+")[1]);
+            Long end = start + offSets;
+            if (!readFileInfo.containsKey(infos[0]) || end > readFileInfo.get(infos[0]).getMaxOffsets()) {
+                TableInfo tableInfo = this.resolveFilePath(infos[0]);
+                readFileInfo.put(infos[0], new ReadFileInfo(infos[0], end, tableInfo.getTableName(),
+                        tableInfo.getPartitionName(), "rdd.HadoopRDD"));
+            }
+        } else if (line.contains("datasources.FileScanRDD: Reading File path:")) {
+            String[] infos = line.split("hdfs://nameservice1")[1].split(",");
+            Long end = Long.valueOf(infos[1].split(":")[1].split("-")[1]);
+            if (!readFileInfo.containsKey(infos[0]) || end > readFileInfo.get(infos[0]).getMaxOffsets()) {
+                TableInfo tableInfo = this.resolveFilePath(infos[0]);
+                readFileInfo.put(infos[0], new ReadFileInfo(infos[0], end, tableInfo.getTableName(),
+                        tableInfo.getPartitionName(), "rdd.FileScanRDD"));
+            }
+        }
+    }
+
+    private TableInfo resolveFilePath(String filePath) {
+        String tableName = null;
+        String partitionName = null;
+        try {
+            String tableAndPartition = "";
+            if (filePath.contains(KEY_EXTERNAL)) {
+                String fileDir = filePath.substring(filePath.indexOf(KEY_EXTERNAL) + KEY_EXTERNAL.length(), filePath.lastIndexOf("/"));
+                String tmpStr = fileDir.substring(fileDir.indexOf("/") + 1);
+                tableAndPartition = tmpStr.substring(tmpStr.indexOf("/") + 1);
+            } else if (filePath.contains(KEY_WAREHOUSE)) {
+                String fileDir = filePath.substring(filePath.indexOf(KEY_WAREHOUSE) + KEY_WAREHOUSE.length(), filePath.lastIndexOf("/"));
+                tableAndPartition = fileDir.substring(fileDir.indexOf("/") + 1);
+            } else {
+                throw new RuntimeException("unknow path");
+            }
+            if (tableAndPartition.contains("/")) {
+                tableName = tableAndPartition.substring(0, tableAndPartition.indexOf("/"));
+                partitionName = tableAndPartition.substring(tableAndPartition.indexOf("/"));
+            } else {
+                tableName = tableAndPartition;
+                partitionName = "";
+            }
+        } catch (Exception e) {
+            log.error("resolveFilePath fail. msg:{}, filePath:{}", e.getMessage(), filePath);
+        }
+        return new TableInfo(tableName, partitionName);
     }
 
 
@@ -234,5 +324,12 @@ public class SparkExecutorLogParser extends CommonTextParser implements IParser 
         executorProgress.setState(state);
         oneClickProgress.setProgressInfo(executorProgress);
         super.update(oneClickProgress);
+    }
+
+    @Data
+    @AllArgsConstructor
+    class TableInfo {
+        private String tableName;
+        private String partitionName;
     }
 }

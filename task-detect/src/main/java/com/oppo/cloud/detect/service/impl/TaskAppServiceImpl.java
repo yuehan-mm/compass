@@ -16,33 +16,29 @@
 
 package com.oppo.cloud.detect.service.impl;
 
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.TypeReference;
-import com.oppo.cloud.common.constant.AppCategoryEnum;
-import com.oppo.cloud.common.constant.Constant;
-import com.oppo.cloud.common.domain.cluster.spark.SparkApp;
-import com.oppo.cloud.common.domain.cluster.yarn.YarnApp;
 import com.oppo.cloud.common.domain.elasticsearch.JobAnalysis;
 import com.oppo.cloud.common.domain.elasticsearch.TaskApp;
 import com.oppo.cloud.common.service.RedisService;
 import com.oppo.cloud.common.util.DateUtil;
 import com.oppo.cloud.common.util.ui.TryNumberUtil;
 import com.oppo.cloud.detect.domain.AbnormalTaskAppInfo;
-import com.oppo.cloud.detect.handler.app.TaskAppHandler;
-import com.oppo.cloud.detect.handler.app.TaskAppHandlerFactory;
-import com.oppo.cloud.detect.service.*;
-import com.oppo.cloud.detect.util.AppNotFoundException;
+import com.oppo.cloud.detect.handler.app.*;
+import com.oppo.cloud.detect.service.ElasticSearchService;
+import com.oppo.cloud.detect.service.TaskAppService;
 import com.oppo.cloud.mapper.TaskApplicationMapper;
-import com.oppo.cloud.model.*;
+import com.oppo.cloud.model.TaskApplication;
+import com.oppo.cloud.model.TaskApplicationExample;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 异常任务App接口类
@@ -72,62 +68,36 @@ public class TaskAppServiceImpl implements TaskAppService {
     @Value("${custom.schedulerType}")
     private String schedulerType;
 
+    @Value("${spring.hdfs.base-path}")
+    private String hdfsBasePath;
 
     @Override
-    public AbnormalTaskAppInfo getAbnormalTaskAppsInfo(JobAnalysis jobAnalysis) {
+    public AbnormalTaskAppInfo getTaskAppsInfo(JobAnalysis jobAnalysis) {
         AbnormalTaskAppInfo abnormalTaskAppInfo = new AbnormalTaskAppInfo();
         List<TaskApp> taskAppList = new ArrayList<>();
         // 收集每个appId的异常信息
         StringBuilder exceptionInfo = new StringBuilder();
-        // 判断任务每次重试的appId是否已经找到
-        Map<Integer, Boolean> needed = new HashMap<>();
-        for (int i = 0; i <= jobAnalysis.getRetryTimes(); i++) {
-            needed.put(i, false);
-        }
-
-        // 获取到 Yarn application Id
-        // 历史所有重试过的 ??
-        List<TaskApplication> taskApplicationList = getTaskApplications(jobAnalysis.getProjectName(),
-                jobAnalysis.getFlowName(),
-                jobAnalysis.getTaskName(),
-                jobAnalysis.getExecutionDate()
-        );
-
-        // 遍历所有的Application信息
-        for (TaskApplication taskApplication : taskApplicationList) {
-            // 校正重试次数
-            taskApplication.setRetryTimes(TryNumberUtil.updateTryNumber(taskApplication.getRetryTimes(), schedulerType));
-
-            try {
-                if (needed.containsKey(taskApplication.getRetryTimes())) {
-                    needed.put(taskApplication.getRetryTimes(), true);
-                } else {
-                    // 兼容手动执行的任务，所有的重试当成不同周期的第一次重试
-                    taskApplication.setRetryTimes(0);
-                    needed.put(0, true);
+        List<TaskApplication> taskApplicationList = getTaskApplications(jobAnalysis);
+        if (!taskApplicationList.isEmpty()) {
+            // 遍历所有的Application信息
+            for (TaskApplication taskApplication : taskApplicationList) {
+                // 校正重试次数
+                taskApplication.setRetryTimes(TryNumberUtil.updateTryNumber(taskApplication.getRetryTimes(), schedulerType));
+                try {
+                    // 根据appId构造TaskApp(包括相关的日志路径)
+                    TaskApp taskApp = this.buildTaskApp(taskApplication);
+                    // 将元数据信息更新到taskApp中
+                    taskApp.setTaskId(jobAnalysis.getTaskId());
+                    taskApp.setFlowId(jobAnalysis.getFlowId());
+                    taskApp.setProjectId(jobAnalysis.getProjectId());
+                    taskApp.setUsers(jobAnalysis.getUsers());
+                    taskAppList.add(taskApp);
+                } catch (Exception e) {
+                    exceptionInfo.append(e.getMessage()).append(";");
                 }
-                // 根据appId构造TaskApp(包括相关的日志路径)
-                TaskApp taskApp = this.buildAbnormalTaskApp(taskApplication);
-                // 将元数据信息更新到taskApp中
-                taskApp.setTaskId(jobAnalysis.getTaskId());
-                taskApp.setFlowId(jobAnalysis.getFlowId());
-                taskApp.setProjectId(jobAnalysis.getProjectId());
-                taskApp.setUsers(jobAnalysis.getUsers());
-                taskAppList.add(taskApp);
-            } catch (Exception e) {
-                exceptionInfo.append(e.getMessage()).append(";");
             }
-        }
-        List<String> notFound = new ArrayList<>();
-        // 标志已经查询到的appId的重试次数
-        for (Integer taskTryNum : needed.keySet()) {
-            if (!needed.get(taskTryNum)) {
-                notFound.add(String.valueOf(taskTryNum));
-            }
-        }
-        // 判断是否查到所有重试次数下的appId
-        if (notFound.size() > 0) {
-            exceptionInfo.append(String.format("can not find appId by tryNum: %s", String.join(",", notFound)));
+        } else {
+            exceptionInfo.append("can not find TaskApplication info.");
         }
 
         abnormalTaskAppInfo.setTaskAppList(taskAppList);                  // Application 信息
@@ -135,61 +105,6 @@ public class TaskAppServiceImpl implements TaskAppService {
         return abnormalTaskAppInfo;
     }
 
-    /**
-     * 获取异常任务下的appId,包括有或没有的
-     */
-
-    @Override
-    public Map<Integer, List<TaskApp>> getAbnormalTaskApps(JobAnalysis jobAnalysis) {
-        Map<Integer, List<TaskApp>> res = new HashMap<>();
-        List<TaskApplication> taskApplicationList = getTaskApplications(jobAnalysis.getProjectName(),
-                jobAnalysis.getFlowName(), jobAnalysis.getTaskName(), jobAnalysis.getExecutionDate());
-        // 根据重试次数构建出所有的重试记录
-        for (int i = 0; i <= jobAnalysis.getRetryTimes(); i++) {
-            List<TaskApp> temp = new ArrayList<>();
-            res.put(i, temp);
-        }
-        // 查询出来所有的appIds
-        for (TaskApplication taskApplication : taskApplicationList) {
-            TaskApp taskApp = this.tryBuildAbnormalTaskApp(taskApplication);
-            List<TaskApp> temp;
-            if (res.containsKey(taskApplication.getRetryTimes())) {
-                temp = res.get(taskApplication.getRetryTimes());
-                temp.add(taskApp);
-                res.put(taskApplication.getRetryTimes(), temp);
-            } else {
-                // 不包含则将这个appId放在第一次重试中
-                temp = new ArrayList<>();
-                taskApp.setRetryTimes(0);
-                temp.add(taskApp);
-                res.put(0, temp);
-            }
-        }
-        // 没有appId的构造为空的
-        for (Integer tryTime : res.keySet()) {
-            List<TaskApp> temp = res.get(tryTime);
-            if (temp.size() == 0) {
-                TaskApp taskApp = new TaskApp();
-                taskApp.setRetryTimes(tryTime);
-                taskApp.setTaskName(jobAnalysis.getTaskName());
-                taskApp.setFlowName(jobAnalysis.getFlowName());
-                taskApp.setProjectName(jobAnalysis.getProjectName());
-                taskApp.setExecutionDate(jobAnalysis.getExecutionDate());
-                temp.add(taskApp);
-                res.put(tryTime, temp);
-            }
-        }
-        return res;
-    }
-
-    @Override
-    public void insertTaskApps(List<TaskApp> taskAppList) throws Exception {
-        for (TaskApp taskApp : taskAppList) {
-            String index = taskApp.genIndex(appIndex);
-            log.info("insertTaskApp {},{},{}", index, taskApp.getApplicationId(), taskApp.genDoc());
-            elasticSearchService.insertOrUpDateEs(index, taskApp.genDocId(), taskApp.genDoc());
-        }
-    }
 
     @Override
     public List<TaskApp> searchTaskApps(JobAnalysis jobAnalysis) throws Exception {
@@ -198,55 +113,53 @@ public class TaskAppServiceImpl implements TaskAppService {
         termCondition.put("flowName.keyword", jobAnalysis.getFlowName());
         termCondition.put("taskName.keyword", jobAnalysis.getTaskName());
         termCondition.put("executionDate", DateUtil.timestampToUTCDate(jobAnalysis.getExecutionDate().getTime()));
-        SearchSourceBuilder searchSourceBuilder =
-                elasticSearchService.genSearchBuilder(termCondition, null, null, null);
+        SearchSourceBuilder searchSourceBuilder = elasticSearchService.genSearchBuilder(termCondition, null, null, null);
         return elasticSearchService.find(TaskApp.class, searchSourceBuilder, appIndex + "-*");
     }
 
     /**
      * 根据基础的appId信息构建出AbnormalTaskApp,有异常则直接退出抛出异常
      */
-    public TaskApp buildAbnormalTaskApp(TaskApplication taskApplication) throws Exception {
+    public TaskApp buildTaskApp(TaskApplication taskApplication) {
         TaskApp taskApp = new TaskApp();
         BeanUtils.copyProperties(taskApplication, taskApp);
         taskApp.setApplicationId(taskApp.getApplicationId());
         taskApp.setExecutionDate(taskApplication.getExecuteTime());
         taskApp.setRetryTimes(taskApplication.getRetryTimes());
-
-        final TaskAppHandler taskAppHandler = TaskAppHandlerFactory.getTaskAppHandler(taskApplication);
-
-        taskAppHandler.handler(taskApplication, taskApp, elasticSearchService, redisService);
-
+        buildTaskApp(taskApplication, taskApp);
         return taskApp;
     }
 
-    public TaskApp tryBuildAbnormalTaskApp(TaskApplication taskApplication) {
-        TaskApp taskApp = new TaskApp();
-        BeanUtils.copyProperties(taskApplication, taskApp);
-        taskApp.setExecutionDate(taskApplication.getExecuteTime());
-        taskApp.setRetryTimes(taskApplication.getRetryTimes());
-
-        final TaskAppHandler taskAppHandler = TaskAppHandlerFactory.getTaskAppHandler(taskApplication);
-
+    public void buildTaskApp(TaskApplication taskApplication, TaskApp taskApp) {
         try {
-            taskAppHandler.handler(taskApplication, taskApp, elasticSearchService, redisService);
+            switch (taskApplication.getApplicationType()) {
+                case SPARK:
+                    new SparkTaskAppHandler().handler(taskApplication, taskApp, elasticSearchService, redisService);
+                    break;
+                case MAPREDUCE:
+                    new MRTaskAppHandler().handler(taskApplication, taskApp, elasticSearchService, redisService);
+                    break;
+                case DATAX:
+                    new DataXTaskAppHandler().handler(taskApplication, taskApp, hdfsBasePath);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid taskApp type : " + taskApplication.getApplicationType());
+            }
         } catch (Exception e) {
             log.error("try complete yarn info failed, msg:", e);
+            throw new RuntimeException(e.getMessage());
         }
-
-        return taskApp;
     }
 
 
-
-    public List<TaskApplication> getTaskApplications(String projectName, String flowName, String taskName,
-                                                     Date executionTime) {
+    public List<TaskApplication> getTaskApplications(JobAnalysis jobAnalysis) {
         TaskApplicationExample taskApplicationExample = new TaskApplicationExample();
         taskApplicationExample.createCriteria()
-                .andProjectNameEqualTo(projectName)
-                .andFlowNameEqualTo(flowName)
-                .andTaskNameEqualTo(taskName)
-                .andExecuteTimeEqualTo(executionTime)
+                .andProjectNameEqualTo(jobAnalysis.getProjectName())
+                .andFlowNameEqualTo(jobAnalysis.getFlowName())
+                .andTaskNameEqualTo(jobAnalysis.getTaskName())
+                .andExecuteTimeEqualTo(jobAnalysis.getExecutionDate())
+                .andRetryTimesEqualTo(jobAnalysis.getRetryTimes() + 1)
                 .andApplicationIdIsNotNull();
         return taskApplicationMapper.selectByExample(taskApplicationExample);
     }

@@ -158,17 +158,17 @@ public class LogParserServiceImpl implements LogParserService {
 
 //        String logPath = String.join(",", applicationMessage.getLogPaths());
         // 保存 applicationId
-        Map<String,ApplicationType> applications = applicationMessage.getApplications();
+        Map<String, ApplicationType> applications = applicationMessage.getApplications();
 
-        for (Map.Entry<String, ApplicationType> application :  applications.entrySet()) {
+        for (Map.Entry<String, ApplicationType> application : applications.entrySet()) {
             addTaskApplication(application.getKey(), application.getValue(), taskInstance);
         }
 
-        if(applications.size() > 0){
+        if (applications.size() > 0) {
             log.info("send to kafka. taskInstance: " + JSON.toJSONString(taskInstance));
             messageProducer.sendMessageSync(TASKINSTANCEAPPLICATIONTOPICS, JSON.toJSONString(taskInstance));
         } else {
-            log.warn("can not match appid. taskInstance: "+ JSON.toJSONString(taskInstance));
+            log.warn("can not match appid. taskInstance: " + JSON.toJSONString(taskInstance));
         }
 
         log.info("project: {}, process:{}, task:{}, execute_time: {}, parse applicationId done!",
@@ -199,11 +199,8 @@ public class LogParserServiceImpl implements LogParserService {
 
         try {
             taskApplicationMapper.insertSelective(taskApplication);
-        } catch (DuplicateKeyException e) {
-            return;
-            // duplicate key with return
         } catch (Exception e) {
-            log.error("insertErr:" + e.getMessage());
+            log.error("insertErr:" + e.getMessage() + "\t" + JSONObject.toJSONString(taskApplication));
         }
 
     }
@@ -223,7 +220,7 @@ public class LogParserServiceImpl implements LogParserService {
         public LogParser(TaskInstance taskInstance, List<Rule> rules, ApplicationMessage applicationMessage) {
             this.taskInstance = taskInstance;
             this.rules = rules;
-            this.applicationMessage =applicationMessage;
+            this.applicationMessage = applicationMessage;
         }
 
         /**
@@ -287,27 +284,27 @@ public class LogParserServiceImpl implements LogParserService {
             }
 
             for (String filePath : filePaths) {
-                try{
+                try {
                     HDFSUtil.readLines(nameNodeConf, filePath, (String strLine) -> {
-                        for (Rule rule : this.rules){
+                        for (Rule rule : this.rules) {
                             Pattern pattern = rule.getPattern();
                             Matcher matcher = pattern.matcher(strLine);
                             if (matcher.matches()) {
-                                if((rule.getName() != null) && (rule.getName().trim().length() != 0)){
-                                    String appId = matcher.group(rule.getName());
-                                    this.applicationMessage.addApplication(appId, rule.getType());
-                                }else{
-                                    String appId = String.format("v_%s_%s",
-                                            System.currentTimeMillis(),
-                                            (int)(Math.random() * System.currentTimeMillis() % 1000)
-                                    );
-                                    this.applicationMessage.addApplication(appId, rule.getType());
+                                if (rule.getType().getValue().equals(ApplicationType.DATAX.getValue())) {
+//                                    String appId = String.format("V_%s_%s_%s",
+//                                            taskInstance.getExecutionTime().getTime(),
+//                                            taskInstance.getStartTime().getTime(),
+//                                            (int) (Math.random() * System.currentTimeMillis() % 1000));
+//                                    this.applicationMessage.addApplication(appId, rule.getType());
+                                    log.info("DATAX TASK, CONTINUE. " + taskInstance.getTaskName());
+                                } else {
+                                    this.applicationMessage.addApplication(matcher.group(rule.getName()), rule.getType());
                                 }
                             }
                         }
 
                     });
-                }catch (Exception e){
+                } catch (Exception e) {
                     throw new RetryException(e);
                 }
 
@@ -353,14 +350,15 @@ public class LogParserServiceImpl implements LogParserService {
         }
     }
 
-    static class ApplicationMessage{
+    static class ApplicationMessage {
 
         private Map<String, ApplicationType> applicationMap = new HashMap<>();
 
-        public ApplicationMessage(){
+        public ApplicationMessage() {
 
         }
-        public void addApplication(String appId, ApplicationType type){
+
+        public void addApplication(String appId, ApplicationType type) {
             this.applicationMap.put(appId, type);
         }
 

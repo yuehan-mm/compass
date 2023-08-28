@@ -48,6 +48,10 @@ public abstract class ReplayEventLogs {
         this.logPath = logPath;
     }
 
+    public ReplayEventLogs(ApplicationType applicationType) {
+        this.applicationType = applicationType;
+    }
+
     public void replay(ReaderObject readerObject) throws Exception {
         try {
             String line;
@@ -68,19 +72,4 @@ public abstract class ReplayEventLogs {
 
     public abstract void correlate() throws Exception;
 
-    public abstract SparkApplication getApplication();
-
-    public abstract Map<Integer, SparkJob> getJobs();
-
-    public abstract Map<String, SparkExecutor> getExecutors();
-
-    public abstract List<SparkListenerSQLExecutionStart> getSqlExecutionStarts();
-
-    public abstract Map<Long, AccumulableInfo> getAccumulableInfoMap();
-
-    public abstract Map<Long, Long> getDriverUpdateMap();
-
-    public abstract JobFinishedEvent getJobFinishedEvent();
-
-    public abstract MapReduceApplication getMapReduceApplication();
 }

@@ -111,9 +111,34 @@ public class RunInfoService {
                 return this.generateSparkAppInfo(detectorStorage.getEnv());
             case MAPREDUCE:
                 return this.generateMapReduceAppInfo(detectorStorage.getEnv());
+            case DATAX:
+                return this.generateDataXAppInfo(detectorStorage.getEnv());
             default:
                 return new AppInfo();
         }
+    }
+
+    private AppInfo generateDataXAppInfo(Map<String, Object> env) {
+        DataXAppInfo appInfo = new DataXAppInfo();
+        for (String name : env.keySet()) {
+            String value = (String) env.get(name);
+            switch (name) {
+                case "src":
+                    appInfo.setSrc(value);
+                    break;
+                case "src_type":
+                    appInfo.setSrc_type(value);
+                    break;
+                case "dest":
+                    appInfo.setDest(value);
+                    break;
+                case "dest_type":
+                    appInfo.setDest_type(value);
+                    break;
+                default:
+            }
+        }
+        return appInfo;
     }
 
     private AppInfo generateMapReduceAppInfo(Map<String, Object> env) {
