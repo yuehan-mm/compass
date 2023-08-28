@@ -98,6 +98,9 @@ public class MysqlWriter {
             if (effectiveRow != 1) {
                 log.info("update updateOffLineData fail. effectiveRow: {} , script_name:{}",
                         effectiveRow, taskParam.getTaskApp().getTaskName());
+            } else {
+                log.info("update updateOffLineData success. , script_name:{}",
+                        taskParam.getTaskApp().getTaskName());
             }
         } catch (Exception e) {
             log.error("updateOffLineData fail. msg：{}", e.getMessage());

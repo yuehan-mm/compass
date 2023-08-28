@@ -105,7 +105,7 @@ public class DetectorConfig {
     private FileScanConfig fileScanConfig;
 
     /**
-     * MR/SPARK 文件扫描异常
+     * SQL评分异常
      */
     private SqlScoreConfig sqlScoreConfig;
 }
