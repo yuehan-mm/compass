@@ -107,7 +107,7 @@ public class MapReduceTask extends Task {
         }
 
         DetectorStorage detectorStorage = mapReduceEventLogParserResult.getDetectorStorage();
-        log.info("MR DetectorStorage : " + JSON.toJSONString(detectorStorage));
+//        log.info("MR DetectorStorage : " + JSON.toJSONString(detectorStorage));
         if (detectorStorage == null) {
             log.error("detectorStorageNull:{}", taskParam);
             return taskResult;
