@@ -231,10 +231,14 @@ public class SparkExecutorLogParser extends CommonTextParser implements IParser 
      * @return
      */
     private String parseSQLInfo(String line) {
-        String sqlCommandBase64 = line.split("For Compass SQL base64 : ")[1];
-        Base64.Decoder decoder = Base64.getDecoder();
-        String sqlCommand = new String(decoder.decode(sqlCommandBase64));
-        log.info("parseSQLInfo sqlCommandBase64:" + sqlCommandBase64);
+        String sqlCommand = "";
+        try {
+            String sqlCommandBase64 = line.split("For Compass SQL base64 : ")[1];
+            Base64.Decoder decoder = Base64.getDecoder();
+            sqlCommand = new String(decoder.decode(sqlCommandBase64));
+        } catch (Exception e) {
+            log.error("parseSQLInfo fail. line:{}, msg:{}", line, e.getMessage());
+        }
         return sqlCommand;
     }
 
