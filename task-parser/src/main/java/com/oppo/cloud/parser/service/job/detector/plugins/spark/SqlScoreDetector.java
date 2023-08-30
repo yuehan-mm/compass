@@ -24,7 +24,7 @@ public class SqlScoreDetector {
         log.info("start SqlScoreDetector");
         log.info("SqlScoreDetector : " + JSON.toJSONString(sqlScoreConfig));
         DetectorResult<SqlScoreAbnormal> detectorResult = new DetectorResult<>(AppCategoryEnum.SQL_SCORE_ANOMALY.getCategory(), false);
-        SqlScoreAbnormal sqlScoreAbnormal = SqlDiagnoseService.buildSqlScoreAbnormal(sqlCommand, taskParam.getTaskApp().getTaskName(), fileScanAbnormal, sqlScoreConfig);
+        SqlScoreAbnormal sqlScoreAbnormal = SqlDiagnoseService.buildSqlScoreAbnormal(sqlCommand, taskParam.getTaskApp(), fileScanAbnormal, sqlScoreConfig);
         detectorResult.setData(sqlScoreAbnormal);
         detectorResult.setAbnormal(sqlScoreAbnormal.getAbnormal());
         return detectorResult;

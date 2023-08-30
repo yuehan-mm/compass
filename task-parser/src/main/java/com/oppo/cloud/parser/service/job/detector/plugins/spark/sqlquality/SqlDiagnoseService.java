@@ -4,6 +4,7 @@ package com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import com.oppo.cloud.common.domain.elasticsearch.TaskApp;
 import com.oppo.cloud.common.domain.eventlog.FileScanAbnormal;
 import com.oppo.cloud.common.domain.eventlog.SqlScoreAbnormal;
 import com.oppo.cloud.common.domain.eventlog.config.SqlScoreConfig;
@@ -21,12 +22,13 @@ import static com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlqualit
 @Slf4j
 public class SqlDiagnoseService {
 
-    public static SqlScoreAbnormal buildSqlScoreAbnormal(String command, String taskName, FileScanAbnormal fileScanAbnormal, SqlScoreConfig sqlScoreConfig) {
+    public static SqlScoreAbnormal buildSqlScoreAbnormal(String command, TaskApp taskApp, FileScanAbnormal fileScanAbnormal, SqlScoreConfig sqlScoreConfig) {
         return setDiagnoseInfo(new DiagnoseResult(
+                        taskApp.getExecutionDate(), taskApp.getApplicationId(),
                         findX(command, GROUP_BY_REGEX), findX(command, UNION_REGEX),
                         findX(command, JOIN_REGEX), findX(command, ORDER_BY_REGEX),
                         getCommandLength(command), findY(command, INSERT_REGEX),
-                        findY(command, MEMORY_CONF_REGEX), getRefTableMap(command, taskName),
+                        findY(command, MEMORY_CONF_REGEX), getRefTableMap(command, taskApp.getTaskName()),
                         fileScanAbnormal.getScriptReport(), fileScanAbnormal.getTableReport())
                 , sqlScoreConfig);
     }

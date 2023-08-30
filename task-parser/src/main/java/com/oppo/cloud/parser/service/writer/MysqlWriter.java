@@ -63,20 +63,20 @@ public class MysqlWriter {
      * @param taskParam
      */
     public void updateOffLineData(SqlScoreAbnormal sqlScoreAbnormal, TaskParam taskParam) {
-        log.error("updateOffLineData----{}", JSON.toJSONString(sqlScoreAbnormal));
         PreparedStatement ps = null;
         try {
-//            String sql = "UPDATE bdmp_cluster.t_script_sql_diagnose_result SET score=?,score_content=?,diagnose_result=? where script_name =?";
-//            ps = connection.prepareStatement(sql);
-//            ps.setInt(1, sqlScoreAbnormal.getScore());
-//            ps.setString(2, sqlScoreAbnormal.getScoreContent());
-//            ps.setString(3, sqlScoreAbnormal.getDiagnoseResult());
-//            ps.setString(4, taskParam.getTaskApp().getTaskName());
-//            int effectiveRow = ps.executeUpdate();
-//            if (effectiveRow != 1) {
-//                log.info("update updateOffLineData fail. effectiveRow: {} , script_name:{}",
-//                        effectiveRow, taskParam.getTaskApp().getTaskName());
-//            }
+            String sql = "UPDATE bdmp_cluster.t_script_sql_diagnose_result SET score=?,score_content=?,diagnose_result=?,update_date=? where script_name =?";
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, sqlScoreAbnormal.getScore());
+            ps.setString(2, sqlScoreAbnormal.getScoreContent());
+            ps.setString(3, sqlScoreAbnormal.getDiagnoseResult());
+            ps.setString(4, String.valueOf(System.currentTimeMillis()));
+            ps.setString(5, taskParam.getTaskApp().getTaskName());
+            int effectiveRow = ps.executeUpdate();
+            if (effectiveRow != 1) {
+                log.info("update updateOffLineData fail. effectiveRow: {} , script_name:{}",
+                        effectiveRow, taskParam.getTaskApp().getTaskName());
+            }
         } catch (Exception e) {
             log.error("updateOffLineData fail. msg：{}", e.getMessage());
         } finally {
