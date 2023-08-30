@@ -19,6 +19,7 @@ package com.oppo.cloud.parser.service.job.task;
 import com.oppo.cloud.common.domain.eventlog.DetectorResult;
 import com.oppo.cloud.common.domain.eventlog.DetectorStorage;
 import com.oppo.cloud.common.domain.eventlog.FileScanAbnormal;
+import com.oppo.cloud.common.domain.eventlog.SqlScoreAbnormal;
 import com.oppo.cloud.common.domain.eventlog.config.DetectorConfig;
 import com.oppo.cloud.common.domain.gc.GCReport;
 import com.oppo.cloud.common.util.spring.SpringBeanUtil;
@@ -30,6 +31,7 @@ import com.oppo.cloud.parser.service.job.detector.plugins.spark.SqlScoreDetector
 import com.oppo.cloud.parser.service.job.parser.IParser;
 import com.oppo.cloud.parser.service.rules.JobRulesConfigService;
 import com.oppo.cloud.parser.service.writer.ElasticWriter;
+import com.oppo.cloud.parser.service.writer.MysqlWriter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -180,15 +182,18 @@ public class SparkTask extends Task {
         // fileScan abnormal
         if (!this.detectorConfig.getFileScanConfig().getDisable()) {
             FileScanDetector fileScanDetector = new FileScanDetector(this.detectorConfig.getFileScanConfig());
-            fileScanDetectorResult = fileScanDetector.detect(executorLogInfo.readFileInfos, taskParam);
+            fileScanDetectorResult = fileScanDetector.detect(executorLogInfo.readFileInfos);
             detectorResultList.add(fileScanDetectorResult);
         }
 
         // sqlScore abnormal
         if (!this.detectorConfig.getSqlScoreConfig().getDisable() && StringUtils.isNotEmpty(executorLogInfo.sqlCommand)) {
             SqlScoreDetector sqlScoreDetector = new SqlScoreDetector(this.detectorConfig.getSqlScoreConfig());
-            detectorResultList.add(sqlScoreDetector.detect(executorLogInfo.sqlCommand,
-                    taskParam, (FileScanAbnormal) fileScanDetectorResult.getData()));
+            DetectorResult sqlScoreDetectorResult = sqlScoreDetector.detect(executorLogInfo.sqlCommand, taskParam,
+                    (FileScanAbnormal) fileScanDetectorResult.getData());
+            detectorResultList.add(sqlScoreDetectorResult);
+            // 更新离线数据
+            MysqlWriter.getInstance().updateOffLineData((SqlScoreAbnormal) sqlScoreDetectorResult.getData(), taskParam);
         }
 
         // mem waste abnormal

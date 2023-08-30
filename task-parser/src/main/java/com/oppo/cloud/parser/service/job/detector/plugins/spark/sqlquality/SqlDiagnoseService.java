@@ -1,9 +1,12 @@
 package com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality;
 
 
+import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.oppo.cloud.common.domain.eventlog.FileScanAbnormal;
+import com.oppo.cloud.common.domain.eventlog.SqlScoreAbnormal;
+import com.oppo.cloud.common.domain.eventlog.config.SqlScoreConfig;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -18,96 +21,80 @@ import static com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlqualit
 @Slf4j
 public class SqlDiagnoseService {
 
-    public static DiagnoseContent parseScript(String command, String taskName, FileScanAbnormal fileScanAbnormal) {
-        return setDiagnoseInfo(findX(command, GROUP_BY_REGEX), findX(command, UNION_REGEX),
-                findX(command, JOIN_REGEX), findX(command, ORDER_BY_REGEX),
-                findY(command, INSERT_REGEX), findY(command, MEMORY_CONF_REGEX),
-                fileScanAbnormal.getFileCount(), fileScanAbnormal.getAvgSize(),
-                getCommandLength(command), getRefTableMap(command, taskName));
+    public static SqlScoreAbnormal buildSqlScoreAbnormal(String command, String taskName, FileScanAbnormal fileScanAbnormal, SqlScoreConfig sqlScoreConfig) {
+        return setDiagnoseInfo(new DiagnoseResult(
+                        findX(command, GROUP_BY_REGEX), findX(command, UNION_REGEX),
+                        findX(command, JOIN_REGEX), findX(command, ORDER_BY_REGEX),
+                        getCommandLength(command), findY(command, INSERT_REGEX),
+                        findY(command, MEMORY_CONF_REGEX), getRefTableMap(command, taskName),
+                        fileScanAbnormal.getScriptReport(), fileScanAbnormal.getTableReport())
+                , sqlScoreConfig);
     }
 
     private static int getCommandLength(String command) {
         return command.replaceAll(" ", "").replaceAll("\n", "").length();
     }
 
-    private static DiagnoseContent setDiagnoseInfo(int groupByCount, int unionCount, int joinCount, int orderByCount,
-                                                   List<String> insertList, List<String> memConfList, int scanFileCount,
-                                                   int scanFileSizeAvg, int sqlLength, Map<String, Integer> refTableMap) {
-        DiagnoseContent diagnoseContent = new DiagnoseContent();
+    private static SqlScoreAbnormal setDiagnoseInfo(DiagnoseResult diagnoseResult, SqlScoreConfig sqlScoreConfig) {
+        SqlScoreAbnormal diagnoseContent = new SqlScoreAbnormal();
         StringBuffer sb = new StringBuffer();
         int deductScore = 0;
 
-        if (groupByCount > SQL_GROUP_BY_THRESHOLD) {
-            int score = (groupByCount - SQL_GROUP_BY_THRESHOLD) * SQL_GROUP_BY_SCORE;
+        if (diagnoseResult.getGroupByCount() > SQL_GROUP_BY_THRESHOLD) {
+            int score = (diagnoseResult.getGroupByCount() - SQL_GROUP_BY_THRESHOLD) * SQL_GROUP_BY_SCORE;
             deductScore += score;
-            sb.append("[SQL group by] 次数:" + groupByCount + "，"
+            sb.append("[SQL group by] 次数:" + diagnoseResult.getGroupByCount() + "，"
                     + "阈值:" + SQL_GROUP_BY_THRESHOLD + "，"
                     + "扣减分数:" + score + "。（"
                     + SQL_GROUP_BY_DESC + "）\n");
         }
 
-        if (unionCount > SQL_UNION_THRESHOLD) {
-            int score = (unionCount - SQL_UNION_THRESHOLD) * SQL_UNION_SCORE;
+        if (diagnoseResult.getUnionCount() > SQL_UNION_THRESHOLD) {
+            int score = (diagnoseResult.getUnionCount() - SQL_UNION_THRESHOLD) * SQL_UNION_SCORE;
             deductScore += score;
-            sb.append("[SQL UNION] 次数:" + unionCount + "，"
+            sb.append("[SQL UNION] 次数:" + diagnoseResult.getUnionCount() + "，"
                     + "阈值:" + SQL_UNION_THRESHOLD + "，"
                     + "扣减分数:" + score + "。（"
                     + SQL_UNION_DESC + "）\n");
         }
 
-        if (joinCount > SQL_JOIN_THRESHOLD) {
-            int score = (joinCount - SQL_JOIN_THRESHOLD) * SQL_JOIN_SCORE;
+        if (diagnoseResult.getJoinCount() > SQL_JOIN_THRESHOLD) {
+            int score = (diagnoseResult.getJoinCount() - SQL_JOIN_THRESHOLD) * SQL_JOIN_SCORE;
             deductScore += score;
-            sb.append("[SQL join] 次数:" + joinCount + "，"
+            sb.append("[SQL join] 次数:" + diagnoseResult.getJoinCount() + "，"
                     + "阈值:" + SQL_JOIN_THRESHOLD + "，"
                     + "扣减分数:" + score + "。（"
                     + SQL_JOIN_DESC + "）\n");
         }
 
-        if (orderByCount > SQL_ORDER_BY_THRESHOLD) {
-            int score = (orderByCount - SQL_ORDER_BY_THRESHOLD) * SQL_ORDER_BY_SCORE;
+        if (diagnoseResult.getOrderByCount() > SQL_ORDER_BY_THRESHOLD) {
+            int score = (diagnoseResult.getOrderByCount() - SQL_ORDER_BY_THRESHOLD) * SQL_ORDER_BY_SCORE;
             deductScore += score;
-            sb.append("[SQL order by] 次数:" + orderByCount + "，"
+            sb.append("[SQL order by] 次数:" + diagnoseResult.getOrderByCount() + "，"
                     + "阈值:" + SQL_ORDER_BY_THRESHOLD + "，"
                     + "扣减分数:" + score + "。（"
                     + SQL_ORDER_BY_DESC + "）\n");
         }
 
-        if (scanFileCount > SQL_SCAN_FILE_THRESHOLD) {
-            int score = ((scanFileCount - SQL_SCAN_FILE_THRESHOLD) / 10 + 1) * SQL_SCAN_FILE_SCORE;
+        if (diagnoseResult.getSqlLength() > SQL_LENGTH_THRESHOLD) {
+            int score = (((diagnoseResult.getSqlLength() - SQL_LENGTH_THRESHOLD) / 1000) + 1) * SQL_LENGTH_SCORE;
             deductScore += score;
-            sb.append("[SQL 扫描文件] 个数:" + scanFileCount + "，"
-                    + "阈值:" + SQL_SCAN_FILE_THRESHOLD + "，"
-                    + "扣减分数:" + score + "。（"
-                    + SQL_SCAN_FILE_DESC + "）\n");
-        }
-
-        if (scanFileSizeAvg < SQL_SCAN_FILE_SIZE_AVG_THRESHOLD) {
-            deductScore += SQL_SCAN_FILE_SIZE_AVG_SCORE;
-            sb.append("[SQL 扫描文件] 平均大小:" + scanFileSizeAvg + "Byte，"
-                    + "阈值:" + SQL_SCAN_FILE_SIZE_AVG_THRESHOLD + "Byte，"
-                    + "扣减分数:" + SQL_SCAN_FILE_SIZE_AVG_SCORE + "。（"
-                    + SQL_SCAN_FILE_SIZE_AVG_DESC + "）\n");
-        }
-
-        if (sqlLength > SQL_LENGTH_THRESHOLD) {
-            int score = (((sqlLength - SQL_LENGTH_THRESHOLD) / 1000) + 1) * SQL_LENGTH_SCORE;
-            deductScore += score;
-            sb.append("[SQL长度] 长度:" + sqlLength + "，"
+            sb.append("[SQL长度] 长度:" + diagnoseResult.getSqlLength() + "，"
                     + "阈值:" + SQL_LENGTH_THRESHOLD + "，"
                     + "扣减分数:" + score + "。（"
                     + SQL_LENGTH_DESC + "）\n");
         }
 
-        if (refTableMap.size() > SQL_READ_TABLE_THRESHOLD) {
-            int score = (refTableMap.size() - SQL_READ_TABLE_THRESHOLD) * SQL_READ_TABLE_SCORE;
+        if (diagnoseResult.getRefTableMap().size() > SQL_READ_TABLE_THRESHOLD) {
+            int score = (diagnoseResult.getRefTableMap().size() - SQL_READ_TABLE_THRESHOLD) * SQL_READ_TABLE_SCORE;
             deductScore += score;
-            sb.append("[SQL读取表数量] 数量:" + refTableMap.size() + "，"
+            sb.append("[SQL读取表数量] 数量:" + diagnoseResult.getRefTableMap().size() + "，"
                     + "阈值:" + SQL_READ_TABLE_THRESHOLD + "，"
                     + "扣减分数:" + score + "。（"
                     + SQL_READ_TABLE_DESC + "）\n");
         }
 
+        Map<String, Integer> refTableMap = diagnoseResult.getRefTableMap();
         for (String tableName : refTableMap.keySet()) {
             if (refTableMap.get(tableName) > SQL_TABLE_USE_THRESHOLD) {
                 int score = (refTableMap.get(tableName) - SQL_TABLE_USE_THRESHOLD) * SQL_TABLE_USE_SCORE;
@@ -120,7 +107,9 @@ public class SqlDiagnoseService {
             }
         }
 
+        diagnoseContent.setDiagnoseResult(JSON.toJSONString(diagnoseResult));
         diagnoseContent.setScore(100 - deductScore);
+        diagnoseContent.setAbnormal(diagnoseContent.getScore() < sqlScoreConfig.getMinScore());
         diagnoseContent.setScoreContent(sb.substring(0, sb.lastIndexOf("\n") > 0 ? sb.lastIndexOf("\n") : 0));
         return diagnoseContent;
     }

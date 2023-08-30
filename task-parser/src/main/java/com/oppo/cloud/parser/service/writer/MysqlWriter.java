@@ -16,10 +16,11 @@
 
 package com.oppo.cloud.parser.service.writer;
 
+import com.alibaba.fastjson2.JSON;
+import com.oppo.cloud.common.domain.eventlog.SqlScoreAbnormal;
 import com.oppo.cloud.common.util.spring.SpringBeanUtil;
 import com.oppo.cloud.parser.config.HdopDBConfig;
 import com.oppo.cloud.parser.domain.job.TaskParam;
-import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.DiagnoseContent;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
@@ -58,22 +59,24 @@ public class MysqlWriter {
     /**
      * 更新离线数据，工单系统目前仍然使用的离线数据
      *
-     * @param scriptInfo
+     * @param sqlScoreAbnormal
      * @param taskParam
      */
-    public void updateOffLineData(DiagnoseContent scriptInfo, TaskParam taskParam) {
+    public void updateOffLineData(SqlScoreAbnormal sqlScoreAbnormal, TaskParam taskParam) {
+        log.error("updateOffLineData----{}", JSON.toJSONString(sqlScoreAbnormal));
         PreparedStatement ps = null;
         try {
-            String sql = "UPDATE bdmp_cluster.t_script_sql_diagnose_result SET score=?,score_content=? where script_name =?";
-            ps = connection.prepareStatement(sql);
-            ps.setInt(1, scriptInfo.getScore());
-            ps.setString(2, scriptInfo.getScoreContent());
-            ps.setString(3, taskParam.getTaskApp().getTaskName());
-            int effectiveRow = ps.executeUpdate();
-            if (effectiveRow != 1) {
-                log.info("update updateOffLineData fail. effectiveRow: {} , script_name:{}",
-                        effectiveRow, taskParam.getTaskApp().getTaskName());
-            }
+//            String sql = "UPDATE bdmp_cluster.t_script_sql_diagnose_result SET score=?,score_content=?,diagnose_result=? where script_name =?";
+//            ps = connection.prepareStatement(sql);
+//            ps.setInt(1, sqlScoreAbnormal.getScore());
+//            ps.setString(2, sqlScoreAbnormal.getScoreContent());
+//            ps.setString(3, sqlScoreAbnormal.getDiagnoseResult());
+//            ps.setString(4, taskParam.getTaskApp().getTaskName());
+//            int effectiveRow = ps.executeUpdate();
+//            if (effectiveRow != 1) {
+//                log.info("update updateOffLineData fail. effectiveRow: {} , script_name:{}",
+//                        effectiveRow, taskParam.getTaskApp().getTaskName());
+//            }
         } catch (Exception e) {
             log.error("updateOffLineData fail. msg：{}", e.getMessage());
         } finally {

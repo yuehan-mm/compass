@@ -20,15 +20,28 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class FileScanAbnormal {
 
-    private int fileCount;
+    private FileScanReport scriptReport;
 
-    private int avgSize;
+    private List<FileScanReport> tableReport;
 
     private Boolean abnormal;
 
+    @Data
+    @AllArgsConstructor
+    public static class FileScanReport {
+        private String tableName;
+        private int totalFileCount;
+        private long totalFileSize;
+        private int fileSizeAvg;
+        private int le10MFileCount;
+        private int partitionCount;
+        private long partitionSizeAvg;
+    }
 }
