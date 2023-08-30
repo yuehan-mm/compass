@@ -65,7 +65,7 @@ public class MysqlWriter {
     public void updateOffLineData(SqlScoreAbnormal sqlScoreAbnormal, TaskParam taskParam) {
         PreparedStatement ps = null;
         try {
-            String sql = "UPDATE bdmp_cluster.t_script_sql_diagnose_result SET score=?,score_content=?,diagnose_result=?,update_date=? where script_name =?";
+            String sql = "UPDATE bdmp_cluster.t_script_sql_diagnose_result SET score=?,score_content=?,diagnose_result=?,data_date=? where script_name =?";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, sqlScoreAbnormal.getScore());
             ps.setString(2, sqlScoreAbnormal.getScoreContent());
