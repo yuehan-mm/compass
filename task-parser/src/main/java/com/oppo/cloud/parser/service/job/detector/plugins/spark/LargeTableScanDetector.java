@@ -50,7 +50,7 @@ public class LargeTableScanDetector implements IDetector {
 
     @Override
     public DetectorResult detect() {
-        log.info("start LargeTableScanDetector");
+        log.debug("start LargeTableScanDetector");
         DetectorResult<LargeTableScanAbnormal> detectorResult =
                 new DetectorResult<>(AppCategoryEnum.LARGE_TABLE_SCAN.getCategory(), false);
 

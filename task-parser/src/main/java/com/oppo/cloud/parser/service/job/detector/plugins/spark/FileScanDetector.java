@@ -24,7 +24,7 @@ public class FileScanDetector {
     }
 
     public DetectorResult detect(Collection<ReadFileInfo> readFileInfos) {
-        log.info("start FileScanDetector");
+        log.debug("start FileScanDetector");
         log.info("FileScanDetector : " + JSON.toJSONString(config));
         DetectorResult<FileScanAbnormal> detectorResult = new DetectorResult<>(AppCategoryEnum.FILE_SCAN_ANOMALY.getCategory(), false);
         FileScanAbnormal fileScanAbnormal = buildFileScanAbnormal(readFileInfos);

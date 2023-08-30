@@ -21,7 +21,7 @@ public class SqlScoreDetector {
 
 
     public DetectorResult detect(String sqlCommand, TaskParam taskParam, FileScanAbnormal fileScanAbnormal) {
-        log.info("start SqlScoreDetector");
+        log.debug("start SqlScoreDetector");
         log.info("SqlScoreDetector : " + JSON.toJSONString(sqlScoreConfig));
         DetectorResult<SqlScoreAbnormal> detectorResult = new DetectorResult<>(AppCategoryEnum.SQL_SCORE_ANOMALY.getCategory(), false);
         SqlScoreAbnormal sqlScoreAbnormal = SqlDiagnoseService.buildSqlScoreAbnormal(sqlCommand, taskParam.getTaskApp(), fileScanAbnormal, sqlScoreConfig);

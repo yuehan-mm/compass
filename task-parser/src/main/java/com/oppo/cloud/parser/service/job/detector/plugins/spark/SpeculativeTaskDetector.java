@@ -49,7 +49,7 @@ public class SpeculativeTaskDetector implements IDetector {
 
     @Override
     public DetectorResult detect() {
-        log.info("start SpeculativeTaskDetector");
+        log.debug("start SpeculativeTaskDetector");
         DetectorResult<List<SpeculativeTaskAbnormal>> detectorResult =
                 new DetectorResult<>(AppCategoryEnum.SPECULATIVE_TASK.getCategory(), false);
 

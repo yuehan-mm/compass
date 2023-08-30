@@ -44,7 +44,7 @@ public class SpeculativeMapReduceDetector implements IDetector {
 
     @Override
     public DetectorResult detect() {
-        log.info("start SpeculativeMapReduceDetector");
+        log.debug("start SpeculativeMapReduceDetector");
         log.info("SpeculativeMapReduceConfig : " + JSON.toJSONString(config));
         DetectorResult<SpeculativeMapReduceAbnormal> detectorResult =
                 new DetectorResult<>(AppCategoryEnum.SPECULATIVE_MAP_REDUCE.getCategory(), false);

@@ -46,7 +46,7 @@ public class OOMWarnDetector implements IDetector {
 
     @Override
     public DetectorResult detect() {
-        log.info("start OOMWarnDetector");
+        log.debug("start OOMWarnDetector");
         Map<Long, AccumulableInfo> accumulableInfoMap = this.replaySparkEventLogs.getAccumulableInfoMap();
         Map<Long, Long> driverUpdateMap = this.replaySparkEventLogs.getDriverUpdateMap();
         List<SparkListenerSQLExecutionStart> sqlExecutionStarts = this.replaySparkEventLogs.getSqlExecutionStarts();

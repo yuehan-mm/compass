@@ -50,7 +50,7 @@ public class CpuWasteDetector implements IDetector {
 
     @Override
     public DetectorResult detect() {
-        log.info("start CpuWasteDetector");
+        log.debug("start CpuWasteDetector");
         DetectorResult<CpuWasteAbnormal> detectorResult =
                 new DetectorResult<>(AppCategoryEnum.CPU_WASTE.getCategory(), false);
         SparkApplication application = this.replaySparkEventLogs.getApplication();
