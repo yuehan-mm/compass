@@ -36,8 +36,7 @@ public class SqlDiagnoseService {
                 taskApp.getExecutionDate(), taskApp.getApplicationId(),
                 findX(command, GROUP_BY_REGEX), findX(command, UNION_REGEX),
                 findX(command, JOIN_REGEX), findX(command, ORDER_BY_REGEX),
-                getCommandLength(command), findY(command, INSERT_REGEX),
-                findY(command, MEMORY_CONF_REGEX), getRefTableMap(command, taskApp.getTaskName()),
+                getCommandLength(command), getRefTableMap(command, taskApp.getTaskName()),
                 fileScanAbnormal.getScriptReport()), sqlScoreConfig);
     }
 

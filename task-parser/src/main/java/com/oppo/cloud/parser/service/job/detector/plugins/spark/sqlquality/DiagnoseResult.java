@@ -18,8 +18,6 @@ public class DiagnoseResult {
     private int joinCount;
     private int orderByCount;
     private int sqlLength;
-    private List<String> insertList;
-    private List<String> memConfList;
     private Map<String, Integer> refTableMap;
     private FileScanAbnormal.FileScanReport scriptReport;
 }
