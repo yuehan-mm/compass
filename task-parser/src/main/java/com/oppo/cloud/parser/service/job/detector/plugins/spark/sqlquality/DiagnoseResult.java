@@ -22,5 +22,4 @@ public class DiagnoseResult {
     private List<String> memConfList;
     private Map<String, Integer> refTableMap;
     private FileScanAbnormal.FileScanReport scriptReport;
-    private List<FileScanAbnormal.FileScanReport> tableReport;
 }

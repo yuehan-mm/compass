@@ -23,21 +23,25 @@ public class Const {
 
 
     public static final int SQL_JOIN_THRESHOLD = 4;
-    public static final int SQL_JOIN_SCORE = 10;
-    public static final String SQL_JOIN_DESC = "一个SQL内join次数最多为4次，之后每增加一次，分数-10";
+    public static final int SQL_JOIN_SCORE = 5;
+    public static final String SQL_JOIN_DESC = "一个SQL内join次数最多为4次，之后每增加一次，分数-5";
 
 
     public static final int SQL_ORDER_BY_THRESHOLD = 1;
     public static final int SQL_ORDER_BY_SCORE = 10;
     public static final String SQL_ORDER_BY_DESC = "一个SQL内最多进行1次排序，之后每增加一次，分数-10";
 
-    public static final int SQL_SCAN_FILE_THRESHOLD = 10;
-    public static final int SQL_SCAN_FILE_SCORE = 5;
-    public static final String SQL_SCAN_FILE_DESC = "一个SQL内最多扫描10个文件，之后每增加10个，分数-5";
+    public static final int SQL_SCAN_FILE_COUNT_THRESHOLD = 20;
+    public static final String SQL_SCAN_FILE_COUNT_DESC = "一个SQL内最多扫描20个文件，大于20个,分数-ln(count-20)分";
 
-    public static final int SQL_SCAN_FILE_SIZE_AVG_THRESHOLD = 1024 * 1024;
-    public static final int SQL_SCAN_FILE_SIZE_AVG_SCORE = 10;
-    public static final String SQL_SCAN_FILE_SIZE_AVG_DESC = "SQL扫描文件平均大小小于1M，分数-10";
+    public static final long SQL_SCAN_FILE_SIZE_THRESHOLD = 1024 * 1024 * 1024;
+    public static final String SQL_SCAN_FILE_SIZE_DESC = "一个SQL内最多扫描文件大小为1024M，大于1024M,分数-ln(size-1024M)分";
+
+    public static final int SQL_SCAN_LE10M_FILE_COUNT_THRESHOLD = 10;
+    public static final String SQL_SCAN_LE10M_FILE_COUNT_DESC = "一个SQL内最多扫描10个小文件（小于10M），大于10个,分数-sqrt(count-20)分";
+
+    public static final int SQL_SCAN_PARTITION_COUNT_THRESHOLD = 10;
+    public static final String SQL_SCAN_PARTITION_COUNT_DESC = "一个SQL内最多扫描10个分区，之后每增加10个分区，分数-1";
 
     public static final int SQL_LENGTH_THRESHOLD = 1000;
     public static final int SQL_LENGTH_SCORE = 1;
