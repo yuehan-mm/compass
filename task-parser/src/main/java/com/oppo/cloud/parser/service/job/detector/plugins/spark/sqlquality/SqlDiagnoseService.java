@@ -138,8 +138,8 @@ public class SqlDiagnoseService {
         if (scriptReport.getTotalFileSize() > SQL_SCAN_FILE_SIZE_THRESHOLD) {
             int score = (int) Math.ceil(Math.log((scriptReport.getTotalFileSize() - SQL_SCAN_FILE_SIZE_THRESHOLD) / 1024 * 1024.0));
             deductScore += score;
-            sb.append("[SQL 扫描文件] 总大小:" + scriptReport.getTotalFileSize() + "Byte，"
-                    + "阈值:" + SQL_SCAN_FILE_SIZE_THRESHOLD + "，"
+            sb.append("[SQL 扫描文件] 总大小:" + scriptReport.getTotalFileSize() / 1024 * 1024 + "MB，"
+                    + "阈值:" + SQL_SCAN_FILE_SIZE_THRESHOLD / 1024 * 1024 + "MB，"
                     + "扣减分数:" + score + "。（"
                     + SQL_SCAN_FILE_SIZE_DESC + "）\n");
         }
