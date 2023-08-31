@@ -145,7 +145,7 @@ public class SqlDiagnoseService {
         }
 
         // 扫描小文个数（小于10M）任务分布:10个以内不扣分，-根号(count-10)
-        if (scriptReport.getLe10MFileCount() < SQL_SCAN_LE10M_FILE_COUNT_THRESHOLD) {
+        if (scriptReport.getLe10MFileCount() > SQL_SCAN_LE10M_FILE_COUNT_THRESHOLD) {
             int score = (int) Math.ceil(Math.sqrt(scriptReport.getLe10MFileCount() - SQL_SCAN_LE10M_FILE_COUNT_THRESHOLD));
             deductScore += score;
             sb.append("[SQL 扫描文件] 小文件个数:" + scriptReport.getLe10MFileCount() + "，"
