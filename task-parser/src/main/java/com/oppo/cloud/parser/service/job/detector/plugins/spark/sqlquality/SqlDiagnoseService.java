@@ -136,7 +136,7 @@ public class SqlDiagnoseService {
 
         // 扫描总文件大小任务分布：小于100M不扣分，-Ln(size-100M)
         if (scriptReport.getTotalFileSize() > SQL_SCAN_FILE_SIZE_THRESHOLD) {
-            int score = (int) Math.ceil(Math.log((scriptReport.getTotalFileSize() - SQL_SCAN_FILE_SIZE_THRESHOLD) / 1024 * 1024));
+            int score = (int) Math.ceil(Math.log((scriptReport.getTotalFileSize() - SQL_SCAN_FILE_SIZE_THRESHOLD) / 1024 * 1024.0));
             deductScore += score;
             sb.append("[SQL 扫描文件] 总大小:" + scriptReport.getTotalFileSize() + "Byte，"
                     + "阈值:" + SQL_SCAN_FILE_SIZE_THRESHOLD + "，"
@@ -156,9 +156,9 @@ public class SqlDiagnoseService {
 
         // 扫描分区数量任务分布：1个以内不扣分，-count/10
         if (scriptReport.getPartitionCount() > SQL_SCAN_PARTITION_COUNT_THRESHOLD) {
-            int score = (int) Math.ceil((scriptReport.getPartitionCount() - SQL_SCAN_PARTITION_COUNT_THRESHOLD) / 10);
+            int score = (int) Math.ceil((scriptReport.getPartitionCount() - SQL_SCAN_PARTITION_COUNT_THRESHOLD) / 10.0);
             deductScore += score;
-            sb.append("[SQL读取表数量] 数量:" + scriptReport.getPartitionCount() + "，"
+            sb.append("[SQL 扫描分区] 数量:" + scriptReport.getPartitionCount() + "，"
                     + "阈值:" + SQL_SCAN_PARTITION_COUNT_THRESHOLD + "，"
                     + "扣减分数:" + score + "。（"
                     + SQL_SCAN_PARTITION_COUNT_DESC + "）\n");
