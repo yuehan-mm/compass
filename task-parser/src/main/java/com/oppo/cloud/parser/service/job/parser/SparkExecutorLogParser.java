@@ -245,11 +245,12 @@ public class SparkExecutorLogParser extends CommonTextParser implements IParser 
     /**
      * spark的这个地方，有两种读方式，所以做了区别
      * spark 把 parquet/orc 看作一种，其他看作一种
-     * parquet/orc 这种表是
+     * <p>
+     * parquet/orc 日志格式
      * datasources.FileScanRDD: Reading File path:
      * hdfs://nameservice1/user/hive/warehouse/dh_hic.db/dim_center/
      * part-00001-16d3e056-c270-4824-8907-4438ab0d415c-c000.snappy.parquet, range: 0-10849, partition values: [empty row]
-     * 其他 这种表是Input split
+     * 其他 日志格式
      * rdd.HadoopRDD: Input split:
      * hdfs://nameservice1/user/hive/warehouse/dl_hdop_txt.db/tt_hdop_bdmpjtsj_va_t_group/datax__7255aeb7_236f_472e_99f1_d42f1e60ee26:0+4916
      *
@@ -278,7 +279,7 @@ public class SparkExecutorLogParser extends CommonTextParser implements IParser 
                 }
             }
         } catch (Exception e) {
-            log.error("parseFileInfo fail. msg:{},line:{} . ", e.getMessage(), line);
+            log.error("parseFileInfo fail.line:{} , appId:{}. ", line, param.getTaskParam().getTaskApp().getApplicationId());
         }
     }
 
@@ -305,7 +306,7 @@ public class SparkExecutorLogParser extends CommonTextParser implements IParser 
                 partitionName = "";
             }
         } catch (Exception e) {
-            log.error("resolveFilePath fail. msg:{}, filePath:{}", e.getMessage(), filePath);
+            log.error("resolveFilePath fail.line:{} , appId:{}. ", filePath, param.getTaskParam().getTaskApp().getApplicationId());
             throw new RuntimeException(e.getMessage());
         }
         return new TableInfo(tableName, partitionName);
