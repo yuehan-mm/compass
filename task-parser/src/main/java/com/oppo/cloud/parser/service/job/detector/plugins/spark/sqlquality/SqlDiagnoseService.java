@@ -180,25 +180,34 @@ public class SqlDiagnoseService {
      * @return <tableName, refCount>
      */
     private static Map<String, Integer> getRefTableMap(String command, String scriptName) {
+        int count = 3;
+        boolean success = false;
         Map<String, Integer> refTableMap = new HashMap<>();
-        try {
-            Map<String, Object> body = new HashMap<>();
-            body.put("dbType", "Hive");
-            body.put("originSQL", command);
-            String jsonStr = HttpRequestUtils.doPost(REQUEST_URL, JSONObject.toJSONString(body));
-            JSONObject json = JSONObject.parseObject(jsonStr);
-            if (json.getInteger("code") != 0) throw new RuntimeException(jsonStr);
-
-            JSONArray dataArray = json.getJSONArray("data");
-            for (int i = 0; i < dataArray.size(); i++) {
-                JSONObject jsonObject = dataArray.getJSONObject(i);
-                String tableName = jsonObject.getString("tableName").toLowerCase();
-                if (!refTableMap.containsKey(tableName)) {
-                    refTableMap.put(tableName, findX(command, TABLE_NAME_REGEX.replace("TABLE_NAME", tableName)));
+        StringBuffer errMsg = new StringBuffer();
+        do {
+            try {
+                Map<String, Object> body = new HashMap<>();
+                body.put("dbType", "Hive");
+                body.put("originSQL", command);
+                String jsonStr = HttpRequestUtils.doPost(REQUEST_URL, JSONObject.toJSONString(body));
+                JSONObject json = JSONObject.parseObject(jsonStr);
+                if (json.getInteger("code") != 0) throw new RuntimeException(jsonStr);
+                JSONArray dataArray = json.getJSONArray("data");
+                for (int i = 0; i < dataArray.size(); i++) {
+                    JSONObject jsonObject = dataArray.getJSONObject(i);
+                    String tableName = jsonObject.getString("tableName").toLowerCase();
+                    if (!refTableMap.containsKey(tableName)) {
+                        refTableMap.put(tableName, findX(command, TABLE_NAME_REGEX.replace("TABLE_NAME", tableName)));
+                    }
                 }
+                success = true;
+            } catch (Exception e) {
+                errMsg.append(e.getMessage());
             }
-        } catch (Exception e) {
-            log.error("getRefTableMap fail. scriptName：" + scriptName + ",msg：" + e.getMessage());
+        } while (!success && --count >= 0);
+
+        if (!success) {// 重试也没成功
+            log.error("getRefTableMap fail. scriptName：" + scriptName + ",msg：" + errMsg);
         }
         return refTableMap;
     }
