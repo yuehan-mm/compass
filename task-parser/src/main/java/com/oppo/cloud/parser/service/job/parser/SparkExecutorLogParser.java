@@ -283,10 +283,10 @@ public class SparkExecutorLogParser extends CommonTextParser implements IParser 
     }
 
     private TableInfo resolveFilePath(String filePath) {
-        String tableName = null;
-        String partitionName = null;
+        String tableName;
+        String partitionName;
         try {
-            String tableAndPartition = "";
+            String tableAndPartition;
             if (filePath.contains(KEY_EXTERNAL)) {
                 String fileDir = filePath.substring(filePath.indexOf(KEY_EXTERNAL) + KEY_EXTERNAL.length(), filePath.lastIndexOf("/"));
                 String tmpStr = fileDir.substring(fileDir.indexOf("/") + 1);
@@ -306,6 +306,7 @@ public class SparkExecutorLogParser extends CommonTextParser implements IParser 
             }
         } catch (Exception e) {
             log.error("resolveFilePath fail. msg:{}, filePath:{}", e.getMessage(), filePath);
+            throw new RuntimeException(e.getMessage());
         }
         return new TableInfo(tableName, partitionName);
     }
