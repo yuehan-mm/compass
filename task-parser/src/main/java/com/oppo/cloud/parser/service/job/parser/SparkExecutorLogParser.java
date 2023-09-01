@@ -257,24 +257,28 @@ public class SparkExecutorLogParser extends CommonTextParser implements IParser 
      * @param readFileInfo
      */
     private void parseFileInfo(String line, Map<String, ReadFileInfo> readFileInfo) {
-        if (line.contains("HadoopRDD: Input split:")) {
-            String[] infos = line.split("hdfs://nameservice1")[1].split(":");
-            Long start = Long.valueOf(infos[1].split("\\+")[0]);
-            Long offSets = Long.valueOf(infos[1].split("\\+")[1]);
-            Long end = start + offSets;
-            if (!readFileInfo.containsKey(infos[0]) || end > readFileInfo.get(infos[0]).getMaxOffsets()) {
-                TableInfo tableInfo = this.resolveFilePath(infos[0]);
-                readFileInfo.put(infos[0], new ReadFileInfo(infos[0], end, tableInfo.getTableName(),
-                        tableInfo.getPartitionName(), "rdd.HadoopRDD"));
+        try {
+            if (line.contains("HadoopRDD: Input split:")) {
+                String[] infos = line.split("hdfs://nameservice1")[1].split(":");
+                Long start = Long.valueOf(infos[1].split("\\+")[0]);
+                Long offSets = Long.valueOf(infos[1].split("\\+")[1]);
+                Long end = start + offSets;
+                if (!readFileInfo.containsKey(infos[0]) || end > readFileInfo.get(infos[0]).getMaxOffsets()) {
+                    TableInfo tableInfo = this.resolveFilePath(infos[0]);
+                    readFileInfo.put(infos[0], new ReadFileInfo(infos[0], end, tableInfo.getTableName(),
+                            tableInfo.getPartitionName(), "rdd.HadoopRDD"));
+                }
+            } else if (line.contains("datasources.FileScanRDD: Reading File path:")) {
+                String[] infos = line.split("hdfs://nameservice1")[1].split(",");
+                Long end = Long.valueOf(infos[1].split(":")[1].split("-")[1]);
+                if (!readFileInfo.containsKey(infos[0]) || end > readFileInfo.get(infos[0]).getMaxOffsets()) {
+                    TableInfo tableInfo = this.resolveFilePath(infos[0]);
+                    readFileInfo.put(infos[0], new ReadFileInfo(infos[0], end, tableInfo.getTableName(),
+                            tableInfo.getPartitionName(), "rdd.FileScanRDD"));
+                }
             }
-        } else if (line.contains("datasources.FileScanRDD: Reading File path:")) {
-            String[] infos = line.split("hdfs://nameservice1")[1].split(",");
-            Long end = Long.valueOf(infos[1].split(":")[1].split("-")[1]);
-            if (!readFileInfo.containsKey(infos[0]) || end > readFileInfo.get(infos[0]).getMaxOffsets()) {
-                TableInfo tableInfo = this.resolveFilePath(infos[0]);
-                readFileInfo.put(infos[0], new ReadFileInfo(infos[0], end, tableInfo.getTableName(),
-                        tableInfo.getPartitionName(), "rdd.FileScanRDD"));
-            }
+        } catch (Exception e) {
+            log.error("parseFileInfo fail. msg:{},line:{} . ", e.getMessage(), line);
         }
     }
 
