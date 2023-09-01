@@ -202,7 +202,7 @@ public class SqlDiagnoseService {
                 }
                 success = true;
             } catch (Exception e) {
-                errMsg.append(e.getMessage());
+                errMsg.append(e.getMessage() + "\t");
             }
         } while (!success && --count >= 0);
 
