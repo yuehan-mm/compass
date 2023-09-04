@@ -180,6 +180,7 @@ public class SqlDiagnoseService {
      * @return <tableName, refCount>
      */
     private static Map<String, Integer> getRefTableMap(String command, String scriptName) {
+        long ts = System.currentTimeMillis();
         Map<String, Integer> refTableMap = new HashMap<>();
         try {
             Map<String, Object> body = new HashMap<>();
@@ -198,7 +199,7 @@ public class SqlDiagnoseService {
                 }
             }
         } catch (Exception e) {
-            log.error("getRefTableMap fail. scriptName：" + scriptName + ",msg：" + e.getMessage());
+            log.error("getRefTableMap fail. scriptName:{},msg:{},timeUsed:{}", scriptName, e.getMessage(), System.currentTimeMillis() - ts);
         }
         return refTableMap;
     }
