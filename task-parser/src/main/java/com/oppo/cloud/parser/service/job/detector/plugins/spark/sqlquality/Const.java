@@ -2,8 +2,8 @@ package com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality;
 
 public class Const {
 
-    public static final String REQUEST_URL = "http://check.qd-hongdao.haier.net/sql-check/parse/check";
-//    public static final String REQUEST_URL = "http://test-check.qd-hongdao.haier.net/sql-check/parse/check";
+//    public static final String REQUEST_URL = "http://check.qd-hongdao.haier.net/sql-check/parse/check";
+    public static final String REQUEST_URL = "http://test-check.qd-hongdao.haier.net/sql-check/parse/check";
 
     public static final String GROUP_BY_REGEX = "(\\s+|\\n+)group(\\s+|\\n+)by(\\s+|\\n+)";
     public static final String UNION_REGEX = "(\\s+|\\n+)union(\\s+|\\n+)";
