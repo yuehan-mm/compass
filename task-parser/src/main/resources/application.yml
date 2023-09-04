@@ -46,7 +46,7 @@ spring:
 custom:
   redisConsumer:
     enable: true
-    maxThreadPoolSize: 10
+    maxThreadPoolSize: 50
     logRecordList: "{lua}:log:record"
     processingHash: "{lua}:parser:processing"
     scheduled:
