@@ -1,4 +1,4 @@
-package com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality;
+package com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.util;
 
 import com.google.common.collect.Maps;
 import okhttp3.*;

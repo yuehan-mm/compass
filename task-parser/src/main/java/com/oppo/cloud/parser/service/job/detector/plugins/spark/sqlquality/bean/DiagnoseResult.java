@@ -1,4 +1,4 @@
-package com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality;
+package com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.bean;
 
 import com.oppo.cloud.common.domain.eventlog.FileScanAbnormal;
 import lombok.AllArgsConstructor;
@@ -19,5 +19,5 @@ public class DiagnoseResult {
     private int orderByCount;
     private int sqlLength;
     private Map<String, Integer> refTableMap;
-    private FileScanAbnormal.FileScanReport scriptReport;
+    private FileScanAbnormal.FileScanReport fileScanReport;
 }

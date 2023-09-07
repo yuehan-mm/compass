@@ -1,4 +1,4 @@
-package com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality;
+package com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.service;
 
 
 import com.alibaba.fastjson2.JSON;
@@ -8,6 +8,8 @@ import com.oppo.cloud.common.domain.elasticsearch.TaskApp;
 import com.oppo.cloud.common.domain.eventlog.FileScanAbnormal;
 import com.oppo.cloud.common.domain.eventlog.SqlScoreAbnormal;
 import com.oppo.cloud.common.domain.eventlog.config.SqlScoreConfig;
+import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.bean.DiagnoseResult;
+import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.util.HttpRequestUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -17,7 +19,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.Const.*;
+import static com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.util.Const.*;
 
 @Slf4j
 public class SqlDiagnoseService {
@@ -46,12 +48,12 @@ public class SqlDiagnoseService {
      * @param command
      * @return
      */
-    private static int getCommandLength(String command) {
+    public static int getCommandLength(String command) {
         return command.replaceAll(" ", "").replaceAll("\n", "").length();
     }
 
 
-    private static SqlScoreAbnormal buildSqlScoreAbnormal(DiagnoseResult diagnoseResult, SqlScoreConfig sqlScoreConfig) {
+    public static SqlScoreAbnormal buildSqlScoreAbnormal(DiagnoseResult diagnoseResult, SqlScoreConfig sqlScoreConfig) {
         SqlScoreAbnormal diagnoseContent = new SqlScoreAbnormal();
         StringBuffer sb = new StringBuffer();
         int deductScore = 0;
@@ -124,41 +126,41 @@ public class SqlDiagnoseService {
         }
 
         // 扫描文件数量任务分布 : 20以内不扣分，-Ln(count-20)
-        FileScanAbnormal.FileScanReport scriptReport = diagnoseResult.getScriptReport();
-        if (scriptReport.getTotalFileCount() > SQL_SCAN_FILE_COUNT_THRESHOLD) {
-            int score = (int) Math.ceil(Math.log(scriptReport.getTotalFileCount() - SQL_SCAN_FILE_COUNT_THRESHOLD));
+        FileScanAbnormal.FileScanReport fileScanReport = diagnoseResult.getFileScanReport();
+        if (fileScanReport != null && fileScanReport.getTotalFileCount() > SQL_SCAN_FILE_COUNT_THRESHOLD) {
+            int score = (int) Math.ceil(Math.log(fileScanReport.getTotalFileCount() - SQL_SCAN_FILE_COUNT_THRESHOLD));
             deductScore += score;
-            sb.append("[SQL 扫描文件] 个数:" + scriptReport.getTotalFileCount() + "，"
+            sb.append("[SQL 扫描文件] 个数:" + fileScanReport.getTotalFileCount() + "，"
                     + "阈值:" + SQL_SCAN_FILE_COUNT_THRESHOLD + "，"
                     + "扣减分数:" + score + "。（"
                     + SQL_SCAN_FILE_COUNT_DESC + "）\n");
         }
 
         // 扫描总文件大小任务分布：小于100M不扣分，-Ln(size-100M)
-        if (scriptReport.getTotalFileSize() > SQL_SCAN_FILE_SIZE_THRESHOLD) {
-            int score = (int) Math.ceil(Math.log((scriptReport.getTotalFileSize() - SQL_SCAN_FILE_SIZE_THRESHOLD) / (1024 * 1024.0)));
+        if (fileScanReport != null && fileScanReport.getTotalFileSize() > SQL_SCAN_FILE_SIZE_THRESHOLD) {
+            int score = (int) Math.ceil(Math.log((fileScanReport.getTotalFileSize() - SQL_SCAN_FILE_SIZE_THRESHOLD) / (1024 * 1024.0)));
             deductScore += score;
-            sb.append("[SQL 扫描文件] 总大小:" + scriptReport.getTotalFileSize() / (1024 * 1024) + "MB，"
+            sb.append("[SQL 扫描文件] 总大小:" + fileScanReport.getTotalFileSize() / (1024 * 1024) + "MB，"
                     + "阈值:" + SQL_SCAN_FILE_SIZE_THRESHOLD / (1024 * 1024) + "MB，"
                     + "扣减分数:" + score + "。（"
                     + SQL_SCAN_FILE_SIZE_DESC + "）\n");
         }
 
         // 扫描小文个数（小于10M）任务分布:10个以内不扣分，-根号(count-10)
-        if (scriptReport.getLe10MFileCount() > SQL_SCAN_LE10M_FILE_COUNT_THRESHOLD) {
-            int score = (int) Math.ceil(Math.sqrt(scriptReport.getLe10MFileCount() - SQL_SCAN_LE10M_FILE_COUNT_THRESHOLD));
+        if (fileScanReport != null && fileScanReport.getLe10MFileCount() > SQL_SCAN_LE10M_FILE_COUNT_THRESHOLD) {
+            int score = (int) Math.ceil(Math.sqrt(fileScanReport.getLe10MFileCount() - SQL_SCAN_LE10M_FILE_COUNT_THRESHOLD));
             deductScore += score;
-            sb.append("[SQL 扫描文件] 小文件个数:" + scriptReport.getLe10MFileCount() + "，"
+            sb.append("[SQL 扫描文件] 小文件个数:" + fileScanReport.getLe10MFileCount() + "，"
                     + "阈值:" + SQL_SCAN_LE10M_FILE_COUNT_THRESHOLD + "，"
                     + "扣减分数:" + score + "。（"
                     + SQL_SCAN_LE10M_FILE_COUNT_DESC + "）\n");
         }
 
         // 扫描分区数量任务分布：1个以内不扣分，-count/10
-        if (scriptReport.getPartitionCount() > SQL_SCAN_PARTITION_COUNT_THRESHOLD) {
-            int score = (int) Math.ceil((scriptReport.getPartitionCount() - SQL_SCAN_PARTITION_COUNT_THRESHOLD) / 10.0);
+        if (fileScanReport != null && fileScanReport.getPartitionCount() > SQL_SCAN_PARTITION_COUNT_THRESHOLD) {
+            int score = (int) Math.ceil((fileScanReport.getPartitionCount() - SQL_SCAN_PARTITION_COUNT_THRESHOLD) / 10.0);
             deductScore += score;
-            sb.append("[SQL 扫描分区] 数量:" + scriptReport.getPartitionCount() + "，"
+            sb.append("[SQL 扫描分区] 数量:" + fileScanReport.getPartitionCount() + "，"
                     + "阈值:" + SQL_SCAN_PARTITION_COUNT_THRESHOLD + "，"
                     + "扣减分数:" + score + "。（"
                     + SQL_SCAN_PARTITION_COUNT_DESC + "）\n");
@@ -179,7 +181,7 @@ public class SqlDiagnoseService {
      * @param scriptName 脚本名称
      * @return <tableName, refCount>
      */
-    private static Map<String, Integer> getRefTableMap(String command, String scriptName) {
+    public static Map<String, Integer> getRefTableMap(String command, String scriptName) {
         long ts = System.currentTimeMillis();
         Map<String, Integer> refTableMap = new HashMap<>();
         try {

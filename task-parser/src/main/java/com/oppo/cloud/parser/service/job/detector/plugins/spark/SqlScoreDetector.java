@@ -7,7 +7,7 @@ import com.oppo.cloud.common.domain.eventlog.FileScanAbnormal;
 import com.oppo.cloud.common.domain.eventlog.SqlScoreAbnormal;
 import com.oppo.cloud.common.domain.eventlog.config.SqlScoreConfig;
 import com.oppo.cloud.parser.domain.job.TaskParam;
-import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.SqlDiagnoseService;
+import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.service.SqlDiagnoseService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
