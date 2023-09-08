@@ -153,7 +153,7 @@ public class SqlDiagnoseService {
         diagnoseContent.setDiagnoseResult(JSON.toJSONString(diagnoseResult));
         diagnoseContent.setScore(100 - res.values().stream().map(x -> x.getDeductScore()).reduce((x, y) -> x + y).orElse(0.0));
         diagnoseContent.setAbnormal(diagnoseContent.getScore() < sqlScoreConfig.getMinScore());
-        diagnoseContent.setScoreContent(JSON.toJSONString(res.values()));
+        diagnoseContent.setScoreContent(JSON.toJSONString(res));
         return diagnoseContent;
     }
 
