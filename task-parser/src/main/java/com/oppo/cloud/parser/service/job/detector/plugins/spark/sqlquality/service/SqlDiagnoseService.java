@@ -10,12 +10,10 @@ import com.oppo.cloud.common.domain.eventlog.SqlScoreAbnormal;
 import com.oppo.cloud.common.domain.eventlog.config.SqlScoreConfig;
 import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.bean.DiagnoseResult;
 import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.util.HttpRequestUtils;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -54,122 +52,94 @@ public class SqlDiagnoseService {
 
 
     public static SqlScoreAbnormal buildSqlScoreAbnormal(DiagnoseResult diagnoseResult, SqlScoreConfig sqlScoreConfig) {
+        Map<String, DiagnoseDesc> res = new HashMap<>();
         SqlScoreAbnormal diagnoseContent = new SqlScoreAbnormal();
-        StringBuffer sb = new StringBuffer();
-        int deductScore = 0;
 
         if (diagnoseResult.getGroupByCount() > SQL_GROUP_BY_THRESHOLD) {
-            int score = (diagnoseResult.getGroupByCount() - SQL_GROUP_BY_THRESHOLD) * SQL_GROUP_BY_SCORE;
-            deductScore += score;
-            sb.append("[SQL group by] 次数:" + diagnoseResult.getGroupByCount() + "，"
-                    + "阈值:" + SQL_GROUP_BY_THRESHOLD + "，"
-                    + "扣减分数:" + score + "。（"
-                    + SQL_GROUP_BY_DESC + "）\n");
+            res.put("SQL_GROUP_BY", new DiagnoseDesc("SQL_GROUP_BY",
+                    SQL_GROUP_BY_THRESHOLD, diagnoseResult.getGroupByCount(),
+                    (diagnoseResult.getGroupByCount() - SQL_GROUP_BY_THRESHOLD) * SQL_GROUP_BY_SCORE,
+                    SQL_GROUP_BY_DESC));
         }
 
         if (diagnoseResult.getUnionCount() > SQL_UNION_THRESHOLD) {
-            int score = (diagnoseResult.getUnionCount() - SQL_UNION_THRESHOLD) * SQL_UNION_SCORE;
-            deductScore += score;
-            sb.append("[SQL UNION] 次数:" + diagnoseResult.getUnionCount() + "，"
-                    + "阈值:" + SQL_UNION_THRESHOLD + "，"
-                    + "扣减分数:" + score + "。（"
-                    + SQL_UNION_DESC + "）\n");
+            res.put("SQL_UNION", new DiagnoseDesc("SQL_UNION",
+                    SQL_UNION_THRESHOLD, diagnoseResult.getUnionCount(),
+                    (diagnoseResult.getUnionCount() - SQL_UNION_THRESHOLD) * SQL_UNION_SCORE,
+                    SQL_UNION_DESC));
         }
 
         if (diagnoseResult.getJoinCount() > SQL_JOIN_THRESHOLD) {
-            int score = (diagnoseResult.getJoinCount() - SQL_JOIN_THRESHOLD) * SQL_JOIN_SCORE;
-            deductScore += score;
-            sb.append("[SQL join] 次数:" + diagnoseResult.getJoinCount() + "，"
-                    + "阈值:" + SQL_JOIN_THRESHOLD + "，"
-                    + "扣减分数:" + score + "。（"
-                    + SQL_JOIN_DESC + "）\n");
+            res.put("SQL_JOIN", new DiagnoseDesc("SQL_JOIN",
+                    SQL_JOIN_THRESHOLD, diagnoseResult.getJoinCount(),
+                    (diagnoseResult.getJoinCount() - SQL_JOIN_THRESHOLD) * SQL_JOIN_SCORE,
+                    SQL_JOIN_DESC));
         }
 
         if (diagnoseResult.getOrderByCount() > SQL_ORDER_BY_THRESHOLD) {
-            int score = (diagnoseResult.getOrderByCount() - SQL_ORDER_BY_THRESHOLD) * SQL_ORDER_BY_SCORE;
-            deductScore += score;
-            sb.append("[SQL order by] 次数:" + diagnoseResult.getOrderByCount() + "，"
-                    + "阈值:" + SQL_ORDER_BY_THRESHOLD + "，"
-                    + "扣减分数:" + score + "。（"
-                    + SQL_ORDER_BY_DESC + "）\n");
+            res.put("SQL_JOIN", new DiagnoseDesc("SQL_JOIN",
+                    SQL_ORDER_BY_THRESHOLD, diagnoseResult.getJoinCount(),
+                    (diagnoseResult.getOrderByCount() - SQL_ORDER_BY_THRESHOLD) * SQL_ORDER_BY_SCORE,
+                    SQL_ORDER_BY_DESC));
         }
 
         if (diagnoseResult.getSqlLength() > SQL_LENGTH_THRESHOLD) {
-            int score = (((diagnoseResult.getSqlLength() - SQL_LENGTH_THRESHOLD) / 1000) + 1) * SQL_LENGTH_SCORE;
-            deductScore += score;
-            sb.append("[SQL长度] 长度:" + diagnoseResult.getSqlLength() + "，"
-                    + "阈值:" + SQL_LENGTH_THRESHOLD + "，"
-                    + "扣减分数:" + score + "。（"
-                    + SQL_LENGTH_DESC + "）\n");
+            res.put("SQL_LENGTH", new DiagnoseDesc("SQL_LENGTH",
+                    SQL_LENGTH_THRESHOLD, diagnoseResult.getSqlLength(),
+                    (((diagnoseResult.getSqlLength() - SQL_LENGTH_THRESHOLD) / 1000) + 1) * SQL_LENGTH_SCORE,
+                    SQL_LENGTH_DESC));
         }
 
-        if (diagnoseResult.getRefTableMap().size() > SQL_READ_TABLE_THRESHOLD) {
-            int score = (diagnoseResult.getRefTableMap().size() - SQL_READ_TABLE_THRESHOLD) * SQL_READ_TABLE_SCORE;
-            deductScore += score;
-            sb.append("[SQL读取表数量] 数量:" + diagnoseResult.getRefTableMap().size() + "，"
-                    + "阈值:" + SQL_READ_TABLE_THRESHOLD + "，"
-                    + "扣减分数:" + score + "。（"
-                    + SQL_READ_TABLE_DESC + "）\n");
+        if (diagnoseResult.getRefTableMap().size() > SQL_TABLE_ERF_THRESHOLD) {
+            res.put("SQL_TABLE_USE", new DiagnoseDesc("SQL_TABLE_USE",
+                    SQL_TABLE_ERF_THRESHOLD, diagnoseResult.getSqlLength(),
+                    (diagnoseResult.getRefTableMap().size() - SQL_TABLE_ERF_THRESHOLD) * SQL_TABLE_ERF_SCORE,
+                    SQL_TABLE_ERF_DESC));
         }
 
-        Map<String, Integer> refTableMap = diagnoseResult.getRefTableMap();
-        for (String tableName : refTableMap.keySet()) {
-            if (refTableMap.get(tableName) > SQL_TABLE_USE_THRESHOLD) {
-                int score = (refTableMap.get(tableName) - SQL_TABLE_USE_THRESHOLD) * SQL_TABLE_USE_SCORE;
-                deductScore += score;
-                sb.append("[表使用次数] 表名:" + tableName
-                        + "次数:" + refTableMap.get(tableName) + "，"
-                        + "阈值:" + SQL_TABLE_USE_THRESHOLD + "，"
-                        + "扣减分数:" + score + "。（"
-                        + SQL_TABLE_USE_DESC + "）\n");
-            }
+        Integer readTableCount = diagnoseResult.getRefTableMap().values().stream().reduce((x, y) -> x + y).orElse(0);
+        if (readTableCount > SQL_READ_TABLE_THRESHOLD) {
+            res.put("SQL_READ_TABLE", new DiagnoseDesc("SQL_READ_TABLE",
+                    SQL_READ_TABLE_THRESHOLD, diagnoseResult.getSqlLength(),
+                    (diagnoseResult.getRefTableMap().size() - SQL_READ_TABLE_THRESHOLD) * SQL_READ_TABLE_SCORE,
+                    SQL_READ_TABLE_DESC));
         }
 
-        // 扫描文件数量任务分布 : 20以内不扣分，-Ln(count-20)
+
         FileScanAbnormal.FileScanReport fileScanReport = diagnoseResult.getFileScanReport();
         if (fileScanReport != null && fileScanReport.getTotalFileCount() > SQL_SCAN_FILE_COUNT_THRESHOLD) {
-            int score = (int) Math.ceil(Math.log(fileScanReport.getTotalFileCount() - SQL_SCAN_FILE_COUNT_THRESHOLD));
-            deductScore += score;
-            sb.append("[SQL 扫描文件] 个数:" + fileScanReport.getTotalFileCount() + "，"
-                    + "阈值:" + SQL_SCAN_FILE_COUNT_THRESHOLD + "，"
-                    + "扣减分数:" + score + "。（"
-                    + SQL_SCAN_FILE_COUNT_DESC + "）\n");
+            res.put("SQL_READ_TABLE", new DiagnoseDesc("SQL_READ_TABLE",
+                    SQL_SCAN_FILE_COUNT_THRESHOLD, diagnoseResult.getSqlLength(),
+                    (fileScanReport.getTotalFileCount() - SQL_SCAN_FILE_COUNT_THRESHOLD) * SQL_SCAN_FILE_COUNT_SCORE,
+                    SQL_SCAN_FILE_COUNT_DESC));
         }
 
-        // 扫描总文件大小任务分布：小于100M不扣分，-Ln(size-100M)
         if (fileScanReport != null && fileScanReport.getTotalFileSize() > SQL_SCAN_FILE_SIZE_THRESHOLD) {
-            int score = (int) Math.ceil(Math.log((fileScanReport.getTotalFileSize() - SQL_SCAN_FILE_SIZE_THRESHOLD) / (1024 * 1024.0)));
-            deductScore += score;
-            sb.append("[SQL 扫描文件] 总大小:" + fileScanReport.getTotalFileSize() / (1024 * 1024) + "MB，"
-                    + "阈值:" + SQL_SCAN_FILE_SIZE_THRESHOLD / (1024 * 1024) + "MB，"
-                    + "扣减分数:" + score + "。（"
-                    + SQL_SCAN_FILE_SIZE_DESC + "）\n");
+            res.put("SQL_SCAN_FILE_SIZE", new DiagnoseDesc("SQL_SCAN_FILE_SIZE",
+                    SQL_SCAN_FILE_SIZE_THRESHOLD, diagnoseResult.getSqlLength(),
+                    Math.ceil((fileScanReport.getTotalFileSize() - SQL_SCAN_FILE_SIZE_THRESHOLD) / (1024 * 1024 * 100.0)) * SQL_SCAN_FILE_SIZE_SCORE,
+                    SQL_SCAN_FILE_SIZE_DESC));
         }
 
-        // 扫描小文个数（小于10M）任务分布:10个以内不扣分，-根号(count-10)
         if (fileScanReport != null && fileScanReport.getLe10MFileCount() > SQL_SCAN_LE10M_FILE_COUNT_THRESHOLD) {
-            int score = (int) Math.ceil(Math.sqrt(fileScanReport.getLe10MFileCount() - SQL_SCAN_LE10M_FILE_COUNT_THRESHOLD));
-            deductScore += score;
-            sb.append("[SQL 扫描文件] 小文件个数:" + fileScanReport.getLe10MFileCount() + "，"
-                    + "阈值:" + SQL_SCAN_LE10M_FILE_COUNT_THRESHOLD + "，"
-                    + "扣减分数:" + score + "。（"
-                    + SQL_SCAN_LE10M_FILE_COUNT_DESC + "）\n");
+            res.put("SQL_SCAN_LE10M_FILE_COUNT", new DiagnoseDesc("SQL_SCAN_LE10M_FILE_COUNT",
+                    SQL_SCAN_LE10M_FILE_COUNT_THRESHOLD, diagnoseResult.getSqlLength(),
+                    (fileScanReport.getLe10MFileCount() - SQL_SCAN_LE10M_FILE_COUNT_THRESHOLD) * SQL_SCAN_LE10M_FILE_COUNT_SCORE,
+                    SQL_SCAN_LE10M_FILE_COUNT_DESC));
         }
 
         // 扫描分区数量任务分布：1个以内不扣分，-count/10
         if (fileScanReport != null && fileScanReport.getPartitionCount() > SQL_SCAN_PARTITION_COUNT_THRESHOLD) {
-            int score = (int) Math.ceil((fileScanReport.getPartitionCount() - SQL_SCAN_PARTITION_COUNT_THRESHOLD) / 10.0);
-            deductScore += score;
-            sb.append("[SQL 扫描分区] 数量:" + fileScanReport.getPartitionCount() + "，"
-                    + "阈值:" + SQL_SCAN_PARTITION_COUNT_THRESHOLD + "，"
-                    + "扣减分数:" + score + "。（"
-                    + SQL_SCAN_PARTITION_COUNT_DESC + "）\n");
+            res.put("SQL_SCAN_LE10M_FILE_COUNT", new DiagnoseDesc("SQL_SCAN_LE10M_FILE_COUNT",
+                    SQL_SCAN_PARTITION_COUNT_THRESHOLD, diagnoseResult.getSqlLength(),
+                    (fileScanReport.getPartitionCount() - SQL_SCAN_PARTITION_COUNT_THRESHOLD) * SQL_SCAN_PARTITION_COUNT_SCORE,
+                    SQL_SCAN_PARTITION_COUNT_DESC));
         }
 
         diagnoseContent.setDiagnoseResult(JSON.toJSONString(diagnoseResult));
-        diagnoseContent.setScore(100 - deductScore);
+        diagnoseContent.setScore(100 - res.values().stream().map(x -> x.getDeductScore()).reduce((x, y) -> x + y).orElse(0.0));
         diagnoseContent.setAbnormal(diagnoseContent.getScore() < sqlScoreConfig.getMinScore());
-        diagnoseContent.setScoreContent(sb.substring(0, sb.lastIndexOf("\n") > 0 ? sb.lastIndexOf("\n") : 0));
+        diagnoseContent.setScoreContent(JSON.toJSONString(res.values()));
         return diagnoseContent;
     }
 
@@ -226,5 +196,28 @@ public class SqlDiagnoseService {
             res.addAll(findY(str.substring(matcher.end()), regex));
         }
         return res;
+    }
+}
+
+@Data
+class DiagnoseDesc {
+    private String diagnoseName;
+    private long threadThread;
+    private long value;
+    private double deductScore;
+    private String desc;
+    private String remark;
+
+    public DiagnoseDesc(String diagnoseName, long threadThread, long value, double deductScore, String desc) {
+        this(diagnoseName, threadThread, value, deductScore, desc, null);
+    }
+
+    public DiagnoseDesc(String diagnoseName, long threadThread, long value, double deductScore, String desc, String remark) {
+        this.diagnoseName = diagnoseName;
+        this.threadThread = threadThread;
+        this.value = value;
+        this.deductScore = deductScore;
+        this.desc = desc;
+        this.remark = remark;
     }
 }

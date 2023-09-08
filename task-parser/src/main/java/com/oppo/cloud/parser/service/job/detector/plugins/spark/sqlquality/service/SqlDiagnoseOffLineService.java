@@ -37,7 +37,7 @@ public class SqlDiagnoseOffLineService {
     public static void writeExcel(List<ScriptInfo> scriptInfos) {
         List<ScriptInfo> abNormalScriptList = scriptInfos.stream().filter(x -> x.getScore() < 60).collect(Collectors.toList());
         System.out.println("ABNORMAL ROWS : " + abNormalScriptList.size());
-        abNormalScriptList.sort(Comparator.comparingInt(o -> o.score));
+        abNormalScriptList.sort(Comparator.comparingDouble(o -> o.score));
         ExcelUtil.writeExcel(abNormalScriptList,
                 "C:\\Users\\22047328\\Desktop\\work-"
                         + new SimpleDateFormat("yyyymmdd_HHmm").format(System.currentTimeMillis()) + ".xlsx");
@@ -96,7 +96,7 @@ public class SqlDiagnoseOffLineService {
                 ps.setString(10, scriptInfo.getCreate_user_group_admin_id());
                 ps.setString(11, scriptInfo.getCreate_user_group_admin_name());
                 ps.setString(12, JSONObject.toJSONString(scriptInfo.getDiagnoseResult()));
-                ps.setInt(13, scriptInfo.getScore());
+                ps.setDouble(13, scriptInfo.getScore());
                 ps.setString(14, scriptInfo.getScoreContent());
                 ps.setString(15, String.valueOf(System.currentTimeMillis()));
                 ps.setString(16, scriptInfo.getCreate_user_root_group_id());
@@ -145,8 +145,7 @@ public class SqlDiagnoseOffLineService {
                     null), new SqlScoreConfig());
             scriptInfo.setDiagnoseResult(JSONObject.parseObject(sqlScoreAbnormal.getDiagnoseResult(), DiagnoseResult.class));
             scriptInfo.setScore(100 - sqlScoreAbnormal.getScore());
-            String scoreContent = sqlScoreAbnormal.getScoreContent();
-            scriptInfo.setScoreContent(scoreContent.substring(0, scoreContent.lastIndexOf("\n") > 0 ? scoreContent.lastIndexOf("\n") : 0));
+            scriptInfo.setScoreContent(sqlScoreAbnormal.getScoreContent());
         });
     }
 }

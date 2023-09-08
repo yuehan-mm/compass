@@ -48,7 +48,7 @@ public class ExcelUtil {
             row.createCell(0).setCellValue(scriptInfo.getScript_id());
             row.createCell(1).setCellValue(scriptInfo.getScript_name());
             row.createCell(2).setCellValue(scriptInfo.getScript_type());
-            row.createCell(3).setCellValue(scriptInfo.getCommand());
+            row.createCell(3).setCellValue("");
             row.createCell(4).setCellValue(scriptInfo.getDb_type());
             row.createCell(5).setCellValue(scriptInfo.getCreate_user_name() + "(" + scriptInfo.getCreate_user_id() + ")");
             row.createCell(6).setCellValue(scriptInfo.getCreate_user_group_nane() + "(" + scriptInfo.getCreate_user_group_id() + ")");

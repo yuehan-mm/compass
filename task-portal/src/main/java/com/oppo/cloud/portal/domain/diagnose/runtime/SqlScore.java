@@ -43,7 +43,7 @@ public class SqlScore extends IsAbnormal {
     @Data
     public static class TaskInfo {
         @ApiModelProperty(value = "SQL评分")
-        private int sqlScore;
+        private double sqlScore;
 
         @ApiModelProperty(value = "评分阈值")
         private int minScore;

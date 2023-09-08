@@ -24,7 +24,7 @@ public class ScriptInfo {
     private String create_user_root_group_name;
 
     public DiagnoseResult diagnoseResult;
-    public int score;
+    public double score;
     public String scoreContent;
 
     public ScriptInfo(String script_id, String script_name, String script_type, String command,

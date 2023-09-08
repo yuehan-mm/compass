@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SqlScoreAbnormal {
 
-    private int score;
+    private double score;
 
     private String scoreContent;
 

@@ -116,7 +116,7 @@ public class ReportBuilder {
 
     }
 
-    private void buildSqlScoreReport(Integer score, SqlReport.SqlScoreReport sqlScoreReport) {
+    private void buildSqlScoreReport(double score, SqlReport.SqlScoreReport sqlScoreReport) {
         if (score >= 85) {
             sqlScoreReport.getGt85_().incrementAndGet();
         } else if (score >= 60) {
