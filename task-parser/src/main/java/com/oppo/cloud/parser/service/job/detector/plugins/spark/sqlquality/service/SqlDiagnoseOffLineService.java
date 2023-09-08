@@ -144,7 +144,7 @@ public class SqlDiagnoseOffLineService {
                     sqlDiagnoseService.getCommandLength(command), sqlDiagnoseService.getRefTableMap(command, scriptInfo.getScript_name()),
                     null), new SqlScoreConfig());
             scriptInfo.setDiagnoseResult(JSONObject.parseObject(sqlScoreAbnormal.getDiagnoseResult(), DiagnoseResult.class));
-            scriptInfo.setScore(100 - sqlScoreAbnormal.getScore());
+            scriptInfo.setScore(sqlScoreAbnormal.getScore());
             scriptInfo.setScoreContent(sqlScoreAbnormal.getScoreContent());
         });
     }

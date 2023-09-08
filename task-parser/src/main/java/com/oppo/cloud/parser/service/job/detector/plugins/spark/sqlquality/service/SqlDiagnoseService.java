@@ -13,6 +13,7 @@ import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.util.
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -53,47 +54,52 @@ public class SqlDiagnoseService {
 
     public static SqlScoreAbnormal buildSqlScoreAbnormal(DiagnoseResult diagnoseResult, SqlScoreConfig sqlScoreConfig) {
         Map<String, DiagnoseDesc> res = new HashMap<>();
-        SqlScoreAbnormal diagnoseContent = new SqlScoreAbnormal();
 
         if (diagnoseResult.getGroupByCount() > SQL_GROUP_BY_THRESHOLD) {
             res.put("SQL_GROUP_BY", new DiagnoseDesc("SQL_GROUP_BY",
                     SQL_GROUP_BY_THRESHOLD, diagnoseResult.getGroupByCount(),
-                    (diagnoseResult.getGroupByCount() - SQL_GROUP_BY_THRESHOLD) * SQL_GROUP_BY_SCORE,
+                    BigDecimal.valueOf((diagnoseResult.getGroupByCount() - SQL_GROUP_BY_THRESHOLD))
+                            .multiply(BigDecimal.valueOf(SQL_GROUP_BY_SCORE)).doubleValue(),
                     SQL_GROUP_BY_DESC));
         }
 
         if (diagnoseResult.getUnionCount() > SQL_UNION_THRESHOLD) {
             res.put("SQL_UNION", new DiagnoseDesc("SQL_UNION",
                     SQL_UNION_THRESHOLD, diagnoseResult.getUnionCount(),
-                    (diagnoseResult.getUnionCount() - SQL_UNION_THRESHOLD) * SQL_UNION_SCORE,
+                    BigDecimal.valueOf((diagnoseResult.getUnionCount() - SQL_UNION_THRESHOLD))
+                            .multiply(BigDecimal.valueOf(SQL_UNION_SCORE)).doubleValue(),
                     SQL_UNION_DESC));
         }
 
         if (diagnoseResult.getJoinCount() > SQL_JOIN_THRESHOLD) {
             res.put("SQL_JOIN", new DiagnoseDesc("SQL_JOIN",
                     SQL_JOIN_THRESHOLD, diagnoseResult.getJoinCount(),
-                    (diagnoseResult.getJoinCount() - SQL_JOIN_THRESHOLD) * SQL_JOIN_SCORE,
+                    BigDecimal.valueOf((diagnoseResult.getJoinCount() - SQL_JOIN_THRESHOLD))
+                            .multiply(BigDecimal.valueOf(SQL_JOIN_SCORE)).doubleValue(),
                     SQL_JOIN_DESC));
         }
 
         if (diagnoseResult.getOrderByCount() > SQL_ORDER_BY_THRESHOLD) {
             res.put("SQL_JOIN", new DiagnoseDesc("SQL_JOIN",
                     SQL_ORDER_BY_THRESHOLD, diagnoseResult.getJoinCount(),
-                    (diagnoseResult.getOrderByCount() - SQL_ORDER_BY_THRESHOLD) * SQL_ORDER_BY_SCORE,
+                    BigDecimal.valueOf((diagnoseResult.getOrderByCount() - SQL_ORDER_BY_THRESHOLD))
+                            .multiply(BigDecimal.valueOf(SQL_ORDER_BY_SCORE)).doubleValue(),
                     SQL_ORDER_BY_DESC));
         }
 
         if (diagnoseResult.getSqlLength() > SQL_LENGTH_THRESHOLD) {
             res.put("SQL_LENGTH", new DiagnoseDesc("SQL_LENGTH",
                     SQL_LENGTH_THRESHOLD, diagnoseResult.getSqlLength(),
-                    (((diagnoseResult.getSqlLength() - SQL_LENGTH_THRESHOLD) / 1000) + 1) * SQL_LENGTH_SCORE,
+                    BigDecimal.valueOf((((diagnoseResult.getSqlLength() - SQL_LENGTH_THRESHOLD) / 1000) + 1))
+                            .multiply(BigDecimal.valueOf(SQL_LENGTH_SCORE)).doubleValue(),
                     SQL_LENGTH_DESC));
         }
 
         if (diagnoseResult.getRefTableMap().size() > SQL_TABLE_ERF_THRESHOLD) {
             res.put("SQL_TABLE_USE", new DiagnoseDesc("SQL_TABLE_USE",
                     SQL_TABLE_ERF_THRESHOLD, diagnoseResult.getSqlLength(),
-                    (diagnoseResult.getRefTableMap().size() - SQL_TABLE_ERF_THRESHOLD) * SQL_TABLE_ERF_SCORE,
+                    BigDecimal.valueOf((diagnoseResult.getRefTableMap().size() - SQL_TABLE_ERF_THRESHOLD))
+                            .multiply(BigDecimal.valueOf(SQL_TABLE_ERF_SCORE)).doubleValue(),
                     SQL_TABLE_ERF_DESC));
         }
 
@@ -101,41 +107,49 @@ public class SqlDiagnoseService {
         if (readTableCount > SQL_READ_TABLE_THRESHOLD) {
             res.put("SQL_READ_TABLE", new DiagnoseDesc("SQL_READ_TABLE",
                     SQL_READ_TABLE_THRESHOLD, diagnoseResult.getSqlLength(),
-                    (diagnoseResult.getRefTableMap().size() - SQL_READ_TABLE_THRESHOLD) * SQL_READ_TABLE_SCORE,
+                    BigDecimal.valueOf((diagnoseResult.getRefTableMap().size() - SQL_READ_TABLE_THRESHOLD))
+                            .multiply(BigDecimal.valueOf(SQL_READ_TABLE_SCORE)).doubleValue(),
                     SQL_READ_TABLE_DESC));
         }
 
 
+        //-------文件类-------//
+        // 扫描文件数量
         FileScanAbnormal.FileScanReport fileScanReport = diagnoseResult.getFileScanReport();
         if (fileScanReport != null && fileScanReport.getTotalFileCount() > SQL_SCAN_FILE_COUNT_THRESHOLD) {
-            res.put("SQL_READ_TABLE", new DiagnoseDesc("SQL_READ_TABLE",
+            res.put("SQL_SCAN_FILE", new DiagnoseDesc("SQL_SCAN_FILE",
                     SQL_SCAN_FILE_COUNT_THRESHOLD, diagnoseResult.getSqlLength(),
-                    (fileScanReport.getTotalFileCount() - SQL_SCAN_FILE_COUNT_THRESHOLD) * SQL_SCAN_FILE_COUNT_SCORE,
+                    BigDecimal.valueOf((fileScanReport.getTotalFileCount() - SQL_SCAN_FILE_COUNT_THRESHOLD))
+                            .multiply(BigDecimal.valueOf(SQL_SCAN_FILE_COUNT_SCORE)).doubleValue(),
                     SQL_SCAN_FILE_COUNT_DESC));
         }
-
+        // 扫描文件大小
         if (fileScanReport != null && fileScanReport.getTotalFileSize() > SQL_SCAN_FILE_SIZE_THRESHOLD) {
             res.put("SQL_SCAN_FILE_SIZE", new DiagnoseDesc("SQL_SCAN_FILE_SIZE",
                     SQL_SCAN_FILE_SIZE_THRESHOLD, diagnoseResult.getSqlLength(),
-                    Math.ceil((fileScanReport.getTotalFileSize() - SQL_SCAN_FILE_SIZE_THRESHOLD) / (1024 * 1024 * 100.0)) * SQL_SCAN_FILE_SIZE_SCORE,
+                    BigDecimal.valueOf(Math.ceil((fileScanReport.getTotalFileSize() - SQL_SCAN_FILE_SIZE_THRESHOLD) / (1024 * 1024 * 100.0)))
+                            .multiply(BigDecimal.valueOf(SQL_SCAN_FILE_SIZE_SCORE)).doubleValue(),
                     SQL_SCAN_FILE_SIZE_DESC));
         }
-
+        // 扫描小文件数量
         if (fileScanReport != null && fileScanReport.getLe10MFileCount() > SQL_SCAN_LE10M_FILE_COUNT_THRESHOLD) {
-            res.put("SQL_SCAN_LE10M_FILE_COUNT", new DiagnoseDesc("SQL_SCAN_LE10M_FILE_COUNT",
+            res.put("SQL_SCAN_LE10M_FILE", new DiagnoseDesc("SQL_SCAN_LE10M_FILE",
                     SQL_SCAN_LE10M_FILE_COUNT_THRESHOLD, diagnoseResult.getSqlLength(),
-                    (fileScanReport.getLe10MFileCount() - SQL_SCAN_LE10M_FILE_COUNT_THRESHOLD) * SQL_SCAN_LE10M_FILE_COUNT_SCORE,
+                    BigDecimal.valueOf((fileScanReport.getLe10MFileCount() - SQL_SCAN_LE10M_FILE_COUNT_THRESHOLD))
+                            .multiply(BigDecimal.valueOf(SQL_SCAN_LE10M_FILE_COUNT_SCORE)).doubleValue(),
                     SQL_SCAN_LE10M_FILE_COUNT_DESC));
         }
 
-        // 扫描分区数量任务分布：1个以内不扣分，-count/10
+        // 扫描分区数量
         if (fileScanReport != null && fileScanReport.getPartitionCount() > SQL_SCAN_PARTITION_COUNT_THRESHOLD) {
-            res.put("SQL_SCAN_LE10M_FILE_COUNT", new DiagnoseDesc("SQL_SCAN_LE10M_FILE_COUNT",
+            res.put("SQL_SCAN_LE10M_FILE", new DiagnoseDesc("SQL_SCAN_LE10M_FILE",
                     SQL_SCAN_PARTITION_COUNT_THRESHOLD, diagnoseResult.getSqlLength(),
-                    (fileScanReport.getPartitionCount() - SQL_SCAN_PARTITION_COUNT_THRESHOLD) * SQL_SCAN_PARTITION_COUNT_SCORE,
+                    BigDecimal.valueOf((fileScanReport.getPartitionCount() - SQL_SCAN_PARTITION_COUNT_THRESHOLD))
+                            .multiply(BigDecimal.valueOf(SQL_SCAN_PARTITION_COUNT_SCORE)).doubleValue(),
                     SQL_SCAN_PARTITION_COUNT_DESC));
         }
 
+        SqlScoreAbnormal diagnoseContent = new SqlScoreAbnormal();
         diagnoseContent.setDiagnoseResult(JSON.toJSONString(diagnoseResult));
         diagnoseContent.setScore(100 - res.values().stream().map(x -> x.getDeductScore()).reduce((x, y) -> x + y).orElse(0.0));
         diagnoseContent.setAbnormal(diagnoseContent.getScore() < sqlScoreConfig.getMinScore());
@@ -197,6 +211,8 @@ public class SqlDiagnoseService {
         }
         return res;
     }
+
+
 }
 
 @Data
