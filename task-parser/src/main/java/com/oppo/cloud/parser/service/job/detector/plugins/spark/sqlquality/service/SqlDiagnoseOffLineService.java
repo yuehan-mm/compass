@@ -49,7 +49,7 @@ public class SqlDiagnoseOffLineService {
      * @return List<List < Object>>
      */
     public static List<ScriptInfo> getScriptList() {
-        String sql = "select *  from t_script_sql_content where command!='' and script_type!='Sqoop'";
+        String sql = "select *  from t_script_sql_content where command!=''";
         System.out.println(sql);
         List<ScriptInfo> fields = new ArrayList<>();
         try {
@@ -140,7 +140,7 @@ public class SqlDiagnoseOffLineService {
             Map<String, Integer> refTableMap;
             try {
                 refTableMap = sqlDiagnoseService.getRefTableMap(command,
-                        scriptInfo.getScript_name(), scriptInfo.getScript_type());
+                        scriptInfo.getScript_name(), covertScriptType(scriptInfo.getScript_type()));
             } catch (Exception e) {
                 failCount.incrementAndGet();
                 refTableMap = new HashMap<>();
@@ -154,5 +154,9 @@ public class SqlDiagnoseOffLineService {
             scriptInfo.setDiagnoseResult(sqlScoreAbnormal.getDiagnoseResult());
             scriptInfo.setScore(sqlScoreAbnormal.getScore());
         });
+    }
+
+    private static String covertScriptType(String scriptType) {
+        return (scriptType.equals("Sqoop") || scriptType.equals("DBScript")) ? "mysql" : "hive";
     }
 }

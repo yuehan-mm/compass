@@ -158,14 +158,16 @@ public class SqlDiagnoseService {
 
 
     /**
+     * 调用此方法的必然是hive或者spark脚本
+     *
      * @param command    sql
      * @param scriptName 脚本名称
      * @return <tableName, refCount>
      */
-    public static Map<String, Integer> getRefTableMap(String command, String scriptName) {
+    private static Map<String, Integer> getRefTableMap(String command, String scriptName) {
         Map<String, Integer> refTableMap;
         try {
-            refTableMap = getRefTableMap(command, scriptName, null);
+            refTableMap = getRefTableMap(command, scriptName, "hive");
         } catch (Exception e) {
             refTableMap = new HashMap<>();
         }
@@ -183,7 +185,7 @@ public class SqlDiagnoseService {
         Map<String, Integer> refTableMap = new HashMap<>();
         try {
             Map<String, Object> body = new HashMap<>();
-            body.put("dbType", scriptType == null ? "hive" : "mysql");
+            body.put("dbType", scriptType);
             body.put("originSQL", command);
             String jsonStr = HttpRequestUtils.doPost(REQUEST_URL, JSONObject.toJSONString(body));
             JSONObject json = JSONObject.parseObject(jsonStr);
