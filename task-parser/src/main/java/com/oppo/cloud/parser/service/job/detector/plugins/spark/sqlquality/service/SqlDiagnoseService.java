@@ -100,7 +100,7 @@ public class SqlDiagnoseService {
                     SQL_TABLE_ERF_THRESHOLD, diagnoseResult.getSqlLength(),
                     BigDecimal.valueOf((diagnoseResult.getRefTableMap().size() - SQL_TABLE_ERF_THRESHOLD))
                             .multiply(BigDecimal.valueOf(SQL_TABLE_ERF_SCORE)).doubleValue(),
-                    SQL_TABLE_ERF_DESC));
+                    SQL_TABLE_ERF_DESC, diagnoseResult.getRefTableMap().keySet()));
         }
 
         Integer readTableCount = diagnoseResult.getRefTableMap().values().stream().reduce((x, y) -> x + y).orElse(0);
@@ -109,7 +109,7 @@ public class SqlDiagnoseService {
                     SQL_READ_TABLE_THRESHOLD, diagnoseResult.getSqlLength(),
                     BigDecimal.valueOf((diagnoseResult.getRefTableMap().size() - SQL_READ_TABLE_THRESHOLD))
                             .multiply(BigDecimal.valueOf(SQL_READ_TABLE_SCORE)).doubleValue(),
-                    SQL_READ_TABLE_DESC));
+                    SQL_READ_TABLE_DESC, diagnoseResult.getRefTableMap()));
         }
 
 
@@ -222,13 +222,13 @@ class DiagnoseDesc {
     private long value;
     private double deductScore;
     private String desc;
-    private String remark;
+    private Object remark;
 
     public DiagnoseDesc(String diagnoseName, long threadThread, long value, double deductScore, String desc) {
         this(diagnoseName, threadThread, value, deductScore, desc, null);
     }
 
-    public DiagnoseDesc(String diagnoseName, long threadThread, long value, double deductScore, String desc, String remark) {
+    public DiagnoseDesc(String diagnoseName, long threadThread, long value, double deductScore, String desc, Object remark) {
         this.diagnoseName = diagnoseName;
         this.threadThread = threadThread;
         this.value = value;
