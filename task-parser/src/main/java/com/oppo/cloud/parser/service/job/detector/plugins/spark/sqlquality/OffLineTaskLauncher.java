@@ -3,6 +3,7 @@ package com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality;
 
 import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.bean.ScriptInfo;
 import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.service.SqlDiagnoseOffLineService;
+import org.apache.commons.lang.time.FastDateFormat;
 
 import java.util.List;
 
@@ -31,6 +32,10 @@ public class OffLineTaskLauncher {
     }
 
     public static void work2() {
+        FastDateFormat fastDateFormat = FastDateFormat.getInstance("yyyy-MM-dd");
+        String insertDataTime = fastDateFormat.format(System.currentTimeMillis() + 1000 * 60 * 60 * 24);
+        String removeDataTime = fastDateFormat.format(System.currentTimeMillis() - 1000 * 60 * 60 * 24 * 7);
+
         System.out.println("Get ScriptList Start");
         List<ScriptInfo> scriptInfos = SqlDiagnoseOffLineService.getScriptList();
 
@@ -44,8 +49,8 @@ public class OffLineTaskLauncher {
         System.out.println("Get Report End");
 
         System.out.println("Write Table Start");
-        SqlDiagnoseOffLineService.deleteData();
-        SqlDiagnoseOffLineService.writeTable(scriptInfos);
+        SqlDiagnoseOffLineService.deleteData(removeDataTime);
+        SqlDiagnoseOffLineService.writeTable(scriptInfos, insertDataTime);
         System.out.println("Write Table End");
     }
 }

@@ -72,8 +72,8 @@ public class SqlDiagnoseOffLineService {
         return fields;
     }
 
-    public static void writeTable(List<ScriptInfo> scriptInfos) {
-        System.out.println("ABNORMAL ROWS : " + scriptInfos.size());
+    public static void writeTable(List<ScriptInfo> scriptInfos, String insertDataTime) {
+        System.out.println("Start Write Data. Date:" + insertDataTime + " Count:" + scriptInfos.size());
         PreparedStatement ps = null;
         try {
             String sql = "INSERT INTO bdmp_cluster.t_script_sql_diagnose_result (script_id, script_name, script_type," +
@@ -97,7 +97,7 @@ public class SqlDiagnoseOffLineService {
                 ps.setString(11, scriptInfo.getCreate_user_group_admin_name());
                 ps.setString(12, scriptInfo.getDiagnoseResult());
                 ps.setDouble(13, scriptInfo.getScore());
-                ps.setString(14, String.valueOf(System.currentTimeMillis()));
+                ps.setString(14, insertDataTime);
                 ps.setString(15, scriptInfo.getCreate_user_root_group_id());
                 ps.setString(16, scriptInfo.getCreate_user_root_group_name());
                 ps.addBatch();
@@ -119,11 +119,12 @@ public class SqlDiagnoseOffLineService {
         }
     }
 
-    public static void deleteData() {
-        String sql = "delete from t_script_sql_diagnose_result ";
-        System.out.println(sql);
+    public static void deleteData(String removeDataTime) {
+        String sql = "delete from t_script_sql_diagnose_result where data_date=? ";
+        System.out.println("Delete Expire Data. sql: " + sql.replace("?", removeDataTime));
         try {
             PreparedStatement prepareStatement = conn.prepareStatement(sql);
+            prepareStatement.setString(1, removeDataTime);
             prepareStatement.executeUpdate();
         } catch (SQLException e) {
             System.out.println("delete data fail." + e.getMessage());
