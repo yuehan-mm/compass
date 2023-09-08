@@ -10,10 +10,10 @@ import java.util.List;
 
 public class OffLineTaskLauncher {
     public static void main(String[] args) {
-        work2();
+        doWork();
     }
 
-    public static void work1() {
+    public static void doReport() {
         System.out.println("Get ScriptList Start");
         List<ScriptInfo> scriptInfos = SqlDiagnoseOffLineService.getScriptList();
 
@@ -31,7 +31,7 @@ public class OffLineTaskLauncher {
         System.out.println("Write Excel End");
     }
 
-    public static void work2() {
+    public static void doWork() {
         FastDateFormat fastDateFormat = FastDateFormat.getInstance("yyyy-MM-dd");
         String insertDataTime = fastDateFormat.format(System.currentTimeMillis() + 1000 * 60 * 60 * 24);
         String removeDataTime = fastDateFormat.format(System.currentTimeMillis() - 1000 * 60 * 60 * 24 * 7);
@@ -43,10 +43,6 @@ public class OffLineTaskLauncher {
         SqlDiagnoseOffLineService.parseScript(scriptInfos);
         System.out.println("Parse Success Rows : " + (scriptInfos.size() - SqlDiagnoseOffLineService.failCount.get()));
         System.out.println("Parse Fail Rows : " + SqlDiagnoseOffLineService.failCount.get());
-
-        System.out.println("Get Report Start");
-        SqlDiagnoseOffLineService.buildReport(scriptInfos);
-        System.out.println("Get Report End");
 
         System.out.println("Write Table Start");
         SqlDiagnoseOffLineService.deleteData(removeDataTime);
