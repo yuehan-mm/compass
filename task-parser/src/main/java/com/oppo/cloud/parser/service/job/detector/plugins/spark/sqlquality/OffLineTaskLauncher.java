@@ -13,12 +13,14 @@ public class OffLineTaskLauncher {
     }
 
     public static void work1() {
+        System.out.println("Get ScriptList Start");
         List<ScriptInfo> scriptInfos = SqlDiagnoseOffLineService.getScriptList();
 
-        System.out.println("Parse Script Start Total Rows : " + scriptInfos.size());
+        System.out.println("Parse Script Start");
         SqlDiagnoseOffLineService.parseScript(scriptInfos);
-        System.out.println("PARSE Success Rows : " + (scriptInfos.size() - SqlDiagnoseOffLineService.failCount.get()));
-        System.out.println("PARSE Fail Rows : " + SqlDiagnoseOffLineService.failCount.get());
+        System.out.println("Parse Total Rows : " + scriptInfos.size());
+        System.out.println("Parse Success Rows : " + (scriptInfos.size() - SqlDiagnoseOffLineService.failCount.get()));
+        System.out.println("Parse Fail Rows : " + SqlDiagnoseOffLineService.failCount.get());
 
         System.out.println("Get Report Start");
         SqlDiagnoseOffLineService.buildReport(scriptInfos);
@@ -30,12 +32,14 @@ public class OffLineTaskLauncher {
     }
 
     public static void work2() {
+        System.out.println("Get ScriptList Start");
         List<ScriptInfo> scriptInfos = SqlDiagnoseOffLineService.getScriptList();
 
-        System.out.println("Parse Script Start Total Rows : " + scriptInfos.size());
+        System.out.println("Parse Script Start");
         SqlDiagnoseOffLineService.parseScript(scriptInfos);
-        System.out.println("PARSE Success Rows : " + (scriptInfos.size() - SqlDiagnoseOffLineService.failCount.get()));
-        System.out.println("PARSE Fail Rows : " + SqlDiagnoseOffLineService.failCount.get());
+        System.out.println("Parse Total Rows : " + scriptInfos.size());
+        System.out.println("Parse Success Rows : " + (scriptInfos.size() - SqlDiagnoseOffLineService.failCount.get()));
+        System.out.println("Parse Fail Rows : " + SqlDiagnoseOffLineService.failCount.get());
 
         System.out.println("Get Report Start");
         SqlDiagnoseOffLineService.buildReport(scriptInfos);
