@@ -24,7 +24,7 @@ public class MySqlUtils {
      */
     public static Connection getConnection() {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             String url = String.format("jdbc:mysql://%s:%s/%s?useSSL=false&useUnicode=true&characterEncoding=UTF-8", ip, port, db);
             return DriverManager.getConnection(url, username, password);
         } catch (Exception e) {

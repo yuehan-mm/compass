@@ -158,18 +158,32 @@ public class SqlDiagnoseService {
 
 
     /**
-     * 获取表引用次数集合
-     *
      * @param command    sql
      * @param scriptName 脚本名称
      * @return <tableName, refCount>
      */
     public static Map<String, Integer> getRefTableMap(String command, String scriptName) {
+        Map<String, Integer> refTableMap;
+        try {
+            refTableMap = getRefTableMap(command, scriptName, null);
+        } catch (Exception e) {
+            refTableMap = new HashMap<>();
+        }
+        return refTableMap;
+    }
+
+    /**
+     * @param command    sql
+     * @param scriptName 脚本名称
+     * @param scriptType 脚本类型
+     * @return <tableName, refCount>
+     */
+    public static Map<String, Integer> getRefTableMap(String command, String scriptName, String scriptType) throws RuntimeException {
         long ts = System.currentTimeMillis();
         Map<String, Integer> refTableMap = new HashMap<>();
         try {
             Map<String, Object> body = new HashMap<>();
-            body.put("dbType", "Hive");
+            body.put("dbType", scriptType == null ? "hive" : "mysql");
             body.put("originSQL", command);
             String jsonStr = HttpRequestUtils.doPost(REQUEST_URL, JSONObject.toJSONString(body));
             JSONObject json = JSONObject.parseObject(jsonStr);
@@ -185,6 +199,7 @@ public class SqlDiagnoseService {
             }
         } catch (Exception e) {
             log.error("getRefTableMap fail. scriptName:{},msg:{},timeUsed:{}", scriptName, e.getMessage(), System.currentTimeMillis() - ts);
+            throw new RuntimeException(e);
         }
         return refTableMap;
     }

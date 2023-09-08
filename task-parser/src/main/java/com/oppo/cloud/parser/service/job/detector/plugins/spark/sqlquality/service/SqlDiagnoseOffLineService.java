@@ -49,7 +49,7 @@ public class SqlDiagnoseOffLineService {
      * @return List<List < Object>>
      */
     public static List<ScriptInfo> getScriptList() {
-        String sql = "select *  from t_script_sql_content where command!='' and script_type!='Sqoop'  and script_type!='DBScript'";
+        String sql = "select *  from t_script_sql_content where command!='' and script_type!='Sqoop'";
         System.out.println(sql);
         List<ScriptInfo> fields = new ArrayList<>();
         try {
@@ -136,12 +136,21 @@ public class SqlDiagnoseOffLineService {
         SqlDiagnoseService sqlDiagnoseService = new SqlDiagnoseService();
         scriptInfos.stream().parallel().forEach(scriptInfo -> {
             String command = scriptInfo.getCommand().toLowerCase();
+
+            Map<String, Integer> refTableMap;
+            try {
+                refTableMap = sqlDiagnoseService.getRefTableMap(command,
+                        scriptInfo.getScript_name(), scriptInfo.getScript_type());
+            } catch (Exception e) {
+                failCount.incrementAndGet();
+                refTableMap = new HashMap<>();
+            }
+
             SqlScoreAbnormal sqlScoreAbnormal = sqlDiagnoseService.buildSqlScoreAbnormal(new DiagnoseResult(
-                    null, null,
-                    sqlDiagnoseService.findX(command, GROUP_BY_REGEX), sqlDiagnoseService.findX(command, UNION_REGEX),
-                    sqlDiagnoseService.findX(command, JOIN_REGEX), sqlDiagnoseService.findX(command, ORDER_BY_REGEX),
-                    sqlDiagnoseService.getCommandLength(command), sqlDiagnoseService.getRefTableMap(command, scriptInfo.getScript_name()),
-                    null), new SqlScoreConfig());
+                    null, null, sqlDiagnoseService.findX(command, GROUP_BY_REGEX),
+                    sqlDiagnoseService.findX(command, UNION_REGEX), sqlDiagnoseService.findX(command, JOIN_REGEX),
+                    sqlDiagnoseService.findX(command, ORDER_BY_REGEX), sqlDiagnoseService.getCommandLength(command),
+                    refTableMap, null), new SqlScoreConfig());
             scriptInfo.setDiagnoseResult(sqlScoreAbnormal.getDiagnoseResult());
             scriptInfo.setScore(sqlScoreAbnormal.getScore());
         });
