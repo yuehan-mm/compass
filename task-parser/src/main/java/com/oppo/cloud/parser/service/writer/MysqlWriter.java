@@ -22,6 +22,7 @@ import com.oppo.cloud.common.util.spring.SpringBeanUtil;
 import com.oppo.cloud.parser.config.HdopDBConfig;
 import com.oppo.cloud.parser.domain.job.TaskParam;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.time.FastDateFormat;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -65,11 +66,11 @@ public class MysqlWriter {
     public void updateOffLineData(SqlScoreAbnormal sqlScoreAbnormal, TaskParam taskParam) {
         PreparedStatement ps = null;
         try {
-            String sql = "UPDATE bdmp_cluster.t_script_sql_diagnose_result SET score=?,diagnose_result=?,data_date=? where script_name =?";
+            String sql = "UPDATE bdmp_cluster.t_script_sql_diagnose_result SET score=?,diagnose_result=? where data_date=? and script_name =?";
             ps = connection.prepareStatement(sql);
             ps.setDouble(1, sqlScoreAbnormal.getScore());
             ps.setString(2, sqlScoreAbnormal.getDiagnoseResult());
-            ps.setString(3, String.valueOf(System.currentTimeMillis()));
+            ps.setString(3, FastDateFormat.getInstance("yyyy-MM-dd").format(System.currentTimeMillis()));
             ps.setString(4, taskParam.getTaskApp().getTaskName());
             int effectiveRow = ps.executeUpdate();
             if (effectiveRow != 1) {
