@@ -16,9 +16,8 @@ public class OffLineTaskLauncher {
         System.out.println("Get ScriptList Start");
         List<ScriptInfo> scriptInfos = SqlDiagnoseOffLineService.getScriptList();
 
-        System.out.println("Parse Script Start");
+        System.out.println("Parse Start Total Rows : " + scriptInfos.size());
         SqlDiagnoseOffLineService.parseScript(scriptInfos);
-        System.out.println("Parse Total Rows : " + scriptInfos.size());
         System.out.println("Parse Success Rows : " + (scriptInfos.size() - SqlDiagnoseOffLineService.failCount.get()));
         System.out.println("Parse Fail Rows : " + SqlDiagnoseOffLineService.failCount.get());
 
@@ -35,9 +34,8 @@ public class OffLineTaskLauncher {
         System.out.println("Get ScriptList Start");
         List<ScriptInfo> scriptInfos = SqlDiagnoseOffLineService.getScriptList();
 
-        System.out.println("Parse Script Start");
+        System.out.println("Parse Start Total Rows : " + scriptInfos.size());
         SqlDiagnoseOffLineService.parseScript(scriptInfos);
-        System.out.println("Parse Total Rows : " + scriptInfos.size());
         System.out.println("Parse Success Rows : " + (scriptInfos.size() - SqlDiagnoseOffLineService.failCount.get()));
         System.out.println("Parse Fail Rows : " + SqlDiagnoseOffLineService.failCount.get());
 
