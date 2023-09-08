@@ -53,9 +53,8 @@ public class ExcelUtil {
             row.createCell(5).setCellValue(scriptInfo.getCreate_user_name() + "(" + scriptInfo.getCreate_user_id() + ")");
             row.createCell(6).setCellValue(scriptInfo.getCreate_user_group_nane() + "(" + scriptInfo.getCreate_user_group_id() + ")");
             row.createCell(7).setCellValue(scriptInfo.getCreate_user_group_admin_name() + "(" + scriptInfo.getCreate_user_group_admin_id() + ")");
-            row.createCell(8).setCellValue(JSONObject.toJSONString(scriptInfo.getDiagnoseResult()));
-            row.createCell(9).setCellValue(scriptInfo.getScore());
-            row.createCell(10).setCellValue(scriptInfo.getScoreContent());
+            row.createCell(8).setCellValue(scriptInfo.getScore());
+            row.createCell(9).setCellValue(scriptInfo.getDiagnoseResult());
         }
     }
 

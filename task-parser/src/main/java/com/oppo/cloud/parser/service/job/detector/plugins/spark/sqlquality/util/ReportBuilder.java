@@ -2,9 +2,10 @@
 package com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.util;
 
 
-import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.bean.DiagnoseResult;
+import com.alibaba.fastjson2.JSONObject;
 import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.bean.ScriptInfo;
 import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.bean.SqlReport;
+import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.service.SqlDiagnoseService;
 import lombok.Data;
 
 import java.util.List;
@@ -20,19 +21,19 @@ public class ReportBuilder {
     public SqlReport buildReport() {
         SqlReport sqlReport = new SqlReport();
         scriptInfos.stream().parallel().forEach(scriptInfo -> {
-            DiagnoseResult diagnoseResult = scriptInfo.getDiagnoseResult();
-            buildUnionCountReport(diagnoseResult.getUnionCount(), sqlReport.getUnionCountReport());
-            buildTableRefCountReport(diagnoseResult.getRefTableMap().size(), sqlReport.getTableRefCountReport());
-            buildTableUseCountReport(diagnoseResult.getRefTableMap()
-                    .keySet().stream()
-                    .map(x -> diagnoseResult.getRefTableMap().get(x))
-                    .reduce((x, y) -> x + y)
-                    .orElse(0), sqlReport.getTableUseCountReport());
-            buildSqlScoreReport(scriptInfo.getScore(), sqlReport.getSqlScoreReport());
-            buildLengthReport(diagnoseResult.getSqlLength(), sqlReport.getSqlLengthReport());
-            buildGroupByCountReport(diagnoseResult.getGroupByCount(), sqlReport.getGroupByCountReport());
-            buildOrderByCountReport(diagnoseResult.getOrderByCount(), sqlReport.getOrderByCountReport());
-            buildJoinCountReport(diagnoseResult.getJoinCount(), sqlReport.getJoinCountReport());
+            SqlDiagnoseService.DiagnoseDesc diagnoseDesc = JSONObject.parseObject(scriptInfo.getDiagnoseResult(), SqlDiagnoseService.DiagnoseDesc.class);
+//            buildUnionCountReport(diagnoseResult.getUnionCount(), sqlReport.getUnionCountReport());
+//            buildTableRefCountReport(diagnoseResult.getRefTableMap().size(), sqlReport.getTableRefCountReport());
+//            buildTableUseCountReport(diagnoseResult.getRefTableMap()
+//                    .keySet().stream()
+//                    .map(x -> diagnoseResult.getRefTableMap().get(x))
+//                    .reduce((x, y) -> x + y)
+//                    .orElse(0), sqlReport.getTableUseCountReport());
+//            buildSqlScoreReport(scriptInfo.getScore(), sqlReport.getSqlScoreReport());
+//            buildLengthReport(diagnoseResult.getSqlLength(), sqlReport.getSqlLengthReport());
+//            buildGroupByCountReport(diagnoseResult.getGroupByCount(), sqlReport.getGroupByCountReport());
+//            buildOrderByCountReport(diagnoseResult.getOrderByCount(), sqlReport.getOrderByCountReport());
+//            buildJoinCountReport(diagnoseResult.getJoinCount(), sqlReport.getJoinCountReport());
         });
         return sqlReport;
     }

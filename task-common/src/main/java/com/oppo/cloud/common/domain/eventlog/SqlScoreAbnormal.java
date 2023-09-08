@@ -27,8 +27,6 @@ public class SqlScoreAbnormal {
 
     private double score;
 
-    private String scoreContent;
-
     private String diagnoseResult;
 
     private Boolean abnormal;

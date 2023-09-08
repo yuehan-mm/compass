@@ -65,13 +65,12 @@ public class MysqlWriter {
     public void updateOffLineData(SqlScoreAbnormal sqlScoreAbnormal, TaskParam taskParam) {
         PreparedStatement ps = null;
         try {
-            String sql = "UPDATE bdmp_cluster.t_script_sql_diagnose_result SET score=?,score_content=?,diagnose_result=?,data_date=? where script_name =?";
+            String sql = "UPDATE bdmp_cluster.t_script_sql_diagnose_result SET score=?,diagnose_result=?,data_date=? where script_name =?";
             ps = connection.prepareStatement(sql);
             ps.setDouble(1, sqlScoreAbnormal.getScore());
-            ps.setString(2, sqlScoreAbnormal.getScoreContent());
-            ps.setString(3, sqlScoreAbnormal.getDiagnoseResult());
-            ps.setString(4, String.valueOf(System.currentTimeMillis()));
-            ps.setString(5, taskParam.getTaskApp().getTaskName());
+            ps.setString(2, sqlScoreAbnormal.getDiagnoseResult());
+            ps.setString(3, String.valueOf(System.currentTimeMillis()));
+            ps.setString(4, taskParam.getTaskApp().getTaskName());
             int effectiveRow = ps.executeUpdate();
             if (effectiveRow != 1) {
                 log.error("update updateOffLineData fail. effectiveRow: {} , script_name:{}",

@@ -78,9 +78,9 @@ public class SqlDiagnoseOffLineService {
         try {
             String sql = "INSERT INTO bdmp_cluster.t_script_sql_diagnose_result (script_id, script_name, script_type," +
                     " command, db_type, create_user_name, create_user_nickname, group_id, group_name," +
-                    " group_admin_name, group_admin_nickname, diagnose_result, score, score_content," +
-                    " data_date, root_group_id, root_group_name) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    " group_admin_name, group_admin_nickname, diagnose_result, score, data_date," +
+                    " root_group_id, root_group_name) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             ps = conn.prepareStatement(sql);
             for (int i = 0; i < scriptInfos.size(); i++) {
                 ScriptInfo scriptInfo = scriptInfos.get(i);
@@ -95,12 +95,11 @@ public class SqlDiagnoseOffLineService {
                 ps.setString(9, scriptInfo.getCreate_user_group_nane());
                 ps.setString(10, scriptInfo.getCreate_user_group_admin_id());
                 ps.setString(11, scriptInfo.getCreate_user_group_admin_name());
-                ps.setString(12, JSONObject.toJSONString(scriptInfo.getDiagnoseResult()));
+                ps.setString(12, scriptInfo.getDiagnoseResult());
                 ps.setDouble(13, scriptInfo.getScore());
-                ps.setString(14, scriptInfo.getScoreContent());
-                ps.setString(15, String.valueOf(System.currentTimeMillis()));
-                ps.setString(16, scriptInfo.getCreate_user_root_group_id());
-                ps.setString(17, scriptInfo.getCreate_user_root_group_name());
+                ps.setString(14, String.valueOf(System.currentTimeMillis()));
+                ps.setString(15, scriptInfo.getCreate_user_root_group_id());
+                ps.setString(16, scriptInfo.getCreate_user_root_group_name());
                 ps.addBatch();
                 if (i % 1000 == 0) {
                     ps.executeBatch();
@@ -143,9 +142,8 @@ public class SqlDiagnoseOffLineService {
                     sqlDiagnoseService.findX(command, JOIN_REGEX), sqlDiagnoseService.findX(command, ORDER_BY_REGEX),
                     sqlDiagnoseService.getCommandLength(command), sqlDiagnoseService.getRefTableMap(command, scriptInfo.getScript_name()),
                     null), new SqlScoreConfig());
-            scriptInfo.setDiagnoseResult(JSONObject.parseObject(sqlScoreAbnormal.getDiagnoseResult(), DiagnoseResult.class));
+            scriptInfo.setDiagnoseResult(sqlScoreAbnormal.getDiagnoseResult());
             scriptInfo.setScore(sqlScoreAbnormal.getScore());
-            scriptInfo.setScoreContent(sqlScoreAbnormal.getScoreContent());
         });
     }
 }

@@ -150,10 +150,9 @@ public class SqlDiagnoseService {
         }
 
         SqlScoreAbnormal diagnoseContent = new SqlScoreAbnormal();
-        diagnoseContent.setDiagnoseResult(JSON.toJSONString(diagnoseResult));
-        diagnoseContent.setScore(100 - res.values().stream().map(x -> x.getDeductScore()).reduce((x, y) -> x + y).orElse(0.0));
+        diagnoseContent.setDiagnoseResult(JSON.toJSONString(res));
+        diagnoseContent.setScore(100.0 - res.values().stream().map(x -> x.getDeductScore()).reduce((x, y) -> x + y).orElse(0.0));
         diagnoseContent.setAbnormal(diagnoseContent.getScore() < sqlScoreConfig.getMinScore());
-        diagnoseContent.setScoreContent(JSON.toJSONString(res));
         return diagnoseContent;
     }
 
@@ -212,28 +211,28 @@ public class SqlDiagnoseService {
         return res;
     }
 
+    @Data
+    public static class DiagnoseDesc {
+        private String diagnoseName;
+        private long threadThread;
+        private long value;
+        private double deductScore;
+        private String desc;
+        private Object remark;
 
-}
+        public DiagnoseDesc(String diagnoseName, long threadThread, long value, double deductScore, String desc) {
+            this(diagnoseName, threadThread, value, deductScore, desc, null);
+        }
 
-@Data
-class DiagnoseDesc {
-    private String diagnoseName;
-    private long threadThread;
-    private long value;
-    private double deductScore;
-    private String desc;
-    private Object remark;
-
-    public DiagnoseDesc(String diagnoseName, long threadThread, long value, double deductScore, String desc) {
-        this(diagnoseName, threadThread, value, deductScore, desc, null);
-    }
-
-    public DiagnoseDesc(String diagnoseName, long threadThread, long value, double deductScore, String desc, Object remark) {
-        this.diagnoseName = diagnoseName;
-        this.threadThread = threadThread;
-        this.value = value;
-        this.deductScore = deductScore;
-        this.desc = desc;
-        this.remark = remark;
+        public DiagnoseDesc(String diagnoseName, long threadThread, long value, double deductScore, String desc, Object remark) {
+            this.diagnoseName = diagnoseName;
+            this.threadThread = threadThread;
+            this.value = value;
+            this.deductScore = deductScore;
+            this.desc = desc;
+            this.remark = remark;
+        }
     }
 }
+
+

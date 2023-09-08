@@ -49,7 +49,7 @@ public class SqlScoreService extends RunTimeBaseService<SqlScore> {
         SqlScore.TaskInfo taskInfo = new SqlScore.TaskInfo();
         taskInfo.setSqlScore(sqlScoreAbnormal.getScore());
         taskInfo.setMinScore(config.getSqlScoreConfig().getMinScore());
-        taskInfo.setSqlScoreContent(sqlScoreAbnormal.getScoreContent());
+        taskInfo.setSqlScoreContent(sqlScoreAbnormal.getDiagnoseResult());
         data.add(taskInfo);
 
         sqlScore.getVars().put("sqlScore", String.valueOf(sqlScoreAbnormal.getScore()));

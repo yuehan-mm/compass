@@ -8,7 +8,7 @@ public class Const {
     public static final String REQUEST_URL = "http://check.qd-hongdao.haier.net/sql-check/parse/check";
 //    public static final String REQUEST_URL = "http://test-check.qd-hongdao.haier.net/sql-check/parse/check";
 
-    public static final List<String> EXCEL_HEAD = Arrays.asList("脚本ID", "脚本名称", "脚本类型", "SQL", "数据库类型", "脚本创建人", "脚本创建人所属组", "脚本创建人所属组管理员", "SQL评分结果", "SQL评分", "SQL评分明细");
+    public static final List<String> EXCEL_HEAD = Arrays.asList("脚本ID", "脚本名称", "脚本类型", "SQL", "数据库类型", "脚本创建人", "脚本创建人所属组", "脚本创建人所属组管理员", "SQL评分", "SQL评分明细");
 
     public static final String GROUP_BY_REGEX = "(\\s+|\\n+)group(\\s+|\\n+)by(\\s+|\\n+)";
     public static final String UNION_REGEX = "(\\s+|\\n+)union(\\s+|\\n+)";
