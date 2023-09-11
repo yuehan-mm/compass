@@ -48,10 +48,10 @@ public class Const {
     public static final String SQL_TABLE_ERF_DESC = String.format("同一个SQL内表的引用个数最多为%s，之后长度每增加1，分数-%s",
             SQL_TABLE_ERF_THRESHOLD, SQL_TABLE_ERF_SCORE);
 
-    public static final int SQL_READ_TABLE_THRESHOLD = 10;
-    public static final double SQL_READ_TABLE_SCORE = 0.5;
-    public static final String SQL_READ_TABLE_DESC = String.format("同一个SQL内表的使用次数最多为%s，之后每使用一次，分数-%s",
-            SQL_READ_TABLE_THRESHOLD, SQL_READ_TABLE_SCORE);
+    public static final int SQL_TABLE_READ_THRESHOLD = 10;
+    public static final double SQL_TABLE_READ_SCORE = 0.5;
+    public static final String SQL_TABLE_READ_DESC = String.format("同一个SQL内表的使用次数最多为%s，之后每使用一次，分数-%s",
+            SQL_TABLE_READ_THRESHOLD, SQL_TABLE_READ_SCORE);
 
     public static final int SQL_SCAN_FILE_COUNT_THRESHOLD = 10;
     public static final double SQL_SCAN_FILE_COUNT_SCORE = 0.5;

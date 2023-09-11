@@ -80,7 +80,7 @@ public class SqlDiagnoseService {
         }
 
         if (diagnoseResult.getOrderByCount() > SQL_ORDER_BY_THRESHOLD) {
-            res.put("SQL_JOIN", new DiagnoseDesc("SQL_JOIN",
+            res.put("SQL_ORDER_BY", new DiagnoseDesc("SQL_ORDER_BY",
                     SQL_ORDER_BY_THRESHOLD, diagnoseResult.getJoinCount(),
                     BigDecimal.valueOf((diagnoseResult.getOrderByCount() - SQL_ORDER_BY_THRESHOLD))
                             .multiply(BigDecimal.valueOf(SQL_ORDER_BY_SCORE)).doubleValue(),
@@ -96,7 +96,7 @@ public class SqlDiagnoseService {
         }
 
         if (diagnoseResult.getRefTableMap().size() > SQL_TABLE_ERF_THRESHOLD) {
-            res.put("SQL_TABLE_USE", new DiagnoseDesc("SQL_TABLE_USE",
+            res.put("SQL_TABLE_REF", new DiagnoseDesc("SQL_TABLE_REF",
                     SQL_TABLE_ERF_THRESHOLD, diagnoseResult.getSqlLength(),
                     BigDecimal.valueOf((diagnoseResult.getRefTableMap().size() - SQL_TABLE_ERF_THRESHOLD))
                             .multiply(BigDecimal.valueOf(SQL_TABLE_ERF_SCORE)).doubleValue(),
@@ -104,12 +104,12 @@ public class SqlDiagnoseService {
         }
 
         Integer readTableCount = diagnoseResult.getRefTableMap().values().stream().reduce((x, y) -> x + y).orElse(0);
-        if (readTableCount > SQL_READ_TABLE_THRESHOLD) {
-            res.put("SQL_READ_TABLE", new DiagnoseDesc("SQL_READ_TABLE",
-                    SQL_READ_TABLE_THRESHOLD, diagnoseResult.getSqlLength(),
-                    BigDecimal.valueOf((diagnoseResult.getRefTableMap().size() - SQL_READ_TABLE_THRESHOLD))
-                            .multiply(BigDecimal.valueOf(SQL_READ_TABLE_SCORE)).doubleValue(),
-                    SQL_READ_TABLE_DESC, diagnoseResult.getRefTableMap()));
+        if (readTableCount > SQL_TABLE_READ_THRESHOLD) {
+            res.put("SQL_TABLE_READ", new DiagnoseDesc("SQL_TABLE_READ",
+                    SQL_TABLE_READ_THRESHOLD, diagnoseResult.getSqlLength(),
+                    BigDecimal.valueOf((diagnoseResult.getRefTableMap().size() - SQL_TABLE_READ_THRESHOLD))
+                            .multiply(BigDecimal.valueOf(SQL_TABLE_READ_SCORE)).doubleValue(),
+                    SQL_TABLE_READ_DESC, diagnoseResult.getRefTableMap()));
         }
 
 
@@ -117,7 +117,7 @@ public class SqlDiagnoseService {
         // 扫描文件数量
         FileScanAbnormal.FileScanReport fileScanReport = diagnoseResult.getFileScanReport();
         if (fileScanReport != null && fileScanReport.getTotalFileCount() > SQL_SCAN_FILE_COUNT_THRESHOLD) {
-            res.put("SQL_SCAN_FILE", new DiagnoseDesc("SQL_SCAN_FILE",
+            res.put("SQL_SCAN_FILE_COUNT", new DiagnoseDesc("SQL_SCAN_FILE_COUNT",
                     SQL_SCAN_FILE_COUNT_THRESHOLD, diagnoseResult.getSqlLength(),
                     BigDecimal.valueOf((fileScanReport.getTotalFileCount() - SQL_SCAN_FILE_COUNT_THRESHOLD))
                             .multiply(BigDecimal.valueOf(SQL_SCAN_FILE_COUNT_SCORE)).doubleValue(),
@@ -133,7 +133,7 @@ public class SqlDiagnoseService {
         }
         // 扫描小文件数量
         if (fileScanReport != null && fileScanReport.getLe10MFileCount() > SQL_SCAN_LE10M_FILE_COUNT_THRESHOLD) {
-            res.put("SQL_SCAN_LE10M_FILE", new DiagnoseDesc("SQL_SCAN_LE10M_FILE",
+            res.put("SQL_SCAN_LE10M_FILE_COUNT", new DiagnoseDesc("SQL_SCAN_LE10M_FILE_COUNT",
                     SQL_SCAN_LE10M_FILE_COUNT_THRESHOLD, diagnoseResult.getSqlLength(),
                     BigDecimal.valueOf((fileScanReport.getLe10MFileCount() - SQL_SCAN_LE10M_FILE_COUNT_THRESHOLD))
                             .multiply(BigDecimal.valueOf(SQL_SCAN_LE10M_FILE_COUNT_SCORE)).doubleValue(),
@@ -142,7 +142,7 @@ public class SqlDiagnoseService {
 
         // 扫描分区数量
         if (fileScanReport != null && fileScanReport.getPartitionCount() > SQL_SCAN_PARTITION_COUNT_THRESHOLD) {
-            res.put("SQL_SCAN_LE10M_FILE", new DiagnoseDesc("SQL_SCAN_LE10M_FILE",
+            res.put("SQL_SCAN_PARTITION_COUNT", new DiagnoseDesc("SQL_SCAN_PARTITION_COUNT",
                     SQL_SCAN_PARTITION_COUNT_THRESHOLD, diagnoseResult.getSqlLength(),
                     BigDecimal.valueOf((fileScanReport.getPartitionCount() - SQL_SCAN_PARTITION_COUNT_THRESHOLD))
                             .multiply(BigDecimal.valueOf(SQL_SCAN_PARTITION_COUNT_SCORE)).doubleValue(),
