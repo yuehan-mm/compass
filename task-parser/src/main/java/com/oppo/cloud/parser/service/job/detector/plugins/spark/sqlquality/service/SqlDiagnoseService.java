@@ -170,15 +170,15 @@ public class SqlDiagnoseService {
                         0, SQL_SCAN_FILE_SIZE_DESC));
             }
             // 扫描小文件数量
-            if (fileScanReport.getLe10MFileCount() > SQL_SCAN_LE10M_FILE_COUNT_THRESHOLD) {
+            if (fileScanReport.getLe10MFileCount() > SQL_SCAN_SMALL_FILE_COUNT_THRESHOLD) {
                 res.put("SQL_SCAN_LE10M_FILE_COUNT", new DiagnoseDesc("SQL_SCAN_LE10M_FILE_COUNT",
-                        SQL_SCAN_LE10M_FILE_COUNT_THRESHOLD, diagnoseResult.getSqlLength(),
-                        BigDecimal.valueOf((fileScanReport.getLe10MFileCount() - SQL_SCAN_LE10M_FILE_COUNT_THRESHOLD))
-                                .multiply(BigDecimal.valueOf(SQL_SCAN_LE10M_FILE_COUNT_SCORE)).doubleValue(),
+                        SQL_SCAN_SMALL_FILE_COUNT_THRESHOLD, diagnoseResult.getSqlLength(),
+                        BigDecimal.valueOf((fileScanReport.getLe10MFileCount() - SQL_SCAN_SMALL_FILE_COUNT_THRESHOLD))
+                                .multiply(BigDecimal.valueOf(SQL_SCAN_SMALL_FILE_COUNT_SCORE)).doubleValue(),
                         SQL_SCAN_LE10M_FILE_COUNT_DESC));
             } else {
                 res.put("SQL_SCAN_LE10M_FILE_COUNT", new DiagnoseDesc("SQL_SCAN_LE10M_FILE_COUNT",
-                        SQL_SCAN_LE10M_FILE_COUNT_THRESHOLD, diagnoseResult.getSqlLength(),
+                        SQL_SCAN_SMALL_FILE_COUNT_THRESHOLD, diagnoseResult.getSqlLength(),
                         0, SQL_SCAN_LE10M_FILE_COUNT_DESC));
             }
 
