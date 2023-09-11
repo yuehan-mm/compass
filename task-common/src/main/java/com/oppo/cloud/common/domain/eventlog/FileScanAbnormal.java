@@ -40,7 +40,7 @@ public class FileScanAbnormal {
         private int totalFileCount;
         private long totalFileSize;
         private int fileSizeAvg;
-        private int le10MFileCount;
+        private int smallFileCount;
         private int partitionCount;
         private long partitionSizeAvg;
     }
