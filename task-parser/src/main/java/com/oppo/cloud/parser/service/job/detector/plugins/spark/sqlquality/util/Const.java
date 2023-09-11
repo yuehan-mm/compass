@@ -67,7 +67,7 @@ public class Const {
 
     public static final int SQL_SCAN_SMALL_FILE_COUNT_THRESHOLD = 10;
     public static final double SQL_SCAN_SMALL_FILE_COUNT_SCORE = 0.2;
-    public static final String SQL_SCAN_LE10M_FILE_COUNT_DESC = String.format("一个SQL内最多扫描%s个小文件（小于10M），之后每增加一个，分数-%s",
+    public static final String SQL_SCAN_SMALL_FILE_COUNT_DESC = String.format("一个SQL内最多扫描%s个小文件（小于10M），之后每增加一个，分数-%s",
             SQL_SCAN_SMALL_FILE_COUNT_THRESHOLD, SQL_SCAN_SMALL_FILE_COUNT_SCORE);
 
     public static final int SQL_SCAN_PARTITION_COUNT_THRESHOLD = 1;
