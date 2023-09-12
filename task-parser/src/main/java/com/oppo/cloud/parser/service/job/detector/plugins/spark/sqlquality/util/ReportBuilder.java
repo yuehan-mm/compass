@@ -464,9 +464,16 @@ public class ReportBuilder {
                 put("groupByCountReport", groupByCountReport.getList());
                 put("joinCountReport", joinCountReport.getList());
                 put("orderByCountReport", orderByCountReport.getList());
+
                 put("sqlLengthReport", sqlLengthReport.getList());
                 put("tableRefCountReport", tableRefCountReport.getList());
                 put("tableReadCountReport", tableReadCountReport.getList());
+
+                put("scanFileCountReport", scanFileCountReport.getList());
+                put("scanFileSizeReport", scanFileSizeReport.getList());
+                put("scanSmallFileCountReport", scanSmallFileCountReport.getList());
+                put("scanPartitionCountReport", scanPartitionCountReport.getList());
+
             }};
         }
     }
