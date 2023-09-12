@@ -1,11 +1,9 @@
-
 package com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.util;
 
 
-import com.alibaba.fastjson2.JSONObject;
+import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.bean.ScriptDiagnoseDetail;
 import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.bean.ScriptInfo;
 import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.bean.SqlReport;
-import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.service.SqlDiagnoseService;
 import lombok.Data;
 
 import java.util.List;
@@ -18,101 +16,104 @@ public class ReportBuilder {
         this.scriptInfos = scriptInfos;
     }
 
-    public SqlReport buildReport() {
+    public static SqlReport buildReport(List<ScriptDiagnoseDetail> scriptInfos) {
         SqlReport sqlReport = new SqlReport();
         scriptInfos.stream().parallel().forEach(scriptInfo -> {
-            SqlDiagnoseService.DiagnoseDesc diagnoseDesc = JSONObject.parseObject(scriptInfo.getDiagnoseResult(), SqlDiagnoseService.DiagnoseDesc.class);
-//            buildUnionCountReport(diagnoseResult.getUnionCount(), sqlReport.getUnionCountReport());
-//            buildTableRefCountReport(diagnoseResult.getRefTableMap().size(), sqlReport.getTableRefCountReport());
-//            buildTableUseCountReport(diagnoseResult.getRefTableMap()
-//                    .keySet().stream()
-//                    .map(x -> diagnoseResult.getRefTableMap().get(x))
-//                    .reduce((x, y) -> x + y)
-//                    .orElse(0), sqlReport.getTableUseCountReport());
-//            buildSqlScoreReport(scriptInfo.getScore(), sqlReport.getSqlScoreReport());
-//            buildLengthReport(diagnoseResult.getSqlLength(), sqlReport.getSqlLengthReport());
-//            buildGroupByCountReport(diagnoseResult.getGroupByCount(), sqlReport.getGroupByCountReport());
-//            buildOrderByCountReport(diagnoseResult.getOrderByCount(), sqlReport.getOrderByCountReport());
-//            buildJoinCountReport(diagnoseResult.getJoinCount(), sqlReport.getJoinCountReport());
+
+            buildUnionCountReport(scriptInfo.getSqlUnionValue(), sqlReport.getUnionCountReport());
+            buildGroupByCountReport(scriptInfo.getSqlGroupByValue(), sqlReport.getGroupByCountReport());
+            buildJoinCountReport(scriptInfo.getSqlJoinValue(), sqlReport.getJoinCountReport());
+            buildOrderByCountReport(scriptInfo.getSqlOrderByValue(), sqlReport.getOrderByCountReport());
+
+            buildLengthReport(scriptInfo.getSqlLengthValue(), sqlReport.getSqlLengthReport());
+            buildTableRefCountReport(scriptInfo.getSqlTableRefValue(), sqlReport.getTableRefCountReport());
+            buildTableReadCountReport(scriptInfo.getSqlTableReadValue(), sqlReport.getTableReadCountReport());
+
+            buildScanFileCountReport(scriptInfo.getSqlScanFileCountValue(), sqlReport.getScanFileCountReport());
+            buildScanFileSizeReport(scriptInfo.getSqlScanFileSizeValue(), sqlReport.getScanFileSizeReport());
+            buildScanSmallFileCountReport(scriptInfo.getSqlScanSmallFileCountValue(), sqlReport.getScanSmallFileCountReport());
+            buildScanPartitionCountReport(scriptInfo.getSqlScanPartitionCountValue(), sqlReport.getScanPartitionCountReport());
+
         });
         return sqlReport;
     }
 
-    private void buildJoinCountReport(Integer joinCount, SqlReport.JoinCountReport joinCountReport) {
+
+    private static void buildJoinCountReport(Integer joinCount, SqlReport.JoinCountReport joinCountReport) {
         if (joinCount >= 50) {
-            joinCountReport.getGt50_().incrementAndGet();
+            joinCountReport.getGt50_().getValue().incrementAndGet();
         } else if (joinCount >= 40) {
-            joinCountReport.getGt40_50().incrementAndGet();
+            joinCountReport.getGt40_50().getValue().incrementAndGet();
         } else if (joinCount >= 30) {
-            joinCountReport.getGt30_40().incrementAndGet();
+            joinCountReport.getGt30_40().getValue().incrementAndGet();
         } else if (joinCount >= 20) {
-            joinCountReport.getGt20_30().incrementAndGet();
+            joinCountReport.getGt20_30().getValue().incrementAndGet();
         } else if (joinCount >= 10) {
-            joinCountReport.getGt10_20().incrementAndGet();
+            joinCountReport.getGt10_20().getValue().incrementAndGet();
         } else if (joinCount >= 5) {
-            joinCountReport.getGt5_10().incrementAndGet();
+            joinCountReport.getGt5_10().getValue().incrementAndGet();
         } else {
-            joinCountReport.get_le5().incrementAndGet();
+            joinCountReport.get_le5().getValue().incrementAndGet();
         }
     }
 
-    private void buildOrderByCountReport(Integer orderByCount, SqlReport.OrderByCountReport orderByCountReport) {
+    private static void buildOrderByCountReport(Integer orderByCount, SqlReport.OrderByCountReport orderByCountReport) {
         if (orderByCount >= 50) {
-            orderByCountReport.getGt50_().incrementAndGet();
+            orderByCountReport.getGt50_().getValue().incrementAndGet();
         } else if (orderByCount >= 40) {
-            orderByCountReport.getGt40_50().incrementAndGet();
+            orderByCountReport.getGt40_50().getValue().incrementAndGet();
         } else if (orderByCount >= 30) {
-            orderByCountReport.getGt30_40().incrementAndGet();
+            orderByCountReport.getGt30_40().getValue().incrementAndGet();
         } else if (orderByCount >= 20) {
-            orderByCountReport.getGt20_30().incrementAndGet();
+            orderByCountReport.getGt20_30().getValue().incrementAndGet();
         } else if (orderByCount >= 10) {
-            orderByCountReport.getGt10_20().incrementAndGet();
+            orderByCountReport.getGt10_20().getValue().incrementAndGet();
         } else if (orderByCount >= 5) {
-            orderByCountReport.getGt5_10().incrementAndGet();
+            orderByCountReport.getGt5_10().getValue().incrementAndGet();
         } else {
-            orderByCountReport.get_le5().incrementAndGet();
+            orderByCountReport.get_le5().getValue().incrementAndGet();
         }
     }
 
-    private void buildGroupByCountReport(Integer groupByCount, SqlReport.GroupByCountReport groupByCountReport) {
+    private static void buildGroupByCountReport(Integer groupByCount, SqlReport.GroupByCountReport groupByCountReport) {
         if (groupByCount >= 50) {
-            groupByCountReport.getGt50_().incrementAndGet();
+            groupByCountReport.getGt50_().getValue().incrementAndGet();
         } else if (groupByCount >= 40) {
-            groupByCountReport.getGt40_50().incrementAndGet();
+            groupByCountReport.getGt40_50().getValue().incrementAndGet();
         } else if (groupByCount >= 30) {
-            groupByCountReport.getGt30_40().incrementAndGet();
+            groupByCountReport.getGt30_40().getValue().incrementAndGet();
         } else if (groupByCount >= 20) {
-            groupByCountReport.getGt20_30().incrementAndGet();
+            groupByCountReport.getGt20_30().getValue().incrementAndGet();
         } else if (groupByCount >= 10) {
-            groupByCountReport.getGt10_20().incrementAndGet();
+            groupByCountReport.getGt10_20().getValue().incrementAndGet();
         } else if (groupByCount >= 5) {
-            groupByCountReport.getGt5_10().incrementAndGet();
+            groupByCountReport.getGt5_10().getValue().incrementAndGet();
         } else {
-            groupByCountReport.get_le5().incrementAndGet();
+            groupByCountReport.get_le5().getValue().incrementAndGet();
         }
     }
 
-    private void buildLengthReport(Integer sqlLength, SqlReport.SqlLengthReport sqlLengthReport) {
+    private static void buildLengthReport(Integer sqlLength, SqlReport.SqlLengthReport sqlLengthReport) {
         if (sqlLength >= 50000) {
-            sqlLengthReport.getGt5000_().incrementAndGet();
+            sqlLengthReport.getGt5000_().getValue().incrementAndGet();
         } else if (sqlLength >= 40000) {
-            sqlLengthReport.getGt40000_50000().incrementAndGet();
+            sqlLengthReport.getGt40000_50000().getValue().incrementAndGet();
         } else if (sqlLength >= 30000) {
-            sqlLengthReport.getGt30000_40000().incrementAndGet();
+            sqlLengthReport.getGt30000_40000().getValue().incrementAndGet();
         } else if (sqlLength >= 20000) {
-            sqlLengthReport.getGt20000_30000().incrementAndGet();
+            sqlLengthReport.getGt20000_30000().getValue().incrementAndGet();
         } else if (sqlLength >= 10000) {
-            sqlLengthReport.getGt10000_20000().incrementAndGet();
+            sqlLengthReport.getGt10000_20000().getValue().incrementAndGet();
         } else if (sqlLength >= 5000) {
-            sqlLengthReport.getGt5000_10000().incrementAndGet();
+            sqlLengthReport.getGt5000_10000().getValue().incrementAndGet();
         } else if (sqlLength >= 2000) {
-            sqlLengthReport.getGt2000_5000().incrementAndGet();
+            sqlLengthReport.getGt2000_5000().getValue().incrementAndGet();
         } else if (sqlLength >= 1000) {
-            sqlLengthReport.getGt1000_2000().incrementAndGet();
+            sqlLengthReport.getGt1000_2000().getValue().incrementAndGet();
         } else if (sqlLength >= 500) {
-            sqlLengthReport.getGt500_1000().incrementAndGet();
+            sqlLengthReport.getGt500_1000().getValue().incrementAndGet();
         } else {
-            sqlLengthReport.get_gt500().incrementAndGet();
+            sqlLengthReport.get_gt500().getValue().incrementAndGet();
         }
 
     }
@@ -146,57 +147,134 @@ public class ReportBuilder {
     }
 
 
-    private void buildUnionCountReport(int count, SqlReport.UnionCountReport unionCountReport) {
+    private static void buildUnionCountReport(int count, SqlReport.UnionCountReport unionCountReport) {
         if (count >= 50) {
-            unionCountReport.getGt50_().incrementAndGet();
+            unionCountReport.getGt50_().getValue().incrementAndGet();
         } else if (count >= 40) {
-            unionCountReport.getGt40_50().incrementAndGet();
+            unionCountReport.getGt40_50().getValue().incrementAndGet();
         } else if (count >= 30) {
-            unionCountReport.getGt30_40().incrementAndGet();
+            unionCountReport.getGt30_40().getValue().incrementAndGet();
         } else if (count >= 20) {
-            unionCountReport.getGt20_30().incrementAndGet();
+            unionCountReport.getGt20_30().getValue().incrementAndGet();
         } else if (count >= 10) {
-            unionCountReport.getGt10_20().incrementAndGet();
+            unionCountReport.getGt10_20().getValue().incrementAndGet();
         } else if (count >= 5) {
-            unionCountReport.getGt5_10().incrementAndGet();
+            unionCountReport.getGt5_10().getValue().incrementAndGet();
         } else {
-            unionCountReport.get_le5().incrementAndGet();
+            unionCountReport.get_le5().getValue().incrementAndGet();
         }
     }
 
-    private void buildTableRefCountReport(int count, SqlReport.TableRefCountReport tableRefCountReport) {
+    private static void buildTableRefCountReport(int count, SqlReport.TableRefCountReport tableRefCountReport) {
         if (count >= 50) {
-            tableRefCountReport.getGt50_().incrementAndGet();
+            tableRefCountReport.getGt50_().getValue().incrementAndGet();
         } else if (count >= 40) {
-            tableRefCountReport.getGt40_50().incrementAndGet();
+            tableRefCountReport.getGt40_50().getValue().incrementAndGet();
         } else if (count >= 30) {
-            tableRefCountReport.getGt30_40().incrementAndGet();
+            tableRefCountReport.getGt30_40().getValue().incrementAndGet();
         } else if (count >= 20) {
-            tableRefCountReport.getGt20_30().incrementAndGet();
+            tableRefCountReport.getGt20_30().getValue().incrementAndGet();
         } else if (count >= 10) {
-            tableRefCountReport.getGt10_20().incrementAndGet();
+            tableRefCountReport.getGt10_20().getValue().incrementAndGet();
         } else if (count >= 5) {
-            tableRefCountReport.getGt5_10().incrementAndGet();
+            tableRefCountReport.getGt5_10().getValue().incrementAndGet();
         } else {
-            tableRefCountReport.get_le5().incrementAndGet();
+            tableRefCountReport.get_le5().getValue().incrementAndGet();
         }
     }
 
-    private void buildTableUseCountReport(int count, SqlReport.TableUseCountReport tableUseCountReport) {
+    private static void buildTableReadCountReport(int count, SqlReport.TableUseCountReport tableUseCountReport) {
         if (count >= 50) {
-            tableUseCountReport.getGt50_().incrementAndGet();
+            tableUseCountReport.getGt50_().getValue().incrementAndGet();
         } else if (count >= 40) {
-            tableUseCountReport.getGt40_50().incrementAndGet();
+            tableUseCountReport.getGt40_50().getValue().incrementAndGet();
         } else if (count >= 30) {
-            tableUseCountReport.getGt30_40().incrementAndGet();
+            tableUseCountReport.getGt30_40().getValue().incrementAndGet();
         } else if (count >= 20) {
-            tableUseCountReport.getGt20_30().incrementAndGet();
+            tableUseCountReport.getGt20_30().getValue().incrementAndGet();
         } else if (count >= 10) {
-            tableUseCountReport.getGt10_20().incrementAndGet();
+            tableUseCountReport.getGt10_20().getValue().incrementAndGet();
         } else if (count >= 5) {
-            tableUseCountReport.getGt5_10().incrementAndGet();
+            tableUseCountReport.getGt5_10().getValue().incrementAndGet();
         } else {
-            tableUseCountReport.get_le5().incrementAndGet();
+            tableUseCountReport.get_le5().getValue().incrementAndGet();
         }
     }
+
+    private static void buildScanFileCountReport(int count, SqlReport.ScanFileCountReport scanFileCountReport) {
+        if (count >= 50) {
+            scanFileCountReport.getGt50_().getValue().incrementAndGet();
+        } else if (count >= 40) {
+            scanFileCountReport.getGt40_50().getValue().incrementAndGet();
+        } else if (count >= 30) {
+            scanFileCountReport.getGt30_40().getValue().incrementAndGet();
+        } else if (count >= 20) {
+            scanFileCountReport.getGt20_30().getValue().incrementAndGet();
+        } else if (count >= 10) {
+            scanFileCountReport.getGt10_20().getValue().incrementAndGet();
+        } else if (count >= 5) {
+            scanFileCountReport.getGt5_10().getValue().incrementAndGet();
+        } else {
+            scanFileCountReport.get_le5().getValue().incrementAndGet();
+        }
+    }
+
+    private static void buildScanFileSizeReport(long size, SqlReport.ScanFileSizeReport scanFileSizeReport) {
+        if (size >= 1024 * 1024 * 1024 * 50) {
+            scanFileSizeReport.getGt50G_().getValue().incrementAndGet();
+        } else if (size >= 1024 * 1024 * 1024 * 10) {
+            scanFileSizeReport.getGt10G_50G().getValue().incrementAndGet();
+        } else if (size >= 1024 * 1024 * 1024 * 5) {
+            scanFileSizeReport.getGt5G_10G().getValue().incrementAndGet();
+        } else if (size >= 1024 * 1024 * 1024) {
+            scanFileSizeReport.getGt1G_5G().getValue().incrementAndGet();
+        } else if (size >= 1024 * 1024 * 300) {
+            scanFileSizeReport.getGt300M_1G().getValue().incrementAndGet();
+        } else if (size >= 1024 * 1024 * 100) {
+            scanFileSizeReport.getGt100M_300M().getValue().incrementAndGet();
+        } else if (size >= 1024 * 1024 * 50) {
+            scanFileSizeReport.getGt50M_100M().getValue().incrementAndGet();
+        } else if (size >= 1024 * 1024 * 10) {
+            scanFileSizeReport.getGt10M_50M().getValue().incrementAndGet();
+        } else {
+            scanFileSizeReport.get_le10M().getValue().incrementAndGet();
+        }
+    }
+
+    private static void buildScanSmallFileCountReport(Integer count, SqlReport.ScanSmallFileCountReport scanSmallFileCountReport) {
+        if (count >= 50) {
+            scanSmallFileCountReport.getGt50_().getValue().incrementAndGet();
+        } else if (count >= 40) {
+            scanSmallFileCountReport.getGt40_50().getValue().incrementAndGet();
+        } else if (count >= 30) {
+            scanSmallFileCountReport.getGt30_40().getValue().incrementAndGet();
+        } else if (count >= 20) {
+            scanSmallFileCountReport.getGt20_30().getValue().incrementAndGet();
+        } else if (count >= 10) {
+            scanSmallFileCountReport.getGt10_20().getValue().incrementAndGet();
+        } else if (count >= 5) {
+            scanSmallFileCountReport.getGt5_10().getValue().incrementAndGet();
+        } else {
+            scanSmallFileCountReport.get_le5().getValue().incrementAndGet();
+        }
+    }
+
+    private static void buildScanPartitionCountReport(Integer count, SqlReport.ScanPartitionCountReport scanPartitionCountReport) {
+        if (count >= 50) {
+            scanPartitionCountReport.getGt50_().getValue().incrementAndGet();
+        } else if (count >= 40) {
+            scanPartitionCountReport.getGt40_50().getValue().incrementAndGet();
+        } else if (count >= 30) {
+            scanPartitionCountReport.getGt30_40().getValue().incrementAndGet();
+        } else if (count >= 20) {
+            scanPartitionCountReport.getGt20_30().getValue().incrementAndGet();
+        } else if (count >= 10) {
+            scanPartitionCountReport.getGt10_20().getValue().incrementAndGet();
+        } else if (count >= 5) {
+            scanPartitionCountReport.getGt5_10().getValue().incrementAndGet();
+        } else {
+            scanPartitionCountReport.get_le5().getValue().incrementAndGet();
+        }
+    }
+
 }

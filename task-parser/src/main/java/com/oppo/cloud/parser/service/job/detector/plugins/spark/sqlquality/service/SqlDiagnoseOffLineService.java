@@ -1,15 +1,13 @@
 package com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.service;
 
 
-import com.alibaba.fastjson2.JSONObject;
 import com.oppo.cloud.common.domain.eventlog.SqlScoreAbnormal;
 import com.oppo.cloud.common.domain.eventlog.config.SqlScoreConfig;
 import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.bean.DiagnoseResult;
+import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.bean.ScriptDiagnoseDetail;
 import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.bean.ScriptInfo;
-import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.bean.SqlReport;
 import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.util.ExcelUtil;
 import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.util.MySqlUtils;
-import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.util.ReportBuilder;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
@@ -27,13 +25,6 @@ public class SqlDiagnoseOffLineService {
     public static AtomicInteger failCount = new AtomicInteger();
     private static Connection conn = MySqlUtils.getConnection();
 
-
-    public static void buildReport(List<ScriptInfo> scriptInfos) {
-        ReportBuilder reportBuilder = new ReportBuilder(scriptInfos);
-        SqlReport sqlReport = reportBuilder.buildReport();
-        System.out.println("REPORT:" + JSONObject.toJSONString(sqlReport));
-    }
-
     public static void writeExcel(List<ScriptInfo> scriptInfos) {
         List<ScriptInfo> abNormalScriptList = scriptInfos.stream().filter(x -> x.getScore() < 60).collect(Collectors.toList());
         System.out.println("ABNORMAL ROWS : " + abNormalScriptList.size());
@@ -41,6 +32,95 @@ public class SqlDiagnoseOffLineService {
         ExcelUtil.writeExcel(abNormalScriptList,
                 "C:\\Users\\22047328\\Desktop\\work-"
                         + new SimpleDateFormat("yyyymmdd_HHmm").format(System.currentTimeMillis()) + ".xlsx");
+    }
+
+    /**
+     * 获取单个表设计
+     *
+     * @return List<List < Object>>
+     */
+    public static List<ScriptDiagnoseDetail> getDiagnoseResultList() {
+        String sql = "select *,\n" +
+                "       ifnull(JSON_EXTRACT(JSON_EXTRACT(diagnose_result, '$.SQL_GROUP_BY'), '$.deductScore'),\n" +
+                "              0)                                                                               SQL_GROUP_BY_DEDUCTSCORE,\n" +
+                "       ifnull(JSON_EXTRACT(JSON_EXTRACT(diagnose_result, '$.SQL_GROUP_BY'), '$.value'), 0)     SQL_GROUP_BY_VALUE,\n" +
+                "\n" +
+                "       ifnull(JSON_EXTRACT(JSON_EXTRACT(diagnose_result, '$.SQL_UNION'), '$.deductScore'), 0)  SQL_UNION_DEDUCTSCORE,\n" +
+                "       ifnull(JSON_EXTRACT(JSON_EXTRACT(diagnose_result, '$.SQL_UNION'), '$.value'), 0)        SQL_UNION_VALUE,\n" +
+                "\n" +
+                "       ifnull(JSON_EXTRACT(JSON_EXTRACT(diagnose_result, '$.SQL_JOIN'), '$.deductScore'), 0)   SQL_JOIN_DEDUCTSCORE,\n" +
+                "       ifnull(JSON_EXTRACT(JSON_EXTRACT(diagnose_result, '$.SQL_JOIN'), '$.value'), 0)         SQL_JOIN_VALUE,\n" +
+                "\n" +
+                "       ifnull(JSON_EXTRACT(JSON_EXTRACT(diagnose_result, '$.SQL_ORDER_BY'), '$.deductScore'),\n" +
+                "              0)                                                                               SQL_ORDER_BY_DEDUCTSCORE,\n" +
+                "       ifnull(JSON_EXTRACT(JSON_EXTRACT(diagnose_result, '$.SQL_ORDER_BY'), '$.value'), 0)     SQL_ORDER_BY_VALUE,\n" +
+                "\n" +
+                "       ifnull(JSON_EXTRACT(JSON_EXTRACT(diagnose_result, '$.SQL_LENGTH'), '$.deductScore'), 0) SQL_LENGTH_DEDUCTSCORE,\n" +
+                "       ifnull(JSON_EXTRACT(JSON_EXTRACT(diagnose_result, '$.SQL_LENGTH'), '$.value'), 0)       SQL_LENGTH_VALUE,\n" +
+                "\n" +
+                "       ifnull(JSON_EXTRACT(JSON_EXTRACT(diagnose_result, '$.SQL_TABLE_REF'), '$.deductScore'),\n" +
+                "              0)                                                                               SQL_TABLE_REF_DEDUCTSCORE,\n" +
+                "       ifnull(JSON_EXTRACT(JSON_EXTRACT(diagnose_result, '$.SQL_TABLE_REF'), '$.value'), 0)    SQL_TABLE_REF_VALUE,\n" +
+                "\n" +
+                "       ifnull(JSON_EXTRACT(JSON_EXTRACT(diagnose_result, '$.SQL_TABLE_READ'), '$.deductScore'),\n" +
+                "              0)                                                                               SQL_TABLE_READ_DEDUCTSCORE,\n" +
+                "       ifnull(JSON_EXTRACT(JSON_EXTRACT(diagnose_result, '$.SQL_TABLE_READ'), '$.value'), 0)   SQL_TABLE_READ_VALUE,\n" +
+                "\n" +
+                "       ifnull(JSON_EXTRACT(JSON_EXTRACT(diagnose_result, '$.SQL_SCAN_FILE_COUNT'), '$.deductScore'),\n" +
+                "              0)                                                                               SQL_SCAN_FILE_COUNT_DEDUCTSCORE,\n" +
+                "       ifnull(JSON_EXTRACT(JSON_EXTRACT(diagnose_result, '$.SQL_SCAN_FILE_COUNT'), '$.value'),\n" +
+                "              0)                                                                               SQL_SCAN_FILE_COUNT_VALUE,\n" +
+                "\n" +
+                "       ifnull(JSON_EXTRACT(JSON_EXTRACT(diagnose_result, '$.SQL_SCAN_FILE_SIZE'), '$.deductScore'),\n" +
+                "              0)                                                                               SQL_SCAN_FILE_SIZE_DEDUCTSCORE,\n" +
+                "       ifnull(JSON_EXTRACT(JSON_EXTRACT(diagnose_result, '$.SQL_SCAN_FILE_SIZE'), '$.value'),\n" +
+                "              0)                                                                               SQL_SCAN_FILE_SIZE_VALUE,\n" +
+                "\n" +
+                "       ifnull(JSON_EXTRACT(JSON_EXTRACT(diagnose_result, '$.SQL_SCAN_SMALL_FILE_COUNT'), '$.deductScore'),\n" +
+                "              0)                                                                               SQL_SCAN_SMALL_FILE_COUNT_DEDUCTSCORE,\n" +
+                "       ifnull(JSON_EXTRACT(JSON_EXTRACT(diagnose_result, '$.SQL_SCAN_SMALL_FILE_COUNT'), '$.value'),\n" +
+                "              0)                                                                               SQL_SCAN_SMALL_FILE_COUNT_VALUE,\n" +
+                "\n" +
+                "       ifnull(JSON_EXTRACT(JSON_EXTRACT(diagnose_result, '$.SQL_SCAN_PARTITION_COUNT'), '$.deductScore'),\n" +
+                "              0)                                                                               SQL_SCAN_PARTITION_COUNT_DEDUCTSCORE,\n" +
+                "       ifnull(JSON_EXTRACT(JSON_EXTRACT(diagnose_result, '$.SQL_SCAN_PARTITION_COUNT'), '$.value'),\n" +
+                "              0)                                                                               SQL_SCAN_PARTITION_COUNT_VALUE\n" +
+                "\n" +
+                "from t_script_sql_diagnose_result ";
+        System.out.println(sql);
+        List<ScriptDiagnoseDetail> fields = new ArrayList<>();
+        try {
+            Statement stat = conn.createStatement();
+            ResultSet rs = stat.executeQuery(sql);
+            while (rs.next()) {
+                fields.add(new ScriptDiagnoseDetail(
+                        rs.getString("script_id"), rs.getString("script_name"),
+                        rs.getString("script_type"), rs.getString("command"),
+                        rs.getString("db_type"), rs.getString("create_user_name"),
+                        rs.getString("create_user_nickname"), rs.getString("group_id"),
+                        rs.getString("group_name"), rs.getString("group_admin_name"),
+                        rs.getString("group_admin_nickname"), rs.getString("root_group_id"),
+                        rs.getString("root_group_name"), rs.getDouble("score"),
+                        rs.getString("diagnose_result"), rs.getString("data_date"),
+
+                        rs.getDouble("SQL_GROUP_BY_DEDUCTSCORE"), rs.getInt("SQL_GROUP_BY_VALUE"),
+                        rs.getDouble("SQL_UNION_DEDUCTSCORE"), rs.getInt("SQL_UNION_VALUE"),
+                        rs.getDouble("SQL_JOIN_DEDUCTSCORE"), rs.getInt("SQL_JOIN_VALUE"),
+                        rs.getDouble("SQL_ORDER_BY_DEDUCTSCORE"), rs.getInt("SQL_ORDER_BY_VALUE"),
+                        rs.getDouble("SQL_LENGTH_DEDUCTSCORE"), rs.getInt("SQL_LENGTH_VALUE"),
+                        rs.getDouble("SQL_TABLE_REF_DEDUCTSCORE"), rs.getInt("SQL_TABLE_REF_VALUE"),
+                        rs.getDouble("SQL_TABLE_READ_DEDUCTSCORE"), rs.getInt("SQL_TABLE_READ_VALUE"),
+                        rs.getDouble("SQL_SCAN_FILE_COUNT_DEDUCTSCORE"), rs.getInt("SQL_SCAN_FILE_COUNT_VALUE"),
+                        rs.getDouble("SQL_SCAN_FILE_SIZE_DEDUCTSCORE"), rs.getLong("SQL_SCAN_FILE_SIZE_VALUE"),
+                        rs.getDouble("SQL_SCAN_SMALL_FILE_COUNT_DEDUCTSCORE"), rs.getInt("SQL_SCAN_SMALL_FILE_COUNT_VALUE"),
+                        rs.getDouble("SQL_SCAN_PARTITION_COUNT_DEDUCTSCORE"), rs.getInt("SQL_SCAN_PARTITION_COUNT_VALUE")
+                ));
+            }
+        } catch (SQLException e) {
+            System.out.println("get script list fail." + e.getMessage());
+            e.printStackTrace();
+        }
+        return fields;
     }
 
     /**
