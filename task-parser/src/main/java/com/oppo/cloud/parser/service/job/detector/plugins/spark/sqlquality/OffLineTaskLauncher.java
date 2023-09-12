@@ -4,12 +4,13 @@ package com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality;
 import com.alibaba.fastjson2.JSON;
 import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.bean.ScriptDiagnoseDetail;
 import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.bean.ScriptInfo;
-import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.bean.SqlReport;
 import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.service.SqlDiagnoseOffLineService;
 import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.util.ReportBuilder;
 import org.apache.commons.lang.time.FastDateFormat;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class OffLineTaskLauncher {
@@ -22,8 +23,8 @@ public class OffLineTaskLauncher {
         List<ScriptDiagnoseDetail> scriptInfos = SqlDiagnoseOffLineService.getDiagnoseResultList();
 
         System.out.println("Get Report Start");
-        SqlReport sqlReport = ReportBuilder.buildReport(scriptInfos);
-        System.out.println(JSON.toJSONString(sqlReport.getBi()));
+        Map<String, List<ReportBuilder.StaticElement>> stringListHashMap = ReportBuilder.buildReport(scriptInfos);
+        System.out.println(JSON.toJSONString(stringListHashMap));
         System.out.println("Get Report End");
 
     }
