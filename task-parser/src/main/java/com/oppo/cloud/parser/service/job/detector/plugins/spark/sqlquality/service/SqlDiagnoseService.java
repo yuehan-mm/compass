@@ -93,13 +93,13 @@ public class SqlDiagnoseService {
 
         if (diagnoseResult.getOrderByCount() > SQL_ORDER_BY_THRESHOLD) {
             res.put("SQL_ORDER_BY", new DiagnoseDesc("SQL_ORDER_BY",
-                    SQL_ORDER_BY_THRESHOLD, diagnoseResult.getJoinCount(),
+                    SQL_ORDER_BY_THRESHOLD, diagnoseResult.getOrderByCount(),
                     BigDecimal.valueOf((diagnoseResult.getOrderByCount() - SQL_ORDER_BY_THRESHOLD))
                             .multiply(BigDecimal.valueOf(SQL_ORDER_BY_SCORE)).doubleValue(),
                     SQL_ORDER_BY_DESC));
         } else {
             res.put("SQL_ORDER_BY", new DiagnoseDesc("SQL_ORDER_BY",
-                    SQL_ORDER_BY_THRESHOLD, diagnoseResult.getJoinCount(),
+                    SQL_ORDER_BY_THRESHOLD, diagnoseResult.getOrderByCount(),
                     0,
                     SQL_ORDER_BY_DESC));
         }
@@ -118,26 +118,26 @@ public class SqlDiagnoseService {
 
         if (diagnoseResult.getRefTableMap().size() > SQL_TABLE_ERF_THRESHOLD) {
             res.put("SQL_TABLE_REF", new DiagnoseDesc("SQL_TABLE_REF",
-                    SQL_TABLE_ERF_THRESHOLD, diagnoseResult.getSqlLength(),
+                    SQL_TABLE_ERF_THRESHOLD, diagnoseResult.getRefTableMap().size(),
                     BigDecimal.valueOf((diagnoseResult.getRefTableMap().size() - SQL_TABLE_ERF_THRESHOLD))
                             .multiply(BigDecimal.valueOf(SQL_TABLE_ERF_SCORE)).doubleValue(),
                     SQL_TABLE_ERF_DESC, diagnoseResult.getRefTableMap().keySet()));
         } else {
             res.put("SQL_TABLE_REF", new DiagnoseDesc("SQL_TABLE_REF",
-                    SQL_TABLE_ERF_THRESHOLD, diagnoseResult.getSqlLength(), 0,
+                    SQL_TABLE_ERF_THRESHOLD, diagnoseResult.getRefTableMap().size(), 0,
                     SQL_TABLE_ERF_DESC, diagnoseResult.getRefTableMap().keySet()));
         }
 
         Integer readTableCount = diagnoseResult.getRefTableMap().values().stream().reduce((x, y) -> x + y).orElse(0);
         if (readTableCount > SQL_TABLE_READ_THRESHOLD) {
             res.put("SQL_TABLE_READ", new DiagnoseDesc("SQL_TABLE_READ",
-                    SQL_TABLE_READ_THRESHOLD, diagnoseResult.getSqlLength(),
-                    BigDecimal.valueOf((diagnoseResult.getRefTableMap().size() - SQL_TABLE_READ_THRESHOLD))
+                    SQL_TABLE_READ_THRESHOLD, readTableCount,
+                    BigDecimal.valueOf((readTableCount - SQL_TABLE_READ_THRESHOLD))
                             .multiply(BigDecimal.valueOf(SQL_TABLE_READ_SCORE)).doubleValue(),
                     SQL_TABLE_READ_DESC, diagnoseResult.getRefTableMap()));
         } else {
             res.put("SQL_TABLE_READ", new DiagnoseDesc("SQL_TABLE_READ",
-                    SQL_TABLE_READ_THRESHOLD, diagnoseResult.getSqlLength(),
+                    SQL_TABLE_READ_THRESHOLD, readTableCount,
                     0, SQL_TABLE_READ_DESC, diagnoseResult.getRefTableMap()));
         }
 
@@ -148,50 +148,50 @@ public class SqlDiagnoseService {
         if (fileScanReport != null) {
             if (fileScanReport.getTotalFileCount() > SQL_SCAN_FILE_COUNT_THRESHOLD) {
                 res.put("SQL_SCAN_FILE_COUNT", new DiagnoseDesc("SQL_SCAN_FILE_COUNT",
-                        SQL_SCAN_FILE_COUNT_THRESHOLD, diagnoseResult.getSqlLength(),
+                        SQL_SCAN_FILE_COUNT_THRESHOLD, fileScanReport.getTotalFileCount(),
                         BigDecimal.valueOf((fileScanReport.getTotalFileCount() - SQL_SCAN_FILE_COUNT_THRESHOLD))
                                 .multiply(BigDecimal.valueOf(SQL_SCAN_FILE_COUNT_SCORE)).doubleValue(),
                         SQL_SCAN_FILE_COUNT_DESC));
             } else {
                 res.put("SQL_SCAN_FILE_COUNT", new DiagnoseDesc("SQL_SCAN_FILE_COUNT",
-                        SQL_SCAN_FILE_COUNT_THRESHOLD, diagnoseResult.getSqlLength(),
+                        SQL_SCAN_FILE_COUNT_THRESHOLD, fileScanReport.getTotalFileCount(),
                         0, SQL_SCAN_FILE_COUNT_DESC));
             }
             // 扫描文件大小
             if (fileScanReport.getTotalFileSize() > SQL_SCAN_FILE_SIZE_THRESHOLD) {
                 res.put("SQL_SCAN_FILE_SIZE", new DiagnoseDesc("SQL_SCAN_FILE_SIZE",
-                        SQL_SCAN_FILE_SIZE_THRESHOLD, diagnoseResult.getSqlLength(),
+                        SQL_SCAN_FILE_SIZE_THRESHOLD, fileScanReport.getTotalFileSize(),
                         BigDecimal.valueOf(Math.ceil((fileScanReport.getTotalFileSize() - SQL_SCAN_FILE_SIZE_THRESHOLD) / (1024 * 1024 * 100.0)))
                                 .multiply(BigDecimal.valueOf(SQL_SCAN_FILE_SIZE_SCORE)).doubleValue(),
                         SQL_SCAN_FILE_SIZE_DESC));
             } else {
                 res.put("SQL_SCAN_FILE_SIZE", new DiagnoseDesc("SQL_SCAN_FILE_SIZE",
-                        SQL_SCAN_FILE_SIZE_THRESHOLD, diagnoseResult.getSqlLength(),
+                        SQL_SCAN_FILE_SIZE_THRESHOLD, fileScanReport.getTotalFileSize(),
                         0, SQL_SCAN_FILE_SIZE_DESC));
             }
             // 扫描小文件数量
             if (fileScanReport.getSmallFileCount() > SQL_SCAN_SMALL_FILE_COUNT_THRESHOLD) {
                 res.put("SQL_SCAN_SMALL_FILE_COUNT", new DiagnoseDesc("SQL_SCAN_SMALL_FILE_COUNT",
-                        SQL_SCAN_SMALL_FILE_COUNT_THRESHOLD, diagnoseResult.getSqlLength(),
+                        SQL_SCAN_SMALL_FILE_COUNT_THRESHOLD, fileScanReport.getSmallFileCount(),
                         BigDecimal.valueOf((fileScanReport.getSmallFileCount() - SQL_SCAN_SMALL_FILE_COUNT_THRESHOLD))
                                 .multiply(BigDecimal.valueOf(SQL_SCAN_SMALL_FILE_COUNT_SCORE)).doubleValue(),
                         SQL_SCAN_SMALL_FILE_COUNT_DESC));
             } else {
                 res.put("SQL_SCAN_SMALL_FILE_COUNT", new DiagnoseDesc("SQL_SCAN_SMALL_FILE_COUNT",
-                        SQL_SCAN_SMALL_FILE_COUNT_THRESHOLD, diagnoseResult.getSqlLength(),
+                        SQL_SCAN_SMALL_FILE_COUNT_THRESHOLD, fileScanReport.getSmallFileCount(),
                         0, SQL_SCAN_SMALL_FILE_COUNT_DESC));
             }
 
             // 扫描分区数量
             if (fileScanReport.getPartitionCount() > SQL_SCAN_PARTITION_COUNT_THRESHOLD) {
                 res.put("SQL_SCAN_PARTITION_COUNT", new DiagnoseDesc("SQL_SCAN_PARTITION_COUNT",
-                        SQL_SCAN_PARTITION_COUNT_THRESHOLD, diagnoseResult.getSqlLength(),
+                        SQL_SCAN_PARTITION_COUNT_THRESHOLD, fileScanReport.getPartitionCount(),
                         BigDecimal.valueOf((fileScanReport.getPartitionCount() - SQL_SCAN_PARTITION_COUNT_THRESHOLD))
                                 .multiply(BigDecimal.valueOf(SQL_SCAN_PARTITION_COUNT_SCORE)).doubleValue(),
                         SQL_SCAN_PARTITION_COUNT_DESC));
             } else {
                 res.put("SQL_SCAN_PARTITION_COUNT", new DiagnoseDesc("SQL_SCAN_PARTITION_COUNT",
-                        SQL_SCAN_PARTITION_COUNT_THRESHOLD, diagnoseResult.getSqlLength(),
+                        SQL_SCAN_PARTITION_COUNT_THRESHOLD, fileScanReport.getPartitionCount(),
                         0, SQL_SCAN_PARTITION_COUNT_DESC));
             }
         }
