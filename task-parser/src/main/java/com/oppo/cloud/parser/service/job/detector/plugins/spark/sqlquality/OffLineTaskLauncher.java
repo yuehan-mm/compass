@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class OffLineTaskLauncher {
     public static void main(String[] args) {
-        doReport();
+        doWork();
     }
 
     public static void doReport() {
@@ -43,7 +43,7 @@ public class OffLineTaskLauncher {
         System.out.println("Parse Fail Rows : " + SqlDiagnoseOffLineService.failCount.get());
 
         System.out.println("Write Table Start");
-        SqlDiagnoseOffLineService.deleteData(removeDataTime);
+        SqlDiagnoseOffLineService.deleteData(insertDataTime, removeDataTime);
         SqlDiagnoseOffLineService.writeTable(scriptInfos, insertDataTime);
         System.out.println("Write Table End");
     }

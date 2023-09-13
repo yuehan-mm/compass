@@ -199,12 +199,14 @@ public class SqlDiagnoseOffLineService {
         }
     }
 
-    public static void deleteData(String removeDataTime) {
-        String sql = "delete from t_script_sql_diagnose_result where data_date=? ";
-        System.out.println("Delete Expire Data. sql: " + sql.replace("?", removeDataTime));
+    public static void deleteData(String insertDataTime, String removeDataTime) {
+        String sql = "delete from t_script_sql_diagnose_result where data_date in (?,?)";
+        System.out.println("Delete Expire Data. sql: " + sql.replaceFirst("\\?", insertDataTime)
+                .replaceFirst("\\?", removeDataTime));
         try {
             PreparedStatement prepareStatement = conn.prepareStatement(sql);
-            prepareStatement.setString(1, removeDataTime);
+            prepareStatement.setString(1, insertDataTime);
+            prepareStatement.setString(2, removeDataTime);
             prepareStatement.executeUpdate();
         } catch (SQLException e) {
             System.out.println("delete data fail." + e.getMessage());

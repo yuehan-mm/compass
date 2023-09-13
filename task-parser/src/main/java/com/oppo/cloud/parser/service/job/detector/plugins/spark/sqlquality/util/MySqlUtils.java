@@ -10,7 +10,10 @@ import java.sql.DriverManager;
  */
 public class MySqlUtils {
 
-    private static String ip = "10.138.225.197";
+
+//    private static String ip = "10.138.225.199";
+//    private static int port = 1529;
+    private static String ip = "10.138.46.222";
     private static int port = 3306;
     private static String db = "bdmp_cluster";
     private static String username = "cluster_manager";
