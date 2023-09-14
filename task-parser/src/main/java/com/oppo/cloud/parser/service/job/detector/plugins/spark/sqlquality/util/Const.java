@@ -51,19 +51,19 @@ public class Const {
     public static final String SQL_TABLE_ERF_NAME = "引用表个数";
     public static final int SQL_TABLE_ERF_THRESHOLD = 5;
     public static final double SQL_TABLE_ERF_SCORE = 2.0;
-    public static final String SQL_TABLE_ERF_DESC = String.format("一个SQL内引用表个数最多为%s，之后每增加一个，分数-%s",
+    public static final String SQL_TABLE_ERF_DESC = String.format("一个SQL内引用表个数最多为%s个，之后每增加一个，分数-%s",
             SQL_TABLE_ERF_THRESHOLD, SQL_TABLE_ERF_SCORE);
 
     public static final String SQL_TABLE_READ_NAME = "使用表次数";
     public static final int SQL_TABLE_READ_THRESHOLD = 10;
     public static final double SQL_TABLE_READ_SCORE = 0.5;
-    public static final String SQL_TABLE_READ_DESC = String.format("一个SQL使用表次数最多为%s，之后每增加一次，分数-%s",
+    public static final String SQL_TABLE_READ_DESC = String.format("一个SQL使用表次数最多为%s次，之后每增加一次，分数-%s",
             SQL_TABLE_READ_THRESHOLD, SQL_TABLE_READ_SCORE);
 
     public static final String SQL_SCAN_FILE_COUNT_NAME = "文件数量";
     public static final int SQL_SCAN_FILE_COUNT_THRESHOLD = 10;
     public static final double SQL_SCAN_FILE_COUNT_SCORE = 0.5;
-    public static final String SQL_SCAN_FILE_COUNT_DESC = String.format("一个SQL扫描文件数量最多为%s，之后每增加一个,分数-%s",
+    public static final String SQL_SCAN_FILE_COUNT_DESC = String.format("一个SQL扫描文件数量最多为%s个，之后每增加一个,分数-%s",
             SQL_SCAN_FILE_COUNT_THRESHOLD, SQL_SCAN_FILE_COUNT_SCORE);
 
     public static final String SQL_SCAN_FILE_SIZE_NAME = "文件大小";
@@ -82,7 +82,7 @@ public class Const {
     public static final String SQL_SCAN_PARTITION_COUNT_NAME = "分区数量";
     public static final int SQL_SCAN_PARTITION_COUNT_THRESHOLD = 1;
     public static final double SQL_SCAN_PARTITION_COUNT_SCORE = 0.5;
-    public static final String SQL_SCAN_PARTITION_COUNT_DESC = String.format("一个SQL扫描分区数量最多为%s，之后每增加一个，分数-%s",
+    public static final String SQL_SCAN_PARTITION_COUNT_DESC = String.format("一个SQL扫描分区数量最多为%s个，之后每增加一个，分数-%s",
             SQL_SCAN_PARTITION_COUNT_THRESHOLD, SQL_SCAN_PARTITION_COUNT_SCORE);
 
 }
