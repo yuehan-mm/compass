@@ -18,71 +18,71 @@ public class Const {
     public static final String INSERT_REGEX = "insert.+table.+partition\\(.+\\)(\\s+|\\n+)";
     public static final String MEMORY_CONF_REGEX = "mapreduce.(map|reduce).memory.mb";
 
-    public static final String SQL_GROUP_BY_NAME = "聚合Group次数";
+    public static final String SQL_GROUP_BY_NAME = "SQL分组次数";
     public static final int SQL_GROUP_BY_THRESHOLD = 5;
     public static final double SQL_GROUP_BY_SCORE = 2.0;
-    public static final String SQL_GROUP_BY_DESC = String.format("一个SQL聚合Group次数最多为%s次，之后每增加一次，分数-%s",
+    public static final String SQL_GROUP_BY_DESC = String.format("一个SQL内最多进行%s次分组，之后每增加一次，分数-%s",
             SQL_GROUP_BY_THRESHOLD, SQL_GROUP_BY_SCORE);
 
-    public static final String SQL_UNION_NAME = "并联Union次数";
+    public static final String SQL_UNION_NAME = "SQL并联次数";
     public static final int SQL_UNION_THRESHOLD = 5;
     public static final double SQL_UNION_SCORE = 2.0;
-    public static final String SQL_UNION_DESC = String.format("一个SQL并联Union次数最多%s次，之后每增加一次，分数-%s",
+    public static final String SQL_UNION_DESC = String.format("同一个SQL内最多进行%s次并联，之后每增加一次，分数-%s",
             SQL_UNION_THRESHOLD, SQL_UNION_SCORE);
 
-    public static final String SQL_JOIN_NAME = "关联Join次数";
+    public static final String SQL_JOIN_NAME = "SQL关联次数";
     public static final int SQL_JOIN_THRESHOLD = 5;
     public static final double SQL_JOIN_SCORE = 2.0;
-    public static final String SQL_JOIN_DESC = String.format("一个SQL关联Join次数最多为%s次，之后每增加一次，分数-%s",
+    public static final String SQL_JOIN_DESC = String.format("一个SQL内关联次数最多为%s次，之后每增加一次，分数-%s",
             SQL_JOIN_THRESHOLD, SQL_JOIN_SCORE);
 
-    public static final String SQL_ORDER_BY_NAME = "排序Order次数";
+    public static final String SQL_ORDER_BY_NAME = "SQL排序次数";
     public static final int SQL_ORDER_BY_THRESHOLD = 1;
     public static final double SQL_ORDER_BY_SCORE = 2.0;
-    public static final String SQL_ORDER_BY_DESC = String.format("一个SQL排序Order次数最多%s次，之后每增加一次，分数-%s",
+    public static final String SQL_ORDER_BY_DESC = String.format("一个SQL内最多进行%s次排序，之后每增加一次，分数-%s",
             SQL_ORDER_BY_THRESHOLD, SQL_ORDER_BY_SCORE);
 
-    public static final String SQL_LENGTH_NAME = "SQL长度";
+    public static final String SQL_LENGTH_NAME = "SQL字节长度";
     public static final int SQL_LENGTH_THRESHOLD = 5000;
     public static final double SQL_LENGTH_SCORE = 0.1;
-    public static final String SQL_LENGTH_DESC = String.format("一个SQL长度最多为%s，之后长度每增加1000，分数-%s",
+    public static final String SQL_LENGTH_DESC = String.format("SQL长度阈值为%s，之后长度每增加1000，分数-%s",
             SQL_LENGTH_THRESHOLD, SQL_LENGTH_SCORE);
 
-    public static final String SQL_TABLE_ERF_NAME = "引用表个数";
+    public static final String SQL_TABLE_ERF_NAME = "SQL表引用个数";
     public static final int SQL_TABLE_ERF_THRESHOLD = 5;
     public static final double SQL_TABLE_ERF_SCORE = 2.0;
-    public static final String SQL_TABLE_ERF_DESC = String.format("一个SQL内引用表个数最多为%s，之后长度每增加1，分数-%s",
+    public static final String SQL_TABLE_ERF_DESC = String.format("同一个SQL内表的引用个数最多为%s，之后长度每增加1，分数-%s",
             SQL_TABLE_ERF_THRESHOLD, SQL_TABLE_ERF_SCORE);
 
-    public static final String SQL_TABLE_READ_NAME = "使用表次数";
+    public static final String SQL_TABLE_READ_NAME = "SQL表读取次数";
     public static final int SQL_TABLE_READ_THRESHOLD = 10;
     public static final double SQL_TABLE_READ_SCORE = 0.5;
-    public static final String SQL_TABLE_READ_DESC = String.format("一个SQL使用表次数最多为%s，之后每多一次，分数-%s",
+    public static final String SQL_TABLE_READ_DESC = String.format("同一个SQL内表的读取次数最多为%s，之后每多一次，分数-%s",
             SQL_TABLE_READ_THRESHOLD, SQL_TABLE_READ_SCORE);
 
-    public static final String SQL_SCAN_FILE_COUNT_NAME = "文件数量";
+    public static final String SQL_SCAN_FILE_COUNT_NAME = "SQL扫描文件数量";
     public static final int SQL_SCAN_FILE_COUNT_THRESHOLD = 10;
     public static final double SQL_SCAN_FILE_COUNT_SCORE = 0.5;
-    public static final String SQL_SCAN_FILE_COUNT_DESC = String.format("一个SQL扫描文件数量最多为%s，之后每增加一个,分数-%s",
+    public static final String SQL_SCAN_FILE_COUNT_DESC = String.format("一个SQL内最多扫描文件个数为%s，之后每增加一个,分数-%s",
             SQL_SCAN_FILE_COUNT_THRESHOLD, SQL_SCAN_FILE_COUNT_SCORE);
 
-    public static final String SQL_SCAN_FILE_SIZE_NAME = "文件大小";
+    public static final String SQL_SCAN_FILE_SIZE_NAME = "SQL扫描文件大小";
     public static final long SQL_SCAN_FILE_SIZE_THRESHOLD = 1024 * 1024 * 1024;
     public static final double SQL_SCAN_FILE_SIZE_SCORE = 0.1;
-    public static final String SQL_SCAN_FILE_SIZE_DESC = String.format("一个SQL扫描文件大小最大为%sM，之后每增加100M,分数-%s",
+    public static final String SQL_SCAN_FILE_SIZE_DESC = String.format("一个SQL内最多扫描文件大小为%sM，之后每增加100M,分数-%s",
             SQL_SCAN_FILE_SIZE_THRESHOLD / 1024 / 1024, SQL_SCAN_FILE_SIZE_SCORE);
 
 
-    public static final String SQL_SCAN_SMALL_FILE_COUNT_NAME = "小文件数量";
+    public static final String SQL_SCAN_SMALL_FILE_COUNT_NAME = "SQL扫描小文件(小于10M)数量";
     public static final int SQL_SCAN_SMALL_FILE_COUNT_THRESHOLD = 10;
     public static final double SQL_SCAN_SMALL_FILE_COUNT_SCORE = 0.2;
-    public static final String SQL_SCAN_SMALL_FILE_COUNT_DESC = String.format("一个SQL扫描小文件数量最多为%s个，之后每增加一个，分数-%s",
+    public static final String SQL_SCAN_SMALL_FILE_COUNT_DESC = String.format("一个SQL内最多扫描%s个小文件（小于10M），之后每增加一个，分数-%s",
             SQL_SCAN_SMALL_FILE_COUNT_THRESHOLD, SQL_SCAN_SMALL_FILE_COUNT_SCORE);
 
-    public static final String SQL_SCAN_PARTITION_COUNT_NAME = "分区数量";
+    public static final String SQL_SCAN_PARTITION_COUNT_NAME = "SQL扫描分区数量";
     public static final int SQL_SCAN_PARTITION_COUNT_THRESHOLD = 1;
     public static final double SQL_SCAN_PARTITION_COUNT_SCORE = 0.5;
-    public static final String SQL_SCAN_PARTITION_COUNT_DESC = String.format("一个SQL扫描分区数量最多为%s，之后每增加一个，分数-%s",
+    public static final String SQL_SCAN_PARTITION_COUNT_DESC = String.format("一个SQL内最多扫描的分区数量为%s，之后每增加一个，分数-%s",
             SQL_SCAN_PARTITION_COUNT_THRESHOLD, SQL_SCAN_PARTITION_COUNT_SCORE);
 
 }
