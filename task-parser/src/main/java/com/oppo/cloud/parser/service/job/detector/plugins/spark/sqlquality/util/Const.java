@@ -51,7 +51,7 @@ public class Const {
     public static final String SQL_TABLE_ERF_NAME = "引用表个数";
     public static final int SQL_TABLE_ERF_THRESHOLD = 5;
     public static final double SQL_TABLE_ERF_SCORE = 2.0;
-    public static final String SQL_TABLE_ERF_DESC = String.format("一个SQL内引用表个数最多为%s，之后长度每增加1，分数-%s",
+    public static final String SQL_TABLE_ERF_DESC = String.format("一个SQL内引用表个数最多为%s，之后每增加一个，分数-%s",
             SQL_TABLE_ERF_THRESHOLD, SQL_TABLE_ERF_SCORE);
 
     public static final String SQL_TABLE_READ_NAME = "使用表次数";
