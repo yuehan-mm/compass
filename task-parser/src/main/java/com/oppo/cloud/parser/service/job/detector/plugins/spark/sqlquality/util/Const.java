@@ -57,7 +57,7 @@ public class Const {
     public static final String SQL_TABLE_READ_NAME = "使用表次数";
     public static final int SQL_TABLE_READ_THRESHOLD = 10;
     public static final double SQL_TABLE_READ_SCORE = 0.5;
-    public static final String SQL_TABLE_READ_DESC = String.format("一个SQL使用表次数最多为%s，之后每多一次，分数-%s",
+    public static final String SQL_TABLE_READ_DESC = String.format("一个SQL使用表次数最多为%s，之后每增加一次，分数-%s",
             SQL_TABLE_READ_THRESHOLD, SQL_TABLE_READ_SCORE);
 
     public static final String SQL_SCAN_FILE_COUNT_NAME = "文件数量";
