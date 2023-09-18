@@ -212,7 +212,7 @@ public class SqlDiagnoseService {
      * @param scriptName 脚本名称
      * @return <tableName, refCount>
      */
-    private static Map<String, Integer> getRefTableMap(String command, String scriptName) {
+    private synchronized static Map<String, Integer> getRefTableMap(String command, String scriptName) {
         Map<String, Integer> refTableMap;
         try {
             refTableMap = getRefTableMap(command, scriptName, "hive");
