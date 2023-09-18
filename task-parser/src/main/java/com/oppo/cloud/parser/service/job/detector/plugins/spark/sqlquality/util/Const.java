@@ -45,7 +45,7 @@ public class Const {
     public static final String SQL_LENGTH_NAME = "SQL长度";
     public static final int SQL_LENGTH_THRESHOLD = 5000;
     public static final double SQL_LENGTH_SCORE = 0.1;
-    public static final String SQL_LENGTH_DESC = String.format("一个SQL长度最多为%s，之后长度每增加1000，分数-%s",
+    public static final String SQL_LENGTH_DESC = String.format("SQL长度安全阈值为%s，之后长度每增加1000，分数-%s",
             SQL_LENGTH_THRESHOLD, SQL_LENGTH_SCORE);
 
     public static final String SQL_TABLE_ERF_NAME = "引用表个数";
