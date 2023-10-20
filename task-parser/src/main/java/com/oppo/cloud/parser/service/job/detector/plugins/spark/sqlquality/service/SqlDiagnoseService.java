@@ -26,7 +26,7 @@ public class SqlDiagnoseService {
         LinkedHashMap<String, DiagnoseDesc> res = new LinkedHashMap<>();
         BigDecimal score = BigDecimal.valueOf(100);
         try {
-            String grammarDiagnoseResult = getGrammarDiagnoseResult(command);
+            String grammarDiagnoseResult = getGrammarDiagnoseResult(command, taskApp);
             if (StringUtils.isNotEmpty(grammarDiagnoseResult)) {
                 JSONObject resJson = JSONObject.parseObject(grammarDiagnoseResult);
                 res.put("SQL_LENGTH", resJson.getObject("SQL_LENGTH", DiagnoseDesc.class));
@@ -103,7 +103,7 @@ public class SqlDiagnoseService {
         return diagnoseContent;
     }
 
-    public static String getGrammarDiagnoseResult(String command) {
+    public static String getGrammarDiagnoseResult(String command, TaskApp taskApp) {
         try {
             Map<String, Object> body = new HashMap<>();
             body.put("action", "insert");
@@ -114,7 +114,7 @@ public class SqlDiagnoseService {
             if (json.getInteger("status") != 200) throw new RuntimeException(jsonStr);
             return json.getJSONObject("data").getString("diagnoseResult");
         } catch (Exception e) {
-            log.error("get getGrammarDiagnoseResult fail. msg:" + e.getMessage());
+            log.error("get getGrammarDiagnoseResult fail. TaskName:" + taskApp.getTaskName() + "\tmsg:" + e.getMessage());
         }
         return null;
     }
