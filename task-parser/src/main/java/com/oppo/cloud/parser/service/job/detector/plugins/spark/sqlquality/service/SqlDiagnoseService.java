@@ -115,6 +115,7 @@ public class SqlDiagnoseService {
             return json.getJSONObject("data").getString("diagnoseResult");
         } catch (Exception e) {
             log.error("get getGrammarDiagnoseResult fail. TaskName:" + taskApp.getTaskName() + "\tmsg:" + e.getMessage());
+            log.error("consume log record error : {}", e);
         }
         return null;
     }
