@@ -74,7 +74,7 @@ public class MysqlWriter {
             ps.setString(4, taskParam.getTaskApp().getTaskName());
             int effectiveRow = ps.executeUpdate();
             if (effectiveRow != 1) {
-                log.error("update updateOffLineData fail. effectiveRow: {} , script_name:{}",
+                log.warn("update updateOffLineData fail. effectiveRow: {} , script_name:{}",
                         effectiveRow, taskParam.getTaskApp().getTaskName());
             }
         } catch (Exception e) {
