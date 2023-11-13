@@ -11,7 +11,7 @@ public class Const {
             SQL_SCAN_FILE_COUNT_THRESHOLD, SQL_SCAN_FILE_COUNT_SCORE);
 
     public static final String SQL_SCAN_FILE_SIZE_NAME = "文件大小";
-    public static final long SQL_SCAN_FILE_SIZE_THRESHOLD = 1024 * 1024 * 1024 * 10;
+    public static final long SQL_SCAN_FILE_SIZE_THRESHOLD = 1024 * 1024 * 1024 * 10l;
     public static final double SQL_SCAN_FILE_SIZE_SCORE = 0.1;
     public static final String SQL_SCAN_FILE_SIZE_DESC = String.format("一个SQL扫描文件大小最大为%sM，之后每增加100M,分数-%s",
             SQL_SCAN_FILE_SIZE_THRESHOLD / 1024 / 1024, SQL_SCAN_FILE_SIZE_SCORE);
