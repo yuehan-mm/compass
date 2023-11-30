@@ -67,7 +67,7 @@ public class MysqlWriter {
     public void saveSqlPerformanceAbnormal(SqlScoreAbnormal sqlScoreAbnormal, TaskParam taskParam) {
         PreparedStatement ps = null;
         try {
-            String sql = "INSERT INTO bdmp_cluster.t_script_sql_diagnose_result (application_id, application_type," +
+            String sql = "INSERT INTO bdmp_cluster.t_job_performance_diagnose_result (application_id, application_type," +
                     " queue, task_name, start_time,end_time, elapsed_time, score, diagnose_result, data_date)" +
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             ps = connection.prepareStatement(sql);
