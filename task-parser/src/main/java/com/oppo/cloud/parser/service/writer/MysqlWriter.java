@@ -17,6 +17,7 @@
 package com.oppo.cloud.parser.service.writer;
 
 import com.alibaba.fastjson2.JSON;
+import com.oppo.cloud.common.domain.elasticsearch.TaskApp;
 import com.oppo.cloud.common.domain.eventlog.SqlScoreAbnormal;
 import com.oppo.cloud.common.util.spring.SpringBeanUtil;
 import com.oppo.cloud.parser.config.HdopDBConfig;
@@ -54,6 +55,43 @@ public class MysqlWriter {
             mysqlWriter = new MysqlWriter();
         }
         return mysqlWriter;
+    }
+
+
+    /**
+     * 保存SQL性能异常
+     *
+     * @param sqlScoreAbnormal
+     * @param taskParam
+     */
+    public void saveSqlPerformanceAbnormal(SqlScoreAbnormal sqlScoreAbnormal, TaskParam taskParam) {
+        PreparedStatement ps = null;
+        try {
+            String sql = "INSERT INTO bdmp_cluster.t_script_sql_diagnose_result (application_id, application_type," +
+                    " queue, task_name, start_time,end_time, elapsed_time, score, diagnose_result, data_date," +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            ps = connection.prepareStatement(sql);
+            TaskApp taskApp = taskParam.getTaskApp();
+            ps.setString(1, taskApp.getApplicationId());
+            ps.setString(2, String.valueOf(taskApp.getApplicationType()));
+            ps.setString(3, taskApp.getQueue());
+            ps.setString(4, taskApp.getTaskName());
+            ps.setLong(5, taskApp.getStartTime().getTime());
+            ps.setLong(6, taskApp.getFinishTime().getTime());
+            ps.setDouble(7, taskApp.getElapsedTime());
+            ps.setDouble(8, sqlScoreAbnormal.getScore());
+            ps.setString(9, sqlScoreAbnormal.getDiagnoseResult());
+            ps.setString(10, FastDateFormat.getInstance("yyyy-MM-dd").format(System.currentTimeMillis()));
+            ps.execute();
+        } catch (Exception e) {
+            log.error("saveSqlScoreAbnormal fail. msg：{}", e.getMessage());
+        } finally {
+            try {
+                if (ps != null) ps.close();
+            } catch (SQLException e) {
+                log.error("close PreparedStatement fail. msg:{}", e.getMessage());
+            }
+        }
     }
 
 
