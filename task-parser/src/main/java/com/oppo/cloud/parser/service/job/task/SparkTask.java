@@ -16,10 +16,7 @@
 
 package com.oppo.cloud.parser.service.job.task;
 
-import com.oppo.cloud.common.domain.eventlog.DetectorResult;
-import com.oppo.cloud.common.domain.eventlog.DetectorStorage;
-import com.oppo.cloud.common.domain.eventlog.FileScanAbnormal;
-import com.oppo.cloud.common.domain.eventlog.SqlScoreAbnormal;
+import com.oppo.cloud.common.domain.eventlog.*;
 import com.oppo.cloud.common.domain.eventlog.config.DetectorConfig;
 import com.oppo.cloud.common.domain.gc.GCReport;
 import com.oppo.cloud.common.util.spring.SpringBeanUtil;
@@ -195,13 +192,15 @@ public class SparkTask extends Task {
             // 更新离线数据
             MysqlWriter.getInstance().updateOffLineData((SqlScoreAbnormal) sqlScoreDetectorResult.getData(), taskParam);
             DetectorResult sqlScoreDetectorResult2 = sqlScoreDetector.detect2(taskParam, (FileScanAbnormal) fileScanDetectorResult.getData());
-            MysqlWriter.getInstance().saveSqlPerformanceAbnormal((SqlScoreAbnormal) sqlScoreDetectorResult2.getData(), taskParam);
+            MysqlWriter.getInstance().saveJobPerformanceAbnormal((SqlScoreAbnormal) sqlScoreDetectorResult2.getData(), taskParam.getTaskApp());
         }
 
         // mem waste abnormal
         if (!this.detectorConfig.getMemWasteConfig().getDisable() && executorLogInfo.gcReports.size() > 0 && memoryCalculateParam != null) {
             MemWasteDetector memWasteDetector = new MemWasteDetector(this.detectorConfig.getMemWasteConfig());
-            detectorResultList.add(memWasteDetector.detect(executorLogInfo.gcReports, memoryCalculateParam));
+            DetectorResult detect = memWasteDetector.detect(executorLogInfo.gcReports, memoryCalculateParam);
+            MysqlWriter.getInstance().saveJobMemWasteDAbnormal((MemWasteAbnormal) detect.getData(), taskParam.getTaskApp());
+            detectorResultList.add(detect);
         }
 
         return detectorResultList;

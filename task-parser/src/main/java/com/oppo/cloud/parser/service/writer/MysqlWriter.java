@@ -16,8 +16,8 @@
 
 package com.oppo.cloud.parser.service.writer;
 
-import com.alibaba.fastjson2.JSON;
 import com.oppo.cloud.common.domain.elasticsearch.TaskApp;
+import com.oppo.cloud.common.domain.eventlog.MemWasteAbnormal;
 import com.oppo.cloud.common.domain.eventlog.SqlScoreAbnormal;
 import com.oppo.cloud.common.util.spring.SpringBeanUtil;
 import com.oppo.cloud.parser.config.HdopDBConfig;
@@ -62,16 +62,15 @@ public class MysqlWriter {
      * 保存SQL性能异常
      *
      * @param sqlScoreAbnormal
-     * @param taskParam
+     * @param taskApp
      */
-    public void saveSqlPerformanceAbnormal(SqlScoreAbnormal sqlScoreAbnormal, TaskParam taskParam) {
+    public void saveJobPerformanceAbnormal(SqlScoreAbnormal sqlScoreAbnormal, TaskApp taskApp) {
         PreparedStatement ps = null;
         try {
             String sql = "INSERT INTO bdmp_cluster.t_job_performance_diagnose_result (application_id, application_type," +
                     " queue, task_name, start_time,end_time, elapsed_time, score, diagnose_result, data_date)" +
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             ps = connection.prepareStatement(sql);
-            TaskApp taskApp = taskParam.getTaskApp();
             ps.setString(1, taskApp.getApplicationId());
             ps.setString(2, String.valueOf(taskApp.getApplicationType()));
             ps.setString(3, taskApp.getQueue());
@@ -140,6 +139,39 @@ public class MysqlWriter {
             }
         } catch (Exception e) {
             log.error("updateOffLineData fail. msg：{}", e.getMessage());
+        } finally {
+            try {
+                if (ps != null) ps.close();
+            } catch (SQLException e) {
+                log.error("close PreparedStatement fail. msg:{}", e.getMessage());
+            }
+        }
+    }
+
+    public void saveJobMemWasteDAbnormal(MemWasteAbnormal memWasteAbnormal, TaskApp taskApp) {
+        PreparedStatement ps = null;
+        try {
+            String sql = "INSERT INTO bdmp_cluster.t_job_mem_waste_diagnose_result (application_id, application_type," +
+                    " queue, task_name, start_time,end_time, elapsed_time, driver_memory,executor_memory," +
+                    " total_memory_time, total_memory_compute_time, wastePercent, data_date)" +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, taskApp.getApplicationId());
+            ps.setString(2, String.valueOf(taskApp.getApplicationType()));
+            ps.setString(3, taskApp.getQueue());
+            ps.setString(4, taskApp.getTaskName());
+            ps.setLong(5, taskApp.getStartTime().getTime());
+            ps.setLong(6, taskApp.getFinishTime().getTime());
+            ps.setDouble(7, taskApp.getElapsedTime());
+            ps.setLong(8, memWasteAbnormal.getDriverMemory());
+            ps.setLong(9, memWasteAbnormal.getExecutorMemory());
+            ps.setLong(10, memWasteAbnormal.getTotalMemoryTime());
+            ps.setLong(11, memWasteAbnormal.getTotalMemoryComputeTime());
+            ps.setDouble(12, memWasteAbnormal.getWastePercent());
+            ps.setString(13, FastDateFormat.getInstance("yyyy-MM-dd").format(System.currentTimeMillis()));
+            ps.execute();
+        } catch (Exception e) {
+            log.error("saveSqlScoreAbnormal fail. msg：{}", e.getMessage());
         } finally {
             try {
                 if (ps != null) ps.close();
