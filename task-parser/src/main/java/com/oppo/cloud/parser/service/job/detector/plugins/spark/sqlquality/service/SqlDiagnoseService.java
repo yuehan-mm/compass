@@ -103,6 +103,77 @@ public class SqlDiagnoseService {
         return diagnoseContent;
     }
 
+    public static SqlScoreAbnormal buildSqlScoreAbnormal2(TaskApp taskApp, FileScanAbnormal fileScanAbnormal, SqlScoreConfig sqlScoreConfig) {
+        LinkedHashMap<String, DiagnoseDesc> res = new LinkedHashMap<>();
+        BigDecimal score = BigDecimal.valueOf(100);
+        try {
+
+            // 扫描文件数量
+            FileScanAbnormal.FileScanReport fileScanReport = fileScanAbnormal.getScriptReport();
+            if (fileScanReport != null) {
+                if (fileScanReport.getTotalFileCount() > SQL_SCAN_FILE_COUNT_THRESHOLD) {
+                    res.put("SQL_SCAN_FILE_COUNT", new DiagnoseDesc("SQL_SCAN_FILE_COUNT", SQL_SCAN_FILE_COUNT_NAME,
+                            SQL_SCAN_FILE_COUNT_THRESHOLD, fileScanReport.getTotalFileCount(),
+                            BigDecimal.valueOf((fileScanReport.getTotalFileCount() - SQL_SCAN_FILE_COUNT_THRESHOLD))
+                                    .multiply(BigDecimal.valueOf(SQL_SCAN_FILE_COUNT_SCORE)).doubleValue(),
+                            SQL_SCAN_FILE_COUNT_DESC));
+                } else {
+                    res.put("SQL_SCAN_FILE_COUNT", new DiagnoseDesc("SQL_SCAN_FILE_COUNT", SQL_SCAN_FILE_COUNT_NAME,
+                            SQL_SCAN_FILE_COUNT_THRESHOLD, fileScanReport.getTotalFileCount(),
+                            0, SQL_SCAN_FILE_COUNT_DESC));
+                }
+                // 扫描文件大小
+                if (fileScanReport.getTotalFileSize() > SQL_SCAN_FILE_SIZE_THRESHOLD) {
+                    res.put("SQL_SCAN_FILE_SIZE", new DiagnoseDesc("SQL_SCAN_FILE_SIZE", SQL_SCAN_FILE_SIZE_NAME,
+                            SQL_SCAN_FILE_SIZE_THRESHOLD, fileScanReport.getTotalFileSize(),
+                            BigDecimal.valueOf(Math.ceil((fileScanReport.getTotalFileSize() - SQL_SCAN_FILE_SIZE_THRESHOLD) / (1024 * 1024 * 100.0)))
+                                    .multiply(BigDecimal.valueOf(SQL_SCAN_FILE_SIZE_SCORE)).doubleValue(),
+                            SQL_SCAN_FILE_SIZE_DESC));
+                } else {
+                    res.put("SQL_SCAN_FILE_SIZE", new DiagnoseDesc("SQL_SCAN_FILE_SIZE", SQL_SCAN_FILE_SIZE_NAME,
+                            SQL_SCAN_FILE_SIZE_THRESHOLD, fileScanReport.getTotalFileSize(),
+                            0, SQL_SCAN_FILE_SIZE_DESC));
+                }
+                // 扫描小文件数量
+                if (fileScanReport.getSmallFileCount() > SQL_SCAN_SMALL_FILE_COUNT_THRESHOLD) {
+                    res.put("SQL_SCAN_SMALL_FILE_COUNT", new DiagnoseDesc("SQL_SCAN_SMALL_FILE_COUNT", SQL_SCAN_SMALL_FILE_COUNT_NAME,
+                            SQL_SCAN_SMALL_FILE_COUNT_THRESHOLD, fileScanReport.getSmallFileCount(),
+                            BigDecimal.valueOf((fileScanReport.getSmallFileCount() - SQL_SCAN_SMALL_FILE_COUNT_THRESHOLD))
+                                    .multiply(BigDecimal.valueOf(SQL_SCAN_SMALL_FILE_COUNT_SCORE)).doubleValue(),
+                            SQL_SCAN_SMALL_FILE_COUNT_DESC));
+                } else {
+                    res.put("SQL_SCAN_SMALL_FILE_COUNT", new DiagnoseDesc("SQL_SCAN_SMALL_FILE_COUNT", SQL_SCAN_SMALL_FILE_COUNT_NAME,
+                            SQL_SCAN_SMALL_FILE_COUNT_THRESHOLD, fileScanReport.getSmallFileCount(),
+                            0, SQL_SCAN_SMALL_FILE_COUNT_DESC));
+                }
+
+                // 扫描分区数量
+                if (fileScanReport.getPartitionCount() > SQL_SCAN_PARTITION_COUNT_THRESHOLD) {
+                    res.put("SQL_SCAN_PARTITION_COUNT", new DiagnoseDesc("SQL_SCAN_PARTITION_COUNT", SQL_SCAN_PARTITION_COUNT_NAME,
+                            SQL_SCAN_PARTITION_COUNT_THRESHOLD, fileScanReport.getPartitionCount(),
+                            BigDecimal.valueOf((fileScanReport.getPartitionCount() - SQL_SCAN_PARTITION_COUNT_THRESHOLD))
+                                    .multiply(BigDecimal.valueOf(SQL_SCAN_PARTITION_COUNT_SCORE)).doubleValue(),
+                            SQL_SCAN_PARTITION_COUNT_DESC));
+                } else {
+                    res.put("SQL_SCAN_PARTITION_COUNT", new DiagnoseDesc("SQL_SCAN_PARTITION_COUNT", SQL_SCAN_PARTITION_COUNT_NAME,
+                            SQL_SCAN_PARTITION_COUNT_THRESHOLD, fileScanReport.getPartitionCount(),
+                            0, SQL_SCAN_PARTITION_COUNT_DESC));
+                }
+            }
+
+            score = score.subtract(res.values().stream().map(x -> BigDecimal.valueOf(x.deductScore)).reduce((x, y) -> x.add(y)).orElse(BigDecimal.valueOf(0)));
+        } catch (Exception e) {
+            log.error("buildSqlScoreAbnormal fail. TaskName: " + taskApp.getTaskName() + "\tmsg: " + e.getMessage());
+        }
+
+        SqlScoreAbnormal diagnoseContent = new SqlScoreAbnormal();
+        diagnoseContent.setDiagnoseResult(JSON.toJSONString(res));
+        diagnoseContent.setScore(score.doubleValue());
+        diagnoseContent.setAbnormal(score.doubleValue() < sqlScoreConfig.getMinScore());
+        return diagnoseContent;
+    }
+
+
     public static String getGrammarDiagnoseResult(String command, TaskApp taskApp) {
         try {
             Map<String, Object> body = new HashMap<>();
