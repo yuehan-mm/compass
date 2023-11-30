@@ -68,7 +68,7 @@ public class MysqlWriter {
         PreparedStatement ps = null;
         try {
             String sql = "INSERT INTO bdmp_cluster.t_script_sql_diagnose_result (application_id, application_type," +
-                    " queue, task_name, start_time,end_time, elapsed_time, score, diagnose_result, data_date," +
+                    " queue, task_name, start_time,end_time, elapsed_time, score, diagnose_result, data_date)" +
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             ps = connection.prepareStatement(sql);
             TaskApp taskApp = taskParam.getTaskApp();
