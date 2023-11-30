@@ -153,7 +153,7 @@ public class MysqlWriter {
         try {
             String sql = "INSERT INTO bdmp_cluster.t_job_mem_waste_diagnose_result (application_id, application_type," +
                     " queue, task_name, start_time,end_time, elapsed_time, driver_memory,executor_memory," +
-                    " total_memory_time, total_memory_compute_time, wastePercent, data_date)" +
+                    " total_memory_time, total_memory_compute_time, waste_percent, data_date)" +
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             ps = connection.prepareStatement(sql);
             ps.setString(1, taskApp.getApplicationId());
@@ -171,7 +171,7 @@ public class MysqlWriter {
             ps.setString(13, FastDateFormat.getInstance("yyyy-MM-dd").format(System.currentTimeMillis()));
             ps.execute();
         } catch (Exception e) {
-            log.error("saveSqlScoreAbnormal fail. msg：{}", e.getMessage());
+            log.error("saveJobMemWasteDAbnormal fail. msg：{}", e.getMessage());
         } finally {
             try {
                 if (ps != null) ps.close();
