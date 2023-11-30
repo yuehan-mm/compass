@@ -91,7 +91,7 @@ custom:
     # 内存浪费（app执行时间超过5分钟，且内存浪费超过70%）
     memWasteConfig:
       disable: false
-      threshold: 70
+      threshold: 10
       # app duration(ms)
       duration: 300000
     # 内存浪费（app执行时间超过5分钟，且cpu浪费超过50%）
