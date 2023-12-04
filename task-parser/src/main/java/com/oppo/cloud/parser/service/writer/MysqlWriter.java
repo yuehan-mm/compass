@@ -68,19 +68,20 @@ public class MysqlWriter {
         PreparedStatement ps = null;
         try {
             String sql = "INSERT INTO bdmp_cluster.t_job_performance_diagnose_result (application_id, application_type," +
-                    " queue, task_name, start_time,end_time, elapsed_time, score, diagnose_result, data_date)" +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    " cluster_name, queue, task_name, start_time,end_time, elapsed_time, score, diagnose_result, data_date)" +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             ps = connection.prepareStatement(sql);
             ps.setString(1, taskApp.getApplicationId());
             ps.setString(2, String.valueOf(taskApp.getApplicationType()));
-            ps.setString(3, taskApp.getQueue());
-            ps.setString(4, taskApp.getTaskName());
-            ps.setLong(5, taskApp.getStartTime().getTime());
-            ps.setLong(6, taskApp.getFinishTime().getTime());
-            ps.setDouble(7, taskApp.getElapsedTime());
-            ps.setDouble(8, sqlScoreAbnormal.getScore());
-            ps.setString(9, sqlScoreAbnormal.getDiagnoseResult());
-            ps.setString(10, FastDateFormat.getInstance("yyyy-MM-dd").format(System.currentTimeMillis()));
+            ps.setString(3, taskApp.getClusterName());
+            ps.setString(4, taskApp.getQueue());
+            ps.setString(5, taskApp.getTaskName());
+            ps.setLong(6, taskApp.getStartTime().getTime());
+            ps.setLong(7, taskApp.getFinishTime().getTime());
+            ps.setDouble(8, taskApp.getElapsedTime());
+            ps.setDouble(9, sqlScoreAbnormal.getScore());
+            ps.setString(10, sqlScoreAbnormal.getDiagnoseResult());
+            ps.setString(11, FastDateFormat.getInstance("yyyy-MM-dd").format(System.currentTimeMillis()));
             ps.execute();
         } catch (Exception e) {
             log.error("saveSqlScoreAbnormal fail. msg：{}", e.getMessage());
