@@ -152,23 +152,24 @@ public class MysqlWriter {
         PreparedStatement ps = null;
         try {
             String sql = "INSERT INTO bdmp_cluster.t_job_mem_waste_diagnose_result (application_id, application_type," +
-                    " queue, task_name, start_time,end_time, elapsed_time, driver_memory,executor_memory," +
+                    " cluster_name, queue, task_name, start_time,end_time, elapsed_time, driver_memory,executor_memory," +
                     " total_memory_time, total_memory_compute_time, waste_percent, data_date)" +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             ps = connection.prepareStatement(sql);
             ps.setString(1, taskApp.getApplicationId());
             ps.setString(2, String.valueOf(taskApp.getApplicationType()));
-            ps.setString(3, taskApp.getQueue());
-            ps.setString(4, taskApp.getTaskName());
-            ps.setLong(5, taskApp.getStartTime().getTime());
-            ps.setLong(6, taskApp.getFinishTime().getTime());
-            ps.setDouble(7, taskApp.getElapsedTime());
-            ps.setLong(8, memWasteAbnormal.getDriverMemory());
-            ps.setLong(9, memWasteAbnormal.getExecutorMemory());
-            ps.setLong(10, memWasteAbnormal.getTotalMemoryTime());
-            ps.setLong(11, memWasteAbnormal.getTotalMemoryComputeTime());
-            ps.setDouble(12, memWasteAbnormal.getWastePercent());
-            ps.setString(13, FastDateFormat.getInstance("yyyy-MM-dd").format(System.currentTimeMillis()));
+            ps.setString(3, taskApp.getClusterName());
+            ps.setString(4, taskApp.getQueue());
+            ps.setString(5, taskApp.getTaskName());
+            ps.setLong(6, taskApp.getStartTime().getTime());
+            ps.setLong(7, taskApp.getFinishTime().getTime());
+            ps.setDouble(8, taskApp.getElapsedTime());
+            ps.setLong(9, memWasteAbnormal.getDriverMemory());
+            ps.setLong(10, memWasteAbnormal.getExecutorMemory());
+            ps.setLong(11, memWasteAbnormal.getTotalMemoryTime());
+            ps.setLong(12, memWasteAbnormal.getTotalMemoryComputeTime());
+            ps.setDouble(13, memWasteAbnormal.getWastePercent());
+            ps.setString(14, FastDateFormat.getInstance("yyyy-MM-dd").format(System.currentTimeMillis()));
             ps.execute();
         } catch (Exception e) {
             log.error("saveJobMemWasteDAbnormal fail. msg：{}", e.getMessage());
