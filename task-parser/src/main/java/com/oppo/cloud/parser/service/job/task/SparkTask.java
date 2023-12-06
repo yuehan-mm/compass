@@ -192,7 +192,7 @@ public class SparkTask extends Task {
             // 更新离线数据
             MysqlWriter.getInstance().updateOffLineData((SqlScoreAbnormal) sqlScoreDetectorResult.getData(), taskParam);
             DetectorResult sqlScoreDetectorResult2 = sqlScoreDetector.detect2(taskParam, (FileScanAbnormal) fileScanDetectorResult.getData());
-            MysqlWriter.getInstance().saveJobPerformanceAbnormal((SqlScoreAbnormal) sqlScoreDetectorResult2.getData(), taskParam.getTaskApp());
+            MysqlWriter.getInstance().saveOrUpdateJobPerformanceAbnormal((SqlScoreAbnormal) sqlScoreDetectorResult2.getData(), taskParam.getTaskApp());
         }
 
         // mem waste abnormal

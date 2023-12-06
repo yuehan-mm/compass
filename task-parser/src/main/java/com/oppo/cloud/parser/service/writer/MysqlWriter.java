@@ -23,12 +23,10 @@ import com.oppo.cloud.common.util.spring.SpringBeanUtil;
 import com.oppo.cloud.parser.config.HdopDBConfig;
 import com.oppo.cloud.parser.domain.job.TaskParam;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.FastDateFormat;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 /**
  * MysqlWriter
@@ -147,6 +145,59 @@ public class MysqlWriter {
                 log.error("close PreparedStatement fail. msg:{}", e.getMessage());
             }
         }
+    }
+
+    public void saveOrUpdateJobPerformanceAbnormal(SqlScoreAbnormal sqlScoreAbnormal, TaskApp taskApp) {
+        Double currentScore = getJobPerformanceScore(taskApp);
+        if (currentScore == null) {
+            this.saveJobPerformanceAbnormal(sqlScoreAbnormal, taskApp);
+        } else if (currentScore > sqlScoreAbnormal.getScore()) {
+            this.deleteJobPerformanceAbnormal(taskApp);
+            this.saveJobPerformanceAbnormal(sqlScoreAbnormal, taskApp);
+        }
+    }
+
+    public Double getJobPerformanceScore(TaskApp taskApp) {
+        PreparedStatement ps = null;
+        try {
+            String sql = "SELECT MIN(score) score FROM bdmp_cluster.t_job_performance_diagnose_result WHERE task_name=? AND data_date=?";
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, taskApp.getTaskName());
+            ps.setString(2, FastDateFormat.getInstance("yyyy-MM-dd").format(System.currentTimeMillis()));
+            ResultSet resultSet = ps.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getDouble("score");
+            }
+        } catch (Exception e) {
+            log.error("saveSqlScoreAbnormal fail. msg：{}", e.getMessage());
+        } finally {
+            try {
+                if (ps != null) ps.close();
+            } catch (SQLException e) {
+                log.error("close PreparedStatement fail. msg:{}", e.getMessage());
+            }
+        }
+        return null;
+    }
+
+    public Double deleteJobPerformanceAbnormal(TaskApp taskApp) {
+        PreparedStatement ps = null;
+        try {
+            String sql = "DELETE FROM bdmp_cluster.t_job_performance_diagnose_result WHERE task_name=? AND data_date=?";
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, StringUtils.isNotEmpty(taskApp.getTaskName()) ? taskApp.getTaskName() : "FF");
+            ps.setString(2, FastDateFormat.getInstance("yyyy-MM-dd").format(System.currentTimeMillis()));
+            ps.execute();
+        } catch (Exception e) {
+            log.error("saveSqlScoreAbnormal fail. msg：{}", e.getMessage());
+        } finally {
+            try {
+                if (ps != null) ps.close();
+            } catch (SQLException e) {
+                log.error("close PreparedStatement fail. msg:{}", e.getMessage());
+            }
+        }
+        return null;
     }
 
     public void saveJobMemWasteDAbnormal(MemWasteAbnormal memWasteAbnormal, TaskApp taskApp) {
