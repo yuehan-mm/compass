@@ -16,12 +16,12 @@
 
 package com.oppo.cloud.parser.service.writer;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.oppo.cloud.common.domain.elasticsearch.TaskApp;
 import com.oppo.cloud.common.domain.eventlog.MemWasteAbnormal;
 import com.oppo.cloud.common.domain.eventlog.SqlScoreAbnormal;
 import com.oppo.cloud.common.util.spring.SpringBeanUtil;
 import com.oppo.cloud.parser.config.HdopDBConfig;
-import com.oppo.cloud.parser.domain.job.TaskParam;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.FastDateFormat;
@@ -93,61 +93,7 @@ public class MysqlWriter {
     }
 
 
-    /**
-     * 更新离线数据，工单系统目前仍然使用的离线数据
-     *
-     * @param sqlScoreAbnormal
-     * @param taskParam
-     */
-    public void updateOffLineData(SqlScoreAbnormal sqlScoreAbnormal, TaskParam taskParam) {
-        PreparedStatement ps = null;
-        try {
-            String sql = "UPDATE bdmp_cluster.t_script_sql_diagnose_result SET score=?,diagnose_result=? where data_date=? and script_name =?";
-            ps = connection.prepareStatement(sql);
-            ps.setDouble(1, sqlScoreAbnormal.getScore());
-            ps.setString(2, sqlScoreAbnormal.getDiagnoseResult());
-            ps.setString(3, FastDateFormat.getInstance("yyyy-MM-dd").format(System.currentTimeMillis()));
-            ps.setString(4, taskParam.getTaskApp().getTaskName());
-            int effectiveRow = ps.executeUpdate();
-            if (effectiveRow != 1) {
-                log.warn("update updateOffLineData fail. effectiveRow: {} , script_name:{}",
-                        effectiveRow, taskParam.getTaskApp().getTaskName());
-            }
-        } catch (Exception e) {
-            log.error("updateOffLineData fail. msg：{}", e.getMessage());
-        } finally {
-            try {
-                if (ps != null) ps.close();
-            } catch (SQLException e) {
-                log.error("close PreparedStatement fail. msg:{}", e.getMessage());
-            }
-        }
-    }
-
-    public void updateOffLineData2(String scanFileReport, TaskParam taskParam) {
-        PreparedStatement ps = null;
-        try {
-            String sql = "UPDATE bdmp_cluster.t_script_sql_diagnose_result SET scan_file_report=? where script_name =?";
-            ps = connection.prepareStatement(sql);
-            ps.setString(1, scanFileReport);
-            ps.setString(2, taskParam.getTaskApp().getTaskName());
-            int effectiveRow = ps.executeUpdate();
-            if (effectiveRow != 1) {
-                log.error("update updateOffLineData fail. effectiveRow: {} , script_name:{}",
-                        effectiveRow, taskParam.getTaskApp().getTaskName());
-            }
-        } catch (Exception e) {
-            log.error("updateOffLineData fail. msg：{}", e.getMessage());
-        } finally {
-            try {
-                if (ps != null) ps.close();
-            } catch (SQLException e) {
-                log.error("close PreparedStatement fail. msg:{}", e.getMessage());
-            }
-        }
-    }
-
-    public void saveOrUpdateJobPerformanceAbnormal(SqlScoreAbnormal sqlScoreAbnormal, TaskApp taskApp) {
+    public synchronized void saveOrUpdateJobPerformanceAbnormal(SqlScoreAbnormal sqlScoreAbnormal, TaskApp taskApp) {
         Double currentScore = getJobPerformanceScore(taskApp);
         if (currentScore == null) {
             this.saveJobPerformanceAbnormal(sqlScoreAbnormal, taskApp);
@@ -169,7 +115,7 @@ public class MysqlWriter {
                 return resultSet.getDouble("score");
             }
         } catch (Exception e) {
-            log.error("saveSqlScoreAbnormal fail. msg：{}", e.getMessage());
+            log.error("getJobPerformanceScore fail. msg：{}", e.getMessage());
         } finally {
             try {
                 if (ps != null) ps.close();
@@ -233,4 +179,114 @@ public class MysqlWriter {
             }
         }
     }
+
+    private void updateJobPerformanceAbnormal(SqlScoreAbnormal sqlScoreAbnormal, TaskApp taskApp) {
+        PreparedStatement ps = null;
+        try {
+            String sql = "UPDATE bdmp_cluster.t_job_performance_diagnose_result SET application_id=?, application_type=?," +
+                    " cluster_name=?, queue=?, start_time=?,end_time=?, elapsed_time=?, score=?, diagnose_result=?" +
+                    " WHERE data_date=? and task_name=?";
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, taskApp.getApplicationId());
+            ps.setString(2, String.valueOf(taskApp.getApplicationType()));
+            ps.setString(3, taskApp.getClusterName());
+            ps.setString(4, taskApp.getQueue());
+            ps.setLong(5, taskApp.getStartTime().getTime());
+            ps.setLong(6, taskApp.getFinishTime().getTime());
+            ps.setDouble(7, taskApp.getElapsedTime());
+            ps.setDouble(8, sqlScoreAbnormal.getScore());
+            ps.setString(9, sqlScoreAbnormal.getDiagnoseResult());
+            ps.setString(10, FastDateFormat.getInstance("yyyy-MM-dd").format(System.currentTimeMillis()));
+            ps.setString(11, taskApp.getTaskName());
+            int i = ps.executeUpdate();
+            if (i != 1) {
+                log.error("updateJobPerformanceAbnormal fail ：" + JSONObject.toJSONString(taskApp));
+            }
+        } catch (Exception e) {
+            log.error("updateOffLineData fail. msg：{}", e.getMessage());
+        } finally {
+            try {
+                if (ps != null) ps.close();
+            } catch (SQLException e) {
+                log.error("close PreparedStatement fail. msg:{}", e.getMessage());
+            }
+        }
+
+    }
+
+    public synchronized void saveOrUpdateJobMemWasteAbnormal(MemWasteAbnormal memWasteAbnormal, TaskApp taskApp) {
+        // 获取浪费比例
+        Double wasteRate = getJobMemWasteRate(taskApp);
+        if (wasteRate == null) {
+            this.saveJobMemWasteDAbnormal(memWasteAbnormal, taskApp);
+        } else if (memWasteAbnormal.getWastePercent() > wasteRate) {
+            this.updateJobMemWasteAbnormal(memWasteAbnormal, taskApp);
+        }
+    }
+
+
+    /**
+     * 获取作业内存浪费率
+     *
+     * @param taskApp
+     * @return
+     */
+    public Double getJobMemWasteRate(TaskApp taskApp) {
+        PreparedStatement ps = null;
+        try {
+            String sql = "SELECT MAX(waste_percent) waste_percent FROM bdmp_cluster.t_job_mem_waste_diagnose_result " +
+                    "WHERE task_name=? AND data_date=?";
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, taskApp.getTaskName());
+            ps.setString(2, FastDateFormat.getInstance("yyyy-MM-dd").format(System.currentTimeMillis()));
+            ResultSet resultSet = ps.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getDouble("waste_percent");
+            }
+        } catch (Exception e) {
+            log.error("getJobMemWasteRate fail. msg：{}", e.getMessage());
+        } finally {
+            try {
+                if (ps != null) ps.close();
+            } catch (SQLException e) {
+                log.error("close PreparedStatement fail. msg:{}", e.getMessage());
+            }
+        }
+        return null;
+    }
+
+
+    private void updateJobMemWasteAbnormal(MemWasteAbnormal memWasteAbnormal, TaskApp taskApp) {
+        PreparedStatement ps = null;
+        try {
+            String sql = "UPDATE bdmp_cluster.t_job_mem_waste_diagnose_result set application_id=?, application_type=?," +
+                    " cluster_name=?, queue=?, start_time=?,end_time=?, elapsed_time=?, driver_memory=?,executor_memory=?," +
+                    " total_memory_time=?, total_memory_compute_time=?, waste_percent=? where data_date=? and  task_name=? ";
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, taskApp.getApplicationId());
+            ps.setString(2, String.valueOf(taskApp.getApplicationType()));
+            ps.setString(3, taskApp.getClusterName());
+            ps.setString(4, taskApp.getQueue());
+            ps.setLong(5, taskApp.getStartTime().getTime());
+            ps.setLong(6, taskApp.getFinishTime().getTime());
+            ps.setDouble(7, taskApp.getElapsedTime());
+            ps.setLong(8, memWasteAbnormal.getDriverMemory());
+            ps.setLong(9, memWasteAbnormal.getExecutorMemory());
+            ps.setLong(10, memWasteAbnormal.getTotalMemoryTime());
+            ps.setLong(11, memWasteAbnormal.getTotalMemoryComputeTime());
+            ps.setDouble(12, memWasteAbnormal.getWastePercent());
+            ps.setString(13, FastDateFormat.getInstance("yyyy-MM-dd").format(System.currentTimeMillis()));
+            ps.setString(14, taskApp.getTaskName());
+            ps.execute();
+        } catch (Exception e) {
+            log.error("saveJobMemWasteDAbnormal fail. msg：{}", e.getMessage());
+        } finally {
+            try {
+                if (ps != null) ps.close();
+            } catch (SQLException e) {
+                log.error("close PreparedStatement fail. msg:{}", e.getMessage());
+            }
+        }
+    }
+
 }

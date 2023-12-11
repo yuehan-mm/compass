@@ -195,7 +195,7 @@ public class SparkTask extends Task {
         if (!this.detectorConfig.getMemWasteConfig().getDisable() && executorLogInfo.gcReports.size() > 0 && memoryCalculateParam != null) {
             MemWasteDetector memWasteDetector = new MemWasteDetector(this.detectorConfig.getMemWasteConfig());
             DetectorResult detect = memWasteDetector.detect(executorLogInfo.gcReports, memoryCalculateParam);
-            MysqlWriter.getInstance().saveJobMemWasteDAbnormal((MemWasteAbnormal) detect.getData(), taskParam.getTaskApp());
+            MysqlWriter.getInstance().saveOrUpdateJobMemWasteAbnormal((MemWasteAbnormal) detect.getData(), taskParam.getTaskApp());
             detectorResultList.add(detect);
         }
 
