@@ -6,11 +6,9 @@ import com.alibaba.fastjson2.JSONObject;
 import com.oppo.cloud.common.domain.elasticsearch.TaskApp;
 import com.oppo.cloud.common.domain.eventlog.FileScanAbnormal;
 import com.oppo.cloud.common.domain.eventlog.SqlScoreAbnormal;
-import com.oppo.cloud.common.domain.eventlog.config.SqlScoreConfig;
 import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.util.HttpRequestUtils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -22,7 +20,7 @@ import static com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlqualit
 @Slf4j
 public class SqlDiagnoseService {
 
-    public static SqlScoreAbnormal buildSqlScoreAbnormal(TaskApp taskApp, FileScanAbnormal fileScanAbnormal, SqlScoreConfig sqlScoreConfig) {
+    public static SqlScoreAbnormal buildSqlScoreAbnormal(TaskApp taskApp, FileScanAbnormal fileScanAbnormal) {
         LinkedHashMap<String, DiagnoseDesc> res = new LinkedHashMap<>();
         BigDecimal score = BigDecimal.valueOf(100);
         try {
@@ -88,7 +86,7 @@ public class SqlDiagnoseService {
         SqlScoreAbnormal diagnoseContent = new SqlScoreAbnormal();
         diagnoseContent.setDiagnoseResult(JSON.toJSONString(res));
         diagnoseContent.setScore(score.doubleValue());
-        diagnoseContent.setAbnormal(score.doubleValue() < sqlScoreConfig.getMinScore());
+        diagnoseContent.setAbnormal(score.doubleValue() < 60);
         return diagnoseContent;
     }
 

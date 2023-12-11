@@ -23,8 +23,8 @@ import com.oppo.cloud.common.util.spring.SpringBeanUtil;
 import com.oppo.cloud.parser.config.ThreadPoolConfig;
 import com.oppo.cloud.parser.domain.job.*;
 import com.oppo.cloud.parser.service.job.detector.plugins.spark.FileScanDetector;
+import com.oppo.cloud.parser.service.job.detector.plugins.spark.JobPerfDetector;
 import com.oppo.cloud.parser.service.job.detector.plugins.spark.MemWasteDetector;
-import com.oppo.cloud.parser.service.job.detector.plugins.spark.SqlScoreDetector;
 import com.oppo.cloud.parser.service.job.parser.IParser;
 import com.oppo.cloud.parser.service.rules.JobRulesConfigService;
 import com.oppo.cloud.parser.service.writer.ElasticWriter;
@@ -183,12 +183,12 @@ public class SparkTask extends Task {
             detectorResultList.add(fileScanDetectorResult);
         }
 
-        // sqlScore abnormal
-        if (!this.detectorConfig.getSqlScoreConfig().getDisable() && StringUtils.isNotEmpty(executorLogInfo.sqlCommand)) {
-            SqlScoreDetector sqlScoreDetector = new SqlScoreDetector(this.detectorConfig.getSqlScoreConfig());
-            DetectorResult sqlScoreDetectorResult = sqlScoreDetector.detect(taskParam, (FileScanAbnormal) fileScanDetectorResult.getData());
-            detectorResultList.add(sqlScoreDetectorResult);
-            MysqlWriter.getInstance().saveOrUpdateJobPerformanceAbnormal((SqlScoreAbnormal) sqlScoreDetectorResult.getData(), taskParam.getTaskApp());
+        // Job Perf abnormal
+        if (!this.detectorConfig.getFileScanConfig().getDisable()) {
+            JobPerfDetector jobPerfDetector = new JobPerfDetector();
+            DetectorResult jobPerfDetectorResult = jobPerfDetector.detect(taskParam, (FileScanAbnormal) fileScanDetectorResult.getData());
+            detectorResultList.add(jobPerfDetectorResult);
+            MysqlWriter.getInstance().saveOrUpdateJobPerformanceAbnormal((SqlScoreAbnormal) jobPerfDetectorResult.getData(), taskParam.getTaskApp());
         }
 
         // mem waste abnormal

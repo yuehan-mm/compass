@@ -76,6 +76,10 @@ public enum AppCategoryEnum {
     FILE_SCAN_ANOMALY("fileScanAnomaly", "文件扫描异常", "runPerformance"),
 
     SQL_SCORE_ANOMALY("sqlScoreAnomaly", "SQL评分过低", "runPerformance"),
+
+    // 作业性能评分过低
+    JOB_PERF_ANOMALY("jobPerfAnomaly", "作业性能评分过低", "runPerformance"),
+
     // 其他异常
     OTHER_EXCEPTION("otherException", "其他异常", "runError");
 
