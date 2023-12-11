@@ -20,20 +20,11 @@ public class SqlScoreDetector {
     }
 
 
-    public DetectorResult detect(String sqlCommand, TaskParam taskParam, FileScanAbnormal fileScanAbnormal) {
+    public DetectorResult detect(TaskParam taskParam, FileScanAbnormal fileScanAbnormal) {
         log.debug("start SqlScoreDetector");
         log.info("SqlScoreDetector : " + JSON.toJSONString(sqlScoreConfig));
         DetectorResult<SqlScoreAbnormal> detectorResult = new DetectorResult<>(AppCategoryEnum.SQL_SCORE_ANOMALY.getCategory(), false);
-        SqlScoreAbnormal sqlScoreAbnormal = SqlDiagnoseService.buildSqlScoreAbnormal(sqlCommand, taskParam.getTaskApp(), fileScanAbnormal, sqlScoreConfig);
-        detectorResult.setData(sqlScoreAbnormal);
-        detectorResult.setAbnormal(sqlScoreAbnormal.getAbnormal());
-        return detectorResult;
-    }
-
-    public DetectorResult detect2(TaskParam taskParam, FileScanAbnormal fileScanAbnormal) {
-        log.debug("start SqlScoreDetector2");
-        DetectorResult<SqlScoreAbnormal> detectorResult = new DetectorResult<>(AppCategoryEnum.SQL_SCORE_ANOMALY.getCategory(), false);
-        SqlScoreAbnormal sqlScoreAbnormal = SqlDiagnoseService.buildSqlScoreAbnormal2(taskParam.getTaskApp(), fileScanAbnormal, sqlScoreConfig);
+        SqlScoreAbnormal sqlScoreAbnormal = SqlDiagnoseService.buildSqlScoreAbnormal(taskParam.getTaskApp(), fileScanAbnormal, sqlScoreConfig);
         detectorResult.setData(sqlScoreAbnormal);
         detectorResult.setAbnormal(sqlScoreAbnormal.getAbnormal());
         return detectorResult;
