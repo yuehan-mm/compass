@@ -92,7 +92,12 @@ public class MysqlWriter {
         }
     }
 
-
+    /**
+     * 更新或保存任务性能评分（每个task每天可能会执行多次，只保留性能评分最低的一次）
+     *
+     * @param sqlScoreAbnormal
+     * @param taskApp
+     */
     public synchronized void saveOrUpdateJobPerformanceAbnormal(SqlScoreAbnormal sqlScoreAbnormal, TaskApp taskApp) {
         Double currentScore = getJobPerformanceScore(taskApp);
         if (currentScore == null) {
@@ -103,6 +108,12 @@ public class MysqlWriter {
         }
     }
 
+    /**
+     * 获取某个task今天最低的性能评分，如果今天还未执行过，则返回null
+     *
+     * @param taskApp
+     * @return
+     */
     public Double getJobPerformanceScore(TaskApp taskApp) {
         PreparedStatement ps = null;
         try {
@@ -214,6 +225,12 @@ public class MysqlWriter {
 
     }
 
+    /**
+     * 更新或保存任务内存浪费（每个task每天可能会执行多次，只保留内存浪费最严重的一次）
+     *
+     * @param memWasteAbnormal
+     * @param taskApp
+     */
     public synchronized void saveOrUpdateJobMemWasteAbnormal(MemWasteAbnormal memWasteAbnormal, TaskApp taskApp) {
         // 获取浪费比例
         Double wasteRate = getJobMemWasteRate(taskApp);
@@ -226,7 +243,7 @@ public class MysqlWriter {
 
 
     /**
-     * 获取作业内存浪费率
+     * 获取某个task今天最高的内存浪费率，如果今天还未执行过，则返回null
      *
      * @param taskApp
      * @return
