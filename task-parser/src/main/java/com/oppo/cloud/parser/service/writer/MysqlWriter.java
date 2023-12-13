@@ -251,14 +251,14 @@ public class MysqlWriter {
     public Double getJobMemWasteRate(TaskApp taskApp) {
         PreparedStatement ps = null;
         try {
-            String sql = "SELECT MAX(waste_percent) waste_percent FROM bdmp_cluster.t_job_mem_waste_diagnose_result " +
+            String sql = "SELECT MAX(waste_percent) percent FROM bdmp_cluster.t_job_mem_waste_diagnose_result " +
                     "WHERE task_name=? AND data_date=?";
             ps = connection.prepareStatement(sql);
             ps.setString(1, taskApp.getTaskName());
             ps.setString(2, FastDateFormat.getInstance("yyyy-MM-dd").format(System.currentTimeMillis()));
             ResultSet resultSet = ps.executeQuery();
             if (resultSet.next()) {
-                return resultSet.getDouble("waste_percent");
+                return resultSet.getDouble("percent");
             }
         } catch (Exception e) {
             log.error("getJobMemWasteRate fail. msg：{}", e.getMessage());
