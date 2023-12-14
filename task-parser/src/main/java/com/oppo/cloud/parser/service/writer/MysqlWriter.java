@@ -99,6 +99,7 @@ public class MysqlWriter {
      * @param taskApp
      */
     public synchronized void saveOrUpdateJobPerformanceAbnormal(SqlScoreAbnormal sqlScoreAbnormal, TaskApp taskApp) {
+        // TODO bug: will not return null
         Double currentScore = getJobPerformanceScore(taskApp);
         if (currentScore == null) {
             this.saveJobPerformanceAbnormal(sqlScoreAbnormal, taskApp);
@@ -233,12 +234,13 @@ public class MysqlWriter {
      */
     public synchronized void saveOrUpdateJobMemWasteAbnormal(MemWasteAbnormal memWasteAbnormal, TaskApp taskApp) {
         // 获取浪费比例
+        // TODO bug: will not return null
         Double wasteRate = getJobMemWasteRate(taskApp);
-        log.info("wasteRate: " + wasteRate + "\tmemWasteAbnormal: " + memWasteAbnormal.getWastePercent());
         if (wasteRate == null) {
             this.saveJobMemWasteDAbnormal(memWasteAbnormal, taskApp);
         } else if (memWasteAbnormal.getWastePercent() > wasteRate) {
-            this.updateJobMemWasteAbnormal(memWasteAbnormal, taskApp);
+            this.deleteJobMemWasteAbnormal(taskApp);
+            this.saveJobMemWasteDAbnormal(memWasteAbnormal, taskApp);
         }
     }
 
@@ -263,6 +265,26 @@ public class MysqlWriter {
             }
         } catch (Exception e) {
             log.error("getJobMemWasteRate fail. msg：{}", e.getMessage());
+        } finally {
+            try {
+                if (ps != null) ps.close();
+            } catch (SQLException e) {
+                log.error("close PreparedStatement fail. msg:{}", e.getMessage());
+            }
+        }
+        return null;
+    }
+
+    public Double deleteJobMemWasteAbnormal(TaskApp taskApp) {
+        PreparedStatement ps = null;
+        try {
+            String sql = "DELETE FROM bdmp_cluster.t_job_mem_waste_diagnose_result WHERE task_name=? AND data_date=?";
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, StringUtils.isNotEmpty(taskApp.getTaskName()) ? taskApp.getTaskName() : "FF");
+            ps.setString(2, FastDateFormat.getInstance("yyyy-MM-dd").format(System.currentTimeMillis()));
+            ps.execute();
+        } catch (Exception e) {
+            log.error("saveSqlScoreAbnormal fail. msg：{}", e.getMessage());
         } finally {
             try {
                 if (ps != null) ps.close();
