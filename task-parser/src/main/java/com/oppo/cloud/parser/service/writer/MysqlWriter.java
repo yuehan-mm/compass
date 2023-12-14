@@ -234,6 +234,7 @@ public class MysqlWriter {
     public synchronized void saveOrUpdateJobMemWasteAbnormal(MemWasteAbnormal memWasteAbnormal, TaskApp taskApp) {
         // 获取浪费比例
         Double wasteRate = getJobMemWasteRate(taskApp);
+        log.info("wasteRate: " + wasteRate + "\tmemWasteAbnormal: " + memWasteAbnormal.getWastePercent());
         if (wasteRate == null) {
             this.saveJobMemWasteDAbnormal(memWasteAbnormal, taskApp);
         } else if (memWasteAbnormal.getWastePercent() > wasteRate) {
