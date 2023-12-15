@@ -18,27 +18,34 @@ package com.oppo.cloud.parser.service.job.parser;
 
 import com.alibaba.fastjson2.JSON;
 import com.oppo.cloud.common.constant.ProgressState;
+import com.oppo.cloud.common.domain.elasticsearch.TaskApp;
+import com.oppo.cloud.common.domain.eventlog.DetectorResult;
 import com.oppo.cloud.common.domain.eventlog.DetectorStorage;
+import com.oppo.cloud.common.domain.eventlog.SqlScoreAbnormal;
 import com.oppo.cloud.common.domain.eventlog.config.DetectorConfig;
 import com.oppo.cloud.common.domain.eventlog.config.MapReduceEnvironmentConfig;
 import com.oppo.cloud.common.domain.job.LogPath;
 import com.oppo.cloud.common.domain.oneclick.OneClickProgress;
 import com.oppo.cloud.common.domain.oneclick.ProgressInfo;
 import com.oppo.cloud.common.util.spring.SpringBeanUtil;
-import com.oppo.cloud.parser.domain.job.*;
+import com.oppo.cloud.parser.domain.job.CommonResult;
+import com.oppo.cloud.parser.domain.job.DetectorParam;
+import com.oppo.cloud.parser.domain.job.MapReduceEventLogParserResult;
+import com.oppo.cloud.parser.domain.job.ParserParam;
 import com.oppo.cloud.parser.domain.reader.ReaderObject;
 import com.oppo.cloud.parser.service.job.detector.manager.DetectorManager;
 import com.oppo.cloud.parser.service.job.detector.manager.MapReduceDetectorManager;
+import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.service.SqlDiagnoseService;
 import com.oppo.cloud.parser.service.job.oneclick.OneClickSubject;
 import com.oppo.cloud.parser.service.reader.IReader;
 import com.oppo.cloud.parser.service.reader.LogReaderFactory;
 import com.oppo.cloud.parser.service.rules.JobRulesConfigService;
-import com.oppo.cloud.parser.utils.ReplayEventLogs;
+import com.oppo.cloud.parser.service.writer.MysqlWriter;
 import com.oppo.cloud.parser.utils.ReplayMapReduceEventLogs;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.FileNotFoundException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -117,8 +124,20 @@ public class MapReduceEventLogParser extends OneClickSubject implements IParser 
         result.setLogType(this.param.getLogType());
         result.setResult(mapReduceEventLogParserResult);
 
+        saveOrUpdateJobPerformanceAbnormal(this.param.getTaskParam().getTaskApp(), detectorStorage.getDataList());
         updateParserProgress(ProgressState.SUCCEED, 0, 0);
         return result;
+    }
+
+    /**
+     * 保存mapreduce任务性能诊断结果
+     *
+     * @param taskApp
+     * @param dataList
+     */
+    private void saveOrUpdateJobPerformanceAbnormal(TaskApp taskApp, List<DetectorResult> dataList) {
+        SqlScoreAbnormal sqlScoreAbnormal = SqlDiagnoseService.buildMapReduceJobPerfAbnormal(taskApp, dataList);
+        MysqlWriter.getInstance().saveJobPerformanceAbnormal2(sqlScoreAbnormal, taskApp);
     }
 
     private Map<String, Object> getMapReduceEnvironmentConfig(ReplayMapReduceEventLogs replayEventLogs) {

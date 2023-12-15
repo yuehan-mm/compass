@@ -3,8 +3,11 @@ package com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.serv
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import com.oppo.cloud.common.constant.AppCategoryEnum;
 import com.oppo.cloud.common.domain.elasticsearch.TaskApp;
+import com.oppo.cloud.common.domain.eventlog.DetectorResult;
 import com.oppo.cloud.common.domain.eventlog.FileScanAbnormal;
+import com.oppo.cloud.common.domain.eventlog.SpeculativeMapReduceAbnormal;
 import com.oppo.cloud.common.domain.eventlog.SqlScoreAbnormal;
 import com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.util.HttpRequestUtils;
 import lombok.Data;
@@ -13,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.oppo.cloud.parser.service.job.detector.plugins.spark.sqlquality.util.Const.*;
@@ -106,6 +110,58 @@ public class SqlDiagnoseService {
             log.error("consume log record error : {}", e);
         }
         return null;
+    }
+
+    public static SqlScoreAbnormal buildMapReduceJobPerfAbnormal(TaskApp taskApp, List<DetectorResult> dataList) {
+        LinkedHashMap<String, DiagnoseDesc> res = new LinkedHashMap<>();
+        BigDecimal score = BigDecimal.valueOf(100);
+        try {
+            Map<String, DetectorResult> detectorResultMap = new HashMap<>();
+            for (DetectorResult detectorResult : dataList) {
+                detectorResultMap.put(detectorResult.getAppCategory(), detectorResult);
+            }
+
+            if (detectorResultMap.containsKey(AppCategoryEnum.SPECULATIVE_MAP_REDUCE.getCategory())) {
+                SpeculativeMapReduceAbnormal speculativeMapReduceAbnormal = (SpeculativeMapReduceAbnormal) detectorResultMap
+                        .get(AppCategoryEnum.SPECULATIVE_MAP_REDUCE.getCategory()).getData();
+
+                // map 数量过多
+                if (speculativeMapReduceAbnormal.getFinishedMaps() > MAPREDUCE_MAP_TASK_COUNT_THRESHOLD) {
+                    res.put("MAPREDUCE_MAP_TASK_COUNT", new DiagnoseDesc("MAPREDUCE_MAP_TASK_COUNT", MAPREDUCE_MAP_TASK_COUNT_NAME,
+                            MAPREDUCE_MAP_TASK_COUNT_THRESHOLD, speculativeMapReduceAbnormal.getFinishedMaps(),
+                            BigDecimal.valueOf((speculativeMapReduceAbnormal.getFinishedMaps() - MAPREDUCE_MAP_TASK_COUNT_THRESHOLD))
+                                    .multiply(BigDecimal.valueOf(MAPREDUCE_MAP_TASK_COUNT_SCORE)).doubleValue(),
+                            MAPREDUCE_MAP_TASK_COUNT_DESC));
+                } else {
+                    res.put("MAPREDUCE_MAP_TASK_COUNT", new DiagnoseDesc("MAPREDUCE_MAP_TASK_COUNT", MAPREDUCE_MAP_TASK_COUNT_NAME,
+                            MAPREDUCE_MAP_TASK_COUNT_THRESHOLD, speculativeMapReduceAbnormal.getFinishedMaps(),
+                            0, MAPREDUCE_MAP_TASK_COUNT_DESC));
+                }
+
+                // reduce 数量过多
+                if (speculativeMapReduceAbnormal.getFinishedReduces() > MAPREDUCE_REDUCE_TASK_COUNT_THRESHOLD) {
+                    res.put("MAPREDUCE_REDUCE_TASK_COUNT", new DiagnoseDesc("MAPREDUCE_REDUCE_TASK_COUNT", MAPREDUCE_REDUCE_TASK_COUNT_NAME,
+                            MAPREDUCE_REDUCE_TASK_COUNT_THRESHOLD, speculativeMapReduceAbnormal.getFinishedReduces(),
+                            BigDecimal.valueOf((speculativeMapReduceAbnormal.getFinishedReduces() - MAPREDUCE_REDUCE_TASK_COUNT_THRESHOLD))
+                                    .multiply(BigDecimal.valueOf(MAPREDUCE_REDUCE_TASK_COUNT_SCORE)).doubleValue(),
+                            MAPREDUCE_REDUCE_TASK_COUNT_DESC));
+                } else {
+                    res.put("MAPREDUCE_REDUCE_TASK_COUNT", new DiagnoseDesc("MAPREDUCE_REDUCE_TASK_COUNT", MAPREDUCE_REDUCE_TASK_COUNT_NAME,
+                            MAPREDUCE_REDUCE_TASK_COUNT_THRESHOLD, speculativeMapReduceAbnormal.getFinishedReduces(),
+                            0, MAPREDUCE_REDUCE_TASK_COUNT_DESC));
+                }
+            }
+
+            score = score.subtract(res.values().stream().map(x -> BigDecimal.valueOf(x.deductScore)).reduce((x, y) -> x.add(y)).orElse(BigDecimal.valueOf(0)));
+        } catch (Exception e) {
+            log.error("buildSqlScoreAbnormal fail. TaskName: " + taskApp.getTaskName() + "\tmsg: " + e.getMessage());
+        }
+
+        SqlScoreAbnormal diagnoseContent = new SqlScoreAbnormal();
+        diagnoseContent.setDiagnoseResult(JSON.toJSONString(res));
+        diagnoseContent.setScore(score.doubleValue());
+        diagnoseContent.setAbnormal(score.doubleValue() < 60);
+        return diagnoseContent;
     }
 
     @Data

@@ -92,6 +92,36 @@ public class MysqlWriter {
         }
     }
 
+    public void saveJobPerformanceAbnormal2(SqlScoreAbnormal sqlScoreAbnormal, TaskApp taskApp) {
+        PreparedStatement ps = null;
+        try {
+            String sql = "INSERT INTO bdmp_cluster.t_job_performance_diagnose_result (application_id, application_type," +
+                    " cluster_name, queue, task_name, start_time,end_time, elapsed_time, score, diagnose_result, data_date)" +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, taskApp.getApplicationId());
+            ps.setString(2, String.valueOf(taskApp.getApplicationType()));
+            ps.setString(3, taskApp.getClusterName());
+            ps.setString(4, taskApp.getQueue());
+            ps.setString(5, taskApp.getTaskName());
+            ps.setLong(6, taskApp.getStartTime().getTime());
+            ps.setLong(7, taskApp.getFinishTime().getTime());
+            ps.setDouble(8, taskApp.getElapsedTime());
+            ps.setDouble(9, sqlScoreAbnormal.getScore());
+            ps.setString(10, sqlScoreAbnormal.getDiagnoseResult());
+            ps.setString(11, "9999");
+            ps.execute();
+        } catch (Exception e) {
+            log.error("saveSqlScoreAbnormal fail. msg：{}", e.getMessage());
+        } finally {
+            try {
+                if (ps != null) ps.close();
+            } catch (SQLException e) {
+                log.error("close PreparedStatement fail. msg:{}", e.getMessage());
+            }
+        }
+    }
+
     /**
      * 更新或保存任务性能评分（每个task每天可能会执行多次，只保留性能评分最低的一次）
      *

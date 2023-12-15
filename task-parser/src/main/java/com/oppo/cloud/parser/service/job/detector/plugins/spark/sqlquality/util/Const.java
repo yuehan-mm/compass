@@ -29,4 +29,17 @@ public class Const {
     public static final String SQL_SCAN_PARTITION_COUNT_DESC = String.format("一个SQL扫描分区数量最多为%s个，之后每增加一个，分数-%s",
             SQL_SCAN_PARTITION_COUNT_THRESHOLD, SQL_SCAN_PARTITION_COUNT_SCORE);
 
+
+    public static final String MAPREDUCE_MAP_TASK_COUNT_NAME = "MapReduce Map任务数量";
+    public static final int MAPREDUCE_MAP_TASK_COUNT_THRESHOLD = 100;
+    public static final double MAPREDUCE_MAP_TASK_COUNT_SCORE = 0.1;
+    public static final String MAPREDUCE_MAP_TASK_COUNT_DESC = String.format("一个MapReduce程序最多有%s个Map任务，之后每增加一个，分数-%s",
+            MAPREDUCE_MAP_TASK_COUNT_THRESHOLD, MAPREDUCE_MAP_TASK_COUNT_SCORE);
+
+
+    public static final String MAPREDUCE_REDUCE_TASK_COUNT_NAME = "MapReduce Reduce任务数量";
+    public static final int MAPREDUCE_REDUCE_TASK_COUNT_THRESHOLD = 100;
+    public static final double MAPREDUCE_REDUCE_TASK_COUNT_SCORE = 0.1;
+    public static final String MAPREDUCE_REDUCE_TASK_COUNT_DESC = String.format("一个MapReduce程序最多有%s个Reduce任务，之后每增加一个，分数-%s",
+            MAPREDUCE_REDUCE_TASK_COUNT_THRESHOLD, MAPREDUCE_REDUCE_TASK_COUNT_SCORE);
 }
